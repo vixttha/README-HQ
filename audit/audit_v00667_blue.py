@@ -99,14 +99,13 @@ def smoke_cases(base, repo):
 
 
 def partition_retry(base):
-    feature = {"documented_in": [{"path": "README.md"}], "changed_in": [{"path": "README.md"}],
-               "tested_by": [{"path": "README.md"}]}
-    rows = [{"id": f"checkpoint-{i}", **feature} for i in range(1, 34)]
+    reference = {"path": "README.md", "anchor": "# README HQ", "line": 1}
+    feature = {relation: [reference] for relation in ("documented_in", "changed_in", "tested_by")}
+    rows = [{"id": f"checkpoint-{i}", "label": f"Checkpoint {i}", **feature} for i in range(1, 34)]
     request = base / "partition.json"
     output = base / "partitions"
     good = {"repository": "vixttha/README-HQ", "source_commit": CANDIDATE, "features": rows}
-    invalid = [{"id": row["id"], **{key: value for key, value in row.items() if key != "id"}} for row in rows]
-    del invalid[-1]["tested_by"]
+    invalid = [*rows[:-1], {key: value for key, value in rows[-1].items() if key != "tested_by"}]
     write_json(request, {**good, "features": invalid})
     program = ROOT / "tools/verify_plan.py"
     partial = command(program, "--partition", request, "--output", output)
@@ -116,11 +115,12 @@ def partition_retry(base):
     fresh = command(program, "--partition", request, "--output", base / "fresh")
     assert partial.returncode != 0 and "tested_by" in partial.stderr, partial.stderr
     assert files == ["part-001/manifest.json"], files
-    assert blocked.returncode != 0 and "File exists" in blocked.stderr, blocked.stderr
+    existing_diagnostic = any(message in blocked.stderr.lower() for message in ("file exists", "file already exists"))
+    assert blocked.returncode != 0 and existing_diagnostic, blocked.stderr
     assert fresh.returncode == 0 and "33 ordered checkpoints in 2 manifests" in fresh.stdout, fresh.stdout
     return {"bad_input_exit": partial.returncode, "first_error": "missing tested_by",
             "partial_manifests": files, "same_path_retry_exit": blocked.returncode,
-            "same_path_retry_error": "File exists", "fresh_path_retry_exit": fresh.returncode}
+            "same_path_retry_error": "destination already exists", "fresh_path_retry_exit": fresh.returncode}
 
 
 def intake_triage(base, repo):
