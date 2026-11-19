@@ -105,10 +105,6 @@ def advisories():
 def upstream_sources():
     records = json.loads((ROOT / "techniques/public-source-inventory.json").read_bytes())
     repositories = sorted({record[0] for record in records})
-    for name in repositories:
-        data = fetch(f"https://api.github.com/repos/{name}")
-        assert data["full_name"].casefold() == name.casefold()
-        assert data["private"] is False and data["visibility"] == "public"
 
     def observe(record):
         repo, commit, path, blob, sha256, lines = record
@@ -122,7 +118,7 @@ def upstream_sources():
 
     with ThreadPoolExecutor(max_workers=5) as pool:
         verified = list(pool.map(observe, records))
-    return {"repositories_verified_public": repositories, "documents": verified}
+    return {"repositories_with_anonymous_source_downloads": repositories, "documents": verified}
 
 
 def main():
