@@ -1,0 +1,115 @@
+{
+  "repository": "vixttha/README-HQ",
+  "source_commit": "8069675ff0e502953a07d392578e72c8ec6009a3",
+  "title": "README HQ v0.0.6 entry point and PR checkpoints 56 through 59",
+  "source_files": [
+    "plans/v0.0.6-repairs/README.md",
+    "audit/audit_entrypoints.py"
+  ],
+  "features": [
+    {
+      "id": "v0-0-6-56",
+      "label": "v0.0.6.56 · #56 · Packaged Graphify self-map",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.56` | [#56](https://github.com/vixttha/README-HQ/issues/56) | Packaged Graphify self-map | High | `v0.0.6.55` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.55` | [#55](https://github.com/vixttha/README-HQ/issues/55) | Immutable learning-source commits | Medium | `v0.0.6.54` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Provide and test a self-map for the actual vendored layout, or route the example explicitly to the working upstream tree. Verify the documented command from a clean checkout and check its graph over MCP."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_entrypoints.py",
+          "anchor": "def check_packaged_self_map(directory, temporary):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-57",
+      "label": "v0.0.6.57 · #57 · Version-index row uniqueness",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.57` | [#57](https://github.com/vixttha/README-HQ/issues/57) | Version-index row uniqueness | Medium | `v0.0.6.56` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.56` | [#56](https://github.com/vixttha/README-HQ/issues/56) | Packaged Graphify self-map | High | `v0.0.6.55` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Require exactly one row per advertised version in the canonical version table. Reject duplicate labels even when their destinations and other columns are identical."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_entrypoints.py",
+          "anchor": "def check_duplicate_version_row(directory):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-58",
+      "label": "v0.0.6.58 · #58 · Merge-queue validation",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.58` | [#58](https://github.com/vixttha/README-HQ/issues/58) | Merge-queue validation | Medium | `v0.0.6.57` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.57` | [#57](https://github.com/vixttha/README-HQ/issues/57) | Version-index row uniqueness | Medium | `v0.0.6.56` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Support checks_requested for adopters that use a merge queue. Verify a queued synthetic merge candidate reports the README and Graphify statuses against the queue SHA under the intended runner policy."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_entrypoints.py",
+          "anchor": "def check_merge_queue_trigger(directory):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-59",
+      "label": "v0.0.6.59 · #59 · Consistent PR head observation",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.59` | [#59](https://github.com/vixttha/README-HQ/issues/59) | Consistent PR head observation | High | `v0.0.6.58` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.58` | [#58](https://github.com/vixttha/README-HQ/issues/58) | Merge-queue validation | Medium | `v0.0.6.57` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Bind the PR observation to coherent head metadata. Recheck the head across dependent evidence reads and retry or report an unstable observation when it changes. Keep historical member and current head results distinct."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_entrypoints.py",
+          "anchor": "def check_moving_pr_observation(directory):"
+        }
+      ]
+    }
+  ]
+}

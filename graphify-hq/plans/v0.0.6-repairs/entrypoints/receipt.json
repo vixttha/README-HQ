@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "template_version": "v0.0.8",
+  "repository": "vixttha/README-HQ",
+  "source_commit": "8069675ff0e502953a07d392578e72c8ec6009a3",
+  "pull_request": null,
+  "scope": "feature-evidence",
+  "graphify_version": "0.9.109",
+  "graph_sha256": "1dda540dd8d6c1bf7da5a9f07a44dacea0c7d3c8209a423851676473b7d86ef0",
+  "nodes": 20,
+  "edges": 35,
+  "feature_links": {
+    "feature:v0-0-6-56": {
+      "documented_in": 2,
+      "changed_in": 1,
+      "tested_by": 1
+    },
+    "feature:v0-0-6-57": {
+      "documented_in": 2,
+      "changed_in": 1,
+      "tested_by": 1
+    },
+    "feature:v0-0-6-58": {
+      "documented_in": 2,
+      "changed_in": 1,
+      "tested_by": 1
+    },
+    "feature:v0-0-6-59": {
+      "documented_in": 2,
+      "changed_in": 1,
+      "tested_by": 1
+    }
+  },
+  "source_files": [
+    "audit/audit_entrypoints.py",
+    "plans/v0.0.6-repairs/README.md"
+  ],
+  "source_sha256": {
+    "audit/audit_entrypoints.py": "a6a5927469cc84eb317313a4613ffbe0297ffc0d58160946dad9bb6d30c2af2f",
+    "plans/v0.0.6-repairs/README.md": "fe5e51fc256dfd77ca4466a212312831d7ea341ea3e4698e15cefb4c11914c4b"
+  },
+  "mcp_verified": true
+}
