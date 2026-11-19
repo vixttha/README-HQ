@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "id": "IDEA-000008",
+  "title": "Recover captured ideas in a later session",
+  "summary": "Keep a dated record of a project idea while its context is fresh so a human or a coding agent can pick it up after a day or two.",
+  "kind": "process",
+  "origin": {
+    "created_by": "joint",
+    "source": "2026-11-19 · README HQ Provenistem design discussion and tracker README trial."
+  },
+  "lifecycle_status": "captured",
+  "implementation_status": "not_planned",
+  "testing": {
+    "status": "untested"
+  },
+  "importance": "high",
+  "complexity": "low",
+  "categories": [
+    "handoff",
+    "idea-capture"
+  ],
+  "benefits": [
+    "A fresh session can recover why an idea mattered and which capabilities it led to."
+  ],
+  "risks": [
+    "An idea recorded without its origin or reasoning may be hard to interpret later."
+  ],
+  "related_ideas": [],
+  "evidence": []
+}
