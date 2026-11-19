@@ -1,6 +1,6 @@
 # README HQ v0.0.6 repair pipeline
 
-Baseline [`v0.0.6` at `f50e374`](https://github.com/vixttha/README-HQ/commit/f50e3749dab90ddfe35894284d1660097a1fb1a8). The [public audit](https://github.com/vixttha/README-HQ/actions/runs/44510897511) reproduced the initial ten findings. The [portability audit](https://github.com/vixttha/README-HQ/actions/runs/44513298531) added seven checkpoints. The [learning audit](https://github.com/vixttha/README-HQ/actions/runs/44515197237) adds seven through `v0.0.6.24`. The [assurance audit](https://github.com/vixttha/README-HQ/actions/runs/44516410470) and Graphify capacity check add nine through `v0.0.6.33`. Each issue owns one cumulative repair checkpoint. The first checkpoint is ready to implement and the later checkpoints follow it in order.
+Baseline [`v0.0.6` at `f50e374`](https://github.com/vixttha/README-HQ/commit/f50e3749dab90ddfe35894284d1660097a1fb1a8). The [public audit](https://github.com/vixttha/README-HQ/actions/runs/44510897511) reproduced the initial ten findings. The [portability audit](https://github.com/vixttha/README-HQ/actions/runs/44513298531) added seven checkpoints. The [learning audit](https://github.com/vixttha/README-HQ/actions/runs/44515197237) adds seven through `v0.0.6.24`. The [assurance audit](https://github.com/vixttha/README-HQ/actions/runs/44516410470) and Graphify capacity check add nine through `v0.0.6.33`. The [Graphify integrity audit](https://github.com/vixttha/README-HQ/actions/runs/44518000891) adds seven through `v0.0.6.40`. Each issue owns one cumulative repair checkpoint. The first checkpoint is ready to implement and the later checkpoints follow it in order.
 
 [Graphify plan](../../graphify-hq/plans/v0.0.6-repairs/README.md)
 
@@ -41,6 +41,13 @@ Baseline [`v0.0.6` at `f50e374`](https://github.com/vixttha/README-HQ/commit/f50
 | `v0.0.6.31` | [#31](https://github.com/vixttha/README-HQ/issues/31) | Optimization-safe verification | Medium | `v0.0.6.30` |
 | `v0.0.6.32` | [#32](https://github.com/vixttha/README-HQ/issues/32) | Durable acceptance receipts | Medium | `v0.0.6.31` |
 | `v0.0.6.33` | [#33](https://github.com/vixttha/README-HQ/issues/33) | Graphify roadmap capacity | Medium | `v0.0.6.32` |
+| `v0.0.6.34` | [#34](https://github.com/vixttha/README-HQ/issues/34) | MCP evidence destinations | High | `v0.0.6.33` |
+| `v0.0.6.35` | [#35](https://github.com/vixttha/README-HQ/issues/35) | Repository provenance | High | `v0.0.6.34` |
+| `v0.0.6.36` | [#36](https://github.com/vixttha/README-HQ/issues/36) | Git source file modes | Medium | `v0.0.6.35` |
+| `v0.0.6.37` | [#37](https://github.com/vixttha/README-HQ/issues/37) | Unambiguous JSON inputs | High | `v0.0.6.36` |
+| `v0.0.6.38` | [#38](https://github.com/vixttha/README-HQ/issues/38) | Source line bounds | Medium | `v0.0.6.37` |
+| `v0.0.6.39` | [#39](https://github.com/vixttha/README-HQ/issues/39) | Archive inventory completeness | High | `v0.0.6.38` |
+| `v0.0.6.40` | [#40](https://github.com/vixttha/README-HQ/issues/40) | Version map coverage | High | `v0.0.6.39` |
 
 ## Checkpoint workflow
 
@@ -48,7 +55,7 @@ Baseline [`v0.0.6` at `f50e374`](https://github.com/vixttha/README-HQ/commit/f50
 2. Make the scoped repair as its own checkpoint. Preserve a distinct commit and link it to the issue.
 3. Run the checkpoint regression and applicable existing checks on standard public GitHub-hosted runners. Rebuild Graphify and query MCP for any change to graph generation, source evidence, or the version index.
 4. Review the combined candidate against the intended base. Record the exact tested SHA, public runner links, Graphify evidence when relevant, and any unresolved conflicts on the issue before advancing to the next checkpoint.
-5. Review the combined series after `v0.0.6.33`. Homepage publication and release decisions stay with the owner.
+5. Review the combined series after `v0.0.6.40`. Homepage publication and release decisions stay with the owner.
 
 ## Verification by checkpoint
 
@@ -207,3 +214,35 @@ The installed Graphify template accepts at most 32 feature nodes per manifest. T
 ### v0.0.6.33
 
 - Generalize Graphify plan partitioning for arbitrary checkpoint counts and verify that no checkpoint is dropped, duplicated, or disconnected across maps.
+
+## Graphify and source integrity
+
+[Reproduction fixtures](https://github.com/vixttha/README-HQ/blob/6cf0f32c3f50f57c541654b86cc017e752ccc46e/audit/audit_graph_integrity.py) · [Public reproduction](https://github.com/vixttha/README-HQ/actions/runs/44518000891/job/135538943406)
+
+### v0.0.6.34
+
+- Verify each outgoing edge against its expected target ID, relation, pinned path, and source range. Reject changed destinations even when totals match.
+
+### v0.0.6.35
+
+- Bind repository identity to independently established source provenance. Report local graph verification and remote provenance as distinct results and reject an unrelated repository label when provenance is claimed.
+
+### v0.0.6.36
+
+- Inspect the pinned Git tree entry mode. Reject symlink evidence with a path diagnostic or resolve it inside the same pinned tree with explicit path and mode records.
+
+### v0.0.6.37
+
+- Reject repeated JSON object keys at any depth before schema validation in registry, archive, version catalog, and Graphify manifest inputs. Include the input path and duplicate key in the diagnostic.
+
+### v0.0.6.38
+
+- Validate positive inline source line and line-range fragments against the target file, with tests for reversed and out-of-bounds ranges as well as valid last-line references.
+
+### v0.0.6.39
+
+- Validate the retained import inventory against an independent pinned listing and check archived README links against the imported tree. Fail on coordinated deletion of required files and manifest entries.
+
+### v0.0.6.40
+
+- Require independently defined coverage for every advertised version. Reject empty or incomplete record sets and identify missing versions and record IDs before publishing verified artifacts.
