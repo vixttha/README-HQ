@@ -1,0 +1,25 @@
+name: README HQ assurance audit
+on:
+  push:
+    branches: [audit/v0.0.6-assurance]
+permissions:
+  contents: read
+jobs:
+  reproduce:
+    name: Verify assurance findings on public Ubuntu
+    if: github.repository == 'vixttha/README-HQ' && github.event.repository.private == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.10'
+      - name: Run disposable assurance fixtures
+        shell: bash
+        run: python audit/audit_assurance.py | tee -a "$GITHUB_STEP_SUMMARY"
