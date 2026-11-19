@@ -1,13 +1,14 @@
 {
   "repository": "vixttha/README-HQ",
-  "source_commit": "2ca97a42eb36415e480c75227cf258385f809901",
-  "title": "README HQ v0.0.6 assurance checkpoints 25 through 49",
+  "source_commit": "8aae1ac74636c0f1e52283b9e9a4d191d8c8c84c",
+  "title": "README HQ v0.0.6 assurance checkpoints 25 through 55",
   "source_files": [
     "plans/v0.0.6-repairs/README.md",
     "audit/audit_assurance.py",
     "audit/check_plan_capacity.py",
     "audit/audit_graph_integrity.py",
-    "audit/audit_reader.py"
+    "audit/audit_reader.py",
+    "audit/audit_provenance.py"
   ],
   "features": [
     {
@@ -657,6 +658,162 @@
         {
           "path": "audit/audit_reader.py",
           "anchor": "def check_git_valid_branch_names(worktree, template, commit):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-50",
+      "label": "v0.0.6.50 · #50 · Checkpoint label and fixture ownership",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.50` | [#50](https://github.com/vixttha/README-HQ/issues/50) | Checkpoint label and fixture ownership | High | `v0.0.6.49` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.49` | [#49](https://github.com/vixttha/README-HQ/issues/49) | Git branch-name compatibility | Medium | `v0.0.6.48` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Bind the checkpoint label, planned change anchor, and reproduction fixture to the corresponding issue. Reject each independently when the manifest, graph, and receipt agree on unrelated evidence."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_provenance.py",
+          "anchor": "def check_checkpoint_evidence(worktree_path):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-51",
+      "label": "v0.0.6.51 · #51 · Graphify plan index links",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.51` | [#51](https://github.com/vixttha/README-HQ/issues/51) | Graphify plan index links | Medium | `v0.0.6.50` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.50` | [#50](https://github.com/vixttha/README-HQ/issues/50) | Checkpoint label and fixture ownership | High | `v0.0.6.49` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Validate each repair-plan index link against the exact partition and artifact in the checked-out tree. Cover missing and existing-but-wrong graph, manifest, and receipt destinations."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_provenance.py",
+          "anchor": "def check_plan_index(worktree_path):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-52",
+      "label": "v0.0.6.52 · #52 · Clean checkout line-ending compatibility",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.52` | [#52](https://github.com/vixttha/README-HQ/issues/52) | Clean checkout line-ending compatibility | Medium | `v0.0.6.51` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.51` | [#51](https://github.com/vixttha/README-HQ/issues/51) | Graphify plan index links | Medium | `v0.0.6.50` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Preserve the bytes of Graphify inputs and generated files across supported checkout settings or compare authoritative Git blobs. Verify default and autocrlf checkouts with real input drift still failing."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_provenance.py",
+          "anchor": "def check_checkout_conversion(temporary):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-53",
+      "label": "v0.0.6.53 · #53 · Immutable Git object reads",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.53` | [#53](https://github.com/vixttha/README-HQ/issues/53) | Immutable Git object reads | High | `v0.0.6.52` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.52` | [#52](https://github.com/vixttha/README-HQ/issues/52) | Clean checkout line-ending compatibility | Medium | `v0.0.6.51` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Ensure every pinned evidence read uses the original Git object regardless of local replacement refs. Verify the reported line coordinates and digest against that object in both the compiler and version-map builder."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_provenance.py",
+          "anchor": "def check_replacement_object(temporary):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-54",
+      "label": "v0.0.6.54 · #54 · Exact MCP relation fields",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.54` | [#54](https://github.com/vixttha/README-HQ/issues/54) | Exact MCP relation fields | Medium | `v0.0.6.53` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.53` | [#53](https://github.com/vixttha/README-HQ/issues/53) | Immutable Git object reads | High | `v0.0.6.52` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Verify typed graph relationship fields or parse an unambiguous MCP representation. Accept valid paths with bracketed text while counting and checking only actual relationship fields."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_provenance.py",
+          "anchor": "def check_mcp_relation_field(temporary):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-55",
+      "label": "v0.0.6.55 · #55 · Immutable learning-source commits",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.55` | [#55](https://github.com/vixttha/README-HQ/issues/55) | Immutable learning-source commits | Medium | `v0.0.6.54` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.54` | [#54](https://github.com/vixttha/README-HQ/issues/54) | Exact MCP relation fields | Medium | `v0.0.6.53` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Resolve each requested source revision to a full immutable commit before verifying and recording a source observation. Require receipt provenance to retain the resolved SHA and test that moving input refs cannot change a saved observation."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_provenance.py",
+          "anchor": "def check_learning_mutable_ref(temporary):"
         }
       ]
     }
