@@ -1,2 +1,29 @@
-# README-HQ
-Versioned README archives, repository audits, and a shared technique library for humans and coding agents.
+# README HQ
+
+README HQ helps people understand a GitHub project and take their first useful step. It gives coding agents the same starting point, with links to repository instructions, test commands, and the evidence behind version and compatibility claims.
+
+**Current candidate** · [Standalone v0.0.1](versions/v0.0.1/README.md)
+
+| If you want to | Start here |
+| --- | --- |
+| Find a current or historical README | [Version index](versions/README.md) |
+| Improve a README in your own repository | [README guide](README-GUIDE.md) |
+| Request a detailed repository review | [Repository audit](audits/README.md) |
+| Browse techniques learned from reviews | [Technique library](techniques/README.md) |
+| Invoke README HQ from an agent | [Agent entry point](AGENTS.md) |
+
+## Use README HQ
+
+Ask your coding agent to use `vixttha/README-HQ`, branch `readme-hq`, and name the target repository. For example, **Use README HQ to audit owner/repository.** The agent loads the branch at its current commit and uses the target repository's own instructions for work there.
+
+To check a README HQ checkout, use Python 3.10 or newer.
+
+```sh
+git clone --branch readme-hq https://github.com/vixttha/README-HQ.git
+cd README-HQ
+python3 tools/check_readme_hq.py
+```
+
+On Windows, use `py -3 tools/check_readme_hq.py`. A passing check prints counts for the version index, technique catalog, local navigation, and archived source files.
+
+The branch keeps versions and audit findings available between sessions. An authorized human or agent starts each audit, records each new finding, and reviews any resulting project changes.
