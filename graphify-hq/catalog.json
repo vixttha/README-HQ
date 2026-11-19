@@ -12,7 +12,11 @@
           "history/aldervale/readme-hq/readme-hq/versions/v0.0.1/GUIDE.md",
           "history/aldervale/readme-hq/Graphify HQ/v0.0.1/README.md"
         ],
-        "changed_in": "history/aldervale/readme-hq/readme-hq/versions/v0.0.1/CHANGELOG.md"
+        "changed_in": {
+          "path": "history/aldervale/readme-hq/readme-hq/versions/v0.0.1/CHANGELOG.md",
+          "anchor": "- A front page with entry points for game README history, game README workspaces, and HQ\u2019s own records.",
+          "line": 7
+        }
       },
       {
         "id": "standalone-hq",
@@ -21,7 +25,11 @@
         "documented_in": [
           "versions/v0.0.1/README.md"
         ],
-        "changed_in": "versions/v0.0.1/CHANGELOG.md"
+        "changed_in": {
+          "path": "versions/v0.0.1/CHANGELOG.md",
+          "anchor": "- Imported both public README HQ branch trees, including version workspaces, their original validators, and AlderVale's six Graphify maps.",
+          "line": 3
+        }
       },
       {
         "id": "bart-hq",
@@ -31,7 +39,11 @@
           "history/bart/readme-hq/readme-hq/versions/v0.0.1/README.md",
           "history/bart/readme-hq/readme-hq/versions/v0.0.1/GUIDE.md"
         ],
-        "changed_in": "history/bart/readme-hq/readme-hq/versions/v0.0.1/CHANGELOG.md"
+        "changed_in": {
+          "path": "history/bart/readme-hq/readme-hq/versions/v0.0.1/CHANGELOG.md",
+          "anchor": "- Establish an independent, durable README HQ branch tailored to Blender-Agent.",
+          "line": 3
+        }
       },
       {
         "id": "aldervale-homepage",
@@ -40,7 +52,11 @@
         "documented_in": [
           "history/aldervale/readme-hq/versions/v0.0.1/README.md"
         ],
-        "changed_in": "history/aldervale/readme-hq/versions/v0.0.1/CHANGELOG.md"
+        "changed_in": {
+          "path": "history/aldervale/readme-hq/versions/v0.0.1/CHANGELOG.md",
+          "anchor": "- A game overview and the current first-playable scope.",
+          "line": 7
+        }
       },
       {
         "id": "bart-homepage",
@@ -51,7 +67,11 @@
           "history/bart/publication-candidate-v0.0.1/README.md",
           "history/bart/readme-hq/workspace/v0.0.1/REVIEW.md"
         ],
-        "changed_in": "history/bart/readme-hq/workspace/v0.0.1/CHANGELOG.md"
+        "changed_in": {
+          "path": "history/bart/readme-hq/workspace/v0.0.1/CHANGELOG.md",
+          "anchor": "- Clear, usable pre-alpha positioning and explicit development status.",
+          "line": 4
+        }
       }
     ],
     "v0.0.2": [
@@ -64,7 +84,11 @@
           "history/aldervale/readme-hq/readme-hq/versions/v0.0.2/GUIDE.md",
           "history/aldervale/readme-hq/Graphify HQ/v0.0.2/README.md"
         ],
-        "changed_in": "history/aldervale/readme-hq/readme-hq/versions/v0.0.2/CHANGELOG.md"
+        "changed_in": {
+          "path": "history/aldervale/readme-hq/readme-hq/versions/v0.0.2/CHANGELOG.md",
+          "anchor": "- Identifies v0.0.2 as the current approved HQ version on `readme-hq`.",
+          "line": 7
+        }
       },
       {
         "id": "aldervale-homepage",
@@ -74,7 +98,11 @@
           "history/aldervale/readme-hq/versions/v0.0.2/README.md",
           "history/aldervale/published-v0.0.2/README.md"
         ],
-        "changed_in": "history/aldervale/readme-hq/versions/v0.0.2/CHANGELOG.md"
+        "changed_in": {
+          "path": "history/aldervale/readme-hq/versions/v0.0.2/CHANGELOG.md",
+          "anchor": "- Reframes the opening around the playable guest journey and keeps the clone-and-run commands, recovery guidance, and GitHub Issues link.",
+          "line": 5
+        }
       },
       {
         "id": "bart-homepage",
@@ -84,7 +112,11 @@
           "history/bart/published-v0.0.2/README.md",
           "history/bart/readme-hq/versions/v0.0.2/README.md"
         ],
-        "changed_in": "history/bart/readme-hq/versions/v0.0.2/CHANGELOG.md"
+        "changed_in": {
+          "path": "history/bart/readme-hq/versions/v0.0.2/CHANGELOG.md",
+          "anchor": "- Adapted the README HQ draft in [PR #4](https://github.com/vixttha/Blender-Agent/pull/4) for the audited foundation.",
+          "line": 3
+        }
       }
     ],
     "v0.0.3": [
@@ -97,7 +129,11 @@
           "history/aldervale/readme-hq/readme-hq/versions/v0.0.3/GUIDE.md",
           "history/aldervale/readme-hq/Graphify HQ/v0.0.3/README.md"
         ],
-        "changed_in": "history/aldervale/readme-hq/readme-hq/versions/v0.0.3/CHANGELOG.md"
+        "changed_in": {
+          "path": "history/aldervale/readme-hq/readme-hq/versions/v0.0.3/CHANGELOG.md",
+          "anchor": "- Replaces the stale v0.0.2 validator limitations with the behavior implemented by the current validator.",
+          "line": 7
+        }
       },
       {
         "id": "aldervale-homepage",
@@ -107,7 +143,11 @@
           "history/aldervale/readme-hq/versions/v0.0.3/README.md",
           "history/aldervale/published-v0.0.3/README.md"
         ],
-        "changed_in": "history/aldervale/readme-hq/versions/v0.0.3/CHANGELOG.md"
+        "changed_in": {
+          "path": "history/aldervale/readme-hq/versions/v0.0.3/CHANGELOG.md",
+          "anchor": "- Adds the approved Workmark v1 at the top of the README.",
+          "line": 5
+        }
       },
       {
         "id": "bart-homepage",
@@ -118,7 +158,11 @@
           "history/bart/visual-v0.0.3/workspace/v0.0.3/DRAFT.md",
           "history/bart/visual-v0.0.3/workspace/v0.0.3/REVIEW.md"
         ],
-        "changed_in": "history/bart/visual-v0.0.3/workspace/v0.0.3/CHANGELOG.md"
+        "changed_in": {
+          "path": "history/bart/visual-v0.0.3/workspace/v0.0.3/CHANGELOG.md",
+          "anchor": "- Put the published pre-release and separate development status near the introduction.",
+          "line": 3
+        }
       }
     ],
     "v0.0.4": [
@@ -131,7 +175,11 @@
           "history/aldervale/readme-hq/readme-hq/versions/v0.0.4/GUIDE.md",
           "history/aldervale/readme-hq/Graphify HQ/v0.0.4/README.md"
         ],
-        "changed_in": "history/aldervale/readme-hq/readme-hq/versions/v0.0.4/CHANGELOG.md"
+        "changed_in": {
+          "path": "history/aldervale/readme-hq/readme-hq/versions/v0.0.4/CHANGELOG.md",
+          "anchor": "- Link to the published public game README v0.0.2, its archived copy and changelog, and its publication PR.",
+          "line": 7
+        }
       },
       {
         "id": "aldervale-homepage",
@@ -141,7 +189,11 @@
           "history/aldervale/readme-hq/versions/v0.0.4/README.md",
           "history/aldervale/published-v0.0.4/README.md"
         ],
-        "changed_in": "history/aldervale/readme-hq/versions/v0.0.4/CHANGELOG.md"
+        "changed_in": {
+          "path": "history/aldervale/readme-hq/versions/v0.0.4/CHANGELOG.md",
+          "anchor": "- Add the Bazaar quick link and a short signed-in-player guide for buying, listing, and cancelling gear listings.",
+          "line": 5
+        }
       },
       {
         "id": "bart-homepage",
@@ -152,7 +204,11 @@
           "history/bart/main-rebrand-v0.0.4/README.md",
           "history/bart/readme-hq/workspace/v0.0.4/REVIEW.md"
         ],
-        "changed_in": "history/bart/readme-hq/workspace/v0.0.4/CHANGELOG.md"
+        "changed_in": {
+          "path": "history/bart/readme-hq/workspace/v0.0.4/CHANGELOG.md",
+          "anchor": "- Introduce Blender-Agent Refinement Toolkit, BART, and \u201cGive shape to an idea.\u201d",
+          "line": 3
+        }
       }
     ],
     "v0.0.5": [
@@ -165,7 +221,11 @@
           "history/aldervale/readme-hq/readme-hq/versions/v0.0.5/GUIDE.md",
           "history/aldervale/readme-hq/Graphify HQ/v0.0.5/README.md"
         ],
-        "changed_in": "history/aldervale/readme-hq/readme-hq/versions/v0.0.5/CHANGELOG.md"
+        "changed_in": {
+          "path": "history/aldervale/readme-hq/readme-hq/versions/v0.0.5/CHANGELOG.md",
+          "anchor": "- Update the landing page\u2019s publication record to public game README v0.0.3. Link to the live README, its archived copy and changelog, and publication PR #124.",
+          "line": 7
+        }
       }
     ],
     "v0.0.6": [
@@ -178,7 +238,11 @@
           "history/aldervale/readme-hq/readme-hq/versions/v0.0.6/GUIDE.md",
           "history/aldervale/readme-hq/Graphify HQ/v0.0.6/README.md"
         ],
-        "changed_in": "history/aldervale/readme-hq/readme-hq/versions/v0.0.6/CHANGELOG.md"
+        "changed_in": {
+          "path": "history/aldervale/readme-hq/readme-hq/versions/v0.0.6/CHANGELOG.md",
+          "anchor": "- Add Graphify HQ to the landing page and replace the v0.0.3 spotlight with the latest approved archive link.",
+          "line": 5
+        }
       },
       {
         "id": "standalone-hq",
@@ -187,7 +251,11 @@
         "documented_in": [
           "versions/v0.0.6/README.md"
         ],
-        "changed_in": "versions/v0.0.6/CHANGELOG.md"
+        "changed_in": {
+          "path": "versions/v0.0.6/CHANGELOG.md",
+          "anchor": "- Continue the standalone version line from the accepted AlderVale README HQ v0.0.6 baseline.",
+          "line": 3
+        }
       }
     ]
   }

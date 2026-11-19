@@ -19,6 +19,7 @@ Use CPython 3.12 on Linux x86-64 with the pinned source commit in the local Git 
 
 ```bash
 kit=graphify-hq/template/v0.0.8
+python -m pip install --require-hashes -r tools/requirements.txt
 python -m pip install --require-hashes --only-binary=:all: --no-deps -r "$kit/requirements.txt"
 python -m pip check
 PYTHONDONTWRITEBYTECODE=1 python -m unittest discover -s "$kit" -p 'test_*.py' -v

@@ -23,8 +23,7 @@ connects matching evidence anchors to their files.
 
 Test links identify definitions. The associated runner job records the
 execution result. The [self-map manifest](self-map.json) supplies feature
-links and inventory for this kit. Add `repository` and `source_commit` to it
-to build the corresponding map. Use the same manifest shape in your project
+links and inventory for this kit. Run the [self-map preparer](self_map.py) to fill the repository and exact commit from this checkout. Use the same manifest shape in your project
 and replace the paths and anchors with yours.
 
 ## Reproducible build and MCP verification
@@ -34,12 +33,13 @@ runner using Python 3.12, fetch the pinned commit and run from the repository
 root. Adjust `kit`, the manifest and the output folder to match your project.
 
 ```bash
-kit=versions/v0.0.8
+kit=graphify-hq/template/v0.0.8
 python -m pip install --require-hashes --no-cache-dir --only-binary=:all: --no-deps -r "$kit/requirements.txt"
 python -m pip check
 python -m unittest discover -s "$kit" -p 'test_*.py' -v
-PYTHONHASHSEED=0 python "$kit/evidence_map.py" manifest.json evidence
-PYTHONHASHSEED=0 python "$kit/evidence_map.py" manifest.json evidence --check
+python "$kit/self_map.py" /tmp/readme-hq-self-map.json
+PYTHONHASHSEED=0 python "$kit/evidence_map.py" /tmp/readme-hq-self-map.json /tmp/readme-hq-self-map
+PYTHONHASHSEED=0 python "$kit/evidence_map.py" /tmp/readme-hq-self-map.json /tmp/readme-hq-self-map --check
 ```
 
 The build uses Graphify to export the map and verifies its source SHA and

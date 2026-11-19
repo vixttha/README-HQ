@@ -9,6 +9,10 @@ import sys
 from tempfile import TemporaryDirectory
 
 
+if not __debug__:
+    raise RuntimeError("The historical learning audit requires assertions enabled. Use learning/intake.py for current receipts.")
+
+
 BASELINE = "f50e3749dab90ddfe35894284d1660097a1fb1a8"
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -123,16 +127,22 @@ def verify_sources(sources, directory=None):
         base = directory if local else Path(temp)
         for source in sources.values():
             name, commit = source["repository"], source["commit"]
+            if len(commit) != 40 or any(char not in "0123456789abcdef" for char in commit):
+                raise ValueError("learning evidence needs an exact source commit")
+            line, anchor = source["line"], source["anchor"]
+            if type(line) is not int or line < 1 or not isinstance(anchor, str) or not anchor.strip():
+                raise ValueError("learning evidence needs a positive line and nonempty anchor")
             project = base / name
             if not local:
                 project.mkdir()
                 git(project, "init", "--quiet")
                 git(project, "fetch", "--quiet", "--depth=1", f"https://github.com/vixttha/{name}.git", commit)
             actual = git(project, "rev-parse", f"{commit}:README.md").decode().strip()
-            assert actual == source["blob"], (name, actual)
-            lines = git(project, "show", f"{commit}:README.md").decode().splitlines()
-            assert source["anchor"] in lines[source["line"] - 1], name
-            assert source["status"] == "observed", name
+            if actual != source["blob"]:
+                raise ValueError("learning source blob does not match the pinned evidence")
+            lines = git(project, "--no-replace-objects", "show", f"{commit}:README.md").decode().split("\n")
+            if line > len(lines) or anchor not in lines[line - 1] or source["status"] != "observed":
+                raise ValueError("learning source anchor or observation status does not match")
             print(f"Observed exact README source for {name} at {commit[:7]} line {source['line']}.")
 
 

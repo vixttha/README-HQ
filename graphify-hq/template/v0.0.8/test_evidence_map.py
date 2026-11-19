@@ -54,6 +54,7 @@ class ManifestTests(unittest.TestCase):
         with (
             tempfile.TemporaryDirectory() as folder,
             patch("evidence_map.git", return_value=b"commit"),
+            patch("evidence_map.source_blob", return_value=b"fixture"),
             patch("evidence_map.source_lines", side_effect=lambda commit, path: (lines[path], path)),
         ):
             graph, receipt = build(validate_manifest(self.manifest), Path(folder))

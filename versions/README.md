@@ -18,6 +18,6 @@ AlderVale’s six approved HQ guides provide the historical version line. Each g
 | Project | v0.0.1 | v0.0.2 | v0.0.3 | v0.0.4 |
 | --- | --- | --- | --- | --- |
 | AlderVale | [Approved archive](../history/aldervale/readme-hq/versions/v0.0.1/README.md) | [Published snapshot](../history/aldervale/published-v0.0.2/README.md) | [Published snapshot](../history/aldervale/published-v0.0.3/README.md) | [Published snapshot](../history/aldervale/published-v0.0.4/README.md) |
-| BART | [Publication candidate](../history/bart/publication-candidate-v0.0.1/README.md) | [Published snapshot](../history/bart/published-v0.0.2/README.md) | [Published snapshot](../history/bart/published-v0.0.3/README.md) | [HQ draft](../history/bart/readme-hq/workspace/v0.0.4/DRAFT.md) · [matching main snapshot](../history/bart/main-rebrand-v0.0.4/README.md) |
+| BART | [Publication candidate](../history/bart/publication-candidate-v0.0.1/README.md) | [Published snapshot](../history/bart/published-v0.0.2/README.md) | [Homepage reading route](bart-homepages.md) | [HQ draft](../history/bart/readme-hq/workspace/v0.0.4/DRAFT.md) · [homepage reading route](bart-homepages.md) |
 
 See [source provenance](../history/README.md) for original Git commits and byte-level verification. Homepage numbers describe each project's README.

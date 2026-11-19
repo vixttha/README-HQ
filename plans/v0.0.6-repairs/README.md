@@ -204,7 +204,7 @@ Baseline [`v0.0.6` at `f50e374`](https://github.com/vixttha/README-HQ/commit/f50
 
 [Audit findings and acceptance rubric](https://github.com/vixttha/README-HQ/blob/ef4648eefd09dad06f6901fe81e81f493aef4ef7/audits/assurance-v0.0.6.md) · [Public reproduction](https://github.com/vixttha/README-HQ/actions/runs/44516410470)
 
-The installed Graphify template accepts at most 32 feature nodes per manifest. The [evidence map index](../../graphify-hq/plans/v0.0.6-repairs/README.md) groups the same ordered pipeline into two compilable maps.
+The installed Graphify template accepts at most 32 feature nodes per manifest. The [evidence map index](../../graphify-hq/plans/v0.0.6-repairs/README.md) groups the same ordered pipeline into three compilable maps.
 
 ### v0.0.6.25
 

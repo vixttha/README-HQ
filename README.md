@@ -22,9 +22,14 @@ To check a README HQ checkout, use Python 3.10 or newer.
 ```sh
 git clone --branch readme-hq https://github.com/vixttha/README-HQ.git
 cd README-HQ
+python3 -m pip install --require-hashes -r tools/requirements.txt
 python3 tools/check_readme_hq.py
 ```
 
-On Windows, use `py -3 tools/check_readme_hq.py`. A passing check prints counts for the version index, technique catalog, local navigation, and archived source files.
+To audit a consumer, run `python3 tools/check_readme_hq.py --repo /path/to/project --ref HEAD --receipt audit.json`. Use `--subproject` for a monorepo package or `--profile reference` for reference-only documentation.
+
+On Windows, install the same requirements with `py -3 -m pip install --require-hashes -r tools/requirements.txt` and use `py -3 tools/check_readme_hq.py`. A passing check prints counts for the version index, technique catalog, local navigation, and archived source files.
 
 The branch keeps versions and audit findings available between sessions. An authorized human or agent starts each audit, records each new finding, and reviews any resulting project changes.
+
+See the [learning intake](learning/README.md) and [reuse and attribution terms](REUSE.md).
