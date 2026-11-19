@@ -1,0 +1,506 @@
+{
+  "candidate": "8d50caec2bc6fcb998994a1fd302294a029325f9",
+  "audit_fixture": "1b751f66a4127a005f5a868a8754896e96a12357",
+  "evidence": {
+    "ubuntu": {
+      "run_id": 44636325925,
+      "artifact_id": 14584985351,
+      "archive_sha256": "7dcee7a8308bf2ec56f4386952fdda7580d6cce2dd532381384fbe64994fc36b",
+      "observations": {
+        "blue-diagnostics.json": {
+          "candidate": "8d50caec2bc6fcb998994a1fd302294a029325f9",
+          "platform": "linux",
+          "run": "44636325925",
+          "attempt": "1",
+          "job": "diagnostics",
+          "findings": {
+            "smoke": {
+              "successful_control": {
+                "exit": 0,
+                "stderr": [],
+                "overall": "passed",
+                "smoke": {
+                  "result": "passed",
+                  "expected": {
+                    "exit": 0,
+                    "contains": "READY"
+                  },
+                  "observed": {
+                    "exit": 0,
+                    "outcome_match": true,
+                    "output_sha256": "3dfa3fb239f56c778a1e9b33eb31328349edd155a95806dac4378904e88527e5"
+                  }
+                },
+                "unchecked": [
+                  "README.md: editorial quality and material claims require human or agent review"
+                ]
+              },
+              "network_disabled": {
+                "exit": 0,
+                "stderr": [],
+                "overall": "passed",
+                "smoke": {
+                  "result": "unchecked",
+                  "detail": "network probe not authorized"
+                },
+                "unchecked": [
+                  "README.md: editorial quality and material claims require human or agent review",
+                  "first action unchecked: network probe not authorized"
+                ]
+              },
+              "failure_a": {
+                "exit": 1,
+                "stderr": [
+                  "first action failed its expected result"
+                ],
+                "overall": "failed",
+                "smoke": {
+                  "result": "failed",
+                  "expected": {
+                    "exit": 0,
+                    "contains": "READY"
+                  },
+                  "observed": {
+                    "exit": 7,
+                    "outcome_match": false,
+                    "output_sha256": "75ac6d8a041b427d071b342bed9fcb82c65a8b4952cec651adb5d389117e3dcb"
+                  }
+                },
+                "unchecked": [
+                  "README.md: editorial quality and material claims require human or agent review"
+                ]
+              },
+              "failure_b": {
+                "exit": 1,
+                "stderr": [
+                  "first action failed its expected result"
+                ],
+                "overall": "failed",
+                "smoke": {
+                  "result": "failed",
+                  "expected": {
+                    "exit": 0,
+                    "contains": "READY"
+                  },
+                  "observed": {
+                    "exit": 7,
+                    "outcome_match": false,
+                    "output_sha256": "97e8e760ddcc06a5208c41e93b8c89cb8408ed2e99434910840bdf8e77a7a21a"
+                  }
+                },
+                "unchecked": [
+                  "README.md: editorial quality and material claims require human or agent review"
+                ]
+              }
+            },
+            "partition_retry": {
+              "bad_input_exit": 2,
+              "first_error": "missing tested_by",
+              "partial_manifests": [
+                "part-001/manifest.json"
+              ],
+              "same_path_retry_exit": 2,
+              "same_path_retry_error": "destination already exists",
+              "fresh_path_retry_exit": 0
+            },
+            "learning_diagnostics": {
+              "simulated_http_429": {
+                "exit": 2,
+                "stderr": [
+                  "usage: intake.py [-h] spec output",
+                  "intake.py: error: learning request or source proof is invalid or unverified"
+                ]
+              },
+              "invalid_pinned_anchor": {
+                "exit": 2,
+                "stderr": [
+                  "usage: intake.py [-h] spec output",
+                  "intake.py: error: learning request or source proof is invalid or unverified"
+                ]
+              },
+              "valid_control": {
+                "exit": 0,
+                "stderr": []
+              }
+            }
+          }
+        },
+        "baseline": {
+          "standalone_versions": 2,
+          "techniques": 17,
+          "local_links": 193,
+          "imported_files": 159,
+          "unchecked": 87
+        }
+      }
+    },
+    "windows": {
+      "run_id": 44636325925,
+      "artifact_id": 14584366291,
+      "archive_sha256": "e4504bd575fd33facdac38e8d4f8d4c7cfcdb4bf799d226ad5f07be9e1617444",
+      "observations": {
+        "blue-diagnostics.json": {
+          "candidate": "8d50caec2bc6fcb998994a1fd302294a029325f9",
+          "platform": "win32",
+          "run": "44636325925",
+          "attempt": "1",
+          "job": "diagnostics",
+          "findings": {
+            "smoke": {
+              "successful_control": {
+                "exit": 0,
+                "stderr": [],
+                "overall": "passed",
+                "smoke": {
+                  "result": "passed",
+                  "expected": {
+                    "exit": 0,
+                    "contains": "READY"
+                  },
+                  "observed": {
+                    "exit": 0,
+                    "outcome_match": true,
+                    "output_sha256": "5f14c516e0c7a2be0aa613a98a475138fe4e5824bd7715e51ae46652059c709b"
+                  }
+                },
+                "unchecked": [
+                  "README.md: editorial quality and material claims require human or agent review"
+                ]
+              },
+              "network_disabled": {
+                "exit": 0,
+                "stderr": [],
+                "overall": "passed",
+                "smoke": {
+                  "result": "unchecked",
+                  "detail": "network probe not authorized"
+                },
+                "unchecked": [
+                  "README.md: editorial quality and material claims require human or agent review",
+                  "first action unchecked: network probe not authorized"
+                ]
+              },
+              "failure_a": {
+                "exit": 1,
+                "stderr": [
+                  "first action failed its expected result"
+                ],
+                "overall": "failed",
+                "smoke": {
+                  "result": "failed",
+                  "expected": {
+                    "exit": 0,
+                    "contains": "READY"
+                  },
+                  "observed": {
+                    "exit": 7,
+                    "outcome_match": false,
+                    "output_sha256": "8be1a7c4a10dd536cc1c8a4c2a709f09d3924a7521859d04166a8aa68e9a2dcd"
+                  }
+                },
+                "unchecked": [
+                  "README.md: editorial quality and material claims require human or agent review"
+                ]
+              },
+              "failure_b": {
+                "exit": 1,
+                "stderr": [
+                  "first action failed its expected result"
+                ],
+                "overall": "failed",
+                "smoke": {
+                  "result": "failed",
+                  "expected": {
+                    "exit": 0,
+                    "contains": "READY"
+                  },
+                  "observed": {
+                    "exit": 7,
+                    "outcome_match": false,
+                    "output_sha256": "f508c51acf21c316f3b86ec63066dd9774e38a6cec32d906f629df67d3a0d07b"
+                  }
+                },
+                "unchecked": [
+                  "README.md: editorial quality and material claims require human or agent review"
+                ]
+              }
+            },
+            "partition_retry": {
+              "bad_input_exit": 2,
+              "first_error": "missing tested_by",
+              "partial_manifests": [
+                "part-001/manifest.json"
+              ],
+              "same_path_retry_exit": 2,
+              "same_path_retry_error": "destination already exists",
+              "fresh_path_retry_exit": 0
+            },
+            "learning_diagnostics": {
+              "simulated_http_429": {
+                "exit": 2,
+                "stderr": [
+                  "usage: intake.py [-h] spec output",
+                  "intake.py: error: learning request or source proof is invalid or unverified"
+                ]
+              },
+              "invalid_pinned_anchor": {
+                "exit": 2,
+                "stderr": [
+                  "usage: intake.py [-h] spec output",
+                  "intake.py: error: learning request or source proof is invalid or unverified"
+                ]
+              },
+              "valid_control": {
+                "exit": 0,
+                "stderr": []
+              }
+            }
+          }
+        },
+        "baseline": {
+          "standalone_versions": 2,
+          "techniques": 17,
+          "local_links": 193,
+          "imported_files": 159,
+          "unchecked": 87
+        }
+      }
+    },
+    "graphify": {
+      "run_id": 44636325925,
+      "artifact_id": 14584422101,
+      "archive_sha256": "4095dac119ebba72f521750d813ef909a93f1f325480d9281b53697ce90a6b59",
+      "observations": {
+        "blue-graphify-observer.json": {
+          "candidate": "8d50caec2bc6fcb998994a1fd302294a029325f9",
+          "verification_step": "failure",
+          "shipped_upload_step": "skipped",
+          "receipt_available": true
+        },
+        "blue-graphify-recovery.json": {
+          "candidate": "8d50caec2bc6fcb998994a1fd302294a029325f9",
+          "platform": "linux",
+          "run": "44636325925",
+          "attempt": "1",
+          "job": "graphify",
+          "findings": {
+            "graphify_interrupted_publication": {
+              "first_attempt_exit": 91,
+              "publication_missing_after_interruption": true,
+              "same_target_retry_blocked": true,
+              "prior_pair_recovered_from_lock": true
+            }
+          }
+        },
+        "receipt.json": {
+          "schema_version": 1,
+          "template_version": "v0.0.8",
+          "repository": "vixttha/README-HQ",
+          "source_commit": "8d50caec2bc6fcb998994a1fd302294a029325f9",
+          "pull_request": null,
+          "scope": "feature-evidence",
+          "repository_provenance": "unverified-local-source",
+          "graphify_version": "0.9.109",
+          "graph_sha256": "deef62205570a09b46224be23303350d6a580e35d200cf3a9ec2d7c649511891",
+          "nodes": 33,
+          "edges": 51,
+          "feature_links": {
+            "feature:archive-verification": {
+              "documented_in": 1,
+              "changed_in": 1,
+              "tested_by": 1,
+              "implemented_in": 3
+            },
+            "feature:feature-evidence": {
+              "documented_in": 1,
+              "changed_in": 1,
+              "tested_by": 3,
+              "implemented_in": 2
+            },
+            "feature:source-provenance": {
+              "documented_in": 1,
+              "changed_in": 1,
+              "tested_by": 2,
+              "implemented_in": 2
+            }
+          },
+          "feature_destinations": {
+            "feature:archive-verification": [
+              [
+                "documented_in",
+                "documented_in:graphify-hq/template/v0.0.8/README.md:L29",
+                "graphify-hq/template/v0.0.8/README.md",
+                "L29"
+              ],
+              [
+                "changed_in",
+                "changed_in:graphify-hq/template/v0.0.8/CHANGELOG.md:L8",
+                "graphify-hq/template/v0.0.8/CHANGELOG.md",
+                "L8"
+              ],
+              [
+                "tested_by",
+                "tested_by:graphify-hq/template/v0.0.8/test_evidence_map.py:L80",
+                "graphify-hq/template/v0.0.8/test_evidence_map.py",
+                "L80"
+              ],
+              [
+                "implemented_in",
+                "implemented_in:.github/workflows/readme-hq.yml:L40",
+                ".github/workflows/readme-hq.yml",
+                "L40"
+              ],
+              [
+                "implemented_in",
+                "implemented_in:graphify-hq/template/v0.0.8/evidence_map.py:L303",
+                "graphify-hq/template/v0.0.8/evidence_map.py",
+                "L303"
+              ],
+              [
+                "implemented_in",
+                "implemented_in:tools/check_readme_hq.py:L135",
+                "tools/check_readme_hq.py",
+                "L135"
+              ]
+            ],
+            "feature:feature-evidence": [
+              [
+                "documented_in",
+                "documented_in:graphify-hq/template/v0.0.8/README.md:L15",
+                "graphify-hq/template/v0.0.8/README.md",
+                "L15"
+              ],
+              [
+                "changed_in",
+                "changed_in:graphify-hq/template/v0.0.8/CHANGELOG.md:L3",
+                "graphify-hq/template/v0.0.8/CHANGELOG.md",
+                "L3"
+              ],
+              [
+                "tested_by",
+                "tested_by:graphify-hq/template/v0.0.8/test_evidence_map.py:L25",
+                "graphify-hq/template/v0.0.8/test_evidence_map.py",
+                "L25"
+              ],
+              [
+                "tested_by",
+                "tested_by:graphify-hq/template/v0.0.8/test_evidence_map.py:L43",
+                "graphify-hq/template/v0.0.8/test_evidence_map.py",
+                "L43"
+              ],
+              [
+                "tested_by",
+                "tested_by:graphify-hq/template/v0.0.8/test_evidence_map.py:L36",
+                "graphify-hq/template/v0.0.8/test_evidence_map.py",
+                "L36"
+              ],
+              [
+                "implemented_in",
+                "implemented_in:graphify-hq/template/v0.0.8/evidence_map.py:L222",
+                "graphify-hq/template/v0.0.8/evidence_map.py",
+                "L222"
+              ],
+              [
+                "implemented_in",
+                "implemented_in:graphify-hq/template/v0.0.8/evidence_map.py:L68",
+                "graphify-hq/template/v0.0.8/evidence_map.py",
+                "L68"
+              ]
+            ],
+            "feature:source-provenance": [
+              [
+                "documented_in",
+                "documented_in:graphify-hq/template/v0.0.8/README.md:L7",
+                "graphify-hq/template/v0.0.8/README.md",
+                "L7"
+              ],
+              [
+                "changed_in",
+                "changed_in:graphify-hq/template/v0.0.8/CHANGELOG.md:L14",
+                "graphify-hq/template/v0.0.8/CHANGELOG.md",
+                "L14"
+              ],
+              [
+                "tested_by",
+                "tested_by:graphify-hq/template/v0.0.8/test_evidence_map.py:L113",
+                "graphify-hq/template/v0.0.8/test_evidence_map.py",
+                "L113"
+              ],
+              [
+                "tested_by",
+                "tested_by:graphify-hq/template/v0.0.8/test_evidence_map.py:L128",
+                "graphify-hq/template/v0.0.8/test_evidence_map.py",
+                "L128"
+              ],
+              [
+                "implemented_in",
+                "implemented_in:graphify-hq/template/v0.0.8/evidence_map.py:L150",
+                "graphify-hq/template/v0.0.8/evidence_map.py",
+                "L150"
+              ],
+              [
+                "implemented_in",
+                "implemented_in:graphify-hq/template/v0.0.8/github_provenance.py:L53",
+                "graphify-hq/template/v0.0.8/github_provenance.py",
+                "L53"
+              ]
+            ]
+          },
+          "source_files": [
+            ".github/workflows/readme-hq.yml",
+            "README.md",
+            "graphify-hq/template/v0.0.8/CHANGELOG.md",
+            "graphify-hq/template/v0.0.8/README.md",
+            "graphify-hq/template/v0.0.8/evidence_map.py",
+            "graphify-hq/template/v0.0.8/github_provenance.py",
+            "graphify-hq/template/v0.0.8/requirements.txt",
+            "graphify-hq/template/v0.0.8/self-map.json",
+            "graphify-hq/template/v0.0.8/test_evidence_map.py",
+            "tools/check_readme_hq.py"
+          ],
+          "source_sha256": {
+            ".github/workflows/readme-hq.yml": "3f805989c68d081e3fd40d05f175a53928c807624aac265ba624ec9140d32ea4",
+            "README.md": "0ffb9da936002853b08634e099ed4096422eb3ed1049c570fc520bcd43e680f2",
+            "graphify-hq/template/v0.0.8/CHANGELOG.md": "b20d85da4ee03acb163f3af836b78604d8672849de59e5466c94cdf7eb7a14ef",
+            "graphify-hq/template/v0.0.8/README.md": "d9dfcf53a652c698a6be03643aef9129f01f1bbca268a751c1b560423e816211",
+            "graphify-hq/template/v0.0.8/evidence_map.py": "18b26f30a16540c37366b825d8b2965ff4a84c2f051b1424226dfbf66aceb87b",
+            "graphify-hq/template/v0.0.8/github_provenance.py": "05abcd465b4d88bcdff451000105dc412c31f036407fe2845051fe12c5014f5a",
+            "graphify-hq/template/v0.0.8/requirements.txt": "2faa3d35b1275e494393ef00aa9f16cdd1ab3afe89cd255749069e5dd86df370",
+            "graphify-hq/template/v0.0.8/self-map.json": "ae598352e30660d8ff9e744cbca92c40de8de9ebe53cc444bf2a955caa72bafd",
+            "graphify-hq/template/v0.0.8/test_evidence_map.py": "7d1cfc1554cb19a1817f7aadf6484af8357baef120dd350a4ecba225f17a4bea",
+            "tools/check_readme_hq.py": "3679aaab40fc7e551e6e504dfde062402c6094b83bf2360a7b26d78ad161ee1c"
+          },
+          "mcp_verified": true
+        }
+      }
+    },
+    "rerun_attempt_1": {
+      "run_id": 44635507396,
+      "artifact_id": 14583916674,
+      "archive_sha256": "890fffb85b0769cfcc3360ec74ac1ffd52636e726b48def2ebdba7d70ae4b0b3",
+      "observations": {
+        "probe.json": {
+          "candidate": "8d50caec2bc6fcb998994a1fd302294a029325f9",
+          "attempt": "1",
+          "run_id": "44635507396",
+          "upload_outcome": "success",
+          "artifact_id": "14583806933"
+        }
+      }
+    },
+    "rerun_attempt_2": {
+      "run_id": 44635507396,
+      "artifact_id": 14584255976,
+      "archive_sha256": "f337756e7e1975360f0fd5353f402835573dbd70b936f0015aabbc9edc0cafac",
+      "observations": {
+        "probe.json": {
+          "candidate": "8d50caec2bc6fcb998994a1fd302294a029325f9",
+          "attempt": "2",
+          "run_id": "44635507396",
+          "upload_outcome": "success",
+          "artifact_id": "14583179139"
+        }
+      }
+    }
+  }
+}
