@@ -2,13 +2,13 @@
   "schema_version": 1,
   "template_version": "v0.0.8",
   "repository": "vixttha/README-HQ",
-  "source_commit": "1a2d1887549be18d5a0e1e4860ef81ebe7c94dce",
+  "source_commit": "3d0dd01dfab1e02328dc012b254142d801f6215e",
   "pull_request": null,
   "scope": "feature-evidence",
   "graphify_version": "0.9.109",
-  "graph_sha256": "d26adf2a333431ac1427802d1aa7902e7d2464b817abe660f10dc96de74f490a",
-  "nodes": 46,
-  "edges": 85,
+  "graph_sha256": "40fb2a040e1354a050be0bf786ef3c814b9b52a654d68ba6b236bc3cbc9ec5c2",
+  "nodes": 55,
+  "edges": 102,
   "feature_links": {
     "feature:v0-0-6-56": {
       "documented_in": 2,
@@ -59,19 +59,31 @@
       "documented_in": 2,
       "changed_in": 1,
       "tested_by": 1
+    },
+    "feature:v0-0-6-66": {
+      "documented_in": 2,
+      "changed_in": 1,
+      "tested_by": 1
+    },
+    "feature:v0-0-6-67": {
+      "documented_in": 2,
+      "changed_in": 1,
+      "tested_by": 1
     }
   },
   "source_files": [
     "audit/audit_boundaries.py",
     "audit/audit_entrypoints.py",
     "audit/audit_markup.py",
+    "audit/audit_navigation.py",
     "plans/v0.0.6-repairs/README.md"
   ],
   "source_sha256": {
     "audit/audit_boundaries.py": "ef8c026e18202672dc1c0737bc631e9d4ea274700529e09c488e664b5c6d36cf",
     "audit/audit_entrypoints.py": "a6a5927469cc84eb317313a4613ffbe0297ffc0d58160946dad9bb6d30c2af2f",
     "audit/audit_markup.py": "9804005e1ae56bcf1843bc2d19125715d6a114260c0646918b6d23a53a5999d1",
-    "plans/v0.0.6-repairs/README.md": "a222888bd1425c25e3d3c65c0556eed4426b14a12d4af6d179b15f6eaccb611d"
+    "audit/audit_navigation.py": "8b273705b0f13007333a0e0e8214f88f927213084eaca9662c0966333887f41d",
+    "plans/v0.0.6-repairs/README.md": "943ae612cc24f621a567190936ff2082dc1f76f4b9ba45d6fd76296b6e1e44ac"
   },
   "mcp_verified": true
 }
