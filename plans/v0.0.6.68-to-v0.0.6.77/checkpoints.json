@@ -1,0 +1,88 @@
+{
+  "schema": 1,
+  "base_commit": "8d50caec2bc6fcb998994a1fd302294a029325f9",
+  "status": "awaiting_approval",
+  "implementation_authorized": false,
+  "checkpoints": [
+    {
+      "version": "v0.0.6.68",
+      "issue": 69,
+      "status": "awaiting_approval",
+      "after": null,
+      "title": "Route agent onboarding to the intended revision",
+      "acceptance": "Follow the draft README and AGENTS instructions from a clean clone. The resolved revision exposes the adopter CLI and the learning intake. Verify the published route at promotion time under its separate owner approval."
+    },
+    {
+      "version": "v0.0.6.69",
+      "issue": 70,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.68",
+      "title": "Require independent proof for technique sources",
+      "acceptance": "Reject a synthetic registry entry even when its inventory row is added alongside it. Accept a source verified against independent public Git evidence, and report duplicate or malformed inventory rows."
+    },
+    {
+      "version": "v0.0.6.70",
+      "issue": 71,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.69",
+      "title": "Verify first-use file outcomes",
+      "acceptance": "Reject an unchanged tracked file as evidence of generation. Accept a newly generated file or an explicitly verified update, checking the expected digest when specified."
+    },
+    {
+      "version": "v0.0.6.71",
+      "issue": 72,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.70",
+      "title": "Partition within both Graphify limits",
+      "acceptance": "Keep ordering and coverage across 32-feature and 64-source-file boundaries. Build the 25-checkpoint, 75-file case successfully, verify every manifest over MCP, and exercise shared paths plus the optional implementation relation."
+    },
+    {
+      "version": "v0.0.6.72",
+      "issue": 73,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.71",
+      "title": "Resolve fetched refs in same-repository links",
+      "acceptance": "Check a nested branch held only in the origin-tracking namespace. Cover local/fetched disagreement, same-named tags, a pinned SHA, and a genuinely unfetched ref."
+    },
+    {
+      "version": "v0.0.6.73",
+      "issue": 74,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.72",
+      "title": "Validate responsive README images",
+      "acceptance": "Report the missing dark-mode source when the fallback succeeds. Validate a correct light/dark pair and preserve the current fallback and accessible-name checks."
+    },
+    {
+      "version": "v0.0.6.74",
+      "issue": 75,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.73",
+      "title": "Preserve receipts when a draft file is missing",
+      "acceptance": "Return a failing exit and write parseable JSON with the original diagnostic when the tracked README is deleted. Confirm a successful check still records source digests."
+    },
+    {
+      "version": "v0.0.6.75",
+      "issue": 76,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.74",
+      "title": "Deduplicate learning selections by evidence identity",
+      "acceptance": "Verify an alias-only edit reuses the receipt. Changing the selected evidence or commit should yield a distinct receipt."
+    },
+    {
+      "version": "v0.0.6.76",
+      "issue": 77,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.75",
+      "title": "Keep a complete Graphify generation available",
+      "acceptance": "Read while a replacement is staged and promoted. The reader can resolve an intact prior or new graph and matching receipt. Verify recovery from interrupted promotion."
+    },
+    {
+      "version": "v0.0.6.77",
+      "issue": 5,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.76",
+      "title": "Bind historical guide links to their version rows",
+      "acceptance": "Reject a v0.0.5 row routed to the v0.0.4 guide even when the map remains correct. Accept the canonical row and preserve the existing wrong-map and current-version controls."
+    }
+  ]
+}
