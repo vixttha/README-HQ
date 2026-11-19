@@ -2,11 +2,11 @@
   "schema_version": 1,
   "template_version": "v0.0.8",
   "repository": "vixttha/README-HQ",
-  "source_commit": "8fe5927643ff00d26a7280e79b0d9206ab1287f4",
+  "source_commit": "73ca0b351e954e6aa4af653bafa8cd506ab74b79",
   "pull_request": null,
   "scope": "feature-evidence",
   "graphify_version": "0.9.109",
-  "graph_sha256": "29de4e47d35f52d584ce1d7ef91efd6457558f88802eee309038e24237801795",
+  "graph_sha256": "ff5d928c46946e06c15576d6b7a710af7a42e736eb1b3154dc95c190f3ff1d11",
   "nodes": 98,
   "edges": 192,
   "feature_links": {
@@ -141,7 +141,7 @@
     "audit/audit_portability.py": "16773ac9d0acc6e9f87b8d947d0fdb196a0bf181d595247bba2855c63116afcc",
     "audit/audit_v006.py": "fb9175758e0906911cbfba31c08c685b0bf04e9591f79962ec71514be0eef687",
     "learning/audit_learning.py": "bc3d0bd0c2452b65ce733a1300315893ebeb06228aa899a4d2f676f26b2034ae",
-    "plans/v0.0.6-repairs/README.md": "e586a51fe17aeafbd0b651eb55c6e85fc9a4f8adf7a05611d2a34b4436be13cd"
+    "plans/v0.0.6-repairs/README.md": "9dbf311b36f5f591f3df0391a7fa1befe31a8dc43ac83fcf6f297134168630d1"
   },
   "mcp_verified": true
 }

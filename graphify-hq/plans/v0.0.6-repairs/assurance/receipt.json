@@ -2,13 +2,13 @@
   "schema_version": 1,
   "template_version": "v0.0.8",
   "repository": "vixttha/README-HQ",
-  "source_commit": "8fe5927643ff00d26a7280e79b0d9206ab1287f4",
+  "source_commit": "73ca0b351e954e6aa4af653bafa8cd506ab74b79",
   "pull_request": null,
   "scope": "feature-evidence",
   "graphify_version": "0.9.109",
-  "graph_sha256": "ca60ee1b441b6b2ef3addc890b851b8cf1b1a40ac8a3bd9cf6f3b990ac7ef9b1",
-  "nodes": 41,
-  "edges": 76,
+  "graph_sha256": "df13717e0d035d048e4e4a85bc24703af516f4572ce9d930c65af35c15c78416",
+  "nodes": 70,
+  "edges": 133,
   "feature_links": {
     "feature:v0-0-6-25": {
       "documented_in": 2,
@@ -54,17 +54,54 @@
       "documented_in": 2,
       "changed_in": 1,
       "tested_by": 1
+    },
+    "feature:v0-0-6-34": {
+      "documented_in": 2,
+      "changed_in": 1,
+      "tested_by": 1
+    },
+    "feature:v0-0-6-35": {
+      "documented_in": 2,
+      "changed_in": 1,
+      "tested_by": 1
+    },
+    "feature:v0-0-6-36": {
+      "documented_in": 2,
+      "changed_in": 1,
+      "tested_by": 1
+    },
+    "feature:v0-0-6-37": {
+      "documented_in": 2,
+      "changed_in": 1,
+      "tested_by": 1
+    },
+    "feature:v0-0-6-38": {
+      "documented_in": 2,
+      "changed_in": 1,
+      "tested_by": 1
+    },
+    "feature:v0-0-6-39": {
+      "documented_in": 2,
+      "changed_in": 1,
+      "tested_by": 1
+    },
+    "feature:v0-0-6-40": {
+      "documented_in": 2,
+      "changed_in": 1,
+      "tested_by": 1
     }
   },
   "source_files": [
     "audit/audit_assurance.py",
+    "audit/audit_graph_integrity.py",
     "audit/check_plan_capacity.py",
     "plans/v0.0.6-repairs/README.md"
   ],
   "source_sha256": {
     "audit/audit_assurance.py": "3fe716afae2d75d400a2c777ebf3a981f537037bca1481f622be27313a1ba0a8",
+    "audit/audit_graph_integrity.py": "9478bcb15353710e1245ba2fd6026d4a724fab0c1a01a20969b96e01bcef22aa",
     "audit/check_plan_capacity.py": "02aa85daae56c2759509e71ea57a09ba7ae2d19a41b640af91fe8cbaa6c9a956",
-    "plans/v0.0.6-repairs/README.md": "e586a51fe17aeafbd0b651eb55c6e85fc9a4f8adf7a05611d2a34b4436be13cd"
+    "plans/v0.0.6-repairs/README.md": "9dbf311b36f5f591f3df0391a7fa1befe31a8dc43ac83fcf6f297134168630d1"
   },
   "mcp_verified": true
 }

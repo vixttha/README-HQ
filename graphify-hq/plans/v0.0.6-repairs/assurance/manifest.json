@@ -1,11 +1,12 @@
 {
   "repository": "vixttha/README-HQ",
-  "source_commit": "8fe5927643ff00d26a7280e79b0d9206ab1287f4",
-  "title": "README HQ v0.0.6 assurance checkpoints 25 through 33",
+  "source_commit": "73ca0b351e954e6aa4af653bafa8cd506ab74b79",
+  "title": "README HQ v0.0.6 assurance checkpoints 25 through 40",
   "source_files": [
     "plans/v0.0.6-repairs/README.md",
     "audit/audit_assurance.py",
-    "audit/check_plan_capacity.py"
+    "audit/check_plan_capacity.py",
+    "audit/audit_graph_integrity.py"
   ],
   "features": [
     {
@@ -239,6 +240,188 @@
         {
           "path": "audit/check_plan_capacity.py",
           "anchor": "def check_graphify_capacity():"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-34",
+      "label": "v0.0.6.34 · #34 · MCP evidence destinations",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.34` | [#34](https://github.com/vixttha/README-HQ/issues/34) | MCP evidence destinations | High | `v0.0.6.33` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.33` | [#33](https://github.com/vixttha/README-HQ/issues/33) | Graphify roadmap capacity | Medium | `v0.0.6.32` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Verify each outgoing edge against its expected target ID, relation, pinned path, and source range. Reject changed destinations even when totals match."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_graph_integrity.py",
+          "anchor": "def check_mcp_destinations(worktree, temporary, template):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-35",
+      "label": "v0.0.6.35 · #35 · Repository provenance",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.35` | [#35](https://github.com/vixttha/README-HQ/issues/35) | Repository provenance | High | `v0.0.6.34` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.34` | [#34](https://github.com/vixttha/README-HQ/issues/34) | MCP evidence destinations | High | `v0.0.6.33` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Bind repository identity to independently established source provenance. Report local graph verification and remote provenance as distinct results and reject an unrelated repository label when provenance is claimed."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_graph_integrity.py",
+          "anchor": "def check_repository_identity(worktree, temporary):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-36",
+      "label": "v0.0.6.36 · #36 · Git source file modes",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.36` | [#36](https://github.com/vixttha/README-HQ/issues/36) | Git source file modes | Medium | `v0.0.6.35` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.35` | [#35](https://github.com/vixttha/README-HQ/issues/35) | Repository provenance | High | `v0.0.6.34` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Inspect the pinned Git tree entry mode. Reject symlink evidence with a path diagnostic or resolve it inside the same pinned tree with explicit path and mode records."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_graph_integrity.py",
+          "anchor": "def check_git_source_type(worktree, template):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-37",
+      "label": "v0.0.6.37 · #37 · Unambiguous JSON inputs",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.37` | [#37](https://github.com/vixttha/README-HQ/issues/37) | Unambiguous JSON inputs | High | `v0.0.6.36` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.36` | [#36](https://github.com/vixttha/README-HQ/issues/36) | Git source file modes | Medium | `v0.0.6.35` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Reject repeated JSON object keys at any depth before schema validation in registry, archive, version catalog, and Graphify manifest inputs. Include the input path and duplicate key in the diagnostic."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_graph_integrity.py",
+          "anchor": "def check_json_ambiguity(worktree, temporary):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-38",
+      "label": "v0.0.6.38 · #38 · Source line bounds",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.38` | [#38](https://github.com/vixttha/README-HQ/issues/38) | Source line bounds | Medium | `v0.0.6.37` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.37` | [#37](https://github.com/vixttha/README-HQ/issues/37) | Unambiguous JSON inputs | High | `v0.0.6.36` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Validate positive inline source line and line-range fragments against the target file, with tests for reversed and out-of-bounds ranges as well as valid last-line references."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_graph_integrity.py",
+          "anchor": "def check_source_line_range(worktree):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-39",
+      "label": "v0.0.6.39 · #39 · Archive inventory completeness",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.39` | [#39](https://github.com/vixttha/README-HQ/issues/39) | Archive inventory completeness | High | `v0.0.6.38` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.38` | [#38](https://github.com/vixttha/README-HQ/issues/38) | Source line bounds | Medium | `v0.0.6.37` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Validate the retained import inventory against an independent pinned listing and check archived README links against the imported tree. Fail on coordinated deletion of required files and manifest entries."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_graph_integrity.py",
+          "anchor": "def check_archive_coverage(worktree):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-40",
+      "label": "v0.0.6.40 · #40 · Version map coverage",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.40` | [#40](https://github.com/vixttha/README-HQ/issues/40) | Version map coverage | High | `v0.0.6.39` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.39` | [#39](https://github.com/vixttha/README-HQ/issues/39) | Archive inventory completeness | High | `v0.0.6.38` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Require independently defined coverage for every advertised version. Reject empty or incomplete record sets and identify missing versions and record IDs before publishing verified artifacts."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_graph_integrity.py",
+          "anchor": "def check_empty_version_coverage(worktree, temporary):"
         }
       ]
     }
