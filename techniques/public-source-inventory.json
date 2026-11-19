@@ -3,126 +3,168 @@
     "vixttha/aldervale-pact-of-ten",
     "007617884c75b9f422fc0feda031042da62962eb",
     "Graphify HQ/README.md",
-    "6da4048131b7ec80b97659dc421aa1cb8706c0b4"
+    "6da4048131b7ec80b97659dc421aa1cb8706c0b4",
+    "d88ea1940cae1408423e1c3eac0907c17191bb3680d908420c3e1b98d3ff83a9",
+    14
   ],
   [
     "vixttha/aldervale-pact-of-ten",
     "007617884c75b9f422fc0feda031042da62962eb",
     "Graphify HQ/v0.0.6/receipt.json",
-    "4bd86e357086f8573d1f529749d3a673d1a1ecf9"
+    "4bd86e357086f8573d1f529749d3a673d1a1ecf9",
+    "c3fd0fd1d0fa28af847fd15a9abeb429cb990b2dd4cace84911e27ac4c5b3427",
+    27
   ],
   [
     "vixttha/aldervale-pact-of-ten",
     "007617884c75b9f422fc0feda031042da62962eb",
     "README.md",
-    "2f3d7cd3ee07e50d73e1e3f1968ca6d70cf73f07"
+    "2f3d7cd3ee07e50d73e1e3f1968ca6d70cf73f07",
+    "a6135046a2218a5aeee192271f33cf4c88a1dd91f5ff5eff70e56925f9e31a65",
+    36
   ],
   [
     "vixttha/aldervale-pact-of-ten",
     "007617884c75b9f422fc0feda031042da62962eb",
     "readme-hq/versions/README.md",
-    "50c42337001a718e3d96fe8f80f59fcafbea8c05"
+    "50c42337001a718e3d96fe8f80f59fcafbea8c05",
+    "6f99dbbcf7f9e8a48bffd92085dcff2b7125bc793c57506c13ecfb1cb8fa6901",
+    14
   ],
   [
     "vixttha/aldervale-pact-of-ten",
     "007617884c75b9f422fc0feda031042da62962eb",
     "tools/check_readme_hq.py",
-    "a7b83fc2981085e8b8620e45870b1e79d04990b5"
+    "a7b83fc2981085e8b8620e45870b1e79d04990b5",
+    "8bb2bb779365f1a0ad5e57e4c382f573a995a3639665c281e764e3512d32bf55",
+    1299
   ],
   [
     "vixttha/aldervale-pact-of-ten",
     "007617884c75b9f422fc0feda031042da62962eb",
     "tools/readme_hq_baselines.json",
-    "76ce00cd579c8b384da790c56c008c8fc39bb9bf"
+    "76ce00cd579c8b384da790c56c008c8fc39bb9bf",
+    "6d2acf172cc0dae713e1b8ee6f0a164761ad928db2d1ecb047cbbe7033d7497b",
+    136
   ],
   [
     "vixttha/aldervale-pact-of-ten",
     "007617884c75b9f422fc0feda031042da62962eb",
     "versions/README.md",
-    "793f87469586952f642ba054656fd07ba86c16e5"
+    "793f87469586952f642ba054656fd07ba86c16e5",
+    "2ca34c7446fbd7a33ff180e98f77646c77d33cee23497f8844946d9caacd1997",
+    10
   ],
   [
     "vixttha/aldervale-pact-of-ten",
     "007617884c75b9f422fc0feda031042da62962eb",
     "workspace/README.md",
-    "c0d96f84f5ce0aca281512ce3f5dee538fee5c93"
+    "c0d96f84f5ce0aca281512ce3f5dee538fee5c93",
+    "a91c20420ceeb4f671655e19ebf0531c643df32c35a787373a0226ce24e5aa09",
+    14
   ],
   [
     "vixttha/aldervale-pact-of-ten",
     "a6c2060b8175f505cc6327ccb5658cc00a458b24",
     "AGENTS.md",
-    "d8df66f4c99a10028049f28bbd85106ee6f06ea5"
+    "d8df66f4c99a10028049f28bbd85106ee6f06ea5",
+    "e2e6a873a8f800c6772087d604e11a0b2ecdae6b117dfc26228b9570e73fdded",
+    35
   ],
   [
     "vixttha/aldervale-pact-of-ten",
     "a6c2060b8175f505cc6327ccb5658cc00a458b24",
     "README.md",
-    "5a985415260e0859a6e52a368c19043ae6160d30"
+    "5a985415260e0859a6e52a368c19043ae6160d30",
+    "a58002c39857d0ab1615d3d332ad9da1414820728984044ef8838dced6952c2f",
+    79
   ],
   [
     "vixttha/blender-agent-refinement-toolkit",
     "01995820c9e51e2f35462c5031a33cefd7b7613d",
     ".github/workflows/readme-hq.yml",
-    "ae99b418fc21afc5efd351d240996732e978f9ac"
+    "ae99b418fc21afc5efd351d240996732e978f9ac",
+    "f38c7b462db40cd11333ae082aa12fea77a52274b224e87437cef2802357f787",
+    65
   ],
   [
     "vixttha/blender-agent-refinement-toolkit",
     "01995820c9e51e2f35462c5031a33cefd7b7613d",
     "tools/check_readme_render.cjs",
-    "fb163ffecaf9ceb3c3043cbf6a4e4a0b705b58df"
+    "fb163ffecaf9ceb3c3043cbf6a4e4a0b705b58df",
+    "4398bfa2611097589c3018329dfc3660b1ce3be75cf6ce755b6a08eb4f9498bb",
+    68
   ],
   [
     "vixttha/blender-agent-refinement-toolkit",
     "01995820c9e51e2f35462c5031a33cefd7b7613d",
     "tools/check_readme_walkthrough.py",
-    "98bd06d5563a2fda7b2c7f5de2e90884e951a159"
+    "98bd06d5563a2fda7b2c7f5de2e90884e951a159",
+    "13f19244b2eab18de83f33227d8cf88ec3ca7239b5c45cfef916685aa8ab68c8",
+    139
   ],
   [
     "vixttha/blender-agent-refinement-toolkit",
     "01995820c9e51e2f35462c5031a33cefd7b7613d",
     "workspace/v0.0.3/README.md",
-    "96dc96b0376738edfb1c743bb91466918c6b13dc"
+    "96dc96b0376738edfb1c743bb91466918c6b13dc",
+    "12a7acff26da90bece258298db944a3b58a37c891b2a93e496175f410dd84828",
+    15
   ],
   [
     "vixttha/blender-agent-refinement-toolkit",
     "01995820c9e51e2f35462c5031a33cefd7b7613d",
     "workspace/v0.0.3/REVIEW.md",
-    "0b8819749b72fe33cb4707009b08f12b4a3e4646"
+    "0b8819749b72fe33cb4707009b08f12b4a3e4646",
+    "b7bc32eafffe91731b98ef79d31611dc068620393a30f179a62594f2ea4274aa",
+    30
   ],
   [
     "vixttha/blender-agent-refinement-toolkit",
     "3e7f9e02e61739825b56bcafecebbd0221cc9657",
     "README.md",
-    "e88435f1f01905f16f3fdf40afc2d79d1cebdcef"
+    "e88435f1f01905f16f3fdf40afc2d79d1cebdcef",
+    "c682575523534ab62b86960310f50206efe432474a263f0d6577e7a0e7231073",
+    175
   ],
   [
     "vixttha/brand-identity-template",
     "87d0f9aedbe69ca4b16815d6b3329efcf5889da9",
     ".github/scripts/smoke_adoption.py",
-    "88dd17907340f0ea5ed9fc979a66f8bbb6c0350d"
+    "88dd17907340f0ea5ed9fc979a66f8bbb6c0350d",
+    "7ad0474c1e5641dcc77d10e92ce044c5aa0fda9a4c3b2d3102163728d9da900a",
+    86
   ],
   [
     "vixttha/brand-identity-template",
     "87d0f9aedbe69ca4b16815d6b3329efcf5889da9",
     ".github/workflows/brand-identity.yml",
-    "80e88ba00eab401d8e6d10c4642b677f2bfcf540"
+    "80e88ba00eab401d8e6d10c4642b677f2bfcf540",
+    "fcb24482373b98bcd0bae46ec3e6f013f47d358a6f95464a81e5c257416a7dde",
+    51
   ],
   [
     "vixttha/brand-identity-template",
     "87d0f9aedbe69ca4b16815d6b3329efcf5889da9",
     "README.md",
-    "a29db28fe7e0ba1745966593a5abd8e8e6ee193b"
+    "a29db28fe7e0ba1745966593a5abd8e8e6ee193b",
+    "4c67ef54d5e883813cff191fe68cd94f28dd18641e82694c4cd19990751024c8",
+    15
   ],
   [
     "vixttha/lydite-test-vault-template",
     "fe7b00aa17862d7a01dfd15481594be837bc6d9f",
     "README.md",
-    "539fcbd4dd6b1838cc7131ff2fcbc18b68353f0f"
+    "539fcbd4dd6b1838cc7131ff2fcbc18b68353f0f",
+    "fd69665cd129639a1d9f852a5640a870d3f41869091acf979a86e7c4ee6df140",
+    24
   ],
   [
     "vixttha/lydite-test-vault-template",
     "fe7b00aa17862d7a01dfd15481594be837bc6d9f",
     "docs/testing.md",
-    "867841c093d1a16e335561e8dc8d2e58734fa2ea"
+    "867841c093d1a16e335561e8dc8d2e58734fa2ea",
+    "c54fcf885d3529b9edb1f7a5e1381b349ee088fde589ef5978e89bb1d2bba12f",
+    22
   ]
 ]

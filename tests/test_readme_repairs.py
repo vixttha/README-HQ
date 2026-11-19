@@ -16,7 +16,7 @@ from hq_data import GitTree, parse_json
 from hq_navigation import check_document, readme_path
 from hq_smoke import verify_first_action
 from check_readme_hq import check_evidence, evidence_identity, target_readme
-from verify_plan import split_checkpoints
+from verify_plan import split_checkpoints, stage_partitions
 
 
 @contextlib.contextmanager
@@ -125,6 +125,42 @@ class EvidenceTests(unittest.TestCase):
         parts = split_checkpoints(features)
         self.assertEqual([len(part) for part in parts], [32, 32, 32, 4])
         self.assertEqual([item for part in parts for item in part], features)
+
+    def test_partition_writer_handles_more_than_three_partitions(self):
+        ref = [{"path": "README.md", "anchor": "# Evidence"}]
+        features = [{"id": f"checkpoint-{i}", "documented_in": ref, "changed_in": ref, "tested_by": ref}
+                    for i in range(100)]
+        with tempfile.TemporaryDirectory() as folder:
+            files = stage_partitions(features, Path(folder) / "parts", "a" * 40, "example/project")
+            published = [item for path in files for item in json.loads(path.read_bytes())["features"]]
+        self.assertEqual(published, features)
+
+    def test_learning_receipt_is_pinned_and_idempotent(self):
+        spec = importlib.util.spec_from_file_location("intake", ROOT / "learning/intake.py")
+        intake = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(intake)
+        with repository({"README.md": "# Evidence\\n"}) as tree:
+            tree.git("remote", "add", "origin", "https://github.com/example/project.git")
+            record = {"id": "example", "checkout": str(tree.root), "ref": "HEAD",
+                      "repository": "example/project", "path": "README.md",
+                      "line": 1, "anchor": "# Evidence", "visibility": "public"}
+            spec = {"visibility": "public", "sources": [record], "selected": ["example"],
+                    "target": {**record, "audience": "developer", "capability": "command line"},
+                    "findings": [{"source": "example", "technique": "first-success-milestone",
+                                  "decision": "adapt", "rationale": "Explain the first result."}]}
+            def fetch(route):
+                if route == "example/project":
+                    return {"private": False, "visibility": "public"}
+                return {"sha": tree.commit}
+            destination = tree.root / "receipts"
+            first = intake.record_intake(spec, destination, fetch=fetch)
+            self.assertEqual(first, intake.record_intake(spec, destination, fetch=fetch))
+            result = json.loads(first.read_bytes())
+            self.assertEqual(result["recommendations"][0]["target"]["commit"], tree.commit)
+            spec["selected"] = []
+            second = intake.record_intake(spec, destination, fetch=fetch)
+            self.assertNotEqual(first, second)
+            self.assertEqual(json.loads(second.read_bytes())["recommendations"], [])
 
     def test_public_learning_refusal_writes_nothing(self):
         spec = importlib.util.spec_from_file_location("intake", ROOT / "learning/intake.py")

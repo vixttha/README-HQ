@@ -10,7 +10,7 @@ from urllib.request import Request, urlopen
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
-from hq_data import GitTree, REPOSITORY, SHA, physical_lines, read_json
+from hq_data import GitTree, REPOSITORY, physical_lines, read_json
 
 
 def verify_anchor(tree, path, line, anchor):
@@ -45,6 +45,8 @@ def record_intake(specification, directory, *, fetch=fetch_github):
     for source in specification["sources"]:
         if source.get("visibility") != "public":
             raise ValueError("only verified public sources enter shared intake")
+        if source["id"] in sources:
+            raise ValueError("learning source IDs must be unique")
         tree = GitTree(source["checkout"], source["ref"])
         public_checkpoint(tree, source["repository"], fetch)
         receipt = verify_anchor(tree, source["path"], source["line"], source["anchor"])
@@ -56,7 +58,8 @@ def record_intake(specification, directory, *, fetch=fetch_github):
     target_tree = GitTree(target["checkout"], target["ref"])
     public_checkpoint(target_tree, target["repository"], fetch)
     target_receipt = verify_anchor(target_tree, target["path"], target["line"], target["anchor"])
-    active = {row["id"] for row in read_json(ROOT / "techniques/registry.json")["techniques"] if row["status"] == "active"}
+    registry = ROOT / "techniques/registry.json"
+    active = {row["id"] for row in read_json(registry)["techniques"] if row["status"] == "active"}
     selected = set(specification["selected"])
     if not selected <= set(sources):
         raise ValueError("chosen learning sources must have independently verified intake evidence")
@@ -94,6 +97,7 @@ def record_intake(specification, directory, *, fetch=fetch_github):
         raise ValueError("target receipts require an audience and capability")
     data = {"schema": 1, "visibility": "public", "target": {"repository": target["repository"],
             "audience": audience, "capability": capability, **target_receipt},
+            "registry_sha256": sha256(registry.read_bytes()).hexdigest(),
             "sources": unique(sources.values()), "selected": sorted(selected),
             "candidates": unique(candidates), "recommendations": unique(uses)}
     body = (json.dumps(data, indent=2, sort_keys=True) + "\n").encode()

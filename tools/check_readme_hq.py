@@ -9,9 +9,9 @@ from pathlib import Path
 import re
 import sys
 import unicodedata
-from urllib.parse import parse_qs, unquote, urlsplit
+from urllib.parse import unquote, urlsplit
 
-from hq_data import GitTree, REPOSITORY, SHA, parse_json, read_json
+from hq_data import GitTree, REPOSITORY, SHA, parse_json
 from hq_navigation import MARKDOWN, check_document, parse_markdown, readme_path, suffix
 
 
@@ -45,8 +45,16 @@ def evidence_identity(item):
     return repo.lower(), parts[3], parts[4]
 
 
-def check_evidence(item, tree):
+def check_evidence(item, tree, known_sources=None):
     identity = evidence_identity(item)
+    source = known_sources.get(identity) if known_sources is not None else None
+    if known_sources is not None and source is None:
+        raise ValueError("evidence is absent from the independently reviewed public source inventory")
+    span = urlsplit(item["url"]).fragment
+    if span and source:
+        endpoints = [int(value.removeprefix("L")) for value in span.split("-")]
+        if endpoints != sorted(endpoints) or endpoints[-1] > source[2]:
+            raise ValueError("evidence span is reversed or outside the source blob")
     if item.get("status") == "observed":
         return identity
     if item.get("status") != "verified":
@@ -61,7 +69,8 @@ def check_evidence(item, tree):
         any(not isinstance(receipt.get(key), str) or not receipt[key].strip() for key in fields)
         or receipt.get("result") != "pass" or receipt.get("visibility") != "public"
         or (receipt["source_repository"].lower(), receipt["source_commit"], receipt["source_path"]) != identity
-        or receipt["source_span"] != urlsplit(item["url"]).fragment
+        or not span or receipt["source_span"] != span
+        or (source and receipt["source_sha256"] != source[1])
         or not re.fullmatch(r"[0-9a-f]{64}", receipt["source_sha256"])
         or not re.fullmatch(r"https://github\.com/[^/]+/[^/]+/actions/runs/\d+(?:/job/\d+)?", receipt["run_url"])
         or receipt["expected"] != receipt["observed"]
@@ -78,11 +87,10 @@ def check_registry(errors, tree=None):
     if type(data.get("schema")) is not int or data["schema"] != 1 or not isinstance(records, list) or not records:
         errors.append("technique registry must use integer schema 1 and a non-empty record array")
         return []
-    checked_sources = {
-        tuple(item[:3]) for item in parse_json(
-            tree.read("techniques/public-source-inventory.json"), "public source inventory"
-        )
-    }
+    inventory = parse_json(tree.read("techniques/public-source-inventory.json"), "public source inventory")
+    if any(not isinstance(item, list) or len(item) != 6 for item in inventory):
+        raise ValueError("public source inventory requires checked blob digests and line counts")
+    checked_sources = {tuple(item[:3]): item[3:] for item in inventory}
     keys = ("title", "problem", "practice", "outcome")
     names, mechanisms, ids = {}, {}, set()
     for record in records:
@@ -114,12 +122,11 @@ def check_registry(errors, tree=None):
         seen = set()
         for item in items:
             try:
-                identity = check_evidence(item, tree)
-                if identity not in checked_sources:
-                    raise ValueError("evidence is absent from the independently reviewed public source inventory")
-                if identity in seen:
-                    raise ValueError("duplicate evidence source, regardless of query or span")
-                seen.add(identity)
+                identity = check_evidence(item, tree, checked_sources)
+                content_key = checked_sources[identity][1]
+                if content_key in seen:
+                    raise ValueError("duplicate evidence content, regardless of URL, span, or mirror")
+                seen.add(content_key)
             except (KeyError, TypeError, ValueError) as error:
                 errors.append(f"{slug}: {error}")
     return records

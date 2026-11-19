@@ -1,5 +1,6 @@
 """Check repair-plan coverage, exact references, index links, and Graphify readback."""
 import argparse
+import json
 from pathlib import Path
 import re
 import subprocess
@@ -17,6 +18,28 @@ def split_checkpoints(features, limit=32):
     if not 1 <= limit <= 32:
         raise ValueError("invalid Graphify feature limit")
     return [features[start:start + limit] for start in range(0, len(features), limit)]
+
+
+def stage_partitions(features, destination, source_commit, repository):
+    if not features:
+        raise ValueError("at least one checkpoint is needed")
+    names = [feature["id"] for feature in features]
+    if len(names) != len(set(names)):
+        raise ValueError("duplicate checkpoint IDs")
+    destination.mkdir(parents=True, exist_ok=False)
+    output = []
+    for number, partition in enumerate(split_checkpoints(features), 1):
+        panel = destination / f"part-{number:03}"
+        panel.mkdir()
+        files = {ref["path"] for feature in partition for key in ("documented_in", "changed_in", "tested_by")
+                 for ref in feature[key]}
+        manifest = {"repository": repository, "source_commit": source_commit,
+                    "title": f"README HQ repair checkpoints, part {number}",
+                    "source_files": sorted(files), "features": partition}
+        file = panel / "manifest.json"
+        file.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+        output.append(file)
+    return output
 
 
 def rows(content):
@@ -83,8 +106,21 @@ def verify(check_mcp):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--mcp", action="store_true")
+    parser.add_argument("--partition", type=Path, metavar="LEDGER",
+                        help="stage new manifests from an ordered checkpoint ledger JSON")
+    parser.add_argument("--output", type=Path, help="empty destination for staged partitions")
     args = parser.parse_args()
     try:
-        verify(args.mcp)
+        if args.partition:
+            if not args.output:
+                parser.error("--partition requires --output")
+            data = read_json(args.partition)
+            tree = GitTree(ROOT, data["source_commit"])
+            if tree.commit != data["source_commit"]:
+                raise ValueError("partitioning requires an exact Git commit")
+            paths = stage_partitions(data["features"], args.output, tree.commit, data["repository"])
+            print(f"Staged {len(data['features'])} ordered checkpoints in {len(paths)} manifests.")
+        else:
+            verify(args.mcp)
     except (OSError, ValueError, KeyError, subprocess.CalledProcessError) as error:
         parser.error(str(error))

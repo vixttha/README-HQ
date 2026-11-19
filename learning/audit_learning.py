@@ -147,11 +147,23 @@ def verify_sources(sources, directory=None):
 
 
 def recommendations(pilot, target, selected_sources):
+    # This historical pilot uses only the curated pinned profiles and evidence.
+    baseline = json.loads((ROOT / "learning/pilot.json").read_bytes())
+    if target not in baseline["targets"].values():
+        return []
+    evidence = target.get("evidence")
+    if evidence not in baseline["sources"] or pilot["sources"].get(evidence) != baseline["sources"][evidence]:
+        return []
+    active = {
+        record["id"] for record in json.loads((ROOT / "techniques/registry.json").read_bytes())["techniques"]
+        if record["status"] == "active"
+    }
     return [
         {"technique": t["id"], "status": t["status"], "source": t["source"],
          "recommendation": t["recommendation"]}
         for t in pilot["techniques"]
         if t["profile"] == target["profile"] and t["source"] in selected_sources
+        and (t["status"] == "candidate" or t["id"] in active)
     ]
 
 
