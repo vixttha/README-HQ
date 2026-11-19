@@ -1,0 +1,132 @@
+name: README HQ Blue audit diagnostics and recovery
+on:
+  push:
+    branches: [audit/v0.0.6.67-blue]
+    paths:
+      - .github/workflows/audit-blue-diagnostics.yml
+      - audit/audit_v00667_blue.py
+permissions:
+  contents: read
+env:
+  PYTHONHASHSEED: '0'
+  PYTHONDONTWRITEBYTECODE: '1'
+  PIP_DISABLE_PIP_VERSION_CHECK: '1'
+jobs:
+  diagnostics:
+    name: Diagnose and retry on ${{ matrix.os }}
+    if: github.event.repository.private == false && github.event.repository.visibility == 'public'
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 12
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: 8d50caec2bc6fcb998994a1fd302294a029325f9
+          path: candidate
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.12'
+      - name: Install the README validator
+        working-directory: candidate
+        run: python -m pip install --require-hashes -r tools/requirements.txt
+      - name: Verify candidate baseline
+        working-directory: candidate
+        run: python tools/check_readme_hq.py --receipt blue-baseline.json
+      - name: Run candidate README regression suite
+        working-directory: candidate
+        run: python -m unittest discover -s tests -p 'test_readme*.py' -v
+      - name: Run negative cases and recovery controls
+        working-directory: candidate
+        run: python ../audit/audit_v00667_blue.py blue-diagnostics.json
+      - name: Retain diagnostic evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: blue-diagnostics-${{ runner.os }}-attempt-${{ github.run_attempt }}
+          path: |
+            candidate/blue-baseline.json
+            candidate/blue-diagnostics.json
+          if-no-files-found: error
+  graphify:
+    name: Verify Graphify and observe failed-job evidence
+    if: github.event.repository.private == false && github.event.repository.visibility == 'public'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: 8d50caec2bc6fcb998994a1fd302294a029325f9
+          path: candidate
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.12'
+      - name: Install pinned dependencies
+        working-directory: candidate
+        shell: bash
+        run: |
+          python -m pip install --require-hashes -r tools/requirements.txt
+          python -m pip install --require-hashes --only-binary=:all: --no-deps -r graphify-hq/template/v0.0.8/requirements.txt
+          python -m pip check
+      - name: Verify Graphify, repair plan, and packaged self-map
+        working-directory: candidate
+        shell: bash
+        run: |
+          python -m unittest discover -s graphify-hq/template/v0.0.8 -p 'test_*.py' -v
+          python -m unittest discover -s tests -p 'test_graphify*.py' -v
+          python graphify-hq/version_maps.py --check
+          python tools/verify_plan.py --mcp
+          kit=graphify-hq/template/v0.0.8
+          python "$kit/self_map.py" "$RUNNER_TEMP/blue-self-map.json"
+          python "$kit/evidence_map.py" "$RUNNER_TEMP/blue-self-map.json" "$RUNNER_TEMP/blue-self-map"
+      - name: Verify interrupted publication and recover the prior pair
+        working-directory: candidate
+        shell: bash
+        run: python ../audit/audit_v00667_blue.py blue-graphify-recovery.json --graph-source "$RUNNER_TEMP/blue-self-map"
+      - name: Trigger an intentional Graphify verification failure on a copy
+        id: injected
+        working-directory: candidate
+        shell: bash
+        run: |
+          cp -r "$RUNNER_TEMP/blue-self-map" "$RUNNER_TEMP/blue-mismatched"
+          printf '{}\n' > "$RUNNER_TEMP/blue-mismatched/receipt.json"
+          python graphify-hq/template/v0.0.8/evidence_map.py "$RUNNER_TEMP/blue-self-map.json" "$RUNNER_TEMP/blue-mismatched" --check
+      - name: Preserve preexisting receipts with the shipped condition
+        id: stock_upload
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: blue-stock-graphify-${{ github.sha }}
+          path: |
+            candidate/graphify-hq/maps/**/receipt.json
+            candidate/graphify-hq/plans/**/receipt.json
+            ${{ runner.temp }}/blue-self-map/receipt.json
+      - name: Record skipped upload and recoverable evidence
+        if: always()
+        working-directory: candidate
+        env:
+          FAILURE_OUTCOME: ${{ steps.injected.outcome }}
+          UPLOAD_OUTCOME: ${{ steps.stock_upload.outcome }}
+        run: |
+          python -c 'import json,os,pathlib; p=pathlib.Path(os.environ["RUNNER_TEMP"])/"blue-self-map"/"receipt.json"; row={"candidate":"8d50caec2bc6fcb998994a1fd302294a029325f9","verification_step":os.environ["FAILURE_OUTCOME"],"shipped_upload_step":os.environ["UPLOAD_OUTCOME"],"receipt_available":p.is_file()}; pathlib.Path("blue-graphify-observer.json").write_text(json.dumps(row)); print(row); assert (row["verification_step"],row["shipped_upload_step"],row["receipt_available"])==("failure","skipped",True)'
+      - name: Retain the observer evidence after the intentional failure
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: blue-graphify-observer-attempt-${{ github.run_attempt }}
+          path: |
+            candidate/blue-graphify-recovery.json
+            candidate/blue-graphify-observer.json
+            ${{ runner.temp }}/blue-self-map/receipt.json
+          if-no-files-found: error
