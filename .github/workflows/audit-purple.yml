@@ -1,0 +1,76 @@
+name: README HQ Purple audit correlated controls
+on:
+  push:
+    branches: [audit/v0.0.6.67-purple]
+    paths:
+      - audit/audit_v00667_purple.py
+      - .github/workflows/audit-purple.yml
+permissions:
+  contents: read
+env:
+  PYTHONHASHSEED: '0'
+  PYTHONDONTWRITEBYTECODE: '1'
+  PIP_DISABLE_PIP_VERSION_CHECK: '1'
+jobs:
+  audit:
+    name: Purple audit on ${{ matrix.os }}
+    if: github.event.repository.private == false && github.event.repository.visibility == 'public'
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: 8d50caec2bc6fcb998994a1fd302294a029325f9
+          path: candidate
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.12'
+      - name: Install reader dependencies
+        working-directory: candidate
+        run: python -m pip install --require-hashes -r tools/requirements.txt
+      - name: Validate the exact baseline
+        working-directory: candidate
+        run: python tools/check_readme_hq.py --receipt purple-baseline.json
+      - name: Run the README regression suite
+        working-directory: candidate
+        run: python -m unittest discover -s tests -p 'test_readme*.py' -v
+      - name: Compare README and smoke results
+        working-directory: candidate
+        run: python ../audit/audit_v00667_purple.py reader purple-reader.json
+      - name: Install pinned Graphify dependencies
+        if: runner.os == 'Linux'
+        working-directory: candidate
+        shell: bash
+        run: |
+          python -m pip install --require-hashes --only-binary=:all: --no-deps -r graphify-hq/template/v0.0.8/requirements.txt
+          python -m pip check
+      - name: Run Graphify regression suites
+        if: runner.os == 'Linux'
+        working-directory: candidate
+        shell: bash
+        run: |
+          python -m unittest discover -s graphify-hq/template/v0.0.8 -p 'test_*.py' -v
+          python -m unittest discover -s tests -p 'test_graphify*.py' -v
+      - name: Correlate reader navigation with Graphify MCP verification
+        if: runner.os == 'Linux'
+        working-directory: candidate
+        run: python ../audit/audit_v00667_purple.py graph purple-graphify.json
+      - name: Preserve exact-SHA evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: purple-audit-${{ runner.os }}-attempt-${{ github.run_attempt }}
+          path: |
+            candidate/purple-baseline.json
+            candidate/purple-reader.json
+            candidate/purple-graphify.json
+          if-no-files-found: error
