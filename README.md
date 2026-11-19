@@ -20,7 +20,7 @@ Ask your coding agent to use `vixttha/README-HQ`, branch `readme-hq`, and name t
 To check a README HQ checkout, use Python 3.10 or newer.
 
 ```sh
-git clone --branch readme-hq https://github.com/vixttha/README-HQ.git
+git clone https://github.com/vixttha/README-HQ.git
 cd README-HQ
 python3 -m pip install --require-hashes -r tools/requirements.txt
 python3 tools/check_readme_hq.py
