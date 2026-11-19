@@ -1,0 +1,38 @@
+name: README HQ Blue audit artifact recovery
+on:
+  push:
+    branches: [audit/v0.0.6.67-blue]
+    paths:
+      - .github/workflows/audit-blue-artifact-recovery.yml
+permissions:
+  contents: read
+jobs:
+  receipt:
+    name: Replay candidate artifact naming on a standard public runner
+    if: github.event.repository.private == false && github.event.repository.visibility == 'public'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Write synthetic same-SHA receipt
+        env:
+          CANDIDATE_SHA: 8d50caec2bc6fcb998994a1fd302294a029325f9
+        run: |
+          python -c 'import json,os,pathlib; pathlib.Path("probe.json").write_text(json.dumps({"candidate":os.environ["CANDIDATE_SHA"],"attempt":os.environ["GITHUB_RUN_ATTEMPT"],"run_id":os.environ["GITHUB_RUN_ID"]}))'
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        name: Upload with the candidate Graphify naming policy
+        id: stable
+        continue-on-error: true
+        with:
+          name: graphify-receipts-8d50caec2bc6fcb998994a1fd302294a029325f9
+          path: probe.json
+      - name: Record the upload status
+        env:
+          UPLOAD_OUTCOME: ${{ steps.stable.outcome }}
+          ARTIFACT_ID: ${{ steps.stable.outputs.artifact-id }}
+        run: |
+          python -c 'import json,os,pathlib; p=pathlib.Path("probe.json"); result=json.loads(p.read_text()); result.update(upload_outcome=os.environ["UPLOAD_OUTCOME"],artifact_id=os.environ["ARTIFACT_ID"]); p.write_text(json.dumps(result)); print(json.dumps(result))'
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        name: Retain attempt-specific observer receipt
+        with:
+          name: blue-observer-attempt-${{ github.run_attempt }}
+          path: probe.json
