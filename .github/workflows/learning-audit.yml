@@ -1,0 +1,21 @@
+name: README HQ learning audit
+on:
+  push:
+    branches: [learning/v0.0.6]
+permissions:
+  contents: read
+jobs:
+  audit:
+    name: Reproduce learning gaps and verify the source-backed pilot
+    if: github.repository == 'vixttha/README-HQ' && github.event.repository.private == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.10'
+      - run: python learning/audit_learning.py
