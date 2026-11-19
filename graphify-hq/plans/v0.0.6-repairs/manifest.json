@@ -1,10 +1,11 @@
 {
   "repository": "vixttha/README-HQ",
-  "source_commit": "ddf42ea4b3a27e079b6e20764ee1033326a33c3e",
-  "title": "README HQ v0.0.6 repair plan and baseline reproduction evidence",
+  "source_commit": "e2815a7ae435f47d027a0fb43e74a0f152f74bd0",
+  "title": "README HQ v0.0.6 repair and portability checkpoints",
   "source_files": [
     "plans/v0.0.6-repairs/README.md",
-    "audit/audit_v006.py"
+    "audit/audit_v006.py",
+    "audit/audit_portability.py"
   ],
   "features": [
     {
@@ -260,6 +261,188 @@
         {
           "path": "audit/audit_v006.py",
           "anchor": "def check_outline_rendering(worktree):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-11",
+      "label": "v0.0.6.11 · #11 · Automatic repository mode and runner safety",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.11` | [#11](https://github.com/vixttha/README-HQ/issues/11) | Automatic repository mode and runner safety | High | `v0.0.6.10` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.10` | [#10](https://github.com/vixttha/README-HQ/issues/10) | Graphify table escaping | Low | `v0.0.6.9` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Classify the trusted hosting repository before any jobs are scheduled. Verify public, private, internal, unknown, and fork-PR metadata. Only verified public mode may schedule standard hosted validation. Use offline validation or an explicitly configured private environment for private/internal mode, and keep evidence private."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_portability.py",
+          "anchor": "def inspect_workflow(worktree):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-12",
+      "label": "v0.0.6.12 · #12 · Portable adopter target and ref",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.12` | [#12](https://github.com/vixttha/README-HQ/issues/12) | Portable adopter target and ref | High | `v0.0.6.11` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.11` | [#11](https://github.com/vixttha/README-HQ/issues/11) | Automatic repository mode and runner safety | High | `v0.0.6.10` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Run an explicit target/ref for a plain project and a monorepo without requiring HQ's history, registry, or version folders. Report the selected repo, entry point, Git tree, applicable checks, and verification gaps."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_portability.py",
+          "anchor": "def check_adopter(worktree, directory):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-13",
+      "label": "v0.0.6.13 · #13 · GitHub-visible README discovery",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.13` | [#13](https://github.com/vixttha/README-HQ/issues/13) | GitHub-visible README discovery | High | `v0.0.6.12` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.12` | [#12](https://github.com/vixttha/README-HQ/issues/12) | Portable adopter target and ref | High | `v0.0.6.11` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Resolve the GitHub-visible README using .github, root, and docs precedence. Run link checks relative to the selected file. Cover competing files, a docs-only README, and a reportable missing README."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_portability.py",
+          "anchor": "def check_surface(worktree):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-14",
+      "label": "v0.0.6.14 · #14 · Mechanical README quality gates",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.14` | [#14](https://github.com/vixttha/README-HQ/issues/14) | Mechanical README quality gates | High | `v0.0.6.13` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.13` | [#13](https://github.com/vixttha/README-HQ/issues/13) | GitHub-visible README discovery | High | `v0.0.6.12` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Add a profile-aware quality check for empty and placeholder content, visible first action, justified prerequisites, and verifiable material claims. Detect GitHub display truncation and keep qualitative review as a separate result."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_portability.py",
+          "anchor": "def check_quality(worktree):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-15",
+      "label": "v0.0.6.15 · #15 · Repository-root-relative links",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.15` | [#15](https://github.com/vixttha/README-HQ/issues/15) | Repository-root-relative links | Medium | `v0.0.6.14` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.14` | [#14](https://github.com/vixttha/README-HQ/issues/14) | Mechanical README quality gates | High | `v0.0.6.13` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Resolve leading-slash GitHub paths from the repository root and ordinary relative paths from the README location. Test both forms in nested folders and continue rejecting references outside the selected repository tree."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_portability.py",
+          "anchor": "def check_root_relative(worktree):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-16",
+      "label": "v0.0.6.16 · #16 · Published Git tree link verification",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.16` | [#16](https://github.com/vixttha/README-HQ/issues/16) | Published Git tree link verification | High | `v0.0.6.15` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.15` | [#15](https://github.com/vixttha/README-HQ/issues/15) | Repository-root-relative links | Medium | `v0.0.6.14` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Validate checkout-relative and recognized same-repository links against the exact tracked publication tree and ref. Exercise untracked paths, wrong-case paths, explicit refs, and existing links on both Linux and Windows. Report any ref that cannot be resolved."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_portability.py",
+          "anchor": "def check_same_repository_links(worktree):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-17",
+      "label": "v0.0.6.17 · #17 · Default-branch publication coverage",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.17` | [#17](https://github.com/vixttha/README-HQ/issues/17) | Default-branch publication coverage | Medium | `v0.0.6.16` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.16` | [#16](https://github.com/vixttha/README-HQ/issues/16) | Published Git tree link verification | High | `v0.0.6.15` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Validate the adopter's configured publication branch on supported push and PR events while preserving the pre-scheduling visibility gate. Test at least main, master, trunk, and a custom branch."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_portability.py",
+          "anchor": "def inspect_workflow(worktree):"
         }
       ]
     }

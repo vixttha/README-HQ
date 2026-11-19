@@ -1,6 +1,6 @@
 # README HQ v0.0.6 repair plan graph
 
-The [repair pipeline](../../../plans/v0.0.6-repairs/README.md) lists the ten checkpoints in order. Each Graphify node links to its issue row, planned change, and baseline reproduction. Nodes after the first also link to their predecessor row. The reproduction links identify evidence of the original defects. Each future repair needs its own passing regression result.
+The [repair pipeline](../../../plans/v0.0.6-repairs/README.md) lists the seventeen checkpoints in order. Each Graphify node links to its issue row, planned change, and baseline reproduction. Nodes after the first also link to their predecessor row. The reproduction links identify evidence of the original defects. Each future repair needs its own passing regression result.
 
 [Graph JSON](graph.json) · [Source manifest](manifest.json) · [Verification receipt](receipt.json)
 

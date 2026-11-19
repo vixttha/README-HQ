@@ -2,13 +2,13 @@
   "schema_version": 1,
   "template_version": "v0.0.8",
   "repository": "vixttha/README-HQ",
-  "source_commit": "ddf42ea4b3a27e079b6e20764ee1033326a33c3e",
+  "source_commit": "e2815a7ae435f47d027a0fb43e74a0f152f74bd0",
   "pull_request": null,
   "scope": "feature-evidence",
   "graphify_version": "0.9.109",
-  "graph_sha256": "c49f615e7788d3f7dc298a070209d9b5b81f6d6a1d814e5d84e4ba23b57234d1",
-  "nodes": 43,
-  "edges": 81,
+  "graph_sha256": "3a5575d25eea3d6999b6c7f0b900c1e3da8313169056f253a9e93a075fd77e7c",
+  "nodes": 71,
+  "edges": 137,
   "feature_links": {
     "feature:v0-0-6-1": {
       "documented_in": 1,
@@ -16,6 +16,41 @@
       "tested_by": 1
     },
     "feature:v0-0-6-10": {
+      "documented_in": 2,
+      "changed_in": 1,
+      "tested_by": 1
+    },
+    "feature:v0-0-6-11": {
+      "documented_in": 2,
+      "changed_in": 1,
+      "tested_by": 1
+    },
+    "feature:v0-0-6-12": {
+      "documented_in": 2,
+      "changed_in": 1,
+      "tested_by": 1
+    },
+    "feature:v0-0-6-13": {
+      "documented_in": 2,
+      "changed_in": 1,
+      "tested_by": 1
+    },
+    "feature:v0-0-6-14": {
+      "documented_in": 2,
+      "changed_in": 1,
+      "tested_by": 1
+    },
+    "feature:v0-0-6-15": {
+      "documented_in": 2,
+      "changed_in": 1,
+      "tested_by": 1
+    },
+    "feature:v0-0-6-16": {
+      "documented_in": 2,
+      "changed_in": 1,
+      "tested_by": 1
+    },
+    "feature:v0-0-6-17": {
       "documented_in": 2,
       "changed_in": 1,
       "tested_by": 1
@@ -62,12 +97,14 @@
     }
   },
   "source_files": [
+    "audit/audit_portability.py",
     "audit/audit_v006.py",
     "plans/v0.0.6-repairs/README.md"
   ],
   "source_sha256": {
+    "audit/audit_portability.py": "16773ac9d0acc6e9f87b8d947d0fdb196a0bf181d595247bba2855c63116afcc",
     "audit/audit_v006.py": "fb9175758e0906911cbfba31c08c685b0bf04e9591f79962ec71514be0eef687",
-    "plans/v0.0.6-repairs/README.md": "68cfb8c5530237fe304db5981aee9345c646ae6ce7badf0d259a9f571a14df98"
+    "plans/v0.0.6-repairs/README.md": "a2fae7b90f4f202aea716deb6508beeb9b459630a553202e4ea74ad418778b3a"
   },
   "mcp_verified": true
 }
