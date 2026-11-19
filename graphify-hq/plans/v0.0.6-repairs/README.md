@@ -1,7 +1,10 @@
-# README HQ v0.0.6 repair plan graph
+# README HQ v0.0.6 repair plan graphs
 
-The [repair pipeline](../../../plans/v0.0.6-repairs/README.md) lists the 24 checkpoints in order. Each Graphify node links to its issue row, planned change, and baseline reproduction. Nodes after the first also link to their predecessor row. The reproduction links identify evidence of the original defects. Each future repair needs its own passing regression result.
+The [repair pipeline](../../../plans/v0.0.6-repairs/README.md) sequences all 33 checkpoints. Each Graphify node links a plan row, the planned change, and its baseline reproduction or inspection. The preceding row connects the ordering across the two manifests.
 
-[Graph JSON](graph.json) · [Source manifest](manifest.json) · [Verification receipt](receipt.json)
+| Checkpoints | Graphify evidence |
+| --- | --- |
+| 1–24 | [Graph JSON](graph.json) · [Manifest](manifest.json) · [Receipt](receipt.json) |
+| 25–33 | [Graph JSON](assurance/graph.json) · [Manifest](assurance/manifest.json) · [Receipt](assurance/receipt.json) |
 
-The map uses pinned Git source and the [Graphify HQ v0.0.8 template](../../template/v0.0.8/README.md). Query a node such as `feature:v0-0-6-1` with Graphify MCP to trace its references.
+The [pinned Graphify template](../../template/v0.0.8/README.md) accepts at most 32 features per manifest. The public plan workflow checks exact source, complete unique coverage, predecessor links, and a byte-for-byte rebuild of both maps with MCP readback. Fixture links reproduce the observed baseline. Repair receipts will use each future candidate revision.
