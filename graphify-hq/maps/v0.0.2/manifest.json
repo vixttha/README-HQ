@@ -1,6 +1,6 @@
 {
   "repository": "vixttha/README-HQ",
-  "source_commit": "d8c4517c7e43fce02b132c3abd82b8da93e75e3e",
+  "source_commit": "562d278ad49d0b4f34c742f0c87e9c63cd8dd664",
   "title": "README HQ v0.0.2 version history",
   "source_files": [
     "history/aldervale/published-v0.0.2/README.md",
@@ -36,13 +36,14 @@
       "changed_in": [
         {
           "path": "history/aldervale/readme-hq/readme-hq/versions/v0.0.2/CHANGELOG.md",
-          "anchor": "- Identifies v0.0.2 as the current approved HQ version on `readme-hq`."
+          "anchor": "- Identifies v0.0.2 as the current approved HQ version on `readme-hq`.",
+          "line": 7
         }
       ],
       "tested_by": [
         {
           "path": "tools/check_readme_hq.py",
-          "anchor": "def check_history(errors):"
+          "anchor": "def check_history(errors, tree=None):"
         }
       ]
     },
@@ -62,13 +63,14 @@
       "changed_in": [
         {
           "path": "history/aldervale/readme-hq/versions/v0.0.2/CHANGELOG.md",
-          "anchor": "- Reframes the opening around the playable guest journey and keeps the clone-and-run commands, recovery guidance, and GitHub Issues link."
+          "anchor": "- Reframes the opening around the playable guest journey and keeps the clone-and-run commands, recovery guidance, and GitHub Issues link.",
+          "line": 5
         }
       ],
       "tested_by": [
         {
           "path": "tools/check_readme_hq.py",
-          "anchor": "def check_history(errors):"
+          "anchor": "def check_history(errors, tree=None):"
         }
       ]
     },
@@ -88,13 +90,14 @@
       "changed_in": [
         {
           "path": "history/bart/readme-hq/versions/v0.0.2/CHANGELOG.md",
-          "anchor": "- Adapted the README HQ draft in [PR #4](https://github.com/vixttha/Blender-Agent/pull/4) for the audited foundation."
+          "anchor": "- Adapted the README HQ draft in [PR #4](https://github.com/vixttha/Blender-Agent/pull/4) for the audited foundation.",
+          "line": 3
         }
       ],
       "tested_by": [
         {
           "path": "tools/check_readme_hq.py",
-          "anchor": "def check_history(errors):"
+          "anchor": "def check_history(errors, tree=None):"
         }
       ]
     }

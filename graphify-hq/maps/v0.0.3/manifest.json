@@ -1,6 +1,6 @@
 {
   "repository": "vixttha/README-HQ",
-  "source_commit": "d8c4517c7e43fce02b132c3abd82b8da93e75e3e",
+  "source_commit": "562d278ad49d0b4f34c742f0c87e9c63cd8dd664",
   "title": "README HQ v0.0.3 version history",
   "source_files": [
     "history/aldervale/published-v0.0.3/README.md",
@@ -37,13 +37,14 @@
       "changed_in": [
         {
           "path": "history/aldervale/readme-hq/readme-hq/versions/v0.0.3/CHANGELOG.md",
-          "anchor": "- Replaces the stale v0.0.2 validator limitations with the behavior implemented by the current validator."
+          "anchor": "- Replaces the stale v0.0.2 validator limitations with the behavior implemented by the current validator.",
+          "line": 7
         }
       ],
       "tested_by": [
         {
           "path": "tools/check_readme_hq.py",
-          "anchor": "def check_history(errors):"
+          "anchor": "def check_history(errors, tree=None):"
         }
       ]
     },
@@ -63,13 +64,14 @@
       "changed_in": [
         {
           "path": "history/aldervale/readme-hq/versions/v0.0.3/CHANGELOG.md",
-          "anchor": "- Adds the approved Workmark v1 at the top of the README."
+          "anchor": "- Adds the approved Workmark v1 at the top of the README.",
+          "line": 5
         }
       ],
       "tested_by": [
         {
           "path": "tools/check_readme_hq.py",
-          "anchor": "def check_history(errors):"
+          "anchor": "def check_history(errors, tree=None):"
         }
       ]
     },
@@ -93,13 +95,14 @@
       "changed_in": [
         {
           "path": "history/bart/visual-v0.0.3/workspace/v0.0.3/CHANGELOG.md",
-          "anchor": "- Put the published pre-release and separate development status near the introduction."
+          "anchor": "- Put the published pre-release and separate development status near the introduction.",
+          "line": 3
         }
       ],
       "tested_by": [
         {
           "path": "tools/check_readme_hq.py",
-          "anchor": "def check_history(errors):"
+          "anchor": "def check_history(errors, tree=None):"
         }
       ]
     }

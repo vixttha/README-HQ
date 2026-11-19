@@ -1,6 +1,6 @@
 {
   "repository": "vixttha/README-HQ",
-  "source_commit": "d8c4517c7e43fce02b132c3abd82b8da93e75e3e",
+  "source_commit": "562d278ad49d0b4f34c742f0c87e9c63cd8dd664",
   "title": "README HQ v0.0.4 version history",
   "source_files": [
     "history/aldervale/published-v0.0.4/README.md",
@@ -37,13 +37,14 @@
       "changed_in": [
         {
           "path": "history/aldervale/readme-hq/readme-hq/versions/v0.0.4/CHANGELOG.md",
-          "anchor": "- Link to the published public game README v0.0.2, its archived copy and changelog, and its publication PR."
+          "anchor": "- Link to the published public game README v0.0.2, its archived copy and changelog, and its publication PR.",
+          "line": 7
         }
       ],
       "tested_by": [
         {
           "path": "tools/check_readme_hq.py",
-          "anchor": "def check_history(errors):"
+          "anchor": "def check_history(errors, tree=None):"
         }
       ]
     },
@@ -63,13 +64,14 @@
       "changed_in": [
         {
           "path": "history/aldervale/readme-hq/versions/v0.0.4/CHANGELOG.md",
-          "anchor": "- Add the Bazaar quick link and a short signed-in-player guide for buying, listing, and cancelling gear listings."
+          "anchor": "- Add the Bazaar quick link and a short signed-in-player guide for buying, listing, and cancelling gear listings.",
+          "line": 5
         }
       ],
       "tested_by": [
         {
           "path": "tools/check_readme_hq.py",
-          "anchor": "def check_history(errors):"
+          "anchor": "def check_history(errors, tree=None):"
         }
       ]
     },
@@ -93,13 +95,14 @@
       "changed_in": [
         {
           "path": "history/bart/readme-hq/workspace/v0.0.4/CHANGELOG.md",
-          "anchor": "- Introduce Blender-Agent Refinement Toolkit, BART, and \u201cGive shape to an idea.\u201d"
+          "anchor": "- Introduce Blender-Agent Refinement Toolkit, BART, and \u201cGive shape to an idea.\u201d",
+          "line": 3
         }
       ],
       "tested_by": [
         {
           "path": "tools/check_readme_hq.py",
-          "anchor": "def check_history(errors):"
+          "anchor": "def check_history(errors, tree=None):"
         }
       ]
     }

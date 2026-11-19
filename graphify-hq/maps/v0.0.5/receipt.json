@@ -2,11 +2,12 @@
   "schema_version": 1,
   "template_version": "v0.0.8",
   "repository": "vixttha/README-HQ",
-  "source_commit": "d8c4517c7e43fce02b132c3abd82b8da93e75e3e",
+  "source_commit": "562d278ad49d0b4f34c742f0c87e9c63cd8dd664",
   "pull_request": null,
   "scope": "feature-evidence",
+  "repository_provenance": "unverified-local-source",
   "graphify_version": "0.9.109",
-  "graph_sha256": "d251f6368b83061ea193b11c0f86af7b4910cb843e98182905d6a20bcb5e46d2",
+  "graph_sha256": "a7e916fa1c9364ea48355ed90ceebccdf68078afc16f0cd9c2ea50b111e37a38",
   "nodes": 12,
   "edges": 16,
   "feature_links": {
@@ -15,6 +16,40 @@
       "changed_in": 1,
       "tested_by": 1
     }
+  },
+  "feature_destinations": {
+    "feature:aldervale-hq-v0-0-5": [
+      [
+        "documented_in",
+        "documented_in:history/aldervale/readme-hq/Graphify HQ/v0.0.5/README.md:L1",
+        "history/aldervale/readme-hq/Graphify HQ/v0.0.5/README.md",
+        "L1"
+      ],
+      [
+        "documented_in",
+        "documented_in:history/aldervale/readme-hq/readme-hq/versions/v0.0.5/GUIDE.md:L1",
+        "history/aldervale/readme-hq/readme-hq/versions/v0.0.5/GUIDE.md",
+        "L1"
+      ],
+      [
+        "documented_in",
+        "documented_in:history/aldervale/readme-hq/readme-hq/versions/v0.0.5/README.md:L1",
+        "history/aldervale/readme-hq/readme-hq/versions/v0.0.5/README.md",
+        "L1"
+      ],
+      [
+        "changed_in",
+        "changed_in:history/aldervale/readme-hq/readme-hq/versions/v0.0.5/CHANGELOG.md:L7",
+        "history/aldervale/readme-hq/readme-hq/versions/v0.0.5/CHANGELOG.md",
+        "L7"
+      ],
+      [
+        "tested_by",
+        "tested_by:tools/check_readme_hq.py:L128",
+        "tools/check_readme_hq.py",
+        "L128"
+      ]
+    ]
   },
   "source_files": [
     "history/aldervale/readme-hq/Graphify HQ/v0.0.5/README.md",
@@ -28,7 +63,7 @@
     "history/aldervale/readme-hq/readme-hq/versions/v0.0.5/CHANGELOG.md": "72668db790ab539ab8db50ddd621c62c64449df7cce1a0bc762198548908fd6c",
     "history/aldervale/readme-hq/readme-hq/versions/v0.0.5/GUIDE.md": "09427382bedeeccf01d2c17f0ac3518c97645f98933cccc34f2486a76aace482",
     "history/aldervale/readme-hq/readme-hq/versions/v0.0.5/README.md": "0114c54efdb3a6e72e3b01f69a53d4fe928ac7243df933a5d54f21f8ed3d215e",
-    "tools/check_readme_hq.py": "4a74111bd01a4929081f076e7f8aa50320774b680f37e7230c629e764ecacf52"
+    "tools/check_readme_hq.py": "fd5d9adc7add3aa577956b80e6331b464cdbfd2f012f63327bee5fe961522153"
   },
   "mcp_verified": true
 }

@@ -1,6 +1,6 @@
 {
   "repository": "vixttha/README-HQ",
-  "source_commit": "d8c4517c7e43fce02b132c3abd82b8da93e75e3e",
+  "source_commit": "562d278ad49d0b4f34c742f0c87e9c63cd8dd664",
   "title": "README HQ v0.0.6 version history",
   "source_files": [
     "history/aldervale/readme-hq/Graphify HQ/v0.0.6/README.md",
@@ -32,13 +32,14 @@
       "changed_in": [
         {
           "path": "history/aldervale/readme-hq/readme-hq/versions/v0.0.6/CHANGELOG.md",
-          "anchor": "- Add Graphify HQ to the landing page and replace the v0.0.3 spotlight with the latest approved archive link."
+          "anchor": "- Add Graphify HQ to the landing page and replace the v0.0.3 spotlight with the latest approved archive link.",
+          "line": 5
         }
       ],
       "tested_by": [
         {
           "path": "tools/check_readme_hq.py",
-          "anchor": "def check_history(errors):"
+          "anchor": "def check_history(errors, tree=None):"
         }
       ]
     },
@@ -54,13 +55,14 @@
       "changed_in": [
         {
           "path": "versions/v0.0.6/CHANGELOG.md",
-          "anchor": "- Continue the standalone version line from the accepted AlderVale README HQ v0.0.6 baseline."
+          "anchor": "- Continue the standalone version line from the accepted AlderVale README HQ v0.0.6 baseline.",
+          "line": 3
         }
       ],
       "tested_by": [
         {
           "path": "tools/check_readme_hq.py",
-          "anchor": "def check_history(errors):"
+          "anchor": "def check_versions(errors, tree=None):"
         }
       ]
     }
