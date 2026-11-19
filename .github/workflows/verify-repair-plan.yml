@@ -1,0 +1,58 @@
+name: README HQ repair plan
+on:
+  push:
+    branches: [plan/v0.0.6-repairs]
+permissions:
+  contents: read
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: '1'
+  PYTHONDONTWRITEBYTECODE: '1'
+  PYTHONHASHSEED: '0'
+jobs:
+  validate:
+    name: Verify the repair plan and Graphify evidence
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.12'
+      - name: Verify the README HQ baseline
+        run: python tools/check_readme_hq.py
+      - name: Install pinned Graphify dependencies
+        run: |
+          python -m pip install --require-hashes --no-cache-dir --only-binary=:all: --no-deps -r graphify-hq/template/v0.0.8/requirements.txt
+          python -m pip check
+      - name: Check checkpoint order and verify Graphify over MCP
+        shell: bash
+        run: |
+          plan=graphify-hq/plans/v0.0.6-repairs
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import re
+          import subprocess
+
+          path = "plans/v0.0.6-repairs/README.md"
+          manifest_path = Path("graphify-hq/plans/v0.0.6-repairs/manifest.json")
+          manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+          source = subprocess.check_output(["git", "show", f"{manifest['source_commit']}:{path}"])
+          actual = Path(path).read_bytes()
+          assert actual == source, "Repair plan differs from the pinned graph source"
+          rows = [x for x in actual.decode("utf-8").splitlines() if x.startswith("| `v0.0.6.")]
+          features = manifest["features"]
+          assert len(rows) == len(features) == 10
+          for number, (row, feature) in enumerate(zip(rows, features), 1):
+              assert row.startswith(f"| `v0.0.6.{number}` | [#{number}](")
+              assert row.split(" | ")[1] == f"[#{number}](https://github.com/vixttha/README-HQ/issues/{number})"
+              assert row.endswith("Audited `v0.0.6` |" if number == 1 else f"`v0.0.6.{number - 1}` |")
+              assert feature["id"] == f"v0-0-6-{number}"
+              expected_anchors = [row] + ([rows[number - 2]] if number > 1 else [])
+              assert feature["documented_in"] == [{"path": path, "anchor": x} for x in expected_anchors]
+          print("Verified 10 unique, ordered issue checkpoints against the pinned repair plan.")
+          PY
+          python graphify-hq/template/v0.0.8/evidence_map.py "$plan/manifest.json" "$plan" --check

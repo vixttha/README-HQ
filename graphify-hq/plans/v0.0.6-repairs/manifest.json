@@ -1,0 +1,267 @@
+{
+  "repository": "vixttha/README-HQ",
+  "source_commit": "ddf42ea4b3a27e079b6e20764ee1033326a33c3e",
+  "title": "README HQ v0.0.6 repair plan and baseline reproduction evidence",
+  "source_files": [
+    "plans/v0.0.6-repairs/README.md",
+    "audit/audit_v006.py"
+  ],
+  "features": [
+    {
+      "id": "v0-0-6-1",
+      "label": "v0.0.6.1 · #1 · Default homepage discovery",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.1` | [#1](https://github.com/vixttha/README-HQ/issues/1) | Default homepage discovery | High | Audited `v0.0.6` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Add a clear route from the default GitHub landing page to the active README HQ version, version index, and Graphify index."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_v006.py",
+          "anchor": "def check_landing(worktree):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-2",
+      "label": "v0.0.6.2 · #2 · Archived BART homepage links",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.2` | [#2](https://github.com/vixttha/README-HQ/issues/2) | Archived BART homepage links | High | `v0.0.6.1` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.1` | [#1](https://github.com/vixttha/README-HQ/issues/1) | Default homepage discovery | High | Audited `v0.0.6` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Restore navigable documentation links for the BART v0.0.3 and v0.0.4 homepage snapshots while preserving the frozen README bytes."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_v006.py",
+          "anchor": "def check_archive_navigation(worktree):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-3",
+      "label": "v0.0.6.3 · #3 · Source provenance and tracked modes",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.3` | [#3](https://github.com/vixttha/README-HQ/issues/3) | Source provenance and tracked modes | High | `v0.0.6.2` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.2` | [#2](https://github.com/vixttha/README-HQ/issues/2) | Archived BART homepage links | High | `v0.0.6.1` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Verify the archive's source repository, commit, path, blob, and tracked mode against independently pinned evidence."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_v006.py",
+          "anchor": "def check_archive_provenance(worktree):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-4",
+      "label": "v0.0.6.4 · #4 · Frozen standalone version integrity",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.4` | [#4](https://github.com/vixttha/README-HQ/issues/4) | Frozen standalone version integrity | High | `v0.0.6.3` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.3` | [#3](https://github.com/vixttha/README-HQ/issues/3) | Source provenance and tracked modes | High | `v0.0.6.2` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Bind accepted standalone README and changelog bytes to source evidence used by archive validation and Graphify."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_v006.py",
+          "anchor": "def check_standalone_version_drift(worktree):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-5",
+      "label": "v0.0.6.5 · #5 · Version-to-map and homepage mapping",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.5` | [#5](https://github.com/vixttha/README-HQ/issues/5) | Version-to-map and homepage mapping | Medium | `v0.0.6.4` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.4` | [#4](https://github.com/vixttha/README-HQ/issues/4) | Frozen standalone version integrity | High | `v0.0.6.3` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Require each version row to link to its own map and make the homepage current version agree with the canonical index."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_v006.py",
+          "anchor": "def check_index_mapping(worktree):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-6",
+      "label": "v0.0.6.6 · #6 · GitHub Markdown navigation",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.6` | [#6](https://github.com/vixttha/README-HQ/issues/6) | GitHub Markdown navigation | Medium | `v0.0.6.5` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.5` | [#5](https://github.com/vixttha/README-HQ/issues/5) | Version-to-map and homepage mapping | Medium | `v0.0.6.4` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Check rendered Markdown link forms and GitHub heading anchors while ignoring inline code and other literal examples."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_v006.py",
+          "anchor": "def check_markdown(worktree):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-7",
+      "label": "v0.0.6.7 · #7 · Record-specific Graphify evidence",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.7` | [#7](https://github.com/vixttha/README-HQ/issues/7) | Record-specific Graphify evidence | Medium | `v0.0.6.6` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.6` | [#6](https://github.com/vixttha/README-HQ/issues/6) | GitHub Markdown navigation | Medium | `v0.0.6.5` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Give each Graphify record the correct verification reference for its own artifact."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_v006.py",
+          "anchor": "def check_graph_evidence(worktree):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-8",
+      "label": "v0.0.6.8 · #8 · Technique registry field types",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.8` | [#8](https://github.com/vixttha/README-HQ/issues/8) | Technique registry field types | Medium | `v0.0.6.7` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.7` | [#7](https://github.com/vixttha/README-HQ/issues/7) | Record-specific Graphify evidence | Medium | `v0.0.6.6` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Enforce the registry schema and explicit field types before normalizing IDs or aliases."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_v006.py",
+          "anchor": "def check_registry_shape(worktree):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-9",
+      "label": "v0.0.6.9 · #9 · Failed batch recovery",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.9` | [#9](https://github.com/vixttha/README-HQ/issues/9) | Failed batch recovery | Medium | `v0.0.6.8` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.8` | [#8](https://github.com/vixttha/README-HQ/issues/8) | Technique registry field types | Medium | `v0.0.6.7` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Publish a complete Graphify batch only after all maps and receipts pass, with a safe retry path."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_v006.py",
+          "anchor": "def check_graph_output_retry(worktree, temporary):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-10",
+      "label": "v0.0.6.10 · #10 · Graphify table escaping",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.10` | [#10](https://github.com/vixttha/README-HQ/issues/10) | Graphify table escaping | Low | `v0.0.6.9` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.9` | [#9](https://github.com/vixttha/README-HQ/issues/9) | Failed batch recovery | Medium | `v0.0.6.8` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Escape delimiters in catalog titles and summaries before rendering Markdown table cells."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_v006.py",
+          "anchor": "def check_outline_rendering(worktree):"
+        }
+      ]
+    }
+  ]
+}

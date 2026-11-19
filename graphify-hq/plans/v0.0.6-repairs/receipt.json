@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "template_version": "v0.0.8",
+  "repository": "vixttha/README-HQ",
+  "source_commit": "ddf42ea4b3a27e079b6e20764ee1033326a33c3e",
+  "pull_request": null,
+  "scope": "feature-evidence",
+  "graphify_version": "0.9.109",
+  "graph_sha256": "c49f615e7788d3f7dc298a070209d9b5b81f6d6a1d814e5d84e4ba23b57234d1",
+  "nodes": 43,
+  "edges": 81,
+  "feature_links": {
+    "feature:v0-0-6-1": {
+      "documented_in": 1,
+      "changed_in": 1,
+      "tested_by": 1
+    },
+    "feature:v0-0-6-10": {
+      "documented_in": 2,
+      "changed_in": 1,
+      "tested_by": 1
+    },
+    "feature:v0-0-6-2": {
+      "documented_in": 2,
+      "changed_in": 1,
+      "tested_by": 1
+    },
+    "feature:v0-0-6-3": {
+      "documented_in": 2,
+      "changed_in": 1,
+      "tested_by": 1
+    },
+    "feature:v0-0-6-4": {
+      "documented_in": 2,
+      "changed_in": 1,
+      "tested_by": 1
+    },
+    "feature:v0-0-6-5": {
+      "documented_in": 2,
+      "changed_in": 1,
+      "tested_by": 1
+    },
+    "feature:v0-0-6-6": {
+      "documented_in": 2,
+      "changed_in": 1,
+      "tested_by": 1
+    },
+    "feature:v0-0-6-7": {
+      "documented_in": 2,
+      "changed_in": 1,
+      "tested_by": 1
+    },
+    "feature:v0-0-6-8": {
+      "documented_in": 2,
+      "changed_in": 1,
+      "tested_by": 1
+    },
+    "feature:v0-0-6-9": {
+      "documented_in": 2,
+      "changed_in": 1,
+      "tested_by": 1
+    }
+  },
+  "source_files": [
+    "audit/audit_v006.py",
+    "plans/v0.0.6-repairs/README.md"
+  ],
+  "source_sha256": {
+    "audit/audit_v006.py": "fb9175758e0906911cbfba31c08c685b0bf04e9591f79962ec71514be0eef687",
+    "plans/v0.0.6-repairs/README.md": "68cfb8c5530237fe304db5981aee9345c646ae6ce7badf0d259a9f571a14df98"
+  },
+  "mcp_verified": true
+}
