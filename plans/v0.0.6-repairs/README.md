@@ -1,6 +1,6 @@
 # README HQ v0.0.6 repair pipeline
 
-Baseline [`v0.0.6` at `f50e374`](https://github.com/vixttha/README-HQ/commit/f50e3749dab90ddfe35894284d1660097a1fb1a8). The [public audit](https://github.com/vixttha/README-HQ/actions/runs/44510897511) reproduced the initial ten findings. The [portability audit](https://github.com/vixttha/README-HQ/actions/runs/44513298531) added seven checkpoints. The [learning audit](https://github.com/vixttha/README-HQ/actions/runs/44515197237) adds seven through `v0.0.6.24`. The [assurance audit](https://github.com/vixttha/README-HQ/actions/runs/44516410470) and Graphify capacity check add nine through `v0.0.6.33`. The [Graphify integrity audit](https://github.com/vixttha/README-HQ/actions/runs/44518000891) adds seven through `v0.0.6.40`. The [reader and evidence audit](https://github.com/vixttha/README-HQ/actions/runs/44524104958/job/135560019059) adds nine through `v0.0.6.49`. The [source and plan audit](https://github.com/vixttha/README-HQ/actions/runs/44525333530/job/135564262326) reproduces three existing reports and adds three findings through `v0.0.6.55`. The [entry-point and provenance audit](https://github.com/vixttha/README-HQ/actions/runs/44527076295/job/135570365343) adds four through `v0.0.6.59`. Each issue owns one cumulative repair checkpoint. The first checkpoint is ready to implement and the later checkpoints follow it in order.
+Baseline [`v0.0.6` at `f50e374`](https://github.com/vixttha/README-HQ/commit/f50e3749dab90ddfe35894284d1660097a1fb1a8). The [public audit](https://github.com/vixttha/README-HQ/actions/runs/44510897511) reproduced the initial ten findings. The [portability audit](https://github.com/vixttha/README-HQ/actions/runs/44513298531) added seven checkpoints. The [learning audit](https://github.com/vixttha/README-HQ/actions/runs/44515197237) adds seven through `v0.0.6.24`. The [assurance audit](https://github.com/vixttha/README-HQ/actions/runs/44516410470) and Graphify capacity check add nine through `v0.0.6.33`. The [Graphify integrity audit](https://github.com/vixttha/README-HQ/actions/runs/44518000891) adds seven through `v0.0.6.40`. The [reader and evidence audit](https://github.com/vixttha/README-HQ/actions/runs/44524104958/job/135560019059) adds nine through `v0.0.6.49`. The [source and plan audit](https://github.com/vixttha/README-HQ/actions/runs/44525333530/job/135564262326) reproduces three existing reports and adds three findings through `v0.0.6.55`. The [entry-point and provenance audit](https://github.com/vixttha/README-HQ/actions/runs/44527076295/job/135570365343) adds four through `v0.0.6.59`. The [output and provenance boundary audit](https://github.com/vixttha/README-HQ/actions/runs/44528813495/job/135576393018) adds three through `v0.0.6.62`. Each issue owns one cumulative repair checkpoint. The first checkpoint is ready to implement and the later checkpoints follow it in order.
 
 [Graphify plan](../../graphify-hq/plans/v0.0.6-repairs/README.md)
 
@@ -67,6 +67,9 @@ Baseline [`v0.0.6` at `f50e374`](https://github.com/vixttha/README-HQ/commit/f50
 | `v0.0.6.57` | [#57](https://github.com/vixttha/README-HQ/issues/57) | Version-index row uniqueness | Medium | `v0.0.6.56` |
 | `v0.0.6.58` | [#58](https://github.com/vixttha/README-HQ/issues/58) | Merge-queue validation | Medium | `v0.0.6.57` |
 | `v0.0.6.59` | [#59](https://github.com/vixttha/README-HQ/issues/59) | Consistent PR head observation | High | `v0.0.6.58` |
+| `v0.0.6.60` | [#60](https://github.com/vixttha/README-HQ/issues/60) | Technique list output encoding | Medium | `v0.0.6.59` |
+| `v0.0.6.61` | [#61](https://github.com/vixttha/README-HQ/issues/61) | Technique lookup key collisions | Medium | `v0.0.6.60` |
+| `v0.0.6.62` | [#62](https://github.com/vixttha/README-HQ/issues/62) | Exact review pagination boundary | Low | `v0.0.6.61` |
 
 ## Checkpoint workflow
 
@@ -74,7 +77,7 @@ Baseline [`v0.0.6` at `f50e374`](https://github.com/vixttha/README-HQ/commit/f50
 2. Make the scoped repair as its own checkpoint. Preserve a distinct commit and link it to the issue.
 3. Run the checkpoint regression and applicable existing checks on standard public GitHub-hosted runners. Rebuild Graphify and query MCP for any change to graph generation, source evidence, or the version index.
 4. Review the combined candidate against the intended base. Record the exact tested SHA, public runner links, Graphify evidence when relevant, and any unresolved conflicts on the issue before advancing to the next checkpoint.
-5. Review the combined series after `v0.0.6.59`. Homepage publication and release decisions stay with the owner.
+5. Review the combined series after `v0.0.6.62`. Homepage publication and release decisions stay with the owner.
 
 ## Verification by checkpoint
 
@@ -353,3 +356,19 @@ The installed Graphify template accepts at most 32 feature nodes per manifest. T
 ### v0.0.6.59
 
 - Bind the PR observation to coherent head metadata. Recheck the head across dependent evidence reads and retry or report an unstable observation when it changes. Keep historical member and current head results distinct.
+
+## Output and provenance boundaries
+
+[Audit report](https://github.com/vixttha/README-HQ/blob/6fb7785c8ad8a983b03a400a104e3b7bbe8ea988/audits/boundaries-v0.0.6.md) · [Public reproduction](https://github.com/vixttha/README-HQ/actions/runs/44528813495/job/135576393018)
+
+### v0.0.6.60
+
+- Make technique list output safe and explicit across supported stream encodings. Keep output and exit status consistent when rendering fails, and test redirected ASCII and UTF-8 output.
+
+### v0.0.6.61
+
+- Reject cross-record exact collisions across the lookup fields promised by the technique guide, or define an explicit disambiguation rule and use it consistently for lookup. Test IDs, aliases, and outcome keys.
+
+### v0.0.6.62
+
+- Use the review endpoint pagination metadata to distinguish complete results from an intentionally bounded observation. Test 999, 1,000, and more than 1,000 reviews and never represent a partial count as exact.
