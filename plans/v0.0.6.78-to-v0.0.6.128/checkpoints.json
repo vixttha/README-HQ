@@ -1,0 +1,919 @@
+{
+  "schema": 1,
+  "base_commit": "8d50caec2bc6fcb998994a1fd302294a029325f9",
+  "previous_plan_commit": "ac07987cfe11d6592b8def2ff16b72a6b2c0a203",
+  "status": "awaiting_approval",
+  "implementation_authorized": false,
+  "merge_authorized": false,
+  "scope": {
+    "first": "v0.0.6.78",
+    "last": "v0.0.6.128",
+    "checkpoint_count": 51
+  },
+  "debug_before_merge": true,
+  "public_github_hosted_runners_only": true,
+  "checkpoints": [
+    {
+      "version": "v0.0.6.78",
+      "issue": 78,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.77",
+      "title": "Bind audit receipts to the executing validator",
+      "priority": "High",
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44622391591/job/135907188784",
+      "debug": {
+        "reproduce": "Put a harmless file at the validator’s relative path in an adopter tree, then repeat with that path missing.",
+        "acceptance": "Both receipts identify the installed validator and revision or digest. They record adopter Git blobs separately.",
+        "public_runners": [
+          "ubuntu-latest",
+          "windows-latest"
+        ],
+        "graphify_mcp": false
+      }
+    },
+    {
+      "version": "v0.0.6.79",
+      "issue": 79,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.78",
+      "title": "Hash the learning registry snapshot used for recommendations",
+      "priority": "High",
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44622391591/job/135907188784",
+      "debug": {
+        "reproduce": "Simulate retiring a technique between reading the active registry and writing the receipt.",
+        "acceptance": "The recorded hash belongs to the snapshot that governed the decision, or intake stops explicitly. Unchanged active and retired controls behave correctly.",
+        "public_runners": [
+          "ubuntu-latest"
+        ],
+        "graphify_mcp": false
+      }
+    },
+    {
+      "version": "v0.0.6.80",
+      "issue": 80,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.79",
+      "title": "Use homepage precedence for repository-root fragments",
+      "priority": "Medium",
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44622391591/job/135907188784",
+      "debug": {
+        "reproduce": "Compete .github, root and docs README headings with a directory README control.",
+        "acceptance": "Root links resolve against the effective homepage and reject fallback-only anchors. Subdirectory links still resolve against their own README.",
+        "public_runners": [
+          "ubuntu-latest",
+          "windows-latest"
+        ],
+        "graphify_mcp": false
+      }
+    },
+    {
+      "version": "v0.0.6.81",
+      "issue": 81,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.80",
+      "title": "Handle malformed registry structure as a normal CLI failure",
+      "priority": "Medium",
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44622391591/job/135907188784",
+      "debug": {
+        "reproduce": "Use valid JSON arrays, null and invalid nested records, plus a valid registry.",
+        "acceptance": "Failures return a normal diagnostic and a parseable failed receipt when requested. The valid registry still passes.",
+        "public_runners": [
+          "ubuntu-latest",
+          "windows-latest"
+        ],
+        "graphify_mcp": false
+      }
+    },
+    {
+      "version": "v0.0.6.82",
+      "issue": 82,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.81",
+      "title": "Report the actual line of each broken link",
+      "priority": "Medium",
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44622391591/job/135907188784",
+      "debug": {
+        "reproduce": "Place two broken links on distinct lines of one paragraph, including repeated labels.",
+        "acceptance": "Diagnostics identify both exact occurrence lines. Single-line and valid-link controls retain their behavior.",
+        "public_runners": [
+          "ubuntu-latest",
+          "windows-latest"
+        ],
+        "graphify_mcp": false
+      }
+    },
+    {
+      "version": "v0.0.6.83",
+      "issue": 83,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.82",
+      "title": "Handle Graphify references that resolve to one edge",
+      "priority": "Medium",
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44622391591/job/135907188784",
+      "debug": {
+        "reproduce": "Use implicit and explicit references that resolve to the same source line. Include separate lines and relations.",
+        "acceptance": "Duplicates are rejected clearly or represented consistently as one resolved edge. Distinct edges survive export and MCP readback.",
+        "public_runners": [
+          "ubuntu-latest"
+        ],
+        "graphify_mcp": true
+      }
+    },
+    {
+      "version": "v0.0.6.84",
+      "issue": 84,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.83",
+      "title": "Run smoke checks in the selected package context",
+      "priority": "High",
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44630216828/job/135934528628",
+      "debug": {
+        "reproduce": "Use a package-only command and a similarly named root decoy, then repeat with an ordinary root project.",
+        "acceptance": "The package action executes in the declared context, the receipt identifies the working directory, and the root decoy cannot satisfy the package check.",
+        "public_runners": [
+          "ubuntu-latest",
+          "windows-latest"
+        ],
+        "graphify_mcp": false
+      }
+    },
+    {
+      "version": "v0.0.6.85",
+      "issue": 85,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.84",
+      "title": "Keep smoke output streams distinct",
+      "priority": "High",
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44630216828/job/135934528628",
+      "debug": {
+        "reproduce": "Split the expected marker across stdout and stderr, then emit the full marker on each intended stream in controls.",
+        "acceptance": "A cross-stream match fails. Valid per-stream checks pass and the observation identifies the stream used.",
+        "public_runners": [
+          "ubuntu-latest",
+          "windows-latest"
+        ],
+        "graphify_mcp": false
+      }
+    },
+    {
+      "version": "v0.0.6.86",
+      "issue": 86,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.85",
+      "title": "Bind each repair-plan partition to its approved source inventory",
+      "priority": "High",
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44630216828/job/135934528628",
+      "debug": {
+        "reproduce": "Remove or add source files and regenerate a self-consistent graph and receipt.",
+        "acceptance": "Verification catches both mutations with the expected inventory held fixed. The canonical graph and exact edges pass MCP readback.",
+        "public_runners": [
+          "ubuntu-latest"
+        ],
+        "graphify_mcp": true
+      }
+    },
+    {
+      "version": "v0.0.6.87",
+      "issue": 87,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.86",
+      "title": "Resolve contradictory learning decisions for one observation",
+      "priority": "Medium",
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44630216828/job/135934528628",
+      "debug": {
+        "reproduce": "Submit adopt and decline for one technique, target and source in the same request.",
+        "acceptance": "Intake rejects or explicitly represents the conflict. A single decision and genuinely distinct evidence remain usable.",
+        "public_runners": [
+          "ubuntu-latest"
+        ],
+        "graphify_mcp": false
+      }
+    },
+    {
+      "version": "v0.0.6.88",
+      "issue": 88,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.87",
+      "title": "Distinguish Git LFS pointers from corrupt media",
+      "priority": "Medium",
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44630216828/job/135934528628",
+      "debug": {
+        "reproduce": "Use a valid pointer with and without a locally available verified object, plus a malformed pointer and a normal PNG.",
+        "acceptance": "The checker distinguishes verified media, unavailable-object coverage and corruption. It respects the caller’s fetch policy.",
+        "public_runners": [
+          "ubuntu-latest",
+          "windows-latest"
+        ],
+        "graphify_mcp": false
+      }
+    },
+    {
+      "version": "v0.0.6.89",
+      "issue": 89,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.88",
+      "title": "Account for rendered bare GFM URLs",
+      "priority": "Medium",
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44630216828/job/135934528628",
+      "debug": {
+        "reproduce": "Use bare HTTPS and www routes, punctuation boundaries, and the same examples within code spans and fences.",
+        "acceptance": "Live autolinks appear in the audit or explicit coverage gaps. Literal examples remain outside link counts.",
+        "public_runners": [
+          "ubuntu-latest",
+          "windows-latest"
+        ],
+        "graphify_mcp": false
+      }
+    },
+    {
+      "version": "v0.0.6.90",
+      "issue": 90,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.89",
+      "title": "Resolve the publication root deterministically",
+      "priority": "Medium",
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44630216828/job/135934528628",
+      "debug": {
+        "reproduce": "Run on the same fixture using its root, a child directory as --repo, and a deliberate --subproject.",
+        "acceptance": "A child checkout path resolves to the actual root or produces a clear diagnostic. Explicit subproject selection behaves as documented.",
+        "public_runners": [
+          "ubuntu-latest",
+          "windows-latest"
+        ],
+        "graphify_mcp": false
+      }
+    },
+    {
+      "version": "v0.0.6.91",
+      "issue": 91,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.90",
+      "title": "Document how CLI evidence becomes a reviewed technique receipt",
+      "priority": "Medium",
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44630216828/job/135934528628",
+      "debug": {
+        "reproduce": "Follow the guide using a public run receipt, then try a raw or incomplete input.",
+        "acceptance": "A reviewer can produce a valid record tied to the exact source, case and outcome. Raw or incomplete input cannot qualify as verified. Record attempt metadata manually until .103 lands.",
+        "public_runners": [
+          "ubuntu-latest"
+        ],
+        "graphify_mcp": false
+      }
+    },
+    {
+      "version": "v0.0.6.92",
+      "issue": 92,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.91",
+      "title": "Check explicitly expected HTTP error bodies",
+      "priority": "Low",
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44630216828/job/135934528628",
+      "debug": {
+        "reproduce": "Use matching and mismatching expected 404 bodies, plus success and gated-auth controls.",
+        "acceptance": "Matches follow the documented bounded-body policy, or an unsupported specification fails before the probe. Authentication gating remains explicit.",
+        "public_runners": [
+          "ubuntu-latest",
+          "windows-latest"
+        ],
+        "graphify_mcp": false
+      }
+    },
+    {
+      "version": "v0.0.6.93",
+      "issue": 93,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.92",
+      "title": "Resolve published GitHub refs with published semantics",
+      "priority": "High",
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44631303188/job/135938331014",
+      "debug": {
+        "reproduce": "Use a local-only origin/main alias, a real published slash branch, and a public HEAD link while on a local topic branch.",
+        "acceptance": "The alias cannot falsely verify, genuine fetched branches resolve, and HEAD uses the remote default. Retain .72’s fetched-ref controls.",
+        "public_runners": [
+          "ubuntu-latest",
+          "windows-latest"
+        ],
+        "graphify_mcp": false
+      }
+    },
+    {
+      "version": "v0.0.6.94",
+      "issue": 94,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.93",
+      "title": "Verify the repair plan’s acceptance text",
+      "priority": "High",
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44631303188/job/135938331014",
+      "debug": {
+        "reproduce": "Remove an acceptance section, change one obligation, and compare with the approved or explicitly revised version.",
+        "acceptance": "Unapproved drift fails while the approved text passes. Pin the selected plan revision and run Graphify MCP checks.",
+        "public_runners": [
+          "ubuntu-latest"
+        ],
+        "graphify_mcp": true
+      }
+    },
+    {
+      "version": "v0.0.6.95",
+      "issue": 95,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.94",
+      "title": "Check animation frames or report partial media coverage",
+      "priority": "Medium",
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44631303188/job/135938331014",
+      "debug": {
+        "reproduce": "Use a GIF with a truncated later frame, a valid animation and a static control.",
+        "acceptance": "Later-frame failure is detected or reported as partial coverage. Valid media follows the supported resource policy.",
+        "public_runners": [
+          "ubuntu-latest",
+          "windows-latest"
+        ],
+        "graphify_mcp": false
+      }
+    },
+    {
+      "version": "v0.0.6.96",
+      "issue": 96,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.95",
+      "title": "Record and verify the final destination of remote smoke requests",
+      "priority": "Medium",
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44631303188/job/135938331014",
+      "debug": {
+        "reproduce": "Compare an expected redirect, an unexpected landing page with matching text, and a direct response.",
+        "acceptance": "The receipt identifies the effective URL. When a destination is asserted, an unrelated landing page fails.",
+        "public_runners": [
+          "ubuntu-latest",
+          "windows-latest"
+        ],
+        "graphify_mcp": false
+      }
+    },
+    {
+      "version": "v0.0.6.97",
+      "issue": 97,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.96",
+      "title": "Report unknown technique IDs explicitly",
+      "priority": "Medium",
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44631303188/job/135938331014",
+      "debug": {
+        "reproduce": "Run unknown, active, retired and out-of-scope technique fixtures.",
+        "acceptance": "The unknown ID reports a diagnostic. Active IDs produce valid output and intentional exclusions are distinguishable.",
+        "public_runners": [
+          "ubuntu-latest"
+        ],
+        "graphify_mcp": false
+      }
+    },
+    {
+      "version": "v0.0.6.98",
+      "issue": 98,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.97",
+      "title": "Bind Graphify PR verification to the base ref and SHA",
+      "priority": "Medium",
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44631303188/job/135938331014",
+      "debug": {
+        "reproduce": "Retarget the PR between reads with the same head, then run a stable-base control.",
+        "acceptance": "Retargeting prevents a coherent verified observation. The stable receipt identifies the exact base and head.",
+        "public_runners": [
+          "ubuntu-latest"
+        ],
+        "graphify_mcp": true
+      }
+    },
+    {
+      "version": "v0.0.6.99",
+      "issue": 99,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.98",
+      "title": "Validate smoke mode and matcher types before execution",
+      "priority": "Medium",
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44631303188/job/135938331014",
+      "debug": {
+        "reproduce": "Exercise argv-only, URL-only, both, neither and a non-string contains matcher with a harmless action marker.",
+        "acceptance": "Valid modes still work. Invalid specs stop before requests or command execution, with a structured diagnostic.",
+        "public_runners": [
+          "ubuntu-latest",
+          "windows-latest"
+        ],
+        "graphify_mcp": false
+      }
+    },
+    {
+      "version": "v0.0.6.100",
+      "issue": 100,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.99",
+      "title": "Make Graphify binary inventory size behavior explicit",
+      "priority": "Low",
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44631303188/job/135938331014",
+      "debug": {
+        "reproduce": "Run valid inventory below and above the 1 MB cap, plus a text anchor boundary control.",
+        "acceptance": "The published limits match observed behavior. Any larger inventory support remains bounded and preserves exact source digests.",
+        "public_runners": [
+          "ubuntu-latest"
+        ],
+        "graphify_mcp": true
+      }
+    },
+    {
+      "version": "v0.0.6.101",
+      "issue": 101,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.100",
+      "title": "Isolate smoke commands from the audited Git repository",
+      "priority": "High",
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44633049784/job/135944431011",
+      "debug": {
+        "reproduce": "Have a disposable action write a harmless local Git setting. Inspect the source configuration, refs and files afterward.",
+        "acceptance": "The audited repository remains unchanged under the default smoke behavior. Ordinary output and exit checks still work.",
+        "public_runners": [
+          "ubuntu-latest",
+          "windows-latest"
+        ],
+        "graphify_mcp": false
+      }
+    },
+    {
+      "version": "v0.0.6.102",
+      "issue": 102,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.101",
+      "title": "Include audit scope in adopter receipts",
+      "priority": "Medium",
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44633049784/job/135944431011",
+      "debug": {
+        "reproduce": "Compare the same commit across distinct repository labels, profiles and subprojects.",
+        "acceptance": "The receipt makes the selected scope distinguishable and states which repository identity was inferred or verified.",
+        "public_runners": [
+          "ubuntu-latest",
+          "windows-latest"
+        ],
+        "graphify_mcp": false
+      }
+    },
+    {
+      "version": "v0.0.6.103",
+      "issue": 103,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.102",
+      "title": "Distinguish GitHub run attempts and jobs in receipts",
+      "priority": "Medium",
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44633049784/job/135944431011",
+      "debug": {
+        "reproduce": "Use two attempts with one run ID, distinct jobs, and a standalone execution.",
+        "acceptance": "Hosted receipts identify the actual attempt and job. Standalone output stays usable and labels unavailable CI metadata.",
+        "public_runners": [
+          "ubuntu-latest",
+          "windows-latest"
+        ],
+        "graphify_mcp": false
+      }
+    },
+    {
+      "version": "v0.0.6.104",
+      "issue": 104,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.103",
+      "title": "Make partial-clone object fetching explicit",
+      "priority": "Medium",
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44633049784/job/135944431011",
+      "debug": {
+        "reproduce": "Use a missing blob with the offline policy and an explicitly permitted fetch, plus a complete-clone control.",
+        "acceptance": "Offline reads leave the blob unfetched and report the gap. Authorized fetches and complete clones record the actual coverage.",
+        "public_runners": [
+          "ubuntu-latest",
+          "windows-latest"
+        ],
+        "graphify_mcp": false
+      }
+    },
+    {
+      "version": "v0.0.6.105",
+      "issue": 105,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.104",
+      "title": "Reject empty or separately label empty Graphify output",
+      "priority": "Medium",
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44633049784/job/135944431011",
+      "debug": {
+        "reproduce": "Build zero-evidence, inventory-only and feature-bearing manifests.",
+        "acceptance": "A root-only graph cannot qualify as evidence-bearing. Supported inventory and feature controls retain accurate MCP evidence and receipts.",
+        "public_runners": [
+          "ubuntu-latest"
+        ],
+        "graphify_mcp": true
+      }
+    },
+    {
+      "version": "v0.0.6.106",
+      "issue": 106,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.105",
+      "title": "Validate the SVG element namespace",
+      "priority": "Medium",
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44633049784/job/135944431011",
+      "debug": {
+        "reproduce": "Use valid default and prefixed SVG namespaces, a foreign namespace and malformed XML.",
+        "acceptance": "Only supported SVG root identities pass. Wrong namespace and malformed XML retain meaningful diagnostics.",
+        "public_runners": [
+          "ubuntu-latest",
+          "windows-latest"
+        ],
+        "graphify_mcp": false
+      }
+    },
+    {
+      "version": "v0.0.6.107",
+      "issue": 107,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.106",
+      "title": "Parse GitHub plain-mode query parameters",
+      "priority": "Medium",
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44633049784/job/135944431011",
+      "debug": {
+        "reproduce": "Compare plain mode alone, extra parameters in either order, and an invalid line range.",
+        "acceptance": "Valid plain links remain valid with extra query parameters. An invalid range still fails the line bounds check.",
+        "public_runners": [
+          "ubuntu-latest",
+          "windows-latest"
+        ],
+        "graphify_mcp": false
+      }
+    },
+    {
+      "version": "v0.0.6.108",
+      "issue": 108,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.107",
+      "title": "Require rendered checkpoint and version tables",
+      "priority": "High",
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44634064022/job/135947933810",
+      "debug": {
+        "reproduce": "Fence the approved-looking plan and version rows, then add table-looking examples beside a real rendered table.",
+        "acceptance": "Hidden tables fail the appropriate reader or Graphify checks. Only the actual navigation table is counted.",
+        "public_runners": [
+          "ubuntu-latest",
+          "windows-latest"
+        ],
+        "graphify_mcp": true
+      }
+    },
+    {
+      "version": "v0.0.6.109",
+      "issue": 109,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.108",
+      "title": "Reuse public GitHub metadata within one learning intake",
+      "priority": "Medium",
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44634064022/job/135947933810",
+      "debug": {
+        "reproduce": "Replay 32 distinct anchors at one commit with a bounded mock API budget, then vary the commit and simulate a genuine limit.",
+        "acceptance": "Redundant metadata calls collapse while each anchor is independently checked. Distinct commits and rate-limit diagnostics remain accurate.",
+        "public_runners": [
+          "ubuntu-latest"
+        ],
+        "graphify_mcp": false
+      }
+    },
+    {
+      "version": "v0.0.6.110",
+      "issue": 110,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.109",
+      "title": "Distinguish raw GitHub files from rendered heading destinations",
+      "priority": "Medium",
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44634064022/job/135947933810",
+      "debug": {
+        "reproduce": "Compare a raw URL and a rendered blob URI for the same tracked Markdown and fragment.",
+        "acceptance": "The raw file’s existence is tracked separately from unsupported fragment coverage. The real rendered heading still verifies.",
+        "public_runners": [
+          "ubuntu-latest",
+          "windows-latest"
+        ],
+        "graphify_mcp": false
+      }
+    },
+    {
+      "version": "v0.0.6.111",
+      "issue": 111,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.110",
+      "title": "Prevent draft reads through symlinked ancestors",
+      "priority": "Medium",
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44634064022/job/135947933810",
+      "debug": {
+        "reproduce": "Replace a tracked directory with an internal symlink, then test an external target and a normal edited draft.",
+        "acceptance": "Substituted bytes are rejected or explicitly marked outside tracked draft coverage. A regular draft still validates normally.",
+        "public_runners": [
+          "ubuntu-latest",
+          "windows-latest"
+        ],
+        "graphify_mcp": false
+      }
+    },
+    {
+      "version": "v0.0.6.112",
+      "issue": 112,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.111",
+      "title": "Keep validation errors visible when receipt writes fail",
+      "priority": "Low",
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44634064022/job/135947933810",
+      "debug": {
+        "reproduce": "Use an existing directory as the receipt path for a broken-link audit and a passing audit.",
+        "acceptance": "The persistence issue is reported without dropping findings or emitting a traceback. A writable receipt path still produces valid JSON.",
+        "public_runners": [
+          "ubuntu-latest",
+          "windows-latest"
+        ],
+        "graphify_mcp": false
+      }
+    },
+    {
+      "version": "v0.0.6.113",
+      "issue": 113,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.112",
+      "title": "Detect missing HTML image alternatives",
+      "priority": "Medium",
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44634204082/job/135948411631",
+      "debug": {
+        "reproduce": "Compare omitted alt, an explicitly decorative empty alt, and descriptive alt.",
+        "acceptance": "Omission receives a meaningful diagnostic. Both valid accessibility controls retain their expected result.",
+        "public_runners": [
+          "ubuntu-latest",
+          "windows-latest"
+        ],
+        "graphify_mcp": false
+      }
+    },
+    {
+      "version": "v0.0.6.114",
+      "issue": 114,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.113",
+      "title": "Apply or reject adopter-only flags explicitly",
+      "priority": "Medium",
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44634204082/job/135948411631",
+      "debug": {
+        "reproduce": "Run standalone defaults, adopter scope flags without a repository, and valid and invalid explicit adopter scopes.",
+        "acceptance": "The CLI never silently validates README HQ when the user supplied a different scope. Valid standalone and adopter uses remain supported.",
+        "public_runners": [
+          "ubuntu-latest",
+          "windows-latest"
+        ],
+        "graphify_mcp": false
+      }
+    },
+    {
+      "version": "v0.0.6.115",
+      "issue": 115,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.114",
+      "title": "Validate the learning request structure before processing",
+      "priority": "Low",
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44634204082/job/135948411631",
+      "debug": {
+        "reproduce": "Use an array, null, malformed nested source and target data, and a valid object.",
+        "acceptance": "Malformed inputs receive stable CLI diagnostics without a traceback or receipt publication. Valid intake still writes its receipt.",
+        "public_runners": [
+          "ubuntu-latest",
+          "windows-latest"
+        ],
+        "graphify_mcp": false
+      }
+    },
+    {
+      "version": "v0.0.6.116",
+      "issue": 116,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.115",
+      "title": "Verify Graphify inventory relations over MCP",
+      "priority": "Medium",
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44634204082/job/135948411631",
+      "debug": {
+        "reproduce": "Use a count-preserving mutation of an inventory edge and the matching graph digest, with valid inventory and feature controls.",
+        "acceptance": "Wrong inventory identities or destinations fail the real MCP readback. Correct feature and file relations still pass.",
+        "public_runners": [
+          "ubuntu-latest"
+        ],
+        "graphify_mcp": true
+      }
+    },
+    {
+      "version": "v0.0.6.117",
+      "issue": 117,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.116",
+      "title": "Make Windows CI fail on the validator’s actual exit",
+      "priority": "High",
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44634204082/job/135948412069",
+      "debug": {
+        "reproduce": "Force the validator to fail before a passing test command, then repeat with both commands passing.",
+        "acceptance": "The public Windows job comes back red for validator failure and preserves its receipt. Ubuntu and clean Windows controls pass.",
+        "public_runners": [
+          "ubuntu-latest",
+          "windows-latest"
+        ],
+        "graphify_mcp": false
+      }
+    },
+    {
+      "version": "v0.0.6.118",
+      "issue": 118,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.117",
+      "title": "Recognize the repository’s actual Quickstart",
+      "priority": "High",
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44634440367/job/135949209668",
+      "debug": {
+        "reproduce": "Audit the candidate README, a valid action after a large navigation table, and a fake Quickstart with an unrelated link.",
+        "acceptance": "The real first action passes. The invalid route fails and the validator still identifies the effective README.",
+        "public_runners": [
+          "ubuntu-latest",
+          "windows-latest"
+        ],
+        "graphify_mcp": false
+      }
+    },
+    {
+      "version": "v0.0.6.119",
+      "issue": 119,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.118",
+      "title": "Make rich-text navigation coverage explicit",
+      "priority": "Medium",
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44634440367/job/135949209668",
+      "debug": {
+        "reproduce": "Use pinned reStructuredText and AsciiDoc files with good and broken links, anchors and first actions.",
+        "acceptance": "Supported routes are checked and bad ones diagnosed. Unsupported coverage is explicit and cannot look like complete validation.",
+        "public_runners": [
+          "ubuntu-latest",
+          "windows-latest"
+        ],
+        "graphify_mcp": false
+      }
+    },
+    {
+      "version": "v0.0.6.120",
+      "issue": 120,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.119",
+      "title": "Publish a copyable first-action proof guide",
+      "priority": "Medium",
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44634440367/artifacts/14582678432",
+      "debug": {
+        "reproduce": "Run documented command-mode examples from clean Ubuntu and Windows checkouts, then exercise the documented failure and URL behavior.",
+        "acceptance": "The example binds the expected result to an exact SHA and working directory and yields inspectable pass and failure receipts.",
+        "public_runners": [
+          "ubuntu-latest",
+          "windows-latest"
+        ],
+        "graphify_mcp": false
+      }
+    },
+    {
+      "version": "v0.0.6.121",
+      "issue": 121,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.120",
+      "title": "Reuse parsed anchors for a pinned Markdown blob",
+      "priority": "Medium",
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44635421690/job/135952553310",
+      "debug": {
+        "reproduce": "Measure actual reads and parses for 64 links to one file, then include distinct refs and fragments and an edited draft.",
+        "acceptance": "Redundant blob work falls while valid and broken links keep their exact outcomes. An updated draft cannot reuse stale anchors.",
+        "public_runners": [
+          "ubuntu-latest",
+          "windows-latest"
+        ],
+        "graphify_mcp": false
+      }
+    },
+    {
+      "version": "v0.0.6.122",
+      "issue": 122,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.121",
+      "title": "Prepare reader dependencies before the retained plan check",
+      "priority": "Medium",
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44635421690/job/135952553310",
+      "debug": {
+        "reproduce": "Run the intended plan workflow against a clean interpreter and the pinned checkout without preinstalled packages.",
+        "acceptance": "The hashed reader setup precedes validation, or the historical workflow runs against its declared original checkout. Reader and Graphify steps run in the intended order.",
+        "public_runners": [
+          "ubuntu-latest"
+        ],
+        "graphify_mcp": true
+      }
+    },
+    {
+      "version": "v0.0.6.123",
+      "issue": 123,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.122",
+      "title": "Link Graphify rich-text evidence to physical source lines",
+      "priority": "Medium",
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44635421690/job/135952553310",
+      "debug": {
+        "reproduce": "Generate Markdown, reStructuredText and AsciiDoc line links and open the pinned examples.",
+        "acceptance": "Each supported link resolves to the exact source view and line. The changed map and receipt pass Graphify MCP verification.",
+        "public_runners": [
+          "ubuntu-latest"
+        ],
+        "graphify_mcp": true
+      }
+    },
+    {
+      "version": "v0.0.6.124",
+      "issue": 124,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.123",
+      "title": "Retain real Graphify evidence after a failed CI attempt",
+      "priority": "High",
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44635863502/job/135954070928",
+      "debug": {
+        "reproduce": "Force a verification mismatch after an earlier artifact was produced. Repeat on a successful run.",
+        "acceptance": "The failed job stays failed, and its attempt-specific diagnostic and available evidence remain downloadable. Prior and unchecked receipts are labeled separately.",
+        "public_runners": [
+          "ubuntu-latest"
+        ],
+        "graphify_mcp": true
+      }
+    },
+    {
+      "version": "v0.0.6.125",
+      "issue": 125,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.124",
+      "title": "Publish plan partitions only after all staged manifests succeed",
+      "priority": "Medium",
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44635863502/job/135954070600",
+      "debug": {
+        "reproduce": "Make a second partition fail in a 33-checkpoint plan, then correct it and retry at the same output path.",
+        "acceptance": "The failed input leaves no partial published manifests. The corrected retry succeeds at the original destination and preserves complete partition coverage.",
+        "public_runners": [
+          "ubuntu-latest"
+        ],
+        "graphify_mcp": true
+      }
+    },
+    {
+      "version": "v0.0.6.126",
+      "issue": 126,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.125",
+      "title": "Make required first-action verification distinguish skipped coverage",
+      "priority": "High",
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44635863502/job/135954070600",
+      "debug": {
+        "reproduce": "Request a pinned HTTPS probe without network permission. Compare blocked, unresolved and failing probes with a successful local action.",
+        "acceptance": "A skipped or blocked required smoke check cannot look like a confirmed pass. Network access remains opt-in and the observed result is explicit.",
+        "public_runners": [
+          "ubuntu-latest",
+          "windows-latest"
+        ],
+        "graphify_mcp": false
+      }
+    },
+    {
+      "version": "v0.0.6.127",
+      "issue": 127,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.126",
+      "title": "Preserve actionable first-action failure diagnostics",
+      "priority": "Medium",
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44635863502/job/135954070600",
+      "debug": {
+        "reproduce": "Run commands with the same exit code and distinct failure reasons, then exercise an output-marker mismatch and a missing file.",
+        "acceptance": "The receipt distinguishes failure causes, retains reproducibility hashes and exposes bounded diagnostics under the documented redaction policy.",
+        "public_runners": [
+          "ubuntu-latest",
+          "windows-latest"
+        ],
+        "graphify_mcp": false
+      }
+    },
+    {
+      "version": "v0.0.6.128",
+      "issue": 128,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.127",
+      "title": "Distinguish retryable GitHub errors from invalid learning evidence",
+      "priority": "Medium",
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44635863502/job/135954070600",
+      "debug": {
+        "reproduce": "Simulate HTTP 429 and a wrong pinned source anchor, then run the valid control.",
+        "acceptance": "The CLI reports distinct structured error categories and retry timing when provided, with sanitized context. Valid intake still succeeds.",
+        "public_runners": [
+          "ubuntu-latest",
+          "windows-latest"
+        ],
+        "graphify_mcp": false
+      }
+    }
+  ]
+}
