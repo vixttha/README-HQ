@@ -1,6 +1,6 @@
 # README HQ v0.0.6 repair pipeline
 
-Baseline [`v0.0.6` at `f50e374`](https://github.com/vixttha/README-HQ/commit/f50e3749dab90ddfe35894284d1660097a1fb1a8). The [public audit](https://github.com/vixttha/README-HQ/actions/runs/44510897511) reproduced the initial ten findings. The [portability audit](https://github.com/vixttha/README-HQ/actions/runs/44513298531) added seven checkpoints. The [learning audit](https://github.com/vixttha/README-HQ/actions/runs/44515197237) adds seven through `v0.0.6.24`. The [assurance audit](https://github.com/vixttha/README-HQ/actions/runs/44516410470) and Graphify capacity check add nine through `v0.0.6.33`. The [Graphify integrity audit](https://github.com/vixttha/README-HQ/actions/runs/44518000891) adds seven through `v0.0.6.40`. Each issue owns one cumulative repair checkpoint. The first checkpoint is ready to implement and the later checkpoints follow it in order.
+Baseline [`v0.0.6` at `f50e374`](https://github.com/vixttha/README-HQ/commit/f50e3749dab90ddfe35894284d1660097a1fb1a8). The [public audit](https://github.com/vixttha/README-HQ/actions/runs/44510897511) reproduced the initial ten findings. The [portability audit](https://github.com/vixttha/README-HQ/actions/runs/44513298531) added seven checkpoints. The [learning audit](https://github.com/vixttha/README-HQ/actions/runs/44515197237) adds seven through `v0.0.6.24`. The [assurance audit](https://github.com/vixttha/README-HQ/actions/runs/44516410470) and Graphify capacity check add nine through `v0.0.6.33`. The [Graphify integrity audit](https://github.com/vixttha/README-HQ/actions/runs/44518000891) adds seven through `v0.0.6.40`. The [reader and evidence audit](https://github.com/vixttha/README-HQ/actions/runs/44524104958/job/135560019059) adds nine through `v0.0.6.49`. Each issue owns one cumulative repair checkpoint. The first checkpoint is ready to implement and the later checkpoints follow it in order.
 
 [Graphify plan](../../graphify-hq/plans/v0.0.6-repairs/README.md)
 
@@ -48,6 +48,15 @@ Baseline [`v0.0.6` at `f50e374`](https://github.com/vixttha/README-HQ/commit/f50
 | `v0.0.6.38` | [#38](https://github.com/vixttha/README-HQ/issues/38) | Source line bounds | Medium | `v0.0.6.37` |
 | `v0.0.6.39` | [#39](https://github.com/vixttha/README-HQ/issues/39) | Archive inventory completeness | High | `v0.0.6.38` |
 | `v0.0.6.40` | [#40](https://github.com/vixttha/README-HQ/issues/40) | Version map coverage | High | `v0.0.6.39` |
+| `v0.0.6.41` | [#41](https://github.com/vixttha/README-HQ/issues/41) | Exact Git line coordinates | High | `v0.0.6.40` |
+| `v0.0.6.42` | [#42](https://github.com/vixttha/README-HQ/issues/42) | Binary media inventory | Medium | `v0.0.6.41` |
+| `v0.0.6.43` | [#43](https://github.com/vixttha/README-HQ/issues/43) | Graph and receipt publication | High | `v0.0.6.42` |
+| `v0.0.6.44` | [#44](https://github.com/vixttha/README-HQ/issues/44) | Bounded GitHub PR history | Medium | `v0.0.6.43` |
+| `v0.0.6.45` | [#45](https://github.com/vixttha/README-HQ/issues/45) | External reader entry points | High | `v0.0.6.44` |
+| `v0.0.6.46` | [#46](https://github.com/vixttha/README-HQ/issues/46) | Learning source coordinates | High | `v0.0.6.45` |
+| `v0.0.6.47` | [#47](https://github.com/vixttha/README-HQ/issues/47) | Technique retirement in recommendations | Medium | `v0.0.6.46` |
+| `v0.0.6.48` | [#48](https://github.com/vixttha/README-HQ/issues/48) | Complete MCP readback at supported limits | High | `v0.0.6.47` |
+| `v0.0.6.49` | [#49](https://github.com/vixttha/README-HQ/issues/49) | Git branch-name compatibility | Medium | `v0.0.6.48` |
 
 ## Checkpoint workflow
 
@@ -55,7 +64,7 @@ Baseline [`v0.0.6` at `f50e374`](https://github.com/vixttha/README-HQ/commit/f50
 2. Make the scoped repair as its own checkpoint. Preserve a distinct commit and link it to the issue.
 3. Run the checkpoint regression and applicable existing checks on standard public GitHub-hosted runners. Rebuild Graphify and query MCP for any change to graph generation, source evidence, or the version index.
 4. Review the combined candidate against the intended base. Record the exact tested SHA, public runner links, Graphify evidence when relevant, and any unresolved conflicts on the issue before advancing to the next checkpoint.
-5. Review the combined series after `v0.0.6.40`. Homepage publication and release decisions stay with the owner.
+5. Review the combined series after `v0.0.6.49`. Homepage publication and release decisions stay with the owner.
 
 ## Verification by checkpoint
 
@@ -246,3 +255,43 @@ The installed Graphify template accepts at most 32 feature nodes per manifest. T
 ### v0.0.6.40
 
 - Require independently defined coverage for every advertised version. Reject empty or incomplete record sets and identify missing versions and record IDs before publishing verified artifacts.
+
+## Reader routes, Graphify limits, and learning evidence
+
+[Audit report](https://github.com/vixttha/README-HQ/blob/13a2bbe235c859732a522d16d9ec5fddc436c7d3/audits/reader-evidence-v0.0.6.md) · [Public reproduction](https://github.com/vixttha/README-HQ/actions/runs/44524104958/job/135560019059)
+
+### v0.0.6.41
+
+- Use one explicit Git-compatible line model for locating evidence and generating source links. Test embedded Unicode separators and CRLF against pinned physical line numbers.
+
+### v0.0.6.42
+
+- Hash and inventory supported binary blobs without decoding them. Require text decoding only for line anchors, and report unsupported anchor types clearly.
+
+### v0.0.6.43
+
+- Stage and validate the graph and receipt as a pair. Preserve the prior accepted pair on a publication failure and test recovery and repeat builds.
+
+### v0.0.6.44
+
+- Check for a capped commit listing. Resolve membership through a complete supported evidence route or report that membership could not be verified from the bounded response.
+
+### v0.0.6.45
+
+- Verify explicitly declared, authorized remote first-action URLs against an expected result when supported. Record unchecked, unresolved, gated, and broken routes distinctly in offline and online checks.
+
+### v0.0.6.46
+
+- Require a positive in-range integer coordinate and a meaningful nonempty anchor before comparing the pinned contents. Cover zero, negative, empty, and valid first/last-line evidence.
+
+### v0.0.6.47
+
+- Resolve existing recommendations against the canonical technique state and applicable registry revision. Exclude retired IDs from active recommendations and preserve prior decision history.
+
+### v0.0.6.48
+
+- Verify complete relationship readback for every supported manifest. Query by relation or page results, detect truncation explicitly, and test long valid paths at the documented limits.
+
+### v0.0.6.49
+
+- Validate source branch names with Git-compatible rules and compare the literal name to the API response. Exercise leading underscores, nested ref names, and invalid refs.
