@@ -12,6 +12,133 @@
   },
   "debug_before_merge": true,
   "public_github_hosted_runners_only": true,
+  "backlog_management": {
+    "source": "https://github.com/vixttha/README-HQ/issues",
+    "numbering": "append_next_unused_checkpoint_preserve_existing_mappings",
+    "reconcile": [
+      "new_distinct_issues",
+      "reopened_issues",
+      "material_evidence_or_state_changes"
+    ],
+    "required_new_checkpoint_context": [
+      "affected_revision",
+      "related_checkpoints",
+      "baseline_replay",
+      "post_fix_acceptance",
+      "public_runner_coverage"
+    ],
+    "covered_by_earlier_repair": "replay_own_case_and_control_on_exact_repair_sha_preserve_checkpoint"
+  },
+  "post_fix_debug_gate": {
+    "required_before": [
+      "advance",
+      "merge_consideration"
+    ],
+    "evidence_on_exact_repair_sha": [
+      "original_failure_replay",
+      "passing_control",
+      "relevant_regressions",
+      "public_job_and_attempt_evidence"
+    ]
+  },
+  "related_issue_groups": [
+    {
+      "id": "scope-and-provenance",
+      "issues": [
+        78,
+        79,
+        84,
+        90,
+        98,
+        102,
+        103,
+        114
+      ],
+      "regression": "Compare two scopes at the same commit, an intentionally changed input snapshot and a stable control. Inspect the actual selected scope, producer and attempt where each is defined.",
+      "source_commit": "8d50caec2bc6fcb998994a1fd302294a029325f9",
+      "source_paths": [
+        "tools/check_readme_hq.py",
+        "learning/intake.py"
+      ]
+    },
+    {
+      "id": "outcome-and-diagnostics",
+      "issues": [
+        85,
+        99,
+        112,
+        117,
+        124,
+        126,
+        127,
+        128
+      ],
+      "regression": "Carry one passing control, one forced failure and one requested-but-unrun case through their relevant CLI, receipt and hosted evidence boundaries. Verify failure artifacts where applicable.",
+      "source_commit": "8d50caec2bc6fcb998994a1fd302294a029325f9",
+      "source_paths": [
+        "tools/hq_smoke.py",
+        ".github/workflows/readme-hq.yml"
+      ]
+    },
+    {
+      "id": "graph-and-plan-coverage",
+      "issues": [
+        83,
+        86,
+        94,
+        105,
+        108,
+        116,
+        125
+      ],
+      "regression": "Compare the graph to the approved plan and source inventory, preserve a correct control and test a late failure followed by a same-path retry.",
+      "source_commit": "8d50caec2bc6fcb998994a1fd302294a029325f9",
+      "source_paths": [
+        "tools/verify_plan.py",
+        "graphify-hq/template/v0.0.8/evidence_map.py"
+      ]
+    },
+    {
+      "id": "published-reader-path",
+      "issues": [
+        80,
+        89,
+        93,
+        107,
+        110,
+        118,
+        119,
+        120,
+        121,
+        123
+      ],
+      "regression": "Walk the effective homepage, pinned navigation and first-action example from clean checkouts. Include fallback homepages, format-specific rendering and unsupported coverage.",
+      "source_commit": "8d50caec2bc6fcb998994a1fd302294a029325f9",
+      "source_paths": [
+        "tools/hq_navigation.py",
+        "tools/check_readme_hq.py"
+      ]
+    },
+    {
+      "id": "learning-intake",
+      "issues": [
+        79,
+        81,
+        87,
+        91,
+        97,
+        109,
+        115,
+        128
+      ],
+      "regression": "Exercise valid and retired techniques, repeated commits, malformed inputs, conflicting decisions, a simulated rate limit and a wrong pinned anchor. Keep per-anchor checks and record the decision against the snapshot used.",
+      "source_commit": "8d50caec2bc6fcb998994a1fd302294a029325f9",
+      "source_paths": [
+        "learning/intake.py",
+        "learning/audit_learning.py"
+      ]
+    }
+  ],
   "checkpoints": [
     {
       "version": "v0.0.6.78",
