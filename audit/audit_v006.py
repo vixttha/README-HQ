@@ -191,9 +191,11 @@ def check_graph_output_retry(worktree, temporary):
 
     def fail_second(*args, **kwargs):
         nonlocal calls
-        calls += 1
-        if calls == 2:
-            raise subprocess.CalledProcessError(1, args[0])
+        command = args[0]
+        if len(command) > 1 and command[1] == str(version_maps.TEMPLATE):
+            calls += 1
+            if calls == 2:
+                raise subprocess.CalledProcessError(1, command)
         return run(*args, **kwargs)
 
     with patch.object(sys, "argv", sys_path), patch.object(version_maps.subprocess, "run", side_effect=fail_second):
