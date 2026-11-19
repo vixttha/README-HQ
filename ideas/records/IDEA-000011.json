@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "id": "IDEA-000011",
+  "title": "Show which reader tasks actually ran",
+  "summary": "Give the README audit a per-task coverage view that distinguishes a completed pass, a failure, and checks that were skipped or unsupported across rendered navigation and first-use actions.",
+  "kind": "process",
+  "origin": {
+    "created_by": "assistant",
+    "source": "2026-11-19 · README HQ audit findings #119 and #126 and the first-use proof discussion."
+  },
+  "lifecycle_status": "captured",
+  "implementation_status": "not_planned",
+  "testing": {
+    "status": "untested"
+  },
+  "importance": "high",
+  "complexity": "medium",
+  "categories": [
+    "reader-journey",
+    "audit-coverage",
+    "first-use"
+  ],
+  "benefits": [
+    "A reviewer can see whether a green aggregate included the reader journey they care about."
+  ],
+  "risks": [
+    "A viewer could treat an unsupported format or unavailable runner as a passing check if those states are hidden in a summary."
+  ],
+  "related_ideas": [
+    "IDEA-000002",
+    "IDEA-000003",
+    "IDEA-000006"
+  ],
+  "evidence": [
+    {
+      "relation": "context",
+      "claim": "The plan records omitted rendered navigation and skipped first-action verification as distinct problems.",
+      "repository": "vixttha/README-HQ",
+      "commit": "4457fc1e82f2cff0225536ff1c43e3e565fb46db",
+      "path": "plans/v0.0.6.78-to-v0.0.6.128/README.md"
+    }
+  ]
+}

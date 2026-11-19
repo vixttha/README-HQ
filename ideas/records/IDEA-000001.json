@@ -2,7 +2,7 @@
   "schema_version": 1,
   "id": "IDEA-000001",
   "title": "Dogfood README HQ on its own homepage",
-  "summary": "Use a dedicated workspace to draft the README HQ main-branch homepage. Capture where the guide helps or leaves a reader without a next step.",
+  "summary": "Use a dedicated workspace to draft README HQ's own main-branch homepage. Compare the current and proposed pages on finding the active guide, running the first documented check, and reaching pinned evidence.",
   "kind": "process",
   "origin": {
     "created_by": "assistant",
@@ -26,7 +26,8 @@
     "A self-test covers one repository and leaves external adoption behavior to later trials."
   ],
   "related_ideas": [
-    "IDEA-000002"
+    "IDEA-000002",
+    "IDEA-000011"
   ],
   "evidence": [
     {

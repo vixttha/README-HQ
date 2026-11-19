@@ -8,11 +8,13 @@
   "implementation_status": "not_planned",
   "idea_ids": [
     "IDEA-000001",
-    "IDEA-000002"
+    "IDEA-000002",
+    "IDEA-000011"
   ],
   "acceptance_criteria": [
-    "Pin the template SHA and the homepage revision it is applied to.",
-    "Record the first reader action, narrow rendering, and agent instruction route before homepage review."
+    "Pin the template and the original homepage at their exact Git SHAs.",
+    "Compare both pages on finding the active guide, running the first documented check, and finding the evidence for the selected version.",
+    "Record the human and agent routes and any gaps in the dedicated self-use proposal."
   ],
   "testing": {
     "status": "untested"

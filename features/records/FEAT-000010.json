@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "id": "FEAT-000010",
+  "title": "Reusable README technique registry",
+  "summary": "Catalog evidence-backed README practices with stable IDs and references so audits can reuse known techniques and extend their evidence.",
+  "kind": "capability",
+  "lifecycle_status": "implemented",
+  "implementation_status": "implemented",
+  "idea_ids": [
+    "IDEA-000005"
+  ],
+  "acceptance_criteria": [
+    "The public registry provides stable technique records that reviewers can cite from audits.",
+    "The guide describes checking active and retired entries for overlap before adding a record."
+  ],
+  "testing": {
+    "status": "untested"
+  },
+  "evidence": [
+    {
+      "kind": "implementation",
+      "claim": "The published technique guide links the registry and defines reuse and evidence rules.",
+      "source_sha": "f50e3749dab90ddfe35894284d1660097a1fb1a8",
+      "source_path": "techniques/README.md",
+      "receipt": "https://github.com/vixttha/README-HQ/blob/f50e3749dab90ddfe35894284d1660097a1fb1a8/techniques/README.md"
+    }
+  ],
+  "release_membership": "NOT_ASSERTED"
+}

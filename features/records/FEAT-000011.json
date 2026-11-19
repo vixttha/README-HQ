@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "id": "FEAT-000011",
+  "title": "Per-task README audit coverage",
+  "summary": "Expose whether each requested reader or agent validation ran and what happened, with an explicit result for coverage the validator could not exercise.",
+  "kind": "capability",
+  "lifecycle_status": "proposed",
+  "implementation_status": "not_planned",
+  "idea_ids": [
+    "IDEA-000011"
+  ],
+  "acceptance_criteria": [
+    "Distinguish passed, failed, skipped, and unsupported tasks in the report.",
+    "A required first-use action that did not run remains incomplete, and unsupported rendered navigation is visible.",
+    "Record the relevant source SHA and task evidence so readers can review the outcome."
+  ],
+  "testing": {
+    "status": "untested"
+  },
+  "evidence": [
+    {
+      "kind": "other",
+      "claim": "The active plan tracks rich-text navigation coverage and missing required first-use verification.",
+      "source_sha": "4457fc1e82f2cff0225536ff1c43e3e565fb46db",
+      "source_path": "plans/v0.0.6.78-to-v0.0.6.128/README.md",
+      "receipt": "https://github.com/vixttha/README-HQ/blob/4457fc1e82f2cff0225536ff1c43e3e565fb46db/plans/v0.0.6.78-to-v0.0.6.128/README.md"
+    }
+  ],
+  "release_membership": "NOT_ASSERTED"
+}

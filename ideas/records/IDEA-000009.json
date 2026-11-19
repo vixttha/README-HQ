@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "id": "IDEA-000009",
+  "title": "Share regression fixtures across related repairs",
+  "summary": "Map issues to shared regression coverage where they exercise the same mechanism. Start with receipt provenance, where adopter and learning receipts need to identify the exact inputs and implementation used.",
+  "kind": "process",
+  "origin": {
+    "created_by": "assistant",
+    "source": "2026-11-19 · Published repair plan's related checkpoints and the README HQ discussion about why issues appear connected."
+  },
+  "lifecycle_status": "captured",
+  "implementation_status": "not_planned",
+  "testing": {
+    "status": "untested"
+  },
+  "importance": "high",
+  "complexity": "medium",
+  "categories": [
+    "repair-planning",
+    "regression-coverage",
+    "provenance"
+  ],
+  "benefits": [
+    "Makes shared assumptions visible and lets each checkpoint run the smallest relevant regression fixture."
+  ],
+  "risks": [
+    "Grouping symptoms can conceal distinct causes. A shared fixture needs an assertion and recorded result for each issue it covers."
+  ],
+  "related_ideas": [
+    "IDEA-000004",
+    "IDEA-000007",
+    "IDEA-000010"
+  ],
+  "evidence": [
+    {
+      "relation": "context",
+      "claim": "The plan groups scope and provenance issues including #78, #79, and #103 while retaining per-issue acceptance.",
+      "repository": "vixttha/README-HQ",
+      "commit": "4457fc1e82f2cff0225536ff1c43e3e565fb46db",
+      "path": "plans/v0.0.6.78-to-v0.0.6.128/README.md"
+    }
+  ]
+}

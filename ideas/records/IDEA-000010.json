@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "id": "IDEA-000010",
+  "title": "Keep a post-fix debug record for every checkpoint",
+  "summary": "Make each repair reviewable from its original failure through the focused fix, a known-good control, and its public runner result at the repair SHA.",
+  "kind": "process",
+  "origin": {
+    "created_by": "assistant",
+    "source": "2026-11-19 · README HQ planning discussion and the documented post-fix debug gate."
+  },
+  "lifecycle_status": "captured",
+  "implementation_status": "not_planned",
+  "testing": {
+    "status": "untested"
+  },
+  "importance": "high",
+  "complexity": "low",
+  "categories": [
+    "repair-planning",
+    "debugging",
+    "evidence"
+  ],
+  "benefits": [
+    "Lets a new session see what was reproduced, what passed after the fix, and what still needs verification before review."
+  ],
+  "risks": [
+    "A run link without the exact SHA, attempt, job, and executed checks can be mistaken for acceptance evidence."
+  ],
+  "related_ideas": [
+    "IDEA-000007",
+    "IDEA-000009"
+  ],
+  "evidence": [
+    {
+      "relation": "context",
+      "claim": "The follow-up plan states the required debug pass, exact public-runner proof, and pre-advance review.",
+      "repository": "vixttha/README-HQ",
+      "commit": "4457fc1e82f2cff0225536ff1c43e3e565fb46db",
+      "path": "plans/v0.0.6.78-to-v0.0.6.128/README.md"
+    }
+  ]
+}

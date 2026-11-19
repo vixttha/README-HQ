@@ -1,17 +1,20 @@
 {
   "schema_version": 1,
   "id": "FEAT-000008",
-  "title": "Repair checkpoint evidence for v0.0.6.68 through v0.0.6.77",
-  "summary": "Track the pre-existing ten-checkpoint proposal and the issue-to-evidence links needed for owner review.",
+  "title": "Repair checkpoint evidence for v0.0.6.68 through v0.0.6.128",
+  "summary": "Track the two published repair plans and the per-issue evidence needed for review. Both plans remain in planning until implementation is approved.",
   "kind": "workflow",
   "lifecycle_status": "planned",
   "implementation_status": "not_planned",
   "idea_ids": [
-    "IDEA-000007"
+    "IDEA-000007",
+    "IDEA-000009",
+    "IDEA-000010"
   ],
   "acceptance_criteria": [
-    "Start checkpoint execution only after owner approval recorded for the plan.",
-    "Each completed checkpoint links its canonical issue, exact commit, and public-runner evidence."
+    "Follow the published sequence and each checkpoint's own acceptance criteria after implementation is approved.",
+    "Replay the original issue and a known-good control after each scoped repair. Record the exact repair SHA, public runner attempt and job, expected and observed outputs, and any gaps before advancing.",
+    "When issues share a fixture or fix, retain separate acceptance results and link them to the revision that actually addressed the behavior."
   ],
   "testing": {
     "status": "untested"
@@ -19,10 +22,17 @@
   "evidence": [
     {
       "kind": "other",
-      "claim": "The public plan defines the order, scope, and owner approval hold.",
+      "claim": "The earlier plan records its checkpoint order and approval hold.",
       "source_sha": "ac07987cfe11d6592b8def2ff16b72a6b2c0a203",
       "source_path": "plans/v0.0.6.68-to-v0.0.6.77/README.md",
       "receipt": "https://github.com/vixttha/README-HQ/blob/ac07987cfe11d6592b8def2ff16b72a6b2c0a203/plans/v0.0.6.68-to-v0.0.6.77/README.md"
+    },
+    {
+      "kind": "other",
+      "claim": "The follow-up plan documents the mapped issue families and the required post-fix debug gate.",
+      "source_sha": "4457fc1e82f2cff0225536ff1c43e3e565fb46db",
+      "source_path": "plans/v0.0.6.78-to-v0.0.6.128/README.md",
+      "receipt": "https://github.com/vixttha/README-HQ/blob/4457fc1e82f2cff0225536ff1c43e3e565fb46db/plans/v0.0.6.78-to-v0.0.6.128/README.md"
     }
   ],
   "release_membership": "NOT_ASSERTED"

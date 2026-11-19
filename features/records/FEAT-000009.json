@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "id": "FEAT-000009",
+  "title": "Source-based repository audit workflow",
+  "summary": "Guide a reviewer through the human README journey and the coding-agent entry point, then capture findings, evidence, and verification gaps at a pinned repository revision.",
+  "kind": "workflow",
+  "lifecycle_status": "implemented",
+  "implementation_status": "implemented",
+  "idea_ids": [],
+  "acceptance_criteria": [
+    "The published workflow guides reviewers to a full target SHA, the README, real entry points, rules, and checks.",
+    "A completed review records reader impact, severity, source references, execution status, and gaps."
+  ],
+  "testing": {
+    "status": "untested"
+  },
+  "evidence": [
+    {
+      "kind": "implementation",
+      "claim": "The published audit guide documents the process and finding format.",
+      "source_sha": "f50e3749dab90ddfe35894284d1660097a1fb1a8",
+      "source_path": "audits/README.md",
+      "receipt": "https://github.com/vixttha/README-HQ/blob/f50e3749dab90ddfe35894284d1660097a1fb1a8/audits/README.md"
+    },
+    {
+      "kind": "implementation",
+      "claim": "The published portfolio audit provides an example of the workflow.",
+      "source_sha": "f50e3749dab90ddfe35894284d1660097a1fb1a8",
+      "source_path": "audits/2026-11-19-foundation.md",
+      "receipt": "https://github.com/vixttha/README-HQ/blob/f50e3749dab90ddfe35894284d1660097a1fb1a8/audits/2026-11-19-foundation.md"
+    }
+  ],
+  "release_membership": "NOT_ASSERTED"
+}
