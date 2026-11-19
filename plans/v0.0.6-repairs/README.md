@@ -1,6 +1,6 @@
 # README HQ v0.0.6 repair pipeline
 
-Baseline [`v0.0.6` at `f50e374`](https://github.com/vixttha/README-HQ/commit/f50e3749dab90ddfe35894284d1660097a1fb1a8). The [public audit](https://github.com/vixttha/README-HQ/actions/runs/44510897511) reproduced the initial ten findings. The [portability audit](https://github.com/vixttha/README-HQ/actions/runs/44513298531) added seven checkpoints. The [learning audit](https://github.com/vixttha/README-HQ/actions/runs/44515197237) adds seven more through `v0.0.6.24`. Each issue owns one cumulative repair checkpoint. The first checkpoint is ready to implement and the later checkpoints follow it in order.
+Baseline [`v0.0.6` at `f50e374`](https://github.com/vixttha/README-HQ/commit/f50e3749dab90ddfe35894284d1660097a1fb1a8). The [public audit](https://github.com/vixttha/README-HQ/actions/runs/44510897511) reproduced the initial ten findings. The [portability audit](https://github.com/vixttha/README-HQ/actions/runs/44513298531) added seven checkpoints. The [learning audit](https://github.com/vixttha/README-HQ/actions/runs/44515197237) adds seven through `v0.0.6.24`. The [assurance audit](https://github.com/vixttha/README-HQ/actions/runs/44516410470) and Graphify capacity check add nine through `v0.0.6.33`. Each issue owns one cumulative repair checkpoint. The first checkpoint is ready to implement and the later checkpoints follow it in order.
 
 [Graphify plan](../../graphify-hq/plans/v0.0.6-repairs/README.md)
 
@@ -32,6 +32,15 @@ Baseline [`v0.0.6` at `f50e374`](https://github.com/vixttha/README-HQ/commit/f50
 | `v0.0.6.22` | [#22](https://github.com/vixttha/README-HQ/issues/22) | Project-specific recommendation receipts | High | `v0.0.6.21` |
 | `v0.0.6.23` | [#23](https://github.com/vixttha/README-HQ/issues/23) | Public and private learning separation | High | `v0.0.6.22` |
 | `v0.0.6.24` | [#24](https://github.com/vixttha/README-HQ/issues/24) | Reuse and attribution boundary | Medium | `v0.0.6.23` |
+| `v0.0.6.25` | [#25](https://github.com/vixttha/README-HQ/issues/25) | Exact Markdown evidence permalinks | Medium | `v0.0.6.24` |
+| `v0.0.6.26` | [#26](https://github.com/vixttha/README-HQ/issues/26) | Rendered Graphify source anchors | Medium | `v0.0.6.25` |
+| `v0.0.6.27` | [#27](https://github.com/vixttha/README-HQ/issues/27) | Behavioral first-use validation | High | `v0.0.6.26` |
+| `v0.0.6.28` | [#28](https://github.com/vixttha/README-HQ/issues/28) | Media and accessible image links | Medium | `v0.0.6.27` |
+| `v0.0.6.29` | [#29](https://github.com/vixttha/README-HQ/issues/29) | Complete diagnostics | Medium | `v0.0.6.28` |
+| `v0.0.6.30` | [#30](https://github.com/vixttha/README-HQ/issues/30) | Target evidence binding | High | `v0.0.6.29` |
+| `v0.0.6.31` | [#31](https://github.com/vixttha/README-HQ/issues/31) | Optimization-safe verification | Medium | `v0.0.6.30` |
+| `v0.0.6.32` | [#32](https://github.com/vixttha/README-HQ/issues/32) | Durable acceptance receipts | Medium | `v0.0.6.31` |
+| `v0.0.6.33` | [#33](https://github.com/vixttha/README-HQ/issues/33) | Graphify roadmap capacity | Medium | `v0.0.6.32` |
 
 ## Checkpoint workflow
 
@@ -39,7 +48,7 @@ Baseline [`v0.0.6` at `f50e374`](https://github.com/vixttha/README-HQ/commit/f50
 2. Make the scoped repair as its own checkpoint. Preserve a distinct commit and link it to the issue.
 3. Run the checkpoint regression and applicable existing checks on standard public GitHub-hosted runners. Rebuild Graphify and query MCP for any change to graph generation, source evidence, or the version index.
 4. Review the combined candidate against the intended base. Record the exact tested SHA, public runner links, Graphify evidence when relevant, and any unresolved conflicts on the issue before advancing to the next checkpoint.
-5. Review the combined series after `v0.0.6.24`. Homepage publication and release decisions stay with the owner.
+5. Review the combined series after `v0.0.6.33`. Homepage publication and release decisions stay with the owner.
 
 ## Verification by checkpoint
 
@@ -156,3 +165,45 @@ Baseline [`v0.0.6` at `f50e374`](https://github.com/vixttha/README-HQ/commit/f50
 ### v0.0.6.24
 
 - Record an owner decision on the HQ template's own reuse terms. For learning from an external example, cite the evidence and store an original abstraction. Require explicit license and attribution metadata before including copied material. Keep unresolved rights visible.
+
+## Assurance and regression verification
+
+[Audit findings and acceptance rubric](https://github.com/vixttha/README-HQ/blob/ef4648eefd09dad06f6901fe81e81f493aef4ef7/audits/assurance-v0.0.6.md) · [Public reproduction](https://github.com/vixttha/README-HQ/actions/runs/44516410470)
+
+The installed Graphify template accepts at most 32 feature nodes per manifest. The [evidence map index](../../graphify-hq/plans/v0.0.6-repairs/README.md) groups the same ordered pipeline into two compilable maps.
+
+### v0.0.6.25
+
+- Generate immutable Markdown source links with the commit, file path, plain-file mode, and accurate line fragment. Verify at least one public source link opens with its exact line highlighted.
+
+### v0.0.6.26
+
+- Select source anchors from rendered source structure or explicit reviewed line anchors. Ignore fenced and indented code for heading and changelog detection. Report an ambiguous or absent anchor.
+
+### v0.0.6.27
+
+- Support explicitly declared, authorized first-use smoke checks with exact revision, environment, invocation, and expected result. Fail on unsuccessful exit and on successful exit with the wrong outcome. Record unsupported, skipped, and unverified scenarios clearly.
+
+### v0.0.6.28
+
+- Verify local media against the published blob using supported format checks. Require a meaningful accessible name for image-only controls and links. Preserve decorative empty alt text where adjacent accessible content already describes the action.
+
+### v0.0.6.29
+
+- Collect file and line diagnostics per URL, continue across independent validation cases, and return a failing result with each observed defect. Keep explicit reporting for sections the validator cannot inspect.
+
+### v0.0.6.30
+
+- Require a resolved target evidence receipt for applicable claims. Verify target facts against a pinned tree, report unresolved evidence, and abstain or mark the recommendation preliminary when the target match cannot be established. Link this pilot defect to the broader project-specific recommendation work in #22.
+
+### v0.0.6.31
+
+- Use explicit conditional failures for provenance and pass/fail reporting, or fail clearly before verification in unsupported execution modes. Test identical malformed evidence under normal and optimized interpreter settings.
+
+### v0.0.6.32
+
+- Generate an exact-SHA, machine-readable acceptance receipt with expected cases, outcomes, skips, source hashes, tool versions, and run references. Preserve accepted public receipts in a durable location and keep private evidence isolated.
+
+### v0.0.6.33
+
+- Generalize Graphify plan partitioning for arbitrary checkpoint counts and verify that no checkpoint is dropped, duplicated, or disconnected across maps.
