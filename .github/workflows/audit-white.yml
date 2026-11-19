@@ -1,0 +1,76 @@
+name: README HQ White audit governance and provenance
+on:
+  push:
+    branches: [audit/v0.0.6.67-white]
+    paths:
+      - .github/workflows/audit-white.yml
+      - audit/audit_v00667_white.py
+permissions:
+  contents: read
+env:
+  PYTHONHASHSEED: '0'
+  PYTHONDONTWRITEBYTECODE: '1'
+  PIP_DISABLE_PIP_VERSION_CHECK: '1'
+jobs:
+  audit:
+    name: White audit on ${{ matrix.os }}
+    if: github.event.repository.private == false && github.event.repository.visibility == 'public'
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: 8d50caec2bc6fcb998994a1fd302294a029325f9
+          path: candidate
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.12'
+      - name: Install pinned README validator dependencies
+        working-directory: candidate
+        run: python -m pip install --require-hashes -r tools/requirements.txt
+      - name: Verify candidate README baseline independently
+        working-directory: candidate
+        run: python tools/check_readme_hq.py --receipt white-baseline.json
+      - name: Run README regressions
+        working-directory: candidate
+        run: python -m unittest discover -s tests -p 'test_readme*.py' -v
+      - name: Inspect PR review and branch policy evidence
+        working-directory: candidate
+        run: python ../audit/audit_v00667_white.py reader white-policy.json
+      - name: Install pinned Graphify dependencies
+        if: runner.os == 'Linux'
+        working-directory: candidate
+        shell: bash
+        run: |
+          python -m pip install --require-hashes --only-binary=:all: --no-deps -r graphify-hq/template/v0.0.8/requirements.txt
+          python -m pip check
+      - name: Run existing Graphify tests
+        if: runner.os == 'Linux'
+        working-directory: candidate
+        shell: bash
+        run: |
+          python -m unittest discover -s graphify-hq/template/v0.0.8 -p 'test_*.py' -v
+          python -m unittest discover -s tests -p 'test_graphify*.py' -v
+      - name: Verify Graphify boundaries against disposable committed drift
+        if: runner.os == 'Linux'
+        working-directory: candidate
+        run: python ../audit/audit_v00667_white.py graph white-graphify.json
+      - name: Save evidence for the applied audit scope
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: white-audit-${{ runner.os }}-attempt-${{ github.run_attempt }}
+          path: |
+            candidate/white-baseline.json
+            candidate/white-policy.json
+            candidate/white-graphify.json
+          if-no-files-found: error
