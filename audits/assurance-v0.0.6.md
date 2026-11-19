@@ -1,6 +1,6 @@
 # README HQ assurance audit
 
-The audit exercises the released baseline [f50e374](https://github.com/vixttha/README-HQ/commit/f50e3749dab90ddfe35894284d1660097a1fb1a8), the [learning pilot](https://github.com/vixttha/README-HQ/tree/a8d97d0559853538d4d814edf5c998e42cfec3d2/learning), and the previous [24-checkpoint plan](https://github.com/vixttha/README-HQ/tree/6d011b0e2e2dd521074819e688b802e786fb5d5a). Disposable fixtures test pass/fail behavior and leave the inspected source revisions pinned.
+The audit exercises the audited baseline [f50e374](https://github.com/vixttha/README-HQ/commit/f50e3749dab90ddfe35894284d1660097a1fb1a8), the [learning pilot](https://github.com/vixttha/README-HQ/tree/a8d97d0559853538d4d814edf5c998e42cfec3d2/learning), and the previous [24-checkpoint plan](https://github.com/vixttha/README-HQ/tree/6d011b0e2e2dd521074819e688b802e786fb5d5a). Disposable fixtures test pass/fail behavior and leave the inspected source revisions pinned.
 
 | Check | Evidence |
 | --- | --- |
