@@ -2,12 +2,12 @@
   "schema_version": 1,
   "template_version": "v0.0.8",
   "repository": "vixttha/README-HQ",
-  "source_commit": "562d278ad49d0b4f34c742f0c87e9c63cd8dd664",
+  "source_commit": "7b75fae3f37b697acdbf30db86392d583f98bd2b",
   "pull_request": null,
   "scope": "feature-evidence",
   "repository_provenance": "unverified-local-source",
   "graphify_version": "0.9.109",
-  "graph_sha256": "05f5248e1c2d7e44dc79b0cdcdb80f2e0c3201f3128a7386b4cfaf9d5d630528",
+  "graph_sha256": "3299b017cd83f59a2e7179140cb1104937e2fc8001223d85abefe24dbba2f3b6",
   "nodes": 28,
   "edges": 41,
   "feature_links": {
@@ -49,9 +49,9 @@
       ],
       [
         "tested_by",
-        "tested_by:tools/check_readme_hq.py:L128",
+        "tested_by:tools/check_readme_hq.py:L135",
         "tools/check_readme_hq.py",
-        "L128"
+        "L135"
       ]
     ],
     "feature:aldervale-hq-v0-0-3": [
@@ -81,9 +81,9 @@
       ],
       [
         "tested_by",
-        "tested_by:tools/check_readme_hq.py:L128",
+        "tested_by:tools/check_readme_hq.py:L135",
         "tools/check_readme_hq.py",
-        "L128"
+        "L135"
       ]
     ],
     "feature:bart-homepage-v0-0-3": [
@@ -113,9 +113,9 @@
       ],
       [
         "tested_by",
-        "tested_by:tools/check_readme_hq.py:L128",
+        "tested_by:tools/check_readme_hq.py:L135",
         "tools/check_readme_hq.py",
-        "L128"
+        "L135"
       ]
     ]
   },
@@ -145,7 +145,7 @@
     "history/bart/visual-v0.0.3/workspace/v0.0.3/CHANGELOG.md": "5ce61533a387f65e229456554a61e9243530dfceec4046bab90f724eef0fcab6",
     "history/bart/visual-v0.0.3/workspace/v0.0.3/DRAFT.md": "50d95dc249d59fab993f12f406cecf3d124c5cce2d01349e4cc968fa1a584987",
     "history/bart/visual-v0.0.3/workspace/v0.0.3/REVIEW.md": "b7bc32eafffe91731b98ef79d31611dc068620393a30f179a62594f2ea4274aa",
-    "tools/check_readme_hq.py": "fd5d9adc7add3aa577956b80e6331b464cdbfd2f012f63327bee5fe961522153"
+    "tools/check_readme_hq.py": "3679aaab40fc7e551e6e504dfde062402c6094b83bf2360a7b26d78ad161ee1c"
   },
   "mcp_verified": true
 }

@@ -2,12 +2,12 @@
   "schema_version": 1,
   "template_version": "v0.0.8",
   "repository": "vixttha/README-HQ",
-  "source_commit": "562d278ad49d0b4f34c742f0c87e9c63cd8dd664",
+  "source_commit": "7b75fae3f37b697acdbf30db86392d583f98bd2b",
   "pull_request": null,
   "scope": "feature-evidence",
   "repository_provenance": "unverified-local-source",
   "graphify_version": "0.9.109",
-  "graph_sha256": "9edd27cb4af06f57eab9cf7e646905187d925c0b2919a9ee42144cea449d0e14",
+  "graph_sha256": "2b600f63e918afac757372b08ee7d7d14b248ac65f53691e3a53bc83fa41357e",
   "nodes": 28,
   "edges": 41,
   "feature_links": {
@@ -49,9 +49,9 @@
       ],
       [
         "tested_by",
-        "tested_by:tools/check_readme_hq.py:L128",
+        "tested_by:tools/check_readme_hq.py:L135",
         "tools/check_readme_hq.py",
-        "L128"
+        "L135"
       ]
     ],
     "feature:aldervale-hq-v0-0-4": [
@@ -81,9 +81,9 @@
       ],
       [
         "tested_by",
-        "tested_by:tools/check_readme_hq.py:L128",
+        "tested_by:tools/check_readme_hq.py:L135",
         "tools/check_readme_hq.py",
-        "L128"
+        "L135"
       ]
     ],
     "feature:bart-homepage-v0-0-4": [
@@ -113,9 +113,9 @@
       ],
       [
         "tested_by",
-        "tested_by:tools/check_readme_hq.py:L128",
+        "tested_by:tools/check_readme_hq.py:L135",
         "tools/check_readme_hq.py",
-        "L128"
+        "L135"
       ]
     ]
   },
@@ -145,7 +145,7 @@
     "history/bart/readme-hq/workspace/v0.0.4/CHANGELOG.md": "11922da90b65fdfb8a17e18aead9bf667434ef3d45832e66e8ed492c088b217b",
     "history/bart/readme-hq/workspace/v0.0.4/DRAFT.md": "c682575523534ab62b86960310f50206efe432474a263f0d6577e7a0e7231073",
     "history/bart/readme-hq/workspace/v0.0.4/REVIEW.md": "c46ccc22676b08f586e9ab4c3e068e33a99af405334037d98b4fbf8dffefa3d9",
-    "tools/check_readme_hq.py": "fd5d9adc7add3aa577956b80e6331b464cdbfd2f012f63327bee5fe961522153"
+    "tools/check_readme_hq.py": "3679aaab40fc7e551e6e504dfde062402c6094b83bf2360a7b26d78ad161ee1c"
   },
   "mcp_verified": true
 }

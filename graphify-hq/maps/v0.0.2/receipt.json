@@ -2,12 +2,12 @@
   "schema_version": 1,
   "template_version": "v0.0.8",
   "repository": "vixttha/README-HQ",
-  "source_commit": "562d278ad49d0b4f34c742f0c87e9c63cd8dd664",
+  "source_commit": "7b75fae3f37b697acdbf30db86392d583f98bd2b",
   "pull_request": null,
   "scope": "feature-evidence",
   "repository_provenance": "unverified-local-source",
   "graphify_version": "0.9.109",
-  "graph_sha256": "85affc091923fbc2b8092a83a7596e89fc3795b956c1b8cae143c0dc84af432e",
+  "graph_sha256": "b4cae3d13f1700974964b7f2966f73da49aea2e154394988a81821483c10788d",
   "nodes": 26,
   "edges": 38,
   "feature_links": {
@@ -49,9 +49,9 @@
       ],
       [
         "tested_by",
-        "tested_by:tools/check_readme_hq.py:L128",
+        "tested_by:tools/check_readme_hq.py:L135",
         "tools/check_readme_hq.py",
-        "L128"
+        "L135"
       ]
     ],
     "feature:aldervale-hq-v0-0-2": [
@@ -81,9 +81,9 @@
       ],
       [
         "tested_by",
-        "tested_by:tools/check_readme_hq.py:L128",
+        "tested_by:tools/check_readme_hq.py:L135",
         "tools/check_readme_hq.py",
-        "L128"
+        "L135"
       ]
     ],
     "feature:bart-homepage-v0-0-2": [
@@ -107,9 +107,9 @@
       ],
       [
         "tested_by",
-        "tested_by:tools/check_readme_hq.py:L128",
+        "tested_by:tools/check_readme_hq.py:L135",
         "tools/check_readme_hq.py",
-        "L128"
+        "L135"
       ]
     ]
   },
@@ -137,7 +137,7 @@
     "history/bart/published-v0.0.2/README.md": "4afc2d482433d561f179039a4a6909a6c980e4e9c0d96aaef961cca63da950f5",
     "history/bart/readme-hq/versions/v0.0.2/CHANGELOG.md": "b789d0c074eeb446ceb1f56ccce71758aa72f4c7533a1e231b6ce7c0565e1050",
     "history/bart/readme-hq/versions/v0.0.2/README.md": "4afc2d482433d561f179039a4a6909a6c980e4e9c0d96aaef961cca63da950f5",
-    "tools/check_readme_hq.py": "fd5d9adc7add3aa577956b80e6331b464cdbfd2f012f63327bee5fe961522153"
+    "tools/check_readme_hq.py": "3679aaab40fc7e551e6e504dfde062402c6094b83bf2360a7b26d78ad161ee1c"
   },
   "mcp_verified": true
 }
