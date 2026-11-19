@@ -1,12 +1,13 @@
 {
   "repository": "vixttha/README-HQ",
-  "source_commit": "73ca0b351e954e6aa4af653bafa8cd506ab74b79",
-  "title": "README HQ v0.0.6 assurance checkpoints 25 through 40",
+  "source_commit": "2ca97a42eb36415e480c75227cf258385f809901",
+  "title": "README HQ v0.0.6 assurance checkpoints 25 through 49",
   "source_files": [
     "plans/v0.0.6-repairs/README.md",
     "audit/audit_assurance.py",
     "audit/check_plan_capacity.py",
-    "audit/audit_graph_integrity.py"
+    "audit/audit_graph_integrity.py",
+    "audit/audit_reader.py"
   ],
   "features": [
     {
@@ -422,6 +423,240 @@
         {
           "path": "audit/audit_graph_integrity.py",
           "anchor": "def check_empty_version_coverage(worktree, temporary):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-41",
+      "label": "v0.0.6.41 · #41 · Exact Git line coordinates",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.41` | [#41](https://github.com/vixttha/README-HQ/issues/41) | Exact Git line coordinates | High | `v0.0.6.40` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.40` | [#40](https://github.com/vixttha/README-HQ/issues/40) | Version map coverage | High | `v0.0.6.39` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Use one explicit Git-compatible line model for locating evidence and generating source links. Test embedded Unicode separators and CRLF against pinned physical line numbers."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_reader.py",
+          "anchor": "def check_unicode_line_coordinates(worktree, temporary, commit):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-42",
+      "label": "v0.0.6.42 · #42 · Binary media inventory",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.42` | [#42](https://github.com/vixttha/README-HQ/issues/42) | Binary media inventory | Medium | `v0.0.6.41` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.41` | [#41](https://github.com/vixttha/README-HQ/issues/41) | Exact Git line coordinates | High | `v0.0.6.40` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Hash and inventory supported binary blobs without decoding them. Require text decoding only for line anchors, and report unsupported anchor types clearly."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_reader.py",
+          "anchor": "def check_binary_file_inventory(worktree, temporary, commit):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-43",
+      "label": "v0.0.6.43 · #43 · Graph and receipt publication",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.43` | [#43](https://github.com/vixttha/README-HQ/issues/43) | Graph and receipt publication | High | `v0.0.6.42` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.42` | [#42](https://github.com/vixttha/README-HQ/issues/42) | Binary media inventory | Medium | `v0.0.6.41` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Stage and validate the graph and receipt as a pair. Preserve the prior accepted pair on a publication failure and test recovery and repeat builds."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_reader.py",
+          "anchor": "def check_pair_publication(worktree, temporary, commit):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-44",
+      "label": "v0.0.6.44 · #44 · Bounded GitHub PR history",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.44` | [#44](https://github.com/vixttha/README-HQ/issues/44) | Bounded GitHub PR history | Medium | `v0.0.6.43` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.43` | [#43](https://github.com/vixttha/README-HQ/issues/43) | Graph and receipt publication | High | `v0.0.6.42` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Check for a capped commit listing. Resolve membership through a complete supported evidence route or report that membership could not be verified from the bounded response."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_reader.py",
+          "anchor": "def check_bounded_pr_history(provenance):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-45",
+      "label": "v0.0.6.45 · #45 · External reader entry points",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.45` | [#45](https://github.com/vixttha/README-HQ/issues/45) | External reader entry points | High | `v0.0.6.44` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.44` | [#44](https://github.com/vixttha/README-HQ/issues/44) | Bounded GitHub PR history | Medium | `v0.0.6.43` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Verify explicitly declared, authorized remote first-action URLs against an expected result when supported. Record unchecked, unresolved, gated, and broken routes distinctly in offline and online checks."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_reader.py",
+          "anchor": "def check_external_reader_route(worktree):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-46",
+      "label": "v0.0.6.46 · #46 · Learning source coordinates",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.46` | [#46](https://github.com/vixttha/README-HQ/issues/46) | Learning source coordinates | High | `v0.0.6.45` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.45` | [#45](https://github.com/vixttha/README-HQ/issues/45) | External reader entry points | High | `v0.0.6.44` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Require a positive in-range integer coordinate and a meaningful nonempty anchor before comparing the pinned contents. Cover zero, negative, empty, and valid first/last-line evidence."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_reader.py",
+          "anchor": "def check_learning_line_coordinates(temporary, pilot_module):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-47",
+      "label": "v0.0.6.47 · #47 · Technique retirement in recommendations",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.47` | [#47](https://github.com/vixttha/README-HQ/issues/47) | Technique retirement in recommendations | Medium | `v0.0.6.46` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.46` | [#46](https://github.com/vixttha/README-HQ/issues/46) | Learning source coordinates | High | `v0.0.6.45` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Resolve existing recommendations against the canonical technique state and applicable registry revision. Exclude retired IDs from active recommendations and preserve prior decision history."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_reader.py",
+          "anchor": "def check_retired_technique(worktree, pilot_module):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-48",
+      "label": "v0.0.6.48 · #48 · Complete MCP readback at supported limits",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.48` | [#48](https://github.com/vixttha/README-HQ/issues/48) | Complete MCP readback at supported limits | High | `v0.0.6.47` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.47` | [#47](https://github.com/vixttha/README-HQ/issues/47) | Technique retirement in recommendations | Medium | `v0.0.6.46` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Verify complete relationship readback for every supported manifest. Query by relation or page results, detect truncation explicitly, and test long valid paths at the documented limits."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_reader.py",
+          "anchor": "def check_documented_neighbor_capacity(worktree, temporary, commit, paths, template):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-49",
+      "label": "v0.0.6.49 · #49 · Git branch-name compatibility",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.49` | [#49](https://github.com/vixttha/README-HQ/issues/49) | Git branch-name compatibility | Medium | `v0.0.6.48` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.48` | [#48](https://github.com/vixttha/README-HQ/issues/48) | Complete MCP readback at supported limits | High | `v0.0.6.47` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Validate source branch names with Git-compatible rules and compare the literal name to the API response. Exercise leading underscores, nested ref names, and invalid refs."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_reader.py",
+          "anchor": "def check_git_valid_branch_names(worktree, template, commit):"
         }
       ]
     }
