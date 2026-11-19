@@ -1,0 +1,31 @@
+{
+  "v0.0.1": [
+    "aldervale-hq",
+    "standalone-hq",
+    "bart-hq",
+    "aldervale-homepage",
+    "bart-homepage"
+  ],
+  "v0.0.2": [
+    "aldervale-hq",
+    "aldervale-homepage",
+    "bart-homepage"
+  ],
+  "v0.0.3": [
+    "aldervale-hq",
+    "aldervale-homepage",
+    "bart-homepage"
+  ],
+  "v0.0.4": [
+    "aldervale-hq",
+    "aldervale-homepage",
+    "bart-homepage"
+  ],
+  "v0.0.5": [
+    "aldervale-hq"
+  ],
+  "v0.0.6": [
+    "aldervale-hq",
+    "standalone-hq"
+  ]
+}

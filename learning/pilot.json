@@ -1,0 +1,48 @@
+{
+  "sources": {
+    "aldervale-state": {
+      "repository": "AlderVale-Pact-of-Ten",
+      "commit": "a6c2060b8175f505cc6327ccb5658cc00a458b24",
+      "blob": "5a985415260e0859a6e52a368c19043ae6160d30",
+      "line": 26,
+      "anchor": "Guest saves are stored by browser profile and address.",
+      "status": "observed"
+    },
+    "brand-adoption": {
+      "repository": "Brand-Identity-Template",
+      "commit": "87d0f9aedbe69ca4b16815d6b3329efcf5889da9",
+      "blob": "a29db28fe7e0ba1745966593a5abd8e8e6ee193b",
+      "line": 11,
+      "anchor": "python3 brand-identity/verify.py",
+      "status": "observed"
+    },
+    "lydite-target": {
+      "repository": "Lydite-Test-Vault-Template",
+      "commit": "fe7b00aa17862d7a01dfd15481594be837bc6d9f",
+      "blob": "539fcbd4dd6b1838cc7131ff2fcbc18b68353f0f",
+      "line": 14,
+      "anchor": "Install the original copy-in starter",
+      "status": "observed"
+    }
+  },
+  "techniques": [
+    {
+      "id": "state-scope-documentation",
+      "status": "candidate",
+      "source": "aldervale-state",
+      "profile": "stateful-browser-game",
+      "recommendation": "Keep the browser and address boundaries beside the first playthrough. Recheck them whenever the launcher or deployment address changes."
+    },
+    {
+      "id": "clean-consumer-adoption",
+      "status": "existing",
+      "source": "brand-adoption",
+      "profile": "copy-in-template",
+      "recommendation": "Pair the copy-in route with a command and a visible success condition in a clean consumer. Validate that destination separately from the template checkout."
+    }
+  ],
+  "targets": {
+    "AlderVale": {"profile": "stateful-browser-game", "evidence": "aldervale-state"},
+    "Lydite": {"profile": "copy-in-template", "evidence": "lydite-target"}
+  }
+}

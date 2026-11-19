@@ -1,0 +1,404 @@
+{
+  "schema_version": 1,
+  "template_version": "v0.0.8",
+  "repository": "vixttha/README-HQ",
+  "source_commit": "3d0dd01dfab1e02328dc012b254142d801f6215e",
+  "pull_request": null,
+  "scope": "feature-evidence",
+  "repository_provenance": "unverified-local-source",
+  "graphify_version": "0.9.109",
+  "graph_sha256": "40fb2a040e1354a050be0bf786ef3c814b9b52a654d68ba6b236bc3cbc9ec5c2",
+  "nodes": 55,
+  "edges": 102,
+  "feature_links": {
+    "feature:v0-0-6-56": {
+      "documented_in": 2,
+      "changed_in": 1,
+      "tested_by": 1
+    },
+    "feature:v0-0-6-57": {
+      "documented_in": 2,
+      "changed_in": 1,
+      "tested_by": 1
+    },
+    "feature:v0-0-6-58": {
+      "documented_in": 2,
+      "changed_in": 1,
+      "tested_by": 1
+    },
+    "feature:v0-0-6-59": {
+      "documented_in": 2,
+      "changed_in": 1,
+      "tested_by": 1
+    },
+    "feature:v0-0-6-60": {
+      "documented_in": 2,
+      "changed_in": 1,
+      "tested_by": 1
+    },
+    "feature:v0-0-6-61": {
+      "documented_in": 2,
+      "changed_in": 1,
+      "tested_by": 1
+    },
+    "feature:v0-0-6-62": {
+      "documented_in": 2,
+      "changed_in": 1,
+      "tested_by": 1
+    },
+    "feature:v0-0-6-63": {
+      "documented_in": 2,
+      "changed_in": 1,
+      "tested_by": 1
+    },
+    "feature:v0-0-6-64": {
+      "documented_in": 2,
+      "changed_in": 1,
+      "tested_by": 1
+    },
+    "feature:v0-0-6-65": {
+      "documented_in": 2,
+      "changed_in": 1,
+      "tested_by": 1
+    },
+    "feature:v0-0-6-66": {
+      "documented_in": 2,
+      "changed_in": 1,
+      "tested_by": 1
+    },
+    "feature:v0-0-6-67": {
+      "documented_in": 2,
+      "changed_in": 1,
+      "tested_by": 1
+    }
+  },
+  "feature_destinations": {
+    "feature:v0-0-6-56": [
+      [
+        "documented_in",
+        "documented_in:plans/v0.0.6-repairs/README.md:L65",
+        "plans/v0.0.6-repairs/README.md",
+        "L65"
+      ],
+      [
+        "documented_in",
+        "documented_in:plans/v0.0.6-repairs/README.md:L66",
+        "plans/v0.0.6-repairs/README.md",
+        "L66"
+      ],
+      [
+        "changed_in",
+        "changed_in:plans/v0.0.6-repairs/README.md:L351",
+        "plans/v0.0.6-repairs/README.md",
+        "L351"
+      ],
+      [
+        "tested_by",
+        "tested_by:audit/audit_entrypoints.py:L49",
+        "audit/audit_entrypoints.py",
+        "L49"
+      ]
+    ],
+    "feature:v0-0-6-57": [
+      [
+        "documented_in",
+        "documented_in:plans/v0.0.6-repairs/README.md:L66",
+        "plans/v0.0.6-repairs/README.md",
+        "L66"
+      ],
+      [
+        "documented_in",
+        "documented_in:plans/v0.0.6-repairs/README.md:L67",
+        "plans/v0.0.6-repairs/README.md",
+        "L67"
+      ],
+      [
+        "changed_in",
+        "changed_in:plans/v0.0.6-repairs/README.md:L355",
+        "plans/v0.0.6-repairs/README.md",
+        "L355"
+      ],
+      [
+        "tested_by",
+        "tested_by:audit/audit_entrypoints.py:L63",
+        "audit/audit_entrypoints.py",
+        "L63"
+      ]
+    ],
+    "feature:v0-0-6-58": [
+      [
+        "documented_in",
+        "documented_in:plans/v0.0.6-repairs/README.md:L67",
+        "plans/v0.0.6-repairs/README.md",
+        "L67"
+      ],
+      [
+        "documented_in",
+        "documented_in:plans/v0.0.6-repairs/README.md:L68",
+        "plans/v0.0.6-repairs/README.md",
+        "L68"
+      ],
+      [
+        "changed_in",
+        "changed_in:plans/v0.0.6-repairs/README.md:L359",
+        "plans/v0.0.6-repairs/README.md",
+        "L359"
+      ],
+      [
+        "tested_by",
+        "tested_by:audit/audit_entrypoints.py:L80",
+        "audit/audit_entrypoints.py",
+        "L80"
+      ]
+    ],
+    "feature:v0-0-6-59": [
+      [
+        "documented_in",
+        "documented_in:plans/v0.0.6-repairs/README.md:L68",
+        "plans/v0.0.6-repairs/README.md",
+        "L68"
+      ],
+      [
+        "documented_in",
+        "documented_in:plans/v0.0.6-repairs/README.md:L69",
+        "plans/v0.0.6-repairs/README.md",
+        "L69"
+      ],
+      [
+        "changed_in",
+        "changed_in:plans/v0.0.6-repairs/README.md:L363",
+        "plans/v0.0.6-repairs/README.md",
+        "L363"
+      ],
+      [
+        "tested_by",
+        "tested_by:audit/audit_entrypoints.py:L89",
+        "audit/audit_entrypoints.py",
+        "L89"
+      ]
+    ],
+    "feature:v0-0-6-60": [
+      [
+        "documented_in",
+        "documented_in:plans/v0.0.6-repairs/README.md:L69",
+        "plans/v0.0.6-repairs/README.md",
+        "L69"
+      ],
+      [
+        "documented_in",
+        "documented_in:plans/v0.0.6-repairs/README.md:L70",
+        "plans/v0.0.6-repairs/README.md",
+        "L70"
+      ],
+      [
+        "changed_in",
+        "changed_in:plans/v0.0.6-repairs/README.md:L371",
+        "plans/v0.0.6-repairs/README.md",
+        "L371"
+      ],
+      [
+        "tested_by",
+        "tested_by:audit/audit_boundaries.py:L44",
+        "audit/audit_boundaries.py",
+        "L44"
+      ]
+    ],
+    "feature:v0-0-6-61": [
+      [
+        "documented_in",
+        "documented_in:plans/v0.0.6-repairs/README.md:L70",
+        "plans/v0.0.6-repairs/README.md",
+        "L70"
+      ],
+      [
+        "documented_in",
+        "documented_in:plans/v0.0.6-repairs/README.md:L71",
+        "plans/v0.0.6-repairs/README.md",
+        "L71"
+      ],
+      [
+        "changed_in",
+        "changed_in:plans/v0.0.6-repairs/README.md:L375",
+        "plans/v0.0.6-repairs/README.md",
+        "L375"
+      ],
+      [
+        "tested_by",
+        "tested_by:audit/audit_boundaries.py:L59",
+        "audit/audit_boundaries.py",
+        "L59"
+      ]
+    ],
+    "feature:v0-0-6-62": [
+      [
+        "documented_in",
+        "documented_in:plans/v0.0.6-repairs/README.md:L71",
+        "plans/v0.0.6-repairs/README.md",
+        "L71"
+      ],
+      [
+        "documented_in",
+        "documented_in:plans/v0.0.6-repairs/README.md:L72",
+        "plans/v0.0.6-repairs/README.md",
+        "L72"
+      ],
+      [
+        "changed_in",
+        "changed_in:plans/v0.0.6-repairs/README.md:L379",
+        "plans/v0.0.6-repairs/README.md",
+        "L379"
+      ],
+      [
+        "tested_by",
+        "tested_by:audit/audit_boundaries.py:L84",
+        "audit/audit_boundaries.py",
+        "L84"
+      ]
+    ],
+    "feature:v0-0-6-63": [
+      [
+        "documented_in",
+        "documented_in:plans/v0.0.6-repairs/README.md:L72",
+        "plans/v0.0.6-repairs/README.md",
+        "L72"
+      ],
+      [
+        "documented_in",
+        "documented_in:plans/v0.0.6-repairs/README.md:L73",
+        "plans/v0.0.6-repairs/README.md",
+        "L73"
+      ],
+      [
+        "changed_in",
+        "changed_in:plans/v0.0.6-repairs/README.md:L387",
+        "plans/v0.0.6-repairs/README.md",
+        "L387"
+      ],
+      [
+        "tested_by",
+        "tested_by:audit/audit_markup.py:L96",
+        "audit/audit_markup.py",
+        "L96"
+      ]
+    ],
+    "feature:v0-0-6-64": [
+      [
+        "documented_in",
+        "documented_in:plans/v0.0.6-repairs/README.md:L73",
+        "plans/v0.0.6-repairs/README.md",
+        "L73"
+      ],
+      [
+        "documented_in",
+        "documented_in:plans/v0.0.6-repairs/README.md:L74",
+        "plans/v0.0.6-repairs/README.md",
+        "L74"
+      ],
+      [
+        "changed_in",
+        "changed_in:plans/v0.0.6-repairs/README.md:L391",
+        "plans/v0.0.6-repairs/README.md",
+        "L391"
+      ],
+      [
+        "tested_by",
+        "tested_by:audit/audit_markup.py:L130",
+        "audit/audit_markup.py",
+        "L130"
+      ]
+    ],
+    "feature:v0-0-6-65": [
+      [
+        "documented_in",
+        "documented_in:plans/v0.0.6-repairs/README.md:L74",
+        "plans/v0.0.6-repairs/README.md",
+        "L74"
+      ],
+      [
+        "documented_in",
+        "documented_in:plans/v0.0.6-repairs/README.md:L75",
+        "plans/v0.0.6-repairs/README.md",
+        "L75"
+      ],
+      [
+        "changed_in",
+        "changed_in:plans/v0.0.6-repairs/README.md:L395",
+        "plans/v0.0.6-repairs/README.md",
+        "L395"
+      ],
+      [
+        "tested_by",
+        "tested_by:audit/audit_markup.py:L154",
+        "audit/audit_markup.py",
+        "L154"
+      ]
+    ],
+    "feature:v0-0-6-66": [
+      [
+        "documented_in",
+        "documented_in:plans/v0.0.6-repairs/README.md:L75",
+        "plans/v0.0.6-repairs/README.md",
+        "L75"
+      ],
+      [
+        "documented_in",
+        "documented_in:plans/v0.0.6-repairs/README.md:L76",
+        "plans/v0.0.6-repairs/README.md",
+        "L76"
+      ],
+      [
+        "changed_in",
+        "changed_in:plans/v0.0.6-repairs/README.md:L403",
+        "plans/v0.0.6-repairs/README.md",
+        "L403"
+      ],
+      [
+        "tested_by",
+        "tested_by:audit/audit_navigation.py:L57",
+        "audit/audit_navigation.py",
+        "L57"
+      ]
+    ],
+    "feature:v0-0-6-67": [
+      [
+        "documented_in",
+        "documented_in:plans/v0.0.6-repairs/README.md:L76",
+        "plans/v0.0.6-repairs/README.md",
+        "L76"
+      ],
+      [
+        "documented_in",
+        "documented_in:plans/v0.0.6-repairs/README.md:L77",
+        "plans/v0.0.6-repairs/README.md",
+        "L77"
+      ],
+      [
+        "changed_in",
+        "changed_in:plans/v0.0.6-repairs/README.md:L407",
+        "plans/v0.0.6-repairs/README.md",
+        "L407"
+      ],
+      [
+        "tested_by",
+        "tested_by:audit/audit_navigation.py:L73",
+        "audit/audit_navigation.py",
+        "L73"
+      ]
+    ]
+  },
+  "source_files": [
+    "audit/audit_boundaries.py",
+    "audit/audit_entrypoints.py",
+    "audit/audit_markup.py",
+    "audit/audit_navigation.py",
+    "plans/v0.0.6-repairs/README.md"
+  ],
+  "source_sha256": {
+    "audit/audit_boundaries.py": "ef8c026e18202672dc1c0737bc631e9d4ea274700529e09c488e664b5c6d36cf",
+    "audit/audit_entrypoints.py": "a6a5927469cc84eb317313a4613ffbe0297ffc0d58160946dad9bb6d30c2af2f",
+    "audit/audit_markup.py": "9804005e1ae56bcf1843bc2d19125715d6a114260c0646918b6d23a53a5999d1",
+    "audit/audit_navigation.py": "8b273705b0f13007333a0e0e8214f88f927213084eaca9662c0966333887f41d",
+    "plans/v0.0.6-repairs/README.md": "943ae612cc24f621a567190936ff2082dc1f76f4b9ba45d6fd76296b6e1e44ac"
+  },
+  "mcp_verified": true
+}

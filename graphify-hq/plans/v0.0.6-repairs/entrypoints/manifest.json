@@ -1,0 +1,326 @@
+{
+  "repository": "vixttha/README-HQ",
+  "source_commit": "3d0dd01dfab1e02328dc012b254142d801f6215e",
+  "title": "README HQ v0.0.6 entry point and provenance checkpoints 56 through 67",
+  "source_files": [
+    "plans/v0.0.6-repairs/README.md",
+    "audit/audit_entrypoints.py",
+    "audit/audit_boundaries.py",
+    "audit/audit_markup.py",
+    "audit/audit_navigation.py"
+  ],
+  "features": [
+    {
+      "id": "v0-0-6-56",
+      "label": "v0.0.6.56 · #56 · Packaged Graphify self-map",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.56` | [#56](https://github.com/vixttha/README-HQ/issues/56) | Packaged Graphify self-map | High | `v0.0.6.55` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.55` | [#55](https://github.com/vixttha/README-HQ/issues/55) | Immutable learning-source commits | Medium | `v0.0.6.54` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Provide and test a self-map for the actual vendored layout, or route the example explicitly to the working upstream tree. Verify the documented command from a clean checkout and check its graph over MCP."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_entrypoints.py",
+          "anchor": "def check_packaged_self_map(directory, temporary):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-57",
+      "label": "v0.0.6.57 · #57 · Version-index row uniqueness",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.57` | [#57](https://github.com/vixttha/README-HQ/issues/57) | Version-index row uniqueness | Medium | `v0.0.6.56` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.56` | [#56](https://github.com/vixttha/README-HQ/issues/56) | Packaged Graphify self-map | High | `v0.0.6.55` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Require exactly one row per advertised version in the canonical version table. Reject duplicate labels even when their destinations and other columns are identical."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_entrypoints.py",
+          "anchor": "def check_duplicate_version_row(directory):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-58",
+      "label": "v0.0.6.58 · #58 · Merge-queue validation",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.58` | [#58](https://github.com/vixttha/README-HQ/issues/58) | Merge-queue validation | Medium | `v0.0.6.57` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.57` | [#57](https://github.com/vixttha/README-HQ/issues/57) | Version-index row uniqueness | Medium | `v0.0.6.56` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Support checks_requested for adopters that use a merge queue. Verify a queued synthetic merge candidate reports the README and Graphify statuses against the queue SHA under the intended runner policy."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_entrypoints.py",
+          "anchor": "def check_merge_queue_trigger(directory):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-59",
+      "label": "v0.0.6.59 · #59 · Consistent PR head observation",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.59` | [#59](https://github.com/vixttha/README-HQ/issues/59) | Consistent PR head observation | High | `v0.0.6.58` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.58` | [#58](https://github.com/vixttha/README-HQ/issues/58) | Merge-queue validation | Medium | `v0.0.6.57` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Bind the PR observation to coherent head metadata. Recheck the head across dependent evidence reads and retry or report an unstable observation when it changes. Keep historical member and current head results distinct."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_entrypoints.py",
+          "anchor": "def check_moving_pr_observation(directory):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-60",
+      "label": "v0.0.6.60 · #60 · Technique list output encoding",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.60` | [#60](https://github.com/vixttha/README-HQ/issues/60) | Technique list output encoding | Medium | `v0.0.6.59` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.59` | [#59](https://github.com/vixttha/README-HQ/issues/59) | Consistent PR head observation | High | `v0.0.6.58` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Make technique list output safe and explicit across supported stream encodings. Keep output and exit status consistent when rendering fails, and test redirected ASCII and UTF-8 output."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_boundaries.py",
+          "anchor": "def check_list_output_encoding(directory):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-61",
+      "label": "v0.0.6.61 · #61 · Technique lookup key collisions",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.61` | [#61](https://github.com/vixttha/README-HQ/issues/61) | Technique lookup key collisions | Medium | `v0.0.6.60` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.60` | [#60](https://github.com/vixttha/README-HQ/issues/60) | Technique list output encoding | Medium | `v0.0.6.59` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Reject cross-record exact collisions across the lookup fields promised by the technique guide, or define an explicit disambiguation rule and use it consistently for lookup. Test IDs, aliases, and outcome keys."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_boundaries.py",
+          "anchor": "def check_cross_field_identifier_collision(directory):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-62",
+      "label": "v0.0.6.62 · #62 · Exact review pagination boundary",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.62` | [#62](https://github.com/vixttha/README-HQ/issues/62) | Exact review pagination boundary | Low | `v0.0.6.61` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.61` | [#61](https://github.com/vixttha/README-HQ/issues/61) | Technique lookup key collisions | Medium | `v0.0.6.60` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Use the review endpoint pagination metadata to distinguish complete results from an intentionally bounded observation. Test 999, 1,000, and more than 1,000 reviews and never represent a partial count as exact."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_boundaries.py",
+          "anchor": "def check_review_pagination_boundary(directory):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-63",
+      "label": "v0.0.6.63 · #63 · GitHub README markup coverage",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.63` | [#63](https://github.com/vixttha/README-HQ/issues/63) | GitHub README markup coverage | Medium | `v0.0.6.62` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.62` | [#62](https://github.com/vixttha/README-HQ/issues/62) | Exact review pagination boundary | Low | `v0.0.6.61` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Recognize headings in supported non-Markdown README formats or require a reviewed explicit anchor with a clear unsupported-format result. Test the three pinned README formats and compare the chosen anchor with the actual document heading."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_markup.py",
+          "anchor": "def check_real_readme_formats(temporary, version_maps):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-64",
+      "label": "v0.0.6.64 · #64 · Joined Unicode emoji in exact anchors",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.64` | [#64](https://github.com/vixttha/README-HQ/issues/64) | Joined Unicode emoji in exact anchors | Medium | `v0.0.6.63` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.63` | [#63](https://github.com/vixttha/README-HQ/issues/63) | GitHub README markup coverage | Medium | `v0.0.6.62` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Permit supported well-formed emoji joiner sequences in exact source anchors and preserve their original text and line coordinates. Test a joined emoji and a plain heading in the same pinned file."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_markup.py",
+          "anchor": "def check_exact_emoji_anchor(temporary):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-65",
+      "label": "v0.0.6.65 · #65 · Release-specific change anchoring",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.65` | [#65](https://github.com/vixttha/README-HQ/issues/65) | Release-specific change anchoring | High | `v0.0.6.64` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.64` | [#64](https://github.com/vixttha/README-HQ/issues/64) | Joined Unicode emoji in exact anchors | Medium | `v0.0.6.63` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Bind the changelog anchor to the requested release section or a reviewed explicit source line. Reject draft placeholders as release evidence and test a newer unreleased section above the requested release."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_markup.py",
+          "anchor": "def check_release_change_placeholder(temporary, directory, version_maps):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-66",
+      "label": "v0.0.6.66 · #66 · Rendered fragment destinations",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.66` | [#66](https://github.com/vixttha/README-HQ/issues/66) | Rendered fragment destinations | High | `v0.0.6.65` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.65` | [#65](https://github.com/vixttha/README-HQ/issues/65) | Release-specific change anchoring | High | `v0.0.6.64` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Resolve a directory route to the GitHub-rendered README before checking its fragment. Validate supported Markdown extensions and distinguish a missing fragment from an unchecked target."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_navigation.py",
+          "anchor": "def check_fragment_coverage(directory):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-67",
+      "label": "v0.0.6.67 · #67 · Custom named anchor navigation",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.67` | [#67](https://github.com/vixttha/README-HQ/issues/67) | Custom named anchor navigation | Medium | `v0.0.6.66` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.66` | [#66](https://github.com/vixttha/README-HQ/issues/66) | Rendered fragment destinations | High | `v0.0.6.65` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Recognize documented custom anchor destinations alongside generated heading anchors, while retaining missing-target diagnostics. Verify the fixture against GitHub-rendered HTML and the offline checker."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_navigation.py",
+          "anchor": "def check_named_anchor(directory):"
+        }
+      ]
+    }
+  ]
+}
