@@ -1,0 +1,223 @@
+{
+  "head": "8d50caec2bc6fcb998994a1fd302294a029325f9",
+  "base": "a7a989ffb6b664df86aae0ea01053ea2fc0a4405",
+  "test_merge": "1475e0cea2b516b1577cf9a190708547d90548f7",
+  "jobs": [
+    {
+      "job": 135610014732,
+      "run": 44538439592,
+      "name": "Recoverable Graphify evidence and plan",
+      "result": "success",
+      "reported_lines": [
+        "2026-11-19T13:56:38.7435753Z Ran 11 tests in 0.041s",
+        "2026-11-19T13:56:39.8359531Z Ran 6 tests in 0.008s",
+        "2026-11-19T13:56:52.7318194Z Graphify verified 6 maps covering 17 version records.",
+        "2026-11-19T13:56:58.8457593Z Verified 67 repair checkpoints and 3 Graphify map partitions.",
+        "2026-11-19T13:57:01.5150458Z Graphify MCP verified 33 nodes and 51 edges at 8d50caec2bc6fcb998994a1fd302294a029325f9"
+      ]
+    },
+    {
+      "job": 135610015326,
+      "run": 44538439592,
+      "name": "README HQ on ubuntu-latest",
+      "result": "success",
+      "reported_lines": [
+        "2026-11-19T13:56:24.8059684Z Validated 2 standalone version(s), 17 techniques, 193 local links, and 159 imported files.",
+        "2026-11-19T13:56:24.8060598Z 87 observations remain unchecked. Use --receipt for details.",
+        "2026-11-19T13:56:26.5206876Z Ran 10 tests in 1.475s"
+      ]
+    },
+    {
+      "job": 135610015363,
+      "run": 44538439592,
+      "name": "README HQ on windows-latest",
+      "result": "success",
+      "reported_lines": [
+        "2026-11-19T13:56:52.7971329Z Validated 2 standalone version(s), 17 techniques, 193 local links, and 159 imported files.",
+        "2026-11-19T13:56:52.7972771Z 87 observations remain unchecked. Use --receipt for details.",
+        "2026-11-19T13:57:15.7210519Z Ran 10 tests in 22.676s"
+      ]
+    },
+    {
+      "job": 135610049843,
+      "run": 44538450099,
+      "name": "Recoverable Graphify evidence and plan",
+      "result": "success",
+      "reported_lines": [
+        "2026-11-19T13:56:38.8748498Z Ran 11 tests in 0.043s",
+        "2026-11-19T13:56:40.0066098Z Ran 6 tests in 0.009s",
+        "2026-11-19T13:56:53.6385396Z Graphify verified 6 maps covering 17 version records.",
+        "2026-11-19T13:56:59.9691887Z Verified 67 repair checkpoints and 3 Graphify map partitions.",
+        "2026-11-19T13:57:02.7140036Z Graphify MCP verified 33 nodes and 51 edges at 1475e0cea2b516b1577cf9a190708547d90548f7"
+      ]
+    },
+    {
+      "job": 135610050337,
+      "run": 44538450099,
+      "name": "README HQ on windows-latest",
+      "result": "success",
+      "reported_lines": [
+        "2026-11-19T13:56:52.5100152Z Validated 2 standalone version(s), 17 techniques, 193 local links, and 159 imported files.",
+        "2026-11-19T13:56:52.5100721Z 87 observations remain unchecked. Use --receipt for details.",
+        "2026-11-19T13:57:10.7272705Z Ran 10 tests in 18.001s"
+      ]
+    },
+    {
+      "job": 135610050630,
+      "run": 44538450099,
+      "name": "README HQ on ubuntu-latest",
+      "result": "success",
+      "reported_lines": [
+        "2026-11-19T13:56:28.4899517Z Validated 2 standalone version(s), 17 techniques, 193 local links, and 159 imported files.",
+        "2026-11-19T13:56:28.4900242Z 87 observations remain unchecked. Use --receipt for details.",
+        "2026-11-19T13:56:30.1408407Z Ran 10 tests in 1.464s"
+      ]
+    }
+  ],
+  "archives": [
+    {
+      "kind": "branch",
+      "id": 14537855771,
+      "name": "graphify-receipts-8d50caec2bc6fcb998994a1fd302294a029325f9",
+      "digest": "sha256:4bc21547241e76a557abd84b2b80673d927ab76554519207815613bf05a2e98f",
+      "files": [
+        {
+          "path": "branch/graphify-hq/maps/v0.0.1/receipt.json",
+          "sha256": "72f3c21ccab52a2ce81e689784842db33032eed8a9763c88fa38f592ada84a11"
+        },
+        {
+          "path": "branch/graphify-hq/maps/v0.0.2/receipt.json",
+          "sha256": "5ca0f434dde29147a2c6523995b81f98b28a4083a94d4be39d9630866d5a4bb5"
+        },
+        {
+          "path": "branch/graphify-hq/maps/v0.0.3/receipt.json",
+          "sha256": "500cedbbe14e89f2ecd66c94fd23120fa1d2a6a67a4ef2322add18494360164f"
+        },
+        {
+          "path": "branch/graphify-hq/maps/v0.0.4/receipt.json",
+          "sha256": "909891a20dc8dfbb969df3dd6cf821b92fc8d136c79e3605299e2d21ca9ebf44"
+        },
+        {
+          "path": "branch/graphify-hq/maps/v0.0.5/receipt.json",
+          "sha256": "3ca4a629223c9c3f92a88bf73360cf785eea4f2a396c37c5a38d147d32962d97"
+        },
+        {
+          "path": "branch/graphify-hq/maps/v0.0.6/receipt.json",
+          "sha256": "3d28e1633affc3cb3b4b72f3f376718334647513c9de4d3ceb4fb9181f2a6556"
+        },
+        {
+          "path": "branch/graphify-hq/plans/v0.0.6-repairs/assurance/receipt.json",
+          "sha256": "a277c7a6426e8f8305c1d1a9fc93e8f0139d29dcebd7f9a1373baa0bee73b6ab"
+        },
+        {
+          "path": "branch/graphify-hq/plans/v0.0.6-repairs/entrypoints/receipt.json",
+          "sha256": "b9358c09337300f1f21c410546b4c30a3db649bb45f38a9f4b744a4849c45b48"
+        },
+        {
+          "path": "branch/graphify-hq/plans/v0.0.6-repairs/receipt.json",
+          "sha256": "feeebc0ae9794d1bf9f3498b7c5390bc42b694bbdcde52a4d75ca65b2d75359a"
+        },
+        {
+          "path": "branch/graphify-self-map.json",
+          "sha256": "ae1c9b32ae18bff5a5e856087315ff3414ad27e72f0b248f6216d87d24d6a367"
+        }
+      ]
+    },
+    {
+      "kind": "branch",
+      "id": 14537038837,
+      "name": "readme-hq-ubuntu-latest-8d50caec2bc6fcb998994a1fd302294a029325f9",
+      "digest": "sha256:b15dc3b96b4bfe65fbcb71a0ef00ec8a9dfaca873759a439512214621b776414",
+      "files": [
+        {
+          "path": "branch/reader-ubuntu.json",
+          "sha256": "a4f4dc641b136553536b3ed8872ad51e20411681651477ad2cf57eb47fbfb31a"
+        }
+      ]
+    },
+    {
+      "kind": "merge",
+      "id": 14536269648,
+      "name": "graphify-receipts-1475e0cea2b516b1577cf9a190708547d90548f7",
+      "digest": "sha256:45027f71b0c170e3fe53523778ce2e32543076605834e4d0003e96f1361b4ae4",
+      "files": [
+        {
+          "path": "merge/graphify-hq/maps/v0.0.1/receipt.json",
+          "sha256": "72f3c21ccab52a2ce81e689784842db33032eed8a9763c88fa38f592ada84a11"
+        },
+        {
+          "path": "merge/graphify-hq/maps/v0.0.2/receipt.json",
+          "sha256": "5ca0f434dde29147a2c6523995b81f98b28a4083a94d4be39d9630866d5a4bb5"
+        },
+        {
+          "path": "merge/graphify-hq/maps/v0.0.3/receipt.json",
+          "sha256": "500cedbbe14e89f2ecd66c94fd23120fa1d2a6a67a4ef2322add18494360164f"
+        },
+        {
+          "path": "merge/graphify-hq/maps/v0.0.4/receipt.json",
+          "sha256": "909891a20dc8dfbb969df3dd6cf821b92fc8d136c79e3605299e2d21ca9ebf44"
+        },
+        {
+          "path": "merge/graphify-hq/maps/v0.0.5/receipt.json",
+          "sha256": "3ca4a629223c9c3f92a88bf73360cf785eea4f2a396c37c5a38d147d32962d97"
+        },
+        {
+          "path": "merge/graphify-hq/maps/v0.0.6/receipt.json",
+          "sha256": "3d28e1633affc3cb3b4b72f3f376718334647513c9de4d3ceb4fb9181f2a6556"
+        },
+        {
+          "path": "merge/graphify-hq/plans/v0.0.6-repairs/assurance/receipt.json",
+          "sha256": "a277c7a6426e8f8305c1d1a9fc93e8f0139d29dcebd7f9a1373baa0bee73b6ab"
+        },
+        {
+          "path": "merge/graphify-hq/plans/v0.0.6-repairs/entrypoints/receipt.json",
+          "sha256": "b9358c09337300f1f21c410546b4c30a3db649bb45f38a9f4b744a4849c45b48"
+        },
+        {
+          "path": "merge/graphify-hq/plans/v0.0.6-repairs/receipt.json",
+          "sha256": "feeebc0ae9794d1bf9f3498b7c5390bc42b694bbdcde52a4d75ca65b2d75359a"
+        },
+        {
+          "path": "merge/graphify-self-map.json",
+          "sha256": "9c4e622394ac7033307024298ef06d5ba7fcb45b35ef7fa7866f0df5c751223c"
+        }
+      ]
+    },
+    {
+      "kind": "merge",
+      "id": 14535714482,
+      "name": "readme-hq-ubuntu-latest-1475e0cea2b516b1577cf9a190708547d90548f7",
+      "digest": "sha256:e8167666f44b432482604228b3dccb8de27e18aa676de50bc8be593f80a2ea1a",
+      "files": [
+        {
+          "path": "merge/reader-ubuntu.json",
+          "sha256": "3f78a3a6ab94c469d4433a70e00d256210a813d2ff26eb032912d09ed4a2ea08"
+        }
+      ]
+    },
+    {
+      "kind": "branch",
+      "id": 14536508778,
+      "name": "readme-hq-windows-latest-8d50caec2bc6fcb998994a1fd302294a029325f9",
+      "digest": "sha256:33c8c1572f1905d48bcd5c80a7c8547607d879ecb6e56bd6350f1fb37081e63f",
+      "files": [
+        {
+          "path": "branch/reader-windows.json",
+          "sha256": "9f778392a167beb0cd0711dc8531c90e18529a16bfe19099405ae2b420e8676e"
+        }
+      ]
+    },
+    {
+      "kind": "merge",
+      "id": 14537695684,
+      "name": "readme-hq-windows-latest-1475e0cea2b516b1577cf9a190708547d90548f7",
+      "digest": "sha256:4ad7cdc6859afc6223f367e47d8420b31c3a80860cfe5f6c48663fa8e8fce37b",
+      "files": [
+        {
+          "path": "merge/reader-windows.json",
+          "sha256": "8e829112df52fc58326dcb701c650a5bf16089d72ea93ad323b8ed12a1303028"
+        }
+      ]
+    }
+  ]
+}

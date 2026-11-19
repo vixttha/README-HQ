@@ -1,0 +1,180 @@
+{
+  "schema_version": 1,
+  "template_version": "v0.0.8",
+  "repository": "vixttha/README-HQ",
+  "source_commit": "1475e0cea2b516b1577cf9a190708547d90548f7",
+  "pull_request": null,
+  "scope": "feature-evidence",
+  "repository_provenance": "unverified-local-source",
+  "graphify_version": "0.9.109",
+  "graph_sha256": "9834c37ee20d3e38b2517fe7f9f4a41c3a2af2d2e48a93ffe6b3dd791130e37c",
+  "nodes": 33,
+  "edges": 51,
+  "feature_links": {
+    "feature:archive-verification": {
+      "documented_in": 1,
+      "changed_in": 1,
+      "tested_by": 1,
+      "implemented_in": 3
+    },
+    "feature:feature-evidence": {
+      "documented_in": 1,
+      "changed_in": 1,
+      "tested_by": 3,
+      "implemented_in": 2
+    },
+    "feature:source-provenance": {
+      "documented_in": 1,
+      "changed_in": 1,
+      "tested_by": 2,
+      "implemented_in": 2
+    }
+  },
+  "feature_destinations": {
+    "feature:archive-verification": [
+      [
+        "documented_in",
+        "documented_in:graphify-hq/template/v0.0.8/README.md:L29",
+        "graphify-hq/template/v0.0.8/README.md",
+        "L29"
+      ],
+      [
+        "changed_in",
+        "changed_in:graphify-hq/template/v0.0.8/CHANGELOG.md:L8",
+        "graphify-hq/template/v0.0.8/CHANGELOG.md",
+        "L8"
+      ],
+      [
+        "tested_by",
+        "tested_by:graphify-hq/template/v0.0.8/test_evidence_map.py:L80",
+        "graphify-hq/template/v0.0.8/test_evidence_map.py",
+        "L80"
+      ],
+      [
+        "implemented_in",
+        "implemented_in:.github/workflows/readme-hq.yml:L40",
+        ".github/workflows/readme-hq.yml",
+        "L40"
+      ],
+      [
+        "implemented_in",
+        "implemented_in:graphify-hq/template/v0.0.8/evidence_map.py:L303",
+        "graphify-hq/template/v0.0.8/evidence_map.py",
+        "L303"
+      ],
+      [
+        "implemented_in",
+        "implemented_in:tools/check_readme_hq.py:L135",
+        "tools/check_readme_hq.py",
+        "L135"
+      ]
+    ],
+    "feature:feature-evidence": [
+      [
+        "documented_in",
+        "documented_in:graphify-hq/template/v0.0.8/README.md:L15",
+        "graphify-hq/template/v0.0.8/README.md",
+        "L15"
+      ],
+      [
+        "changed_in",
+        "changed_in:graphify-hq/template/v0.0.8/CHANGELOG.md:L3",
+        "graphify-hq/template/v0.0.8/CHANGELOG.md",
+        "L3"
+      ],
+      [
+        "tested_by",
+        "tested_by:graphify-hq/template/v0.0.8/test_evidence_map.py:L25",
+        "graphify-hq/template/v0.0.8/test_evidence_map.py",
+        "L25"
+      ],
+      [
+        "tested_by",
+        "tested_by:graphify-hq/template/v0.0.8/test_evidence_map.py:L43",
+        "graphify-hq/template/v0.0.8/test_evidence_map.py",
+        "L43"
+      ],
+      [
+        "tested_by",
+        "tested_by:graphify-hq/template/v0.0.8/test_evidence_map.py:L36",
+        "graphify-hq/template/v0.0.8/test_evidence_map.py",
+        "L36"
+      ],
+      [
+        "implemented_in",
+        "implemented_in:graphify-hq/template/v0.0.8/evidence_map.py:L222",
+        "graphify-hq/template/v0.0.8/evidence_map.py",
+        "L222"
+      ],
+      [
+        "implemented_in",
+        "implemented_in:graphify-hq/template/v0.0.8/evidence_map.py:L68",
+        "graphify-hq/template/v0.0.8/evidence_map.py",
+        "L68"
+      ]
+    ],
+    "feature:source-provenance": [
+      [
+        "documented_in",
+        "documented_in:graphify-hq/template/v0.0.8/README.md:L7",
+        "graphify-hq/template/v0.0.8/README.md",
+        "L7"
+      ],
+      [
+        "changed_in",
+        "changed_in:graphify-hq/template/v0.0.8/CHANGELOG.md:L14",
+        "graphify-hq/template/v0.0.8/CHANGELOG.md",
+        "L14"
+      ],
+      [
+        "tested_by",
+        "tested_by:graphify-hq/template/v0.0.8/test_evidence_map.py:L113",
+        "graphify-hq/template/v0.0.8/test_evidence_map.py",
+        "L113"
+      ],
+      [
+        "tested_by",
+        "tested_by:graphify-hq/template/v0.0.8/test_evidence_map.py:L128",
+        "graphify-hq/template/v0.0.8/test_evidence_map.py",
+        "L128"
+      ],
+      [
+        "implemented_in",
+        "implemented_in:graphify-hq/template/v0.0.8/evidence_map.py:L150",
+        "graphify-hq/template/v0.0.8/evidence_map.py",
+        "L150"
+      ],
+      [
+        "implemented_in",
+        "implemented_in:graphify-hq/template/v0.0.8/github_provenance.py:L53",
+        "graphify-hq/template/v0.0.8/github_provenance.py",
+        "L53"
+      ]
+    ]
+  },
+  "source_files": [
+    ".github/workflows/readme-hq.yml",
+    "README.md",
+    "graphify-hq/template/v0.0.8/CHANGELOG.md",
+    "graphify-hq/template/v0.0.8/README.md",
+    "graphify-hq/template/v0.0.8/evidence_map.py",
+    "graphify-hq/template/v0.0.8/github_provenance.py",
+    "graphify-hq/template/v0.0.8/requirements.txt",
+    "graphify-hq/template/v0.0.8/self-map.json",
+    "graphify-hq/template/v0.0.8/test_evidence_map.py",
+    "tools/check_readme_hq.py"
+  ],
+  "source_sha256": {
+    ".github/workflows/readme-hq.yml": "3f805989c68d081e3fd40d05f175a53928c807624aac265ba624ec9140d32ea4",
+    "README.md": "0ffb9da936002853b08634e099ed4096422eb3ed1049c570fc520bcd43e680f2",
+    "graphify-hq/template/v0.0.8/CHANGELOG.md": "b20d85da4ee03acb163f3af836b78604d8672849de59e5466c94cdf7eb7a14ef",
+    "graphify-hq/template/v0.0.8/README.md": "d9dfcf53a652c698a6be03643aef9129f01f1bbca268a751c1b560423e816211",
+    "graphify-hq/template/v0.0.8/evidence_map.py": "18b26f30a16540c37366b825d8b2965ff4a84c2f051b1424226dfbf66aceb87b",
+    "graphify-hq/template/v0.0.8/github_provenance.py": "05abcd465b4d88bcdff451000105dc412c31f036407fe2845051fe12c5014f5a",
+    "graphify-hq/template/v0.0.8/requirements.txt": "2faa3d35b1275e494393ef00aa9f16cdd1ab3afe89cd255749069e5dd86df370",
+    "graphify-hq/template/v0.0.8/self-map.json": "ae598352e30660d8ff9e744cbca92c40de8de9ebe53cc444bf2a955caa72bafd",
+    "graphify-hq/template/v0.0.8/test_evidence_map.py": "7d1cfc1554cb19a1817f7aadf6484af8357baef120dd350a4ecba225f17a4bea",
+    "tools/check_readme_hq.py": "3679aaab40fc7e551e6e504dfde062402c6094b83bf2360a7b26d78ad161ee1c"
+  },
+  "mcp_verified": true
+}
