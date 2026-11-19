@@ -1,0 +1,25 @@
+name: README HQ portability audit
+on:
+  push:
+    branches: [audit/v0.0.6-portability]
+permissions:
+  contents: read
+jobs:
+  reproduce:
+    name: Portability fixtures on ${{ matrix.os }}
+    if: github.event.repository.private == false
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.10'
+      - run: python audit/audit_portability.py
