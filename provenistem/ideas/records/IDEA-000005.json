@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "id": "IDEA-000005",
+  "title": "Make README publication and reuse evidence easy to inspect",
+  "summary": "Give reviewers a consistent place to find the published ref, archived bytes, citation or reuse basis, and the matching verification run.",
+  "kind": "process",
+  "origin": {
+    "created_by": "assistant",
+    "source": "README HQ source archive and https://github.com/vixttha/README-HQ/issues/24."
+  },
+  "lifecycle_status": "captured",
+  "implementation_status": "not_planned",
+  "testing": {
+    "status": "untested"
+  },
+  "importance": "high",
+  "complexity": "medium",
+  "categories": [
+    "publication",
+    "provenance"
+  ],
+  "benefits": [
+    "Helps reviewers identify which README and assets were actually approved and checked."
+  ],
+  "risks": [
+    "A receipt can refer to the wrong revision if title or version is used as the only identifier."
+  ],
+  "related_ideas": [
+    "IDEA-000001",
+    "IDEA-000004"
+  ],
+  "evidence": [
+    {
+      "relation": "context",
+      "claim": "The history index records original commits and imported archives.",
+      "repository": "vixttha/README-HQ",
+      "commit": "f50e3749dab90ddfe35894284d1660097a1fb1a8",
+      "path": "history/README.md"
+    }
+  ]
+}

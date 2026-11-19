@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "id": "IDEA-000001",
+  "title": "Dogfood README HQ on its own homepage",
+  "summary": "Use a dedicated workspace to draft the README HQ main-branch homepage. Capture where the guide helps or leaves a reader without a next step.",
+  "kind": "process",
+  "origin": {
+    "created_by": "assistant",
+    "source": "README HQ self-use discussion and public homepage issue #1."
+  },
+  "lifecycle_status": "captured",
+  "implementation_status": "not_planned",
+  "testing": {
+    "status": "untested"
+  },
+  "importance": "high",
+  "complexity": "medium",
+  "categories": [
+    "dogfooding",
+    "homepage"
+  ],
+  "benefits": [
+    "Gives maintainers a concrete example of using the template from draft through review."
+  ],
+  "risks": [
+    "A self-test covers one repository and leaves external adoption behavior to later trials."
+  ],
+  "related_ideas": [
+    "IDEA-000002"
+  ],
+  "evidence": [
+    {
+      "relation": "context",
+      "claim": "The published guide defines the draft and publication workflow.",
+      "repository": "vixttha/README-HQ",
+      "commit": "f50e3749dab90ddfe35894284d1660097a1fb1a8",
+      "path": "README-GUIDE.md"
+    }
+  ]
+}

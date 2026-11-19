@@ -6,6 +6,7 @@ README HQ helps people understand a GitHub project and take their first useful s
 
 | If you want to | Start here |
 | --- | --- |
+| Browse README HQ ideas and features | [Provenistem tracker](provenistem/README.md) |
 | Find a current or historical README | [Version index](versions/README.md) |
 | Explore changes and evidence by version | [Graphify HQ](graphify-hq/README.md) |
 | Improve a README in your own repository | [README guide](README-GUIDE.md) |

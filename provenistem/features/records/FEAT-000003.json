@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "id": "FEAT-000003",
+  "title": "Validate the combined v0.0.6.67 repair candidate",
+  "summary": "Track the Ubuntu, Windows, and Graphify checks for the combined draft candidate at the exact SHA under review in PR #68.",
+  "kind": "workflow",
+  "lifecycle_status": "implemented",
+  "implementation_status": "implemented",
+  "idea_ids": [
+    "IDEA-000005",
+    "IDEA-000007"
+  ],
+  "acceptance_criteria": [
+    "The three jobs report success for the same repair-branch SHA.",
+    "Issue-specific acceptance and the merge decision remain recorded in PR #68."
+  ],
+  "testing": {
+    "status": "tested",
+    "outcome": "pass",
+    "refs": [
+      "https://github.com/vixttha/README-HQ/actions/runs/44538439592"
+    ]
+  },
+  "evidence": [
+    {
+      "kind": "test",
+      "claim": "Three checks passed for the repair-branch SHA; the candidate remains a draft.",
+      "source_sha": "8d50caec2bc6fcb998994a1fd302294a029325f9",
+      "source_path": ".github/workflows/readme-hq.yml",
+      "receipt": "https://github.com/vixttha/README-HQ/actions/runs/44538439592"
+    }
+  ],
+  "release_membership": "NOT_ASSERTED"
+}

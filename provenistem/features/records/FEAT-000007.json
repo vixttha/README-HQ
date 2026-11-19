@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "id": "FEAT-000007",
+  "title": "Standalone adoption walkthrough",
+  "summary": "Describe the steps and expected first result for adopting README HQ in a new repository at a pinned template revision.",
+  "kind": "workflow",
+  "lifecycle_status": "proposed",
+  "implementation_status": "not_planned",
+  "idea_ids": [
+    "IDEA-000002",
+    "IDEA-000005"
+  ],
+  "acceptance_criteria": [
+    "A clean adopter checkout follows the correct instructions for its selected ref.",
+    "The walkthrough describes the documented reuse decision and project-specific follow-up."
+  ],
+  "testing": {
+    "status": "untested"
+  },
+  "evidence": [
+    {
+      "kind": "other",
+      "claim": "The current guide describes how adopters should verify first success.",
+      "source_sha": "f50e3749dab90ddfe35894284d1660097a1fb1a8",
+      "source_path": "README-GUIDE.md",
+      "receipt": "https://github.com/vixttha/README-HQ/issues/24"
+    }
+  ],
+  "release_membership": "NOT_ASSERTED"
+}

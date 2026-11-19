@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "id": "FEAT-000001",
+  "title": "Versioned README archives and publication records",
+  "summary": "Expose approved guides, historical homepage states, changelogs, and pinned sources from the README HQ version index.",
+  "kind": "capability",
+  "lifecycle_status": "implemented",
+  "implementation_status": "implemented",
+  "idea_ids": [
+    "IDEA-000005"
+  ],
+  "acceptance_criteria": [
+    "Each archived homepage record links to its version and publication or draft status.",
+    "A reviewer can trace imported documents to the recorded Git source."
+  ],
+  "testing": {
+    "status": "untested"
+  },
+  "evidence": [
+    {
+      "kind": "implementation",
+      "claim": "The active index separates guide records and project homepage records.",
+      "source_sha": "f50e3749dab90ddfe35894284d1660097a1fb1a8",
+      "source_path": "versions/README.md",
+      "receipt": "https://github.com/vixttha/README-HQ/blob/f50e3749dab90ddfe35894284d1660097a1fb1a8/versions/README.md"
+    },
+    {
+      "kind": "implementation",
+      "claim": "The history index links to the archive provenance manifest.",
+      "source_sha": "f50e3749dab90ddfe35894284d1660097a1fb1a8",
+      "source_path": "history/README.md",
+      "receipt": "https://github.com/vixttha/README-HQ/blob/f50e3749dab90ddfe35894284d1660097a1fb1a8/history/README.md"
+    }
+  ],
+  "release_membership": "NOT_ASSERTED"
+}

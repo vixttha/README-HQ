@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "id": "IDEA-000007",
+  "title": "Track the v0.0.6.68 through v0.0.6.77 repair sequence",
+  "summary": "Keep the proposed checkpoint order and per-issue evidence visible while the approved start remains pending.",
+  "kind": "process",
+  "origin": {
+    "created_by": "assistant",
+    "source": "Published README HQ repair-sequence plan."
+  },
+  "lifecycle_status": "captured",
+  "implementation_status": "not_planned",
+  "testing": {
+    "status": "untested"
+  },
+  "importance": "high",
+  "complexity": "medium",
+  "categories": [
+    "repair-planning",
+    "evidence"
+  ],
+  "benefits": [
+    "Lets reviewers map each proposed checkpoint to its canonical GitHub issue."
+  ],
+  "risks": [
+    "A planning record could be mistaken for permission to start implementation."
+  ],
+  "related_ideas": [
+    "IDEA-000003",
+    "IDEA-000004",
+    "IDEA-000006"
+  ],
+  "evidence": [
+    {
+      "relation": "context",
+      "claim": "The ten-checkpoint plan records its approval hold and execution order.",
+      "repository": "vixttha/README-HQ",
+      "commit": "ac07987cfe11d6592b8def2ff16b72a6b2c0a203",
+      "path": "plans/v0.0.6.68-to-v0.0.6.77/README.md"
+    }
+  ]
+}

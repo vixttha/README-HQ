@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "id": "FEAT-000004",
+  "title": "Dedicated README HQ self-use workspace",
+  "summary": "Prepare an isolated dogfooding workspace to validate the documented reader and agent paths against README HQ itself.",
+  "kind": "workflow",
+  "lifecycle_status": "proposed",
+  "implementation_status": "not_planned",
+  "idea_ids": [
+    "IDEA-000001",
+    "IDEA-000002"
+  ],
+  "acceptance_criteria": [
+    "Pin the template SHA and the homepage revision it is applied to.",
+    "Record the first reader action, narrow rendering, and agent instruction route before homepage review."
+  ],
+  "testing": {
+    "status": "untested"
+  },
+  "evidence": [
+    {
+      "kind": "other",
+      "claim": "The existing guide describes independent drafts and publication changes.",
+      "source_sha": "f50e3749dab90ddfe35894284d1660097a1fb1a8",
+      "source_path": "README-GUIDE.md",
+      "receipt": "https://github.com/vixttha/README-HQ/issues/1"
+    }
+  ],
+  "release_membership": "NOT_ASSERTED"
+}

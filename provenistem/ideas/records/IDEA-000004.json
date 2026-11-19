@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "id": "IDEA-000004",
+  "title": "Keep large Graphify evidence sets readable during regeneration",
+  "summary": "Exercise map partition limits and ensure readers can still open a complete graph and its matching receipt during replacement.",
+  "kind": "architecture",
+  "origin": {
+    "created_by": "assistant",
+    "source": "Public repair plan and https://github.com/vixttha/README-HQ/issues/72 and https://github.com/vixttha/README-HQ/issues/77."
+  },
+  "lifecycle_status": "captured",
+  "implementation_status": "not_planned",
+  "testing": {
+    "status": "untested"
+  },
+  "importance": "high",
+  "complexity": "high",
+  "categories": [
+    "graphify",
+    "evidence"
+  ],
+  "benefits": [
+    "Keeps version evidence navigable as the number of sources grows."
+  ],
+  "risks": [
+    "Changing partition or promotion rules can invalidate existing map links."
+  ],
+  "related_ideas": [
+    "IDEA-000005"
+  ],
+  "evidence": [
+    {
+      "relation": "context",
+      "claim": "The plan tracks partition limits and complete generation availability separately.",
+      "repository": "vixttha/README-HQ",
+      "commit": "ac07987cfe11d6592b8def2ff16b72a6b2c0a203",
+      "path": "plans/v0.0.6.68-to-v0.0.6.77/README.md"
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "id": "IDEA-000002",
+  "title": "Try the adoption guide on different repository types",
+  "summary": "Test whether first-time adopters can follow the template in a CLI, a browser game, and a reusable toolkit using their actual entry points.",
+  "kind": "research",
+  "origin": {
+    "created_by": "assistant",
+    "source": "README HQ portable guide and the project types used in its versioned archive."
+  },
+  "lifecycle_status": "captured",
+  "implementation_status": "not_planned",
+  "testing": {
+    "status": "untested"
+  },
+  "importance": "high",
+  "complexity": "medium",
+  "categories": [
+    "adoption",
+    "usability"
+  ],
+  "benefits": [
+    "Shows where the guide needs project-specific instructions for first success."
+  ],
+  "risks": [
+    "A small sample can miss projects with unusual build or publication requirements."
+  ],
+  "related_ideas": [
+    "IDEA-000001",
+    "IDEA-000003"
+  ],
+  "evidence": [
+    {
+      "relation": "context",
+      "claim": "The guide lists first-action routes for games, CLIs, and templates.",
+      "repository": "vixttha/README-HQ",
+      "commit": "f50e3749dab90ddfe35894284d1660097a1fb1a8",
+      "path": "README-GUIDE.md"
+    },
+    {
+      "relation": "context",
+      "claim": "AlderVale and BART provide two archived project examples.",
+      "repository": "vixttha/README-HQ",
+      "commit": "f50e3749dab90ddfe35894284d1660097a1fb1a8",
+      "path": "versions/README.md"
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "id": "IDEA-000003",
+  "title": "Prove a documented first-use command produced its result",
+  "summary": "Record whether an example command created or changed the expected artifact at the checkout that a reader actually used.",
+  "kind": "feature",
+  "origin": {
+    "created_by": "assistant",
+    "source": "Public repair plan and https://github.com/vixttha/README-HQ/issues/71."
+  },
+  "lifecycle_status": "captured",
+  "implementation_status": "not_planned",
+  "testing": {
+    "status": "untested"
+  },
+  "importance": "high",
+  "complexity": "medium",
+  "categories": [
+    "first-use",
+    "validation"
+  ],
+  "benefits": [
+    "Makes a successful command distinguishable from reading a file that was already present."
+  ],
+  "risks": [
+    "Some examples intentionally reuse outputs and require an explicit expected update."
+  ],
+  "related_ideas": [
+    "IDEA-000002",
+    "IDEA-000005"
+  ],
+  "evidence": [
+    {
+      "relation": "context",
+      "claim": "The plan records the first-use output check and the held start condition.",
+      "repository": "vixttha/README-HQ",
+      "commit": "ac07987cfe11d6592b8def2ff16b72a6b2c0a203",
+      "path": "plans/v0.0.6.68-to-v0.0.6.77/README.md"
+    }
+  ]
+}

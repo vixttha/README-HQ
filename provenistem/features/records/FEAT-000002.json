@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "id": "FEAT-000002",
+  "title": "Graphify maps for README HQ versions",
+  "summary": "Provide a source outline, graph, and verification receipt for each documented README HQ version in the current archive.",
+  "kind": "integration",
+  "lifecycle_status": "implemented",
+  "implementation_status": "implemented",
+  "idea_ids": [
+    "IDEA-000004",
+    "IDEA-000005"
+  ],
+  "acceptance_criteria": [
+    "Every version row exposes its documented Graphify map.",
+    "Each receipt binds the graph to the recorded input commit and file digests."
+  ],
+  "testing": {
+    "status": "untested"
+  },
+  "evidence": [
+    {
+      "kind": "implementation",
+      "claim": "The map index lists the six version maps and the receipt contents.",
+      "source_sha": "f50e3749dab90ddfe35894284d1660097a1fb1a8",
+      "source_path": "graphify-hq/README.md",
+      "receipt": "https://github.com/vixttha/README-HQ/blob/f50e3749dab90ddfe35894284d1660097a1fb1a8/graphify-hq/README.md"
+    }
+  ],
+  "release_membership": "NOT_ASSERTED"
+}
