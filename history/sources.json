@@ -656,6 +656,66 @@
           "blob": "8344c65c4652d792a6f14cf3e849ade383e1c1cf"
         }
       ]
+    },
+    {
+      "repository": "vixttha/AlderVale-Pact-of-Ten",
+      "commit": "ed8c7b30c9bbc0497fd27eb6ce7c34757ed3b0c1",
+      "observed_ref": "ed8c7b30c9bbc0497fd27eb6ce7c34757ed3b0c1",
+      "directory": "history/aldervale/published-v0.0.2",
+      "files": [
+        {
+          "path": "README.md",
+          "blob": "b6fe2eeb2eeaf01110596231c08cf538b97524e2"
+        },
+        {
+          "path": "assets/breeze-campus.webp",
+          "blob": "d3b7ef2b5a3df1b39223f717191db83ab35d09c9"
+        },
+        {
+          "path": "assets/breeze-first-spark-duel.webp",
+          "blob": "8344c65c4652d792a6f14cf3e849ade383e1c1cf"
+        }
+      ]
+    },
+    {
+      "repository": "vixttha/AlderVale-Pact-of-Ten",
+      "commit": "fced4038c1dfa655c223d1bcbbdf3c18593b1e1f",
+      "observed_ref": "fced4038c1dfa655c223d1bcbbdf3c18593b1e1f",
+      "directory": "history/aldervale/published-v0.0.3",
+      "files": [
+        {
+          "path": "README.md",
+          "blob": "a73b157800a86a5daea69523e8acd4d863aa0ff1"
+        },
+        {
+          "path": "assets/aldervale-workmark-v1.webp",
+          "blob": "766fcea8f0e2838efb94f4fe4547e6dad4d98f0d"
+        },
+        {
+          "path": "assets/breeze-campus.webp",
+          "blob": "d3b7ef2b5a3df1b39223f717191db83ab35d09c9"
+        },
+        {
+          "path": "assets/breeze-first-spark-duel.webp",
+          "blob": "8344c65c4652d792a6f14cf3e849ade383e1c1cf"
+        }
+      ]
+    },
+    {
+      "repository": "vixttha/Blender-Agent-Refinement-Toolkit",
+      "commit": "cb945bd8531ee425615c1968612ab6503849369d",
+      "observed_ref": "cb945bd8531ee425615c1968612ab6503849369d",
+      "directory": "history/bart/published-v0.0.2",
+      "files": [
+        {
+          "path": "LICENSE",
+          "blob": "3a31b6b1dcedea9bb0ca27243d3d7b0cb504a4f5"
+        },
+        {
+          "path": "README.md",
+          "blob": "bcf44ad75d81de99ef0a5549a6f28f350de45ddc"
+        }
+      ]
     }
   ]
 }
