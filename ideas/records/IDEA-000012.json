@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "id": "IDEA-000012",
+  "title": "Combine README techniques around a reader task",
+  "summary": "Record when complementary README techniques belong together and evaluate whether a reader or agent can complete the intended task at the pinned adopter revision.",
+  "kind": "process",
+  "origin": {
+    "created_by": "joint",
+    "source": "2026-11-19 · Owner approved recording reusable technique combinations and piloting one with Veraphify."
+  },
+  "lifecycle_status": "captured",
+  "implementation_status": "not_planned",
+  "testing": {
+    "status": "untested"
+  },
+  "importance": "high",
+  "complexity": "medium",
+  "categories": [
+    "reader-journey",
+    "techniques",
+    "adoption"
+  ],
+  "benefits": [
+    "Adopters can apply and adapt proven practices around a concrete task and retain what worked."
+  ],
+  "risks": [
+    "A generic checklist can hide which technique applies, and a successful command can be mistaken for a successful reader or agent journey."
+  ],
+  "related_ideas": [
+    "IDEA-000002",
+    "IDEA-000003",
+    "IDEA-000005",
+    "IDEA-000011"
+  ],
+  "evidence": [
+    {
+      "relation": "context",
+      "claim": "The Veraphify adopter learning log proposes technique combinations by reader task.",
+      "repository": "vixttha/Veraphify",
+      "commit": "1065e52c7924628c3402b63265124391b5f3c46e",
+      "path": "LEARNING.md"
+    },
+    {
+      "relation": "context",
+      "claim": "The approved trial starts from a draft homepage that publishes the walkthrough and evidence routes.",
+      "repository": "vixttha/Veraphify",
+      "commit": "c0a03f7e40b115c51fbc4be2a45f50ce1dee46f7",
+      "path": "README.md"
+    }
+  ]
+}

@@ -10,3 +10,6 @@
 | [FEAT-000007](records/FEAT-000007.json) | Standalone adoption walkthrough | Proposed |
 | [FEAT-000008](records/FEAT-000008.json) | Repair checkpoint evidence for v0.0.6.68 through v0.0.6.128 | Planned, awaiting approval |
 | [FEAT-000011](records/FEAT-000011.json) | Per-task README audit coverage | Proposed |
+| [FEAT-000012](records/FEAT-000012.json) | Reusable README technique combinations | Proposed |
+
+[Veraphify two-version lookup trial](../trials/veraphify-two-version-lookup.md)

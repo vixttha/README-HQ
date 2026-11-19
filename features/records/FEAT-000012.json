@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "FEAT-000012",
+  "title": "Reusable README technique combinations",
+  "summary": "Let README HQ recommend an ordered set of known techniques for a scoped reader task and let adopters retain applicability decisions and outcome evidence.",
+  "kind": "workflow",
+  "lifecycle_status": "proposed",
+  "implementation_status": "not_planned",
+  "idea_ids": [
+    "IDEA-000012",
+    "IDEA-000011"
+  ],
+  "acceptance_criteria": [
+    "Record the reader task, prerequisites, ordered active technique IDs at a pinned registry revision, and reasons to apply, adapt, or skip the combination.",
+    "Record discovery, execution, and fresh-agent handoff independently with expected and observed results, the tested revisions, and explicit gaps.",
+    "Use a same-checkout relative link for supporting docs and immutable source links for claims about another revision. Retain an outcome record alongside workflow and artifact identifiers.",
+    "A command unrelated to the advertised first action cannot satisfy the execution check."
+  ],
+  "testing": {
+    "status": "untested"
+  },
+  "evidence": [
+    {
+      "kind": "other",
+      "claim": "The adopter's existing learning log supplies candidate technique combinations.",
+      "source_sha": "1065e52c7924628c3402b63265124391b5f3c46e",
+      "source_path": "LEARNING.md",
+      "receipt": "https://github.com/vixttha/Veraphify/blob/1065e52c7924628c3402b63265124391b5f3c46e/LEARNING.md"
+    },
+    {
+      "kind": "other",
+      "claim": "The public Ubuntu job verifies the documented two-version command on its pinned product revision. This is evidence for the pilot's execution check.",
+      "source_sha": "91ccf6bdc4ac4645006151d68605c2b77239d651",
+      "source_path": "docs/adopter-walkthrough.md",
+      "receipt": "https://github.com/vixttha/Veraphify/actions/runs/44640005952/job/135968332305"
+    }
+  ],
+  "release_membership": "NOT_ASSERTED"
+}
