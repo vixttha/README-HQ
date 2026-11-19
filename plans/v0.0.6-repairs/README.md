@@ -1,6 +1,6 @@
 # README HQ v0.0.6 repair pipeline
 
-Baseline [`v0.0.6` at `f50e374`](https://github.com/vixttha/README-HQ/commit/f50e3749dab90ddfe35894284d1660097a1fb1a8). The [public audit](https://github.com/vixttha/README-HQ/actions/runs/44510897511) reproduced the initial ten findings. The [portability audit](https://github.com/vixttha/README-HQ/actions/runs/44513298531) added seven checkpoints. The [learning audit](https://github.com/vixttha/README-HQ/actions/runs/44515197237) adds seven through `v0.0.6.24`. The [assurance audit](https://github.com/vixttha/README-HQ/actions/runs/44516410470) and Graphify capacity check add nine through `v0.0.6.33`. The [Graphify integrity audit](https://github.com/vixttha/README-HQ/actions/runs/44518000891) adds seven through `v0.0.6.40`. The [reader and evidence audit](https://github.com/vixttha/README-HQ/actions/runs/44524104958/job/135560019059) adds nine through `v0.0.6.49`. The [source and plan audit](https://github.com/vixttha/README-HQ/actions/runs/44525333530/job/135564262326) reproduces three existing reports and adds three findings through `v0.0.6.55`. Each issue owns one cumulative repair checkpoint. The first checkpoint is ready to implement and the later checkpoints follow it in order.
+Baseline [`v0.0.6` at `f50e374`](https://github.com/vixttha/README-HQ/commit/f50e3749dab90ddfe35894284d1660097a1fb1a8). The [public audit](https://github.com/vixttha/README-HQ/actions/runs/44510897511) reproduced the initial ten findings. The [portability audit](https://github.com/vixttha/README-HQ/actions/runs/44513298531) added seven checkpoints. The [learning audit](https://github.com/vixttha/README-HQ/actions/runs/44515197237) adds seven through `v0.0.6.24`. The [assurance audit](https://github.com/vixttha/README-HQ/actions/runs/44516410470) and Graphify capacity check add nine through `v0.0.6.33`. The [Graphify integrity audit](https://github.com/vixttha/README-HQ/actions/runs/44518000891) adds seven through `v0.0.6.40`. The [reader and evidence audit](https://github.com/vixttha/README-HQ/actions/runs/44524104958/job/135560019059) adds nine through `v0.0.6.49`. The [source and plan audit](https://github.com/vixttha/README-HQ/actions/runs/44525333530/job/135564262326) reproduces three existing reports and adds three findings through `v0.0.6.55`. The [entry-point and provenance audit](https://github.com/vixttha/README-HQ/actions/runs/44527076295/job/135570365343) adds four through `v0.0.6.59`. Each issue owns one cumulative repair checkpoint. The first checkpoint is ready to implement and the later checkpoints follow it in order.
 
 [Graphify plan](../../graphify-hq/plans/v0.0.6-repairs/README.md)
 
@@ -63,6 +63,10 @@ Baseline [`v0.0.6` at `f50e374`](https://github.com/vixttha/README-HQ/commit/f50
 | `v0.0.6.53` | [#53](https://github.com/vixttha/README-HQ/issues/53) | Immutable Git object reads | High | `v0.0.6.52` |
 | `v0.0.6.54` | [#54](https://github.com/vixttha/README-HQ/issues/54) | Exact MCP relation fields | Medium | `v0.0.6.53` |
 | `v0.0.6.55` | [#55](https://github.com/vixttha/README-HQ/issues/55) | Immutable learning-source commits | Medium | `v0.0.6.54` |
+| `v0.0.6.56` | [#56](https://github.com/vixttha/README-HQ/issues/56) | Packaged Graphify self-map | High | `v0.0.6.55` |
+| `v0.0.6.57` | [#57](https://github.com/vixttha/README-HQ/issues/57) | Version-index row uniqueness | Medium | `v0.0.6.56` |
+| `v0.0.6.58` | [#58](https://github.com/vixttha/README-HQ/issues/58) | Merge-queue validation | Medium | `v0.0.6.57` |
+| `v0.0.6.59` | [#59](https://github.com/vixttha/README-HQ/issues/59) | Consistent PR head observation | High | `v0.0.6.58` |
 
 ## Checkpoint workflow
 
@@ -70,7 +74,7 @@ Baseline [`v0.0.6` at `f50e374`](https://github.com/vixttha/README-HQ/commit/f50
 2. Make the scoped repair as its own checkpoint. Preserve a distinct commit and link it to the issue.
 3. Run the checkpoint regression and applicable existing checks on standard public GitHub-hosted runners. Rebuild Graphify and query MCP for any change to graph generation, source evidence, or the version index.
 4. Review the combined candidate against the intended base. Record the exact tested SHA, public runner links, Graphify evidence when relevant, and any unresolved conflicts on the issue before advancing to the next checkpoint.
-5. Review the combined series after `v0.0.6.55`. Homepage publication and release decisions stay with the owner.
+5. Review the combined series after `v0.0.6.59`. Homepage publication and release decisions stay with the owner.
 
 ## Verification by checkpoint
 
@@ -329,3 +333,23 @@ The installed Graphify template accepts at most 32 feature nodes per manifest. T
 ### v0.0.6.55
 
 - Resolve each requested source revision to a full immutable commit before verifying and recording a source observation. Require receipt provenance to retain the resolved SHA and test that moving input refs cannot change a saved observation.
+
+## Entry points and PR provenance
+
+[Audit report](https://github.com/vixttha/README-HQ/blob/43c98fafc931cf6a1acc6e494b91c2118e02035a/audits/entrypoints-v0.0.6.md) · [Public reproduction](https://github.com/vixttha/README-HQ/actions/runs/44527076295/job/135570365343)
+
+### v0.0.6.56
+
+- Provide and test a self-map for the actual vendored layout, or route the example explicitly to the working upstream tree. Verify the documented command from a clean checkout and check its graph over MCP.
+
+### v0.0.6.57
+
+- Require exactly one row per advertised version in the canonical version table. Reject duplicate labels even when their destinations and other columns are identical.
+
+### v0.0.6.58
+
+- Support checks_requested for adopters that use a merge queue. Verify a queued synthetic merge candidate reports the README and Graphify statuses against the queue SHA under the intended runner policy.
+
+### v0.0.6.59
+
+- Bind the PR observation to coherent head metadata. Recheck the head across dependent evidence reads and retry or report an unstable observation when it changes. Keep historical member and current head results distinct.

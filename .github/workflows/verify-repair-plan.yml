@@ -28,7 +28,7 @@ jobs:
         run: |
           python -m pip install --require-hashes --no-cache-dir --only-binary=:all: --no-deps -r graphify-hq/template/v0.0.8/requirements.txt
           python -m pip check
-      - name: Check checkpoint order and verify both Graphify maps over MCP
+      - name: Check checkpoint order and verify all three Graphify maps over MCP
         shell: bash
         run: |
           graph=graphify-hq/plans/v0.0.6-repairs
@@ -56,7 +56,7 @@ jobs:
               (feature for manifest in manifests for feature in manifest["features"]),
               key=lambda x: int(x["id"].rsplit("-", 1)[1]),
           )
-          require(len(partitions) == 2 and len(rows) == len(features) == 55, "Incomplete plan coverage")
+          require(len(partitions) == 3 and len(rows) == len(features) == 59, "Incomplete plan coverage")
           for number, (row, feature) in enumerate(zip(rows, features), 1):
               require(row.startswith(f"| `v0.0.6.{number}` | [#{number}]("), f"Wrong checkpoint {number}")
               require(row.split(" | ")[1] == f"[#{number}](https://github.com/vixttha/README-HQ/issues/{number})", f"Wrong issue {number}")
@@ -65,7 +65,7 @@ jobs:
               require(feature["id"] == f"v0-0-6-{number}", f"Wrong or duplicate feature {number}")
               anchors = [row] + ([rows[number - 2]] if number > 1 else [])
               require(feature["documented_in"] == [{"path": path, "anchor": x} for x in anchors], f"Evidence mismatch for {number}")
-          print("Verified all 55 unique, ordered issue checkpoints across both Graphify maps.")
+          print("Verified all 59 unique, ordered issue checkpoints across all three Graphify maps.")
           PY
           shopt -s nullglob
           for manifest in "$graph/manifest.json" "$graph"/*/manifest.json; do
