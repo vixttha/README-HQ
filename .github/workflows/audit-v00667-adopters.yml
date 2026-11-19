@@ -1,0 +1,51 @@
+name: README HQ real adopter audit
+on:
+  push:
+    branches: [audit/v0.0.6.67-deep-quality]
+    paths:
+      - .github/workflows/audit-v00667-adopters.yml
+      - audit/audit_v00667_adopters.py
+permissions:
+  contents: read
+env:
+  PYTHONDONTWRITEBYTECODE: '1'
+  PIP_DISABLE_PIP_VERSION_CHECK: '1'
+jobs:
+  adopters:
+    name: Pinned public adopter matrix on Python 3.10
+    if: github.event.repository.private == false && github.event.repository.visibility == 'public'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: 8d50caec2bc6fcb998994a1fd302294a029325f9
+          path: candidate
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.10'
+      - name: Install hash-locked README validator
+        working-directory: candidate
+        run: python -m pip install --require-hashes -r tools/requirements.txt
+      - name: Verify the audit tool at the documented minimum Python version
+        working-directory: candidate
+        run: |
+          python tools/check_readme_hq.py --receipt candidate-baseline.json
+          python -m unittest discover -s tests -p 'test_readme*.py' -v
+      - name: Measure scope on exact public adopter trees
+        working-directory: candidate
+        run: python ../audit/audit_v00667_adopters.py candidate-adopters.json
+      - name: Save coverage observations
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: readme-hq-adopters-${{ github.run_attempt }}
+          path: |
+            candidate/candidate-baseline.json
+            candidate/candidate-adopters.json
+          if-no-files-found: error
