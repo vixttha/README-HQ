@@ -45,7 +45,7 @@ jobs:
           assert actual == source, "Repair plan differs from the pinned graph source"
           rows = [x for x in actual.decode("utf-8").splitlines() if x.startswith("| `v0.0.6.")]
           features = manifest["features"]
-          assert len(rows) == len(features) == 17
+          assert len(rows) == len(features) == 24
           for number, (row, feature) in enumerate(zip(rows, features), 1):
               assert row.startswith(f"| `v0.0.6.{number}` | [#{number}](")
               assert row.split(" | ")[1] == f"[#{number}](https://github.com/vixttha/README-HQ/issues/{number})"
@@ -53,6 +53,6 @@ jobs:
               assert feature["id"] == f"v0-0-6-{number}"
               expected_anchors = [row] + ([rows[number - 2]] if number > 1 else [])
               assert feature["documented_in"] == [{"path": path, "anchor": x} for x in expected_anchors]
-          print("Verified 17 unique, ordered issue checkpoints against the pinned repair plan.")
+          print("Verified 24 unique, ordered issue checkpoints against the pinned repair plan.")
           PY
           python graphify-hq/template/v0.0.8/evidence_map.py "$plan/manifest.json" "$plan" --check
