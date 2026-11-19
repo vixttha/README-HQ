@@ -186,12 +186,11 @@
   },
   "provenistem_scope": {
     "commit": "c7b075cbd1b162f59ebcf2a810ddc40607fd56c5",
-    "receipt_claim": "existing smoke and graph jobs passed for the pinned draft",
+    "receipt_claim": "Ubuntu reader, Windows reader, and Graphify jobs passed for the pinned draft",
     "release_membership": "NOT_ASSERTED"
   },
-  "notion_decisions": {
-    "current_plan": "https://app.notion.com/p/41df9af1c58d819682e4ca1981b462a3",
-    "historical_aldervale_promotion": "https://app.notion.com/p/87cd702a8c264ea882c28e0eaf8a3dac",
-    "historical_pull_request": "https://github.com/vixttha/AlderVale-Pact-of-Ten/pull/139"
+  "public_decision_records": {
+    "current_candidate": "https://github.com/vixttha/README-HQ/pull/68",
+    "historical_aldervale_promotion": "https://github.com/vixttha/AlderVale-Pact-of-Ten/pull/139"
   }
 }
