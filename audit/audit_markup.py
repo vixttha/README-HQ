@@ -31,7 +31,7 @@ SOURCES = (
            (".github/workflows/main.yml", "run: python -m pytest -n logical --dist=worksteal -vv")),
     Source("asciidoctor/asciidoctor", "743f47d5e4d12049744e6d5236ad16cdfb6dca3d",
            ("README.adoc", "= Asciidoctor"), ("CHANGELOG.adoc", "= Asciidoctor Changelog"),
-           ("test/test_helper.rb", "class Minitest::Test")),
+           ("test/test_helper.rb", "def empty_safe_document options = {}")),
 )
 
 
