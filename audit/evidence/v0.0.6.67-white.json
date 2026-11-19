@@ -1,0 +1,197 @@
+{
+  "candidate": "8d50caec2bc6fcb998994a1fd302294a029325f9",
+  "fixture_commit": "059bc4bfd8a3aedc266f05b70e290711970fd3d4",
+  "workflow_run_id": 44638933062,
+  "attempt": 1,
+  "results": {
+    "linux": {
+      "artifact_id": 14584653791,
+      "job_id": 135964594883,
+      "archive_sha256": "67caa64d69a4b9c0436a3864dc6e5ed3b30806c416defcdc1ab3ac7f93869501",
+      "baseline_cases": {
+        "standalone_versions": 2,
+        "techniques": 17,
+        "local_links": 193,
+        "imported_files": 159
+      },
+      "unchecked": 87,
+      "observations": {
+        "white-policy.json": {
+          "candidate": "8d50caec2bc6fcb998994a1fd302294a029325f9",
+          "platform": "linux",
+          "workflow_run_id": "44638933062",
+          "workflow_attempt": "1",
+          "observations": {
+            "approval_observation": {
+              "synthetic_external_review": {
+                "count": 1,
+                "draft": true,
+                "queries": [
+                  "pulls/68",
+                  "pulls/68/reviews?per_page=100&page=1",
+                  "pulls/68"
+                ]
+              },
+              "synthetic_owner_review": {
+                "count": 1,
+                "draft": true,
+                "queries": [
+                  "pulls/68",
+                  "pulls/68/reviews?per_page=100&page=1",
+                  "pulls/68"
+                ]
+              },
+              "stale_review_control": {
+                "count": 0,
+                "draft": true,
+                "queries": [
+                  "pulls/68",
+                  "pulls/68/reviews?per_page=100&page=1",
+                  "pulls/68"
+                ]
+              },
+              "authority_lookup_performed": false
+            },
+            "live_repository": {
+              "name": "main",
+              "commit": "a7a989ffb6b664df86aae0ea01053ea2fc0a4405",
+              "protected": false,
+              "required_check_contexts": [],
+              "active_rule_types": [],
+              "draft": true,
+              "head_commit": "8d50caec2bc6fcb998994a1fd302294a029325f9",
+              "base_commit": "a7a989ffb6b664df86aae0ea01053ea2fc0a4405"
+            }
+          }
+        },
+        "white-graphify.json": {
+          "candidate": "8d50caec2bc6fcb998994a1fd302294a029325f9",
+          "platform": "linux",
+          "workflow_run_id": "44638933062",
+          "workflow_attempt": "1",
+          "observations": {
+            "approval_observation": {
+              "synthetic_external_review": {
+                "count": 1,
+                "draft": true,
+                "queries": [
+                  "pulls/68",
+                  "pulls/68/reviews?per_page=100&page=1",
+                  "pulls/68"
+                ]
+              },
+              "synthetic_owner_review": {
+                "count": 1,
+                "draft": true,
+                "queries": [
+                  "pulls/68",
+                  "pulls/68/reviews?per_page=100&page=1",
+                  "pulls/68"
+                ]
+              },
+              "stale_review_control": {
+                "count": 0,
+                "draft": true,
+                "queries": [
+                  "pulls/68",
+                  "pulls/68/reviews?per_page=100&page=1",
+                  "pulls/68"
+                ]
+              },
+              "authority_lookup_performed": false
+            },
+            "later_ledger": {
+              "observed_planning_commit": "4457fc1e82f2cff0225536ff1c43e3e565fb46db",
+              "real_checkpoints": 51,
+              "real_status": "awaiting_approval",
+              "real_post_fix_debug": true,
+              "fixture_commit": "2e804ab1a009c471ff69e4d8d56b8765c17bcaed",
+              "fixture_duplicate_issue": 79,
+              "fixture_missing_debug_acceptance": true,
+              "fixture_debug_gate_disabled": true,
+              "candidate_reader_exit": 0,
+              "original_ledger_graphify_exit": 0,
+              "original_ledger_graphify_scope": "Verified 67 repair checkpoints and 3 Graphify map partitions."
+            },
+            "archive_membership": {
+              "extra_file": "versions/v0.0.6/audit-fixture-extra.txt",
+              "reader_exit": 0,
+              "graphify_exit": 0,
+              "edited_frozen_readme_control_exit": 1,
+              "map_report": "Graphify verified 6 maps covering 17 version records."
+            }
+          }
+        }
+      }
+    },
+    "windows": {
+      "artifact_id": 14584793832,
+      "job_id": 135964595287,
+      "archive_sha256": "b5afaf251bc9a0127e13d784c9650de347c53f54d10746ccd54b8c72cdaebd84",
+      "baseline_cases": {
+        "standalone_versions": 2,
+        "techniques": 17,
+        "local_links": 193,
+        "imported_files": 159
+      },
+      "unchecked": 87,
+      "observations": {
+        "white-policy.json": {
+          "candidate": "8d50caec2bc6fcb998994a1fd302294a029325f9",
+          "platform": "win32",
+          "workflow_run_id": "44638933062",
+          "workflow_attempt": "1",
+          "observations": {
+            "approval_observation": {
+              "synthetic_external_review": {
+                "count": 1,
+                "draft": true,
+                "queries": [
+                  "pulls/68",
+                  "pulls/68/reviews?per_page=100&page=1",
+                  "pulls/68"
+                ]
+              },
+              "synthetic_owner_review": {
+                "count": 1,
+                "draft": true,
+                "queries": [
+                  "pulls/68",
+                  "pulls/68/reviews?per_page=100&page=1",
+                  "pulls/68"
+                ]
+              },
+              "stale_review_control": {
+                "count": 0,
+                "draft": true,
+                "queries": [
+                  "pulls/68",
+                  "pulls/68/reviews?per_page=100&page=1",
+                  "pulls/68"
+                ]
+              },
+              "authority_lookup_performed": false
+            }
+          }
+        }
+      }
+    }
+  },
+  "issue_records": {
+    "main_protection": 132,
+    "later_plan_coverage": 133,
+    "review_eligibility": 134,
+    "archive_scope_follow_up": 4,
+    "standalone_reuse": 24
+  },
+  "provenistem_scope": {
+    "commit": "c7b075cbd1b162f59ebcf2a810ddc40607fd56c5",
+    "receipt_claim": "existing smoke and graph jobs passed for the pinned draft",
+    "release_membership": "NOT_ASSERTED"
+  },
+  "notion_decisions": {
+    "current_plan": "https://app.notion.com/p/41df9af1c58d819682e4ca1981b462a3",
+    "historical_aldervale_promotion": "https://app.notion.com/p/87cd702a8c264ea882c28e0eaf8a3dac",
+    "historical_pull_request": "https://github.com/vixttha/AlderVale-Pact-of-Ten/pull/139"
+  }
+}
