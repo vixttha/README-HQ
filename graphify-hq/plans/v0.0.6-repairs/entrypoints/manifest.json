@@ -1,10 +1,11 @@
 {
   "repository": "vixttha/README-HQ",
-  "source_commit": "8069675ff0e502953a07d392578e72c8ec6009a3",
-  "title": "README HQ v0.0.6 entry point and PR checkpoints 56 through 59",
+  "source_commit": "a483439c78d8a5baa4ddfabc50883f3a099865e0",
+  "title": "README HQ v0.0.6 entry point and provenance checkpoints 56 through 62",
   "source_files": [
     "plans/v0.0.6-repairs/README.md",
-    "audit/audit_entrypoints.py"
+    "audit/audit_entrypoints.py",
+    "audit/audit_boundaries.py"
   ],
   "features": [
     {
@@ -108,6 +109,84 @@
         {
           "path": "audit/audit_entrypoints.py",
           "anchor": "def check_moving_pr_observation(directory):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-60",
+      "label": "v0.0.6.60 · #60 · Technique list output encoding",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.60` | [#60](https://github.com/vixttha/README-HQ/issues/60) | Technique list output encoding | Medium | `v0.0.6.59` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.59` | [#59](https://github.com/vixttha/README-HQ/issues/59) | Consistent PR head observation | High | `v0.0.6.58` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Make technique list output safe and explicit across supported stream encodings. Keep output and exit status consistent when rendering fails, and test redirected ASCII and UTF-8 output."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_boundaries.py",
+          "anchor": "def check_list_output_encoding(directory):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-61",
+      "label": "v0.0.6.61 · #61 · Technique lookup key collisions",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.61` | [#61](https://github.com/vixttha/README-HQ/issues/61) | Technique lookup key collisions | Medium | `v0.0.6.60` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.60` | [#60](https://github.com/vixttha/README-HQ/issues/60) | Technique list output encoding | Medium | `v0.0.6.59` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Reject cross-record exact collisions across the lookup fields promised by the technique guide, or define an explicit disambiguation rule and use it consistently for lookup. Test IDs, aliases, and outcome keys."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_boundaries.py",
+          "anchor": "def check_cross_field_identifier_collision(directory):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-62",
+      "label": "v0.0.6.62 · #62 · Exact review pagination boundary",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.62` | [#62](https://github.com/vixttha/README-HQ/issues/62) | Exact review pagination boundary | Low | `v0.0.6.61` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.61` | [#61](https://github.com/vixttha/README-HQ/issues/61) | Technique lookup key collisions | Medium | `v0.0.6.60` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Use the review endpoint pagination metadata to distinguish complete results from an intentionally bounded observation. Test 999, 1,000, and more than 1,000 reviews and never represent a partial count as exact."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_boundaries.py",
+          "anchor": "def check_review_pagination_boundary(directory):"
         }
       ]
     }
