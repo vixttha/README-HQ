@@ -1,0 +1,178 @@
+{
+  "candidate": "8d50caec2bc6fcb998994a1fd302294a029325f9",
+  "fixture_commit": "46a2826378054d18ac2b261f8810b968bd47e8d8",
+  "workflow_run_id": 44637371509,
+  "workflow_run_attempt": 1,
+  "platforms": {
+    "ubuntu": {
+      "artifact_id": 14584526550,
+      "archive_sha256": "c2731e303038b42c474b57c6a0e633bbd11b94f8cde697d7bb1cae04faeffa5e",
+      "job_id": 135959236957,
+      "baseline_cases": {
+        "standalone_versions": 2,
+        "techniques": 17,
+        "local_links": 193,
+        "imported_files": 159
+      },
+      "unchecked": 87,
+      "observations": {
+        "purple-reader.json": {
+          "candidate": "8d50caec2bc6fcb998994a1fd302294a029325f9",
+          "platform": "linux",
+          "run": "44637371509",
+          "attempt": "1",
+          "job": "audit",
+          "observations": {
+            "first_action_binding": {
+              "broken_fixture_commit": "19c46e3c70e653815708bcb74bb100de152be5d9",
+              "documented_command_direct_exit": 7,
+              "unrelated_command": {
+                "exit": 0,
+                "overall": "passed",
+                "first_action": "passed",
+                "readme_sha256": "8357d99f364338ba385a45d56cf6a812c10a4d71f900654a92450ea5eb3fd0b3"
+              },
+              "documented_command": {
+                "exit": 1,
+                "overall": "failed",
+                "first_action": "failed",
+                "readme_sha256": "8357d99f364338ba385a45d56cf6a812c10a4d71f900654a92450ea5eb3fd0b3"
+              },
+              "working_documented_control": {
+                "exit": 0,
+                "overall": "passed",
+                "first_action": "passed",
+                "readme_sha256": "8357d99f364338ba385a45d56cf6a812c10a4d71f900654a92450ea5eb3fd0b3"
+              },
+              "unchecked_distinct_urls": {
+                "network_requests": 0,
+                "receipts_byte_identical": true,
+                "sha256": "88d0c1c98bf074499d08db8ef01368d421162e9c9f9430a5218a37ff53a140b5"
+              }
+            },
+            "rendered_org_readme": {
+              "repository": "alphapapa/org-super-agenda",
+              "commit": "fb20ad9c8a9705aa05d40751682beae2d094e0fe",
+              "published_readme": "README.org",
+              "published_blob": "4fa4d633ca22a472f07fc0f67df851d95def5936",
+              "validator_exit": 1,
+              "validator_errors": [
+                "no supported README found at the selected entry point"
+              ]
+            }
+          }
+        },
+        "purple-graphify.json": {
+          "candidate": "8d50caec2bc6fcb998994a1fd302294a029325f9",
+          "platform": "linux",
+          "run": "44637371509",
+          "attempt": "1",
+          "job": "audit",
+          "observations": {
+            "graphify_navigation": {
+              "fixture_commit": "8c53ff73088fda202b4b9b63c7ab57a4a55799e1",
+              "index_wrong_destination": "maps/v0.0.5/README.md",
+              "reader_exit": 0,
+              "graphify_exit": 0,
+              "plan_exit": 0,
+              "corrupt_graph_receipt_exit": 2,
+              "graphify_report": "Graphify verified 6 maps covering 17 version records.",
+              "plan_report": "Verified 67 repair checkpoints and 3 Graphify map partitions."
+            }
+          }
+        }
+      }
+    },
+    "windows": {
+      "artifact_id": 14584602212,
+      "archive_sha256": "749df80c94a4baa36da9a530aa7814f3b1c4a03f50f843ae0fb7d411ca3b7293",
+      "job_id": 135959236449,
+      "baseline_cases": {
+        "standalone_versions": 2,
+        "techniques": 17,
+        "local_links": 193,
+        "imported_files": 159
+      },
+      "unchecked": 87,
+      "observations": {
+        "purple-reader.json": {
+          "candidate": "8d50caec2bc6fcb998994a1fd302294a029325f9",
+          "platform": "win32",
+          "run": "44637371509",
+          "attempt": "1",
+          "job": "audit",
+          "observations": {
+            "first_action_binding": {
+              "broken_fixture_commit": "91cec697b7cb60543ccd8fe0f1c77ee15b0e15f7",
+              "documented_command_direct_exit": 7,
+              "unrelated_command": {
+                "exit": 0,
+                "overall": "passed",
+                "first_action": "passed",
+                "readme_sha256": "3c40e98eb5aaa572cac0e7e5651d68e3295b5c1d34e2fe6994e86ef9748779c0"
+              },
+              "documented_command": {
+                "exit": 1,
+                "overall": "failed",
+                "first_action": "failed",
+                "readme_sha256": "3c40e98eb5aaa572cac0e7e5651d68e3295b5c1d34e2fe6994e86ef9748779c0"
+              },
+              "working_documented_control": {
+                "exit": 0,
+                "overall": "passed",
+                "first_action": "passed",
+                "readme_sha256": "3c40e98eb5aaa572cac0e7e5651d68e3295b5c1d34e2fe6994e86ef9748779c0"
+              },
+              "unchecked_distinct_urls": {
+                "network_requests": 0,
+                "receipts_byte_identical": true,
+                "sha256": "053449f0f2132e9e8f64baea1fbc7918488cf652d0892b86a1a2539c257ce377"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "original_run_comparison": {
+    "head_run_id": 44538439592,
+    "head_windows_artifact_id": 14536508778,
+    "merge_run_id": 44538450099,
+    "merge_windows_artifact_id": 14537695684,
+    "merge_commit": "1475e0cea2b516b1577cf9a190708547d90548f7",
+    "shared_git_tree": "0e4717b433e783700640086751a8c827752347bd",
+    "head_checkout_receipt_matches": true,
+    "merge_checkout_receipt_matches": true
+  },
+  "issue_records": {
+    "documented_action": 129,
+    "unchecked_probe_identity": 130,
+    "org_homepage_discovery": 131,
+    "graphify_landing_navigation": 5
+  },
+  "prior_detection": {
+    "windows_validator_exit": {
+      "issue": 117,
+      "run_id": 44634204082,
+      "job_id": 135948412069
+    },
+    "graphify_failure_receipt": {
+      "issue": 124,
+      "run_id": 44636325925,
+      "job_id": 135955663556
+    },
+    "unchecked_smoke": {
+      "issue": 126,
+      "run_id": 44636325925,
+      "job_id": 135955663222
+    }
+  },
+  "plan_snapshot": {
+    "commit": "bfaa02a45f0fd4d6320df5a7dd456805386412f5",
+    "first": "v0.0.6.78",
+    "last": "v0.0.6.128",
+    "checkpoint_count": 51,
+    "debug_before_merge": true,
+    "status": "awaiting_approval"
+  }
+}
