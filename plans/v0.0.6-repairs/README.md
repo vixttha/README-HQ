@@ -1,6 +1,6 @@
 # README HQ v0.0.6 repair pipeline
 
-Baseline [`v0.0.6` at `f50e374`](https://github.com/vixttha/README-HQ/commit/f50e3749dab90ddfe35894284d1660097a1fb1a8). The [public audit](https://github.com/vixttha/README-HQ/actions/runs/44510897511) reproduced the initial ten findings. The [portability audit](https://github.com/vixttha/README-HQ/actions/runs/44513298531) added seven checkpoints. Each issue owns one cumulative repair checkpoint. The first checkpoint is ready to implement and the later checkpoints follow it in order.
+Baseline [`v0.0.6` at `f50e374`](https://github.com/vixttha/README-HQ/commit/f50e3749dab90ddfe35894284d1660097a1fb1a8). The [public audit](https://github.com/vixttha/README-HQ/actions/runs/44510897511) reproduced the initial ten findings. The [portability audit](https://github.com/vixttha/README-HQ/actions/runs/44513298531) added seven checkpoints. The [learning audit](https://github.com/vixttha/README-HQ/actions/runs/44515197237) adds seven more through `v0.0.6.24`. Each issue owns one cumulative repair checkpoint. The first checkpoint is ready to implement and the later checkpoints follow it in order.
 
 [Graphify plan](../../graphify-hq/plans/v0.0.6-repairs/README.md)
 
@@ -25,6 +25,13 @@ Baseline [`v0.0.6` at `f50e374`](https://github.com/vixttha/README-HQ/commit/f50
 | `v0.0.6.15` | [#15](https://github.com/vixttha/README-HQ/issues/15) | Repository-root-relative links | Medium | `v0.0.6.14` |
 | `v0.0.6.16` | [#16](https://github.com/vixttha/README-HQ/issues/16) | Published Git tree link verification | High | `v0.0.6.15` |
 | `v0.0.6.17` | [#17](https://github.com/vixttha/README-HQ/issues/17) | Default-branch publication coverage | Medium | `v0.0.6.16` |
+| `v0.0.6.18` | [#18](https://github.com/vixttha/README-HQ/issues/18) | Verified source and run binding | High | `v0.0.6.17` |
+| `v0.0.6.19` | [#19](https://github.com/vixttha/README-HQ/issues/19) | Canonical evidence identity | Medium | `v0.0.6.18` |
+| `v0.0.6.20` | [#20](https://github.com/vixttha/README-HQ/issues/20) | Duplicate mechanism detection | Medium | `v0.0.6.19` |
+| `v0.0.6.21` | [#21](https://github.com/vixttha/README-HQ/issues/21) | Durable source-learning intake | High | `v0.0.6.20` |
+| `v0.0.6.22` | [#22](https://github.com/vixttha/README-HQ/issues/22) | Project-specific recommendation receipts | High | `v0.0.6.21` |
+| `v0.0.6.23` | [#23](https://github.com/vixttha/README-HQ/issues/23) | Public and private learning separation | High | `v0.0.6.22` |
+| `v0.0.6.24` | [#24](https://github.com/vixttha/README-HQ/issues/24) | Reuse and attribution boundary | Medium | `v0.0.6.23` |
 
 ## Checkpoint workflow
 
@@ -32,7 +39,7 @@ Baseline [`v0.0.6` at `f50e374`](https://github.com/vixttha/README-HQ/commit/f50
 2. Make the scoped repair as its own checkpoint. Preserve a distinct commit and link it to the issue.
 3. Run the checkpoint regression and applicable existing checks on standard public GitHub-hosted runners. Rebuild Graphify and query MCP for any change to graph generation, source evidence, or the version index.
 4. Review the combined candidate against the intended base. Record the exact tested SHA, public runner links, Graphify evidence when relevant, and any unresolved conflicts on the issue before advancing to the next checkpoint.
-5. Review the combined series after `v0.0.6.17`. Homepage publication and release decisions stay with the owner.
+5. Review the combined series after `v0.0.6.24`. Homepage publication and release decisions stay with the owner.
 
 ## Verification by checkpoint
 
@@ -117,3 +124,35 @@ Baseline [`v0.0.6` at `f50e374`](https://github.com/vixttha/README-HQ/commit/f50
 ## Portability and quality acceptance
 
 [Acceptance matrix](https://github.com/vixttha/README-HQ/blob/97037dfb94241182b2471bcb33e7dc9a21557019/audits/portability-and-quality.md) · [Public audit](https://github.com/vixttha/README-HQ/actions/runs/44513298531)
+
+## Learning and project-specific outputs
+
+[Learning workflow and pilot](https://github.com/vixttha/README-HQ/blob/a8d97d0559853538d4d814edf5c998e42cfec3d2/learning/README.md) · [Public learning audit](https://github.com/vixttha/README-HQ/actions/runs/44515197237)
+
+### v0.0.6.18
+
+- Bind each finding to a source repository, full commit, path or artifact digest, and anchor. Use observed for a documented pattern. Require outcome, environment, and exact execution evidence before marking a behavioral claim verified.
+
+### v0.0.6.19
+
+- Normalize evidence identity to repository, commit, path, and evidence span while grouping same-file observations under the same source. Preserve relevant source lines and keep aliases or mirrors from inflating independent corroboration.
+
+### v0.0.6.20
+
+- Detect exact repeated mechanisms with a canonical signature, flag semantic overlap for review, and retain one stable ID with aliases and corroborating evidence. Test against both active and retired techniques.
+
+### v0.0.6.21
+
+- Create an idempotent learning intake for supplied source repositories and in-flight discoveries. Persist source revision, candidate identity, disposition, and provenance. Demonstrate that repeated intake records new evidence once and retains versioned history.
+
+### v0.0.6.22
+
+- Bind recommendations to a target tree, owner-selected references, actual audience and capabilities, and the matching technique record. Record adopt, adapt, already present, declined, irrelevant, or insufficient evidence. Test that changing target facts or allowed sources changes the applicable recommendations.
+
+### v0.0.6.23
+
+- Keep public shared learning and private project receipts isolated. Require independently resolved visibility and provenance before public admission. Verify using a synthetic private marker that public outputs and logs contain no private identifiers, links, or excerpts.
+
+### v0.0.6.24
+
+- Record an owner decision on the HQ template's own reuse terms. For learning from an external example, cite the evidence and store an original abstraction. Require explicit license and attribution metadata before including copied material. Keep unresolved rights visible.
