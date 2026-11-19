@@ -25,7 +25,8 @@ def reference(commit, path, change=False):
     lines = source_bytes(commit, path).decode("utf-8").splitlines()
     stripped = [line.strip() for line in lines]
     occurrences = Counter(stripped)
-    prefixes = ("- ", "# ") if change else ("# ",)
+    headings = ("# ", "<h1 ", "<h1>", "## ")
+    prefixes = ("- ", *headings) if change else headings
     for prefix in prefixes:
         for number, line in enumerate(stripped, 1):
             if line.startswith(prefix) and len(line) <= 500 and occurrences[line] == 1:
