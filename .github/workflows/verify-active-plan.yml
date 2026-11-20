@@ -20,6 +20,9 @@ jobs:
       - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
         with:
           python-version: '3.12'
+      - name: Install pinned Markdown parser
+        run: |
+          python -m pip install --require-hashes --only-binary=:all: -r tools/markdown-requirements.txt
       - name: Check the current repair ledger and preserve published mappings
         shell: bash
         run: |
