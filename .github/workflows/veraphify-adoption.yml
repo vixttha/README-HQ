@@ -28,6 +28,7 @@ jobs:
       ADOPTER_SHA: "f50e3749dab90ddfe35894284d1660097a1fb1a8"
       ADOPTER_FILE: "tools/check_readme_hq.py"
       ADOPTER_ANCHOR: "def check_registry("
+      ADOPTER_REFERENCES: "{\"documented_in\":[{\"path\":\"README.md\",\"anchor\":\"python3 tools/check_readme_hq.py\"}],\"changed_in\":[{\"path\":\"README-GUIDE.md\",\"anchor\":\"The [technique library](techniques/README.md) holds reusable practices\"}],\"tested_by\":[{\"path\":\".github/workflows/readme-hq.yml\",\"anchor\":\"run: python3 tools/check_readme_hq.py\"}]}"
       GRAPHIFY_QUERY_LOG_DISABLE: '1'
       PYTHONHASHSEED: '0'
     steps:
@@ -66,7 +67,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           repository: vixttha/Veraphify
-          ref: 64b3b3005d7442aaacf5dc6ca45255ca673cba53
+          ref: bd04eddb54006bc0f7a155405fe87241903343de
           path: adoption-tools
           persist-credentials: false
       - name: Build the pinned evidence map and verify the archive and citation
