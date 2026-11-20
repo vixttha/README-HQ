@@ -83,6 +83,28 @@ class ReaderTests(unittest.TestCase):
                         "repository_identity": "inferred-from-origin", "profile": profile,
                         "subproject": subproject, "commit": tree.commit})
 
+    def test_receipt_distinguishes_actions_attempts_jobs_and_standalone(self):
+        from hq_smoke import write_receipt
+
+        with repository({"README.md": "# Guide"}) as tree:
+            receipt = tree.root / "audit.json"
+            env = {"GITHUB_ACTIONS": "true", "GITHUB_REPOSITORY": "example/project",
+                   "GITHUB_RUN_ID": "23", "RUNNER_OS": "Linux"}
+            for attempt, job in (("1", "linux"), ("2", "linux"), ("2", "verification")):
+                with patch.dict(os.environ, {**env, "GITHUB_RUN_ATTEMPT": attempt, "GITHUB_JOB": job}):
+                    write_receipt(receipt, tree, {}, [], [])
+                result = json.loads(receipt.read_bytes())
+                self.assertEqual(result["github_actions"], {
+                    "status": "provided-by-runner", "run_id": "23", "attempt": attempt,
+                    "attempt_url": f"https://github.com/example/project/actions/runs/23/attempts/{attempt}",
+                    "job": job, "runner_os": "Linux"})
+            with patch.dict(os.environ, {"GITHUB_ACTIONS": "false"}):
+                write_receipt(receipt, tree, {}, [], [])
+            result = json.loads(receipt.read_bytes())
+            self.assertIsNone(result["run_url"])
+            self.assertEqual(result["github_actions"]["status"], "unavailable")
+            self.assertIsNone(result["github_actions"]["job"])
+
     def test_pinned_readme_and_monorepo_routes(self):
         with repository({"README.md": "# Root", ".github/README.md": "# Published",
                          "docs/README.md": "# Docs", "packages/example/README.md": "# Subproject"}) as tree:

@@ -176,14 +176,24 @@ def write_receipt(destination, tree, cases, errors, gaps, *, validator_path=None
                     sources[path] = sha256(tree.read(path)).hexdigest()
                 except (KeyError, OSError, ValueError):
                     unavailable_sources.append(path)
-    run = os.environ.get("GITHUB_RUN_ID")
-    repo = os.environ.get("GITHUB_REPOSITORY")
+    hosted = os.environ.get("GITHUB_ACTIONS") == "true"
+    run = os.environ.get("GITHUB_RUN_ID") if hosted else None
+    repo = os.environ.get("GITHUB_REPOSITORY") if hosted else None
+    run_url = f"https://github.com/{repo}/actions/runs/{run}" if repo and run else None
+    attempt = os.environ.get("GITHUB_RUN_ATTEMPT") if hosted else None
     data = {
         "schema": 1,
         "commit": tree.commit if tree else None,
         "draft": tree.draft if tree else None,
         "tools": {"python": sys.version.split()[0], "platform": platform.platform()},
-        "run_url": f"https://github.com/{repo}/actions/runs/{run}" if repo and run else None,
+        "run_url": run_url,
+        "github_actions": {
+            "status": "provided-by-runner" if hosted else "unavailable",
+            "run_id": run, "attempt": attempt,
+            "attempt_url": f"{run_url}/attempts/{attempt}" if run_url and attempt else None,
+            "job": os.environ.get("GITHUB_JOB") if hosted else None,
+            "runner_os": os.environ.get("RUNNER_OS") if hosted else None,
+        },
         "sources": sources, "cases": cases, "errors": errors, "unchecked": gaps,
         "result": "failed" if errors else "passed",
     }
