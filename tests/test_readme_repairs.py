@@ -978,6 +978,16 @@ A separate [same label](fourth.md).
                     self.assertEqual(data["cases"]["first_action"]["result"], result)
                     self.assertEqual(data["result"], {0: "passed", 1: "failed", 2: "incomplete"}[exit_code])
 
+    def test_shell_only_syntax_does_not_bind_a_literal_smoke_argv(self):
+        from hq_smoke import matches_documented_action
+
+        for value, argv in (
+            ("echo yes && echo done", ["echo", "yes", "&&", "echo", "done"]),
+            ("echo $HOME", ["echo", "$HOME"]),
+        ):
+            self.assertFalse(matches_documented_action({"kind": "argv", "value": value}, {"argv": argv}))
+        self.assertTrue(matches_documented_action({"kind": "argv", "value": "echo yes"}, {"argv": ["echo", "yes"]}))
+
     def test_required_smoke_needs_a_matching_documented_action(self):
         from check_readme_hq import main
 
@@ -1001,7 +1011,9 @@ A separate [same label](fourth.md).
                 if expected == 2:
                     self.assertEqual(binding, {"status": "supplemental"})
                 else:
-                    self.assertEqual(binding, {"status": "matched", "path": "README.md", "line": 8})
+                    from hashlib import sha256
+                    self.assertEqual(binding, {"status": "matched", "path": "README.md", "line": 8,
+                                               "source_sha256": sha256(readme.encode()).hexdigest()})
 
     def test_smoke_failure_codes_and_private_output_distinguish_same_exit(self):
         with repository({"README.md": "# Guide"}) as tree:
@@ -1581,6 +1593,9 @@ class EvidenceTests(unittest.TestCase):
         for returned, expected in (
             (limited, {"code": "github-rate-limited", "retryable": True,
                        "http_status": 429, "retry_after_seconds": 15}),
+            (HTTPError("https://secret.invalid", 503, "private body", {"Retry-After": "20"}, BytesIO()),
+             {"code": "github-temporarily-unavailable", "retryable": True, "http_status": 503,
+              "retry_after_seconds": 20}),
             (ValueError("source anchor does not match"), {"code": "invalid-or-unverified-evidence",
                                                         "retryable": False}),
         ):

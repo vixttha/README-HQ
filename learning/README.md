@@ -7,3 +7,5 @@ The intake verifies public visibility and exact commit against GitHub and verifi
 Reuse decisions and source attribution are recorded under [project and imported material terms](../REUSE.md). The earlier [learning pilot](https://github.com/vixttha/README-HQ/tree/a8d97d0559853538d4d814edf5c998e42cfec3d2/learning) documents the historical experiments.
 
 The intake receipt retains the requested and canonical GitHub repository names, the API repository ID, and the exact matched anchor and line. A canonical rename is accepted only when the canonical metadata confirms the same public repository ID. Different anchors on one line can represent distinct evidence.
+
+Pass `--json-errors` to receive a structured diagnostic on standard error. Retryable API and transport failures have separate codes from invalid evidence. Retry timing is included when GitHub supplies it.

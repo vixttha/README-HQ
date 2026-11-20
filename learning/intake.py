@@ -9,7 +9,7 @@ import json
 from pathlib import Path
 import sys
 from tempfile import NamedTemporaryFile
-from urllib.error import HTTPError
+from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -197,8 +197,13 @@ def is_github_rate_limit(error):
 
 
 def intake_error(error):
-    if isinstance(error, HTTPError) and is_github_rate_limit(error):
-        result = {"code": "github-rate-limited", "retryable": True, "http_status": error.code}
+    if isinstance(error, HTTPError):
+        rate_limited = is_github_rate_limit(error)
+        if not rate_limited and error.code not in {500, 502, 503, 504}:
+            return {"code": "invalid-or-unverified-evidence", "retryable": False}, (
+                "learning request or source proof is invalid or unverified")
+        code = "github-rate-limited" if rate_limited else "github-temporarily-unavailable"
+        result = {"code": code, "retryable": True, "http_status": error.code}
         retry = error.headers.get("Retry-After", "") if error.headers else ""
         if len(retry) <= 9 and retry.isascii() and retry.isdecimal():
             result["retry_after_seconds"] = int(retry)
@@ -213,7 +218,10 @@ def intake_error(error):
             reset = error.headers.get("X-RateLimit-Reset", "")
             if len(reset) <= 10 and reset.isascii() and reset.isdecimal():
                 result["retry_at"] = datetime.fromtimestamp(int(reset), timezone.utc).isoformat()
-        return result, f"GitHub API rate limit reached (HTTP {error.code}); retry later"
+        message = "GitHub API rate limit reached" if rate_limited else "GitHub API is temporarily unavailable"
+        return result, f"{message} (HTTP {error.code}); retry later"
+    if isinstance(error, URLError):
+        return {"code": "github-transport-unavailable", "retryable": True}, "GitHub API connection failed; retry later"
     if isinstance(error, UnknownTechniqueError):
         return {"code": "unknown-technique", "retryable": False}, str(error)
     return {"code": "invalid-or-unverified-evidence", "retryable": False}, (

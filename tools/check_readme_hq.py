@@ -424,12 +424,14 @@ def main():
                 gaps.append(f"{entry}: rendered navigation, anchors, and first-use instructions remain unchecked")
             if args.smoke:
                 from hq_smoke import verify_first_action
-                actions = []
+                actions, source_sha256 = [], None
                 if entry and suffix(entry) in MARKDOWN:
-                    actions = list(documented_actions(parse_markdown(tree.read(entry).decode("utf-8"))[2]))
+                    source_bytes = tree.read(entry)
+                    source_sha256 = hashlib.sha256(source_bytes).hexdigest()
+                    actions = list(documented_actions(parse_markdown(source_bytes.decode("utf-8"))[2]))
                 outcome = verify_first_action(tree, args.smoke, allow_network=args.allow_network,
                                               subproject=args.subproject, include_output=args.include_smoke_output,
-                                              entrypoint=entry, actions=actions)
+                                              entrypoint=entry, actions=actions, source_sha256=source_sha256)
                 if args.require_smoke:
                     outcome["required"] = True
                 cases["first_action"] = outcome

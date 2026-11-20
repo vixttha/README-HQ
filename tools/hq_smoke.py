@@ -32,13 +32,14 @@ def url_subject(value):
 
 
 def verify_first_action(tree, path, *, allow_network=False, subproject=".", include_output=False,
-                        entrypoint=None, actions=None):
+                        entrypoint=None, actions=None, source_sha256=None):
     spec = read_json(path)
     result = run_first_action(tree, spec, allow_network=allow_network, subproject=subproject,
                               include_output=include_output)
     if actions is not None:
         binding = next((action for action in actions if matches_documented_action(action, spec)), None)
-        result["documentation"] = ({"status": "matched", "path": entrypoint, "line": binding["line"]}
+        result["documentation"] = ({"status": "matched", "path": entrypoint, "line": binding["line"],
+                                    "source_sha256": source_sha256}
                                    if binding else {"status": "supplemental"})
     return result
 
@@ -56,7 +57,7 @@ def matches_documented_action(action, spec):
         documented = list(lexer)
     except ValueError:
         return False
-    if not documented:
+    if not documented or any(re.fullmatch(r"[();|&<>]+", arg) or "$" in arg or chr(96) in arg for arg in documented):
         return False
     if documented[0] in {"python", "python3", "python.exe", "python3.exe"} and actual[0] == sys.executable:
         documented[0] = sys.executable
