@@ -5,6 +5,8 @@ from pathlib import Path
 import re
 import sys
 
+from markdown_it import MarkdownIt
+
 from hq_data import read_json
 
 VERSION = re.compile(r"v0\.0\.6\.(\d+)")
@@ -15,30 +17,6 @@ REQUIRED_PROOF = {"original_failure_replay", "passing_control", "relevant_regres
 
 def ledger_rows(ledger):
     return [(item["version"], item["issue"]) for item in ledger["checkpoints"]]
-
-
-def visible_lines(markdown):
-    fence = None
-    comment = False
-    for line in markdown.splitlines():
-        marker = re.match(r"^ {0,3}(`{3,}|~{3,})(.*)$", line)
-        if marker and not comment and (fence is None or (
-            marker[1][0] == fence[0] and len(marker[1]) >= len(fence) and not marker[2].strip()
-        )):
-            fence = marker[1] if fence is None else None
-            continue
-        if fence:
-            continue
-        parts = []
-        while line:
-            if comment:
-                _, end, line = line.partition("-->")
-                comment = not end
-            else:
-                visible, start, line = line.partition("<!--")
-                parts.append(visible)
-                comment = bool(start)
-        yield "".join(parts)
 
 
 def check_plan(markdown, ledger, previous=None):
@@ -73,14 +51,20 @@ def check_plan(markdown, ledger, previous=None):
             raise ValueError(f"checkpoint {item['version']} has incomplete debug obligations")
 
     sections, observed = [], []
-    for line in visible_lines(markdown):
-        if heading := HEADING.fullmatch(line):
-            sections.append((heading[1], []))
-        elif re.match(r"^#{1,3}\s", line):
-            sections.append((None, []))
-        elif row := ROW.match(line):
+    lines = markdown.splitlines()
+    parser = MarkdownIt("commonmark").enable("table")
+    for token in parser.parse(markdown):
+        if token.map is None:
+            continue
+        line = lines[token.map[0]]
+        if token.type == "heading_open" and token.level == 0:
+            if heading := HEADING.fullmatch(line):
+                sections.append((heading[1], []))
+            elif int(token.tag[1:]) <= 3:
+                sections.append((None, []))
+        elif token.type == "tr_open" and (row := ROW.match(line)):
             observed.append((row[1], int(row[2])))
-        elif sections and sections[-1][0]:
+        elif token.type == "list_item_open" and sections and sections[-1][0]:
             sections[-1][1].append(line)
     checkpoints = [(name, body) for name, body in sections if name]
     if observed != rows or [name for name, _ in checkpoints] != [version for version, _ in rows]:

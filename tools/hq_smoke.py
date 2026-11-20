@@ -58,6 +58,40 @@ def matches_documented_action(action, spec):
     return documented == actual
 
 
+def shell_words_continued(lines, language):
+    """Return the first logical command and its physical offset in the fence."""
+    escape = "^" if language == "cmd" else "`" if language in {"powershell", "pwsh"} else "\\"
+    command = ""
+    start = None
+    for offset, line in enumerate(lines):
+        if start is None:
+            if not line.strip() or line.lstrip().startswith("#"):
+                continue
+            start = offset
+        command += line
+        if not ends_with_shell_continuation(command, language, escape):
+            return command.strip(), start
+        command = command[:-1]
+    return None
+
+
+def ends_with_shell_continuation(command, language, escape):
+    quote = None
+    escaped = False
+    quotes = '"' if language == "cmd" else "'\""
+    literal_quote = '"' if language == "cmd" else "'"
+    for char in command:
+        if escaped:
+            escaped = False
+        elif char == escape and quote != literal_quote:
+            escaped = True
+        elif quote is None and char in quotes:
+            quote = char
+        elif char == quote:
+            quote = None
+    return escaped
+
+
 def literal_shell_argv(value, language):
     windows = language in {"cmd", "powershell", "pwsh"}
     quotes = '"' if language == "cmd" else "'\""
@@ -82,7 +116,7 @@ def literal_shell_argv(value, language):
                 quote = None
         elif char in quotes:
             quote = char
-        elif char in "();|&<>*?[]~#":
+        elif char in "();|&<>*?[]~#" or (language == "bash" and char in "{}"):
             return None
     if quote or escaped:
         return None

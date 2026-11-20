@@ -259,6 +259,8 @@ def check_navigation(errors, tree=None, gaps=None, *, checked_media=None):
 
 
 def documented_actions(blocks):
+    from hq_smoke import shell_words_continued
+
     action = re.compile(r"^(?:quick[ -]?start|getting started|install(?:ation)?|setup|usage|use|run|try|play|build)\b", re.I)
     label = re.compile(r"^(?:install(?:ation)?|setup|quick[ -]?start|getting started|run|try|play|build|launch|open)\b", re.I)
     shell = {"", "sh", "shell", "bash", "zsh", "powershell", "pwsh", "cmd", "console", "terminal", "shell-session"}
@@ -278,12 +280,10 @@ def documented_actions(blocks):
         elif action_level is not None and token.type == "fence":
             info = token.info.strip().split()
             language = info[0].lower() if info else "sh"
-            if language in shell:
-                for offset, command in enumerate(token.content.splitlines(), 2):
-                    if command.strip() and not command.lstrip().startswith("#"):
-                        yield {"kind": "argv", "value": command.strip(), "line": token.map[0] + offset,
-                               "language": language}
-                        break
+            if language in shell and (logical := shell_words_continued(token.content.splitlines(), language)):
+                command, offset = logical
+                yield {"kind": "argv", "value": command, "line": token.map[0] + offset + 2,
+                       "language": language}
         elif action_level is not None and token.type == "inline":
             children = token.children or []
             for index, item in enumerate(children):

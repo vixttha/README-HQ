@@ -130,6 +130,23 @@ class ReaderTests(unittest.TestCase):
                 self.assertEqual(any("no accessible name" in error for error in errors), not named)
                 self.assertFalse(gaps)
 
+    def test_batch5_review_logical_shell_commands_and_bash_expansion(self):
+        from check_readme_hq import documented_actions
+        from hq_navigation import parse_markdown
+        from hq_smoke import matches_documented_action
+
+        for language, delimiter in (("sh", chr(92)), ("powershell", chr(96)), ("cmd", "^")):
+            markdown = f"## Quickstart\n\n```{language}\npython -c {delimiter}\n  \"print(1)\"\nignore me\n```"
+            action, = documented_actions(parse_markdown(markdown)[2])
+            self.assertEqual(action["line"], 4)
+            self.assertTrue(matches_documented_action(action, {"argv": [sys.executable, "-c", "print(1)"]}))
+
+        argv = {"argv": [sys.executable, "sample.py", "{a,b}"]}
+        self.assertFalse(matches_documented_action({"kind": "argv", "value": "python sample.py {a,b}",
+                                                     "language": "bash"}, argv))
+        self.assertTrue(matches_documented_action({"kind": "argv", "value": "python sample.py '{a,b}'",
+                                                    "language": "bash"}, argv))
+
     def test_batch5_review_github_response_timeout_is_retryable_but_local_timeout_is_not(self):
         from urllib.error import URLError
 
@@ -266,13 +283,16 @@ class ReaderTests(unittest.TestCase):
         sections = [f"### v0.0.6.{i}\n- **Replay** Repeat the test.\n- **After the repair** Pass it.\n"
                     f"- **Public runners** Ubuntu [#{i}](https://github.com/vixttha/README-HQ/issues/{i})\n"
                     for i in (78, 79)]
-        markdown = "\n".join(rows + sections)
+        table = ["| Checkpoint | Issue | Repair |", "| --- | --- | --- |", *rows]
+        markdown = "\n".join(table + [""] + sections)
         self.assertEqual(check_plan(markdown, ledger, ledger), 2)
+        literal = markdown.replace("Repeat the test.", "Print `<!--` as plain text.")
+        self.assertEqual(check_plan(literal, ledger, ledger), 2)
         controls = (
             ("<!--\n" + markdown + "\n-->", ledger),
             (markdown, {**ledger, "debug_before_merge": False}),
             (markdown, {**ledger, "checkpoints": [item(78), {**item(79), "issue": 78}]}),
-            ("\n".join(rows[::-1] + sections), ledger),
+            ("\n".join(table[:2] + rows[::-1] + [""] + sections), ledger),
             (markdown.replace("- **After the repair** Pass it.", "```\n- **After the repair** Pass it.\n```"), ledger),
         )
         for changed, data in controls:
