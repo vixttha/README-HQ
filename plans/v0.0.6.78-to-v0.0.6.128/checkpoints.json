@@ -1773,7 +1773,217 @@
             "version": "v0.0.6.112",
             "issue": 112
           }
-        ]
+        ],
+        "status": "public_runner_verified",
+        "verification": {
+          "pull_request": "https://github.com/vixttha/README-HQ/pull/144",
+          "head": "393487e218a4f0cb9475a87189601ef9241636eb",
+          "base": "941f6b49aac6ab78076f088ad6b58a00e9f03477",
+          "post_fix_run": "https://github.com/vixttha/README-HQ/actions/runs/44661216297/attempts/1",
+          "push_run": "https://github.com/vixttha/README-HQ/actions/runs/44661182610/attempts/1",
+          "review_run": "https://github.com/vixttha/README-HQ/actions/runs/44661195828/attempts/1",
+          "proposed_merge": "3557f272107f658ffa84a6225a96acb9188a37c3",
+          "observer": "58e14abc64b8f996aeccf3abde3836b50eb17e2c",
+          "artifacts": [
+            {
+              "id": 14595098151,
+              "name": "graphify-receipts-393487e218a4f0cb9475a87189601ef9241636eb-attempt-1",
+              "run_id": 44661182610,
+              "attempt": 1,
+              "sha256": "6d2d84da0560d01f814763eeba291c7907cc48cfbd5117783efb383b5147feb9"
+            },
+            {
+              "id": 14595023731,
+              "name": "readme-hq-windows-latest-393487e218a4f0cb9475a87189601ef9241636eb-attempt-1",
+              "run_id": 44661182610,
+              "attempt": 1,
+              "sha256": "6ad8d828d0371621c517caf4646da2c4110bd0d3cd47acd817f9d4c40c647042"
+            },
+            {
+              "id": 14594998849,
+              "name": "readme-hq-ubuntu-latest-393487e218a4f0cb9475a87189601ef9241636eb-attempt-2",
+              "run_id": 44661182610,
+              "attempt": 2,
+              "sha256": "9e8545da54c3d90dce8a30779009e56728a402e896fb619b33c859b0282a3d35"
+            },
+            {
+              "id": 14594699481,
+              "name": "readme-hq-ubuntu-latest-393487e218a4f0cb9475a87189601ef9241636eb-attempt-1",
+              "run_id": 44661182610,
+              "attempt": 1,
+              "sha256": "2170c6677828a41573831fb0b606e172359148d2a3807520fa636cce2c7112c0"
+            },
+            {
+              "id": 14595976677,
+              "name": "graphify-receipts-3557f272107f658ffa84a6225a96acb9188a37c3-attempt-1",
+              "run_id": 44661195828,
+              "attempt": 1,
+              "sha256": "f22816cb42f6c38992e1a31c92329db98fd931db4886f3fe8c6a3bacb95a4917"
+            },
+            {
+              "id": 14595697343,
+              "name": "readme-hq-windows-latest-3557f272107f658ffa84a6225a96acb9188a37c3-attempt-1",
+              "run_id": 44661195828,
+              "attempt": 1,
+              "sha256": "cf0f7c498759fa95f2d2b8b570756e38e5643b3e3b382241156b963e39a782a7"
+            },
+            {
+              "id": 14595387712,
+              "name": "readme-hq-ubuntu-latest-3557f272107f658ffa84a6225a96acb9188a37c3-attempt-1",
+              "run_id": 44661195828,
+              "attempt": 1,
+              "sha256": "e13bbe4ec300145d53cf313023e06dfa1bdbf12477a5d50d7af46b28b38521c6"
+            },
+            {
+              "id": 14596345206,
+              "name": "batch-3-windows-latest-1",
+              "run_id": 44661216297,
+              "attempt": 1,
+              "sha256": "731036ee24aa70708dfee2980e4f8118299cfeeffd993daaea1520874f32f796"
+            },
+            {
+              "id": 14596171205,
+              "name": "batch-3-ubuntu-latest-1",
+              "run_id": 44661216297,
+              "attempt": 1,
+              "sha256": "6a36feace509ebcf3b2976184b2c1b4df0ae4cb42e30831c6d9ff4655457ef25"
+            }
+          ],
+          "repair_commits": [
+            "b3d4ab576be023e1e5ca53fc9f70698439035f68",
+            "c0f7e3624ce790e6dfc2eb6ba034705b543607e5",
+            "1b239f083609c012f974d1dc550115a1b7d7407b",
+            "ee88c916088e3d46ff2430799ddabc3c62d4743b",
+            "aee1c15c6e71334ada06a744ee3393bf6c817677",
+            "9ba84651b1adf28b31ff95720de822f04af64fbd",
+            "db0053471026ee578334f6c1a689e396962170f4",
+            "6c024300f2f3a3cb623371c53d641c8a1c19e87b",
+            "6a729011e509ea132a36e51f125c10aa5e06142b",
+            "e176faf069782772e62e708813dbc987487c4c11",
+            "39102b05ab1678c8922e02252c6b2ae4f0b389f5",
+            "6b419e10061dc2c5c3d902c371dbc126117fca9d",
+            "93443ac4a34d41a50a4f3c5daf2df5f061a8d5d3",
+            "5786639b128fa5db83663b7fee8b8c6c1d4926a7",
+            "44174db2d70c6af6a7fb58d5fa5683bf64c48458"
+          ],
+          "follow_ups": [
+            {
+              "commit": "2ff499ee9918d3c202f708bad58ab341944b7848",
+              "tree": "be8ceb465556e953544b85c844a868fe9b2dff49",
+              "parent": "44174db2d70c6af6a7fb58d5fa5683bf64c48458",
+              "label": "fixture-control follow-up",
+              "issues": [
+                104,
+                108,
+                112
+              ]
+            },
+            {
+              "commit": "393487e218a4f0cb9475a87189601ef9241636eb",
+              "tree": "0dcb2f9887ec36caf8799e62387b7d829609ff5a",
+              "parent": "2ff499ee9918d3c202f708bad58ab341944b7848",
+              "label": "CodeRabbit and artifact follow-up",
+              "issues": [
+                98,
+                100,
+                103,
+                104,
+                108,
+                110
+              ]
+            }
+          ],
+          "coderabbit_review": "https://github.com/vixttha/README-HQ/pull/144#pullrequestreview-5986613884",
+          "coderabbit_final_check": "https://github.com/vixttha/README-HQ/runs/136039785360",
+          "issue_evidence": [
+            {
+              "issue": 98,
+              "url": "https://github.com/vixttha/README-HQ/issues/98#issuecomment-7028399510"
+            },
+            {
+              "issue": 99,
+              "url": "https://github.com/vixttha/README-HQ/issues/99#issuecomment-7028399803"
+            },
+            {
+              "issue": 100,
+              "url": "https://github.com/vixttha/README-HQ/issues/100#issuecomment-7028400020"
+            },
+            {
+              "issue": 101,
+              "url": "https://github.com/vixttha/README-HQ/issues/101#issuecomment-7028400284"
+            },
+            {
+              "issue": 102,
+              "url": "https://github.com/vixttha/README-HQ/issues/102#issuecomment-7028400535"
+            },
+            {
+              "issue": 103,
+              "url": "https://github.com/vixttha/README-HQ/issues/103#issuecomment-7028400750"
+            },
+            {
+              "issue": 104,
+              "url": "https://github.com/vixttha/README-HQ/issues/104#issuecomment-7028401133"
+            },
+            {
+              "issue": 105,
+              "url": "https://github.com/vixttha/README-HQ/issues/105#issuecomment-7028401386"
+            },
+            {
+              "issue": 106,
+              "url": "https://github.com/vixttha/README-HQ/issues/106#issuecomment-7028401595"
+            },
+            {
+              "issue": 107,
+              "url": "https://github.com/vixttha/README-HQ/issues/107#issuecomment-7028401846"
+            },
+            {
+              "issue": 108,
+              "url": "https://github.com/vixttha/README-HQ/issues/108#issuecomment-7028402069"
+            },
+            {
+              "issue": 109,
+              "url": "https://github.com/vixttha/README-HQ/issues/109#issuecomment-7028402283"
+            },
+            {
+              "issue": 110,
+              "url": "https://github.com/vixttha/README-HQ/issues/110#issuecomment-7028402523"
+            },
+            {
+              "issue": 111,
+              "url": "https://github.com/vixttha/README-HQ/issues/111#issuecomment-7028402749"
+            },
+            {
+              "issue": 112,
+              "url": "https://github.com/vixttha/README-HQ/issues/112#issuecomment-7028403012"
+            }
+          ],
+          "follow_up_issue_evidence": [
+            {
+              "issue": 98,
+              "url": "https://github.com/vixttha/README-HQ/issues/98#issuecomment-7028549202"
+            },
+            {
+              "issue": 100,
+              "url": "https://github.com/vixttha/README-HQ/issues/100#issuecomment-7028549430"
+            },
+            {
+              "issue": 103,
+              "url": "https://github.com/vixttha/README-HQ/issues/103#issuecomment-7028519639"
+            },
+            {
+              "issue": 104,
+              "url": "https://github.com/vixttha/README-HQ/issues/104#issuecomment-7028549686"
+            },
+            {
+              "issue": 108,
+              "url": "https://github.com/vixttha/README-HQ/issues/108#issuecomment-7028549973"
+            },
+            {
+              "issue": 110,
+              "url": "https://github.com/vixttha/README-HQ/issues/110#issuecomment-7028550207"
+            }
+          ]
+        }
       },
       {
         "id": 4,

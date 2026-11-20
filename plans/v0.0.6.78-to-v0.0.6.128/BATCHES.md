@@ -1,6 +1,6 @@
 # README HQ repair batches
 
-**Status** Batches 1 and 2 are verified on public runners in [draft PR #141](https://github.com/vixttha/README-HQ/pull/141) and [draft PR #142](https://github.com/vixttha/README-HQ/pull/142). Later batches remain planned. The pending sequence follows the combined [v0.0.6.67 candidate](https://github.com/vixttha/README-HQ/commit/8d50caec2bc6fcb998994a1fd302294a029325f9) in [draft PR #68](https://github.com/vixttha/README-HQ/pull/68).
+**Status** Batches 1–3 are verified on public runners in [draft PR #141](https://github.com/vixttha/README-HQ/pull/141), [draft PR #142](https://github.com/vixttha/README-HQ/pull/142), and [draft PR #144](https://github.com/vixttha/README-HQ/pull/144). Batches 4 and 5 remain planned. The pending sequence follows the combined [v0.0.6.67 candidate](https://github.com/vixttha/README-HQ/commit/8d50caec2bc6fcb998994a1fd302294a029325f9) in [draft PR #68](https://github.com/vixttha/README-HQ/pull/68).
 
 Work on one batch at a time, with up to 15 sequential checkpoints per batch. This schedule covers the 73 checkpoints from `v0.0.6.68` through `v0.0.6.140`. The original [v0.0.6.1–v0.0.6.67 plan](https://github.com/vixttha/README-HQ/blob/7f4562b8f44544bc9dd4b479fcd1bc30ca07ca94/plans/v0.0.6-repairs/README.md) remains the record for qualifying its open criteria. The already-planned .77 follow-up stays with [issue #5](https://github.com/vixttha/README-HQ/issues/5).
 
@@ -8,7 +8,7 @@ Work on one batch at a time, with up to 15 sequential checkpoints per batch. Thi
 | --- | --- | ---: | --- |
 | [Batch 1](#batch-1) | `v0.0.6.68`–`v0.0.6.82` | 15 | Public runner evidence recorded in draft PR #141 |
 | [Batch 2](#batch-2) | `v0.0.6.83`–`v0.0.6.97` | 15 | Public runner evidence recorded in draft PR #142 |
-| [Batch 3](#batch-3) | `v0.0.6.98`–`v0.0.6.112` | 15 | `v0.0.6.97` passes and batch evidence is reviewed |
+| [Batch 3](#batch-3) | `v0.0.6.98`–`v0.0.6.112` | 15 | Public runner evidence recorded in draft PR #144 |
 | [Batch 4](#batch-4) | `v0.0.6.113`–`v0.0.6.127` | 15 | `v0.0.6.112` passes and batch evidence is reviewed |
 | [Batch 5](#batch-5) | `v0.0.6.128`–`v0.0.6.140` | 13 | `v0.0.6.127` passes and batch evidence is reviewed |
 
@@ -78,6 +78,12 @@ Graphify evidence, package-context smoke checks, plan integrity, published links
 ## Batch 3
 
 PR and run provenance, execution isolation, inventory limits, rendered navigation, and failure receipts.
+
+[Draft PR #144](https://github.com/vixttha/README-HQ/pull/144) records 15 checkpoint commits and two follow-ups at [`393487e2`](https://github.com/vixttha/README-HQ/commit/393487e218a4f0cb9475a87189601ef9241636eb). The [checkpoint run](https://github.com/vixttha/README-HQ/actions/runs/44661216297/attempts/1) reproduced and passed all 15 checks on Ubuntu and all 12 applicable checks on Windows. Graphify checkpoints .98, .100, and .105 ran on Ubuntu. Both platforms passed the follow-up checks. The [batch push](https://github.com/vixttha/README-HQ/actions/runs/44661182610/attempts/1) and [proposed merge](https://github.com/vixttha/README-HQ/actions/runs/44661195828/attempts/1) passed Ubuntu, Windows, and Graphify MCP.
+
+The [CodeRabbit review](https://github.com/vixttha/README-HQ/pull/144#pullrequestreview-5986613884) found five problems in PR mock provenance, missing Git-blob handling, partial-clone smoke preparation, Markdown line endings, and qualified raw refs. The [follow-up commit](https://github.com/vixttha/README-HQ/commit/393487e218a4f0cb9475a87189601ef9241636eb) addresses all five. [Final CodeRabbit check](https://github.com/vixttha/README-HQ/runs/136039785360).
+
+The [Ubuntu rerun](https://github.com/vixttha/README-HQ/actions/runs/44661182610/attempts/2) produced a distinct attempt-2 artifact under the same run ID. The [issue #103 evidence](https://github.com/vixttha/README-HQ/issues/103#issuecomment-7028519639) records both job references, artifact IDs, and digests.
 
 | Checkpoint | Issue | Planned repair |
 | --- | --- | --- |
