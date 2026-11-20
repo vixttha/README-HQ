@@ -459,6 +459,36 @@ class EvidenceTests(unittest.TestCase):
             self.assertNotEqual(first, second)
             self.assertEqual(json.loads(second.read_bytes())["recommendations"], [])
 
+    def test_learning_conflicting_decisions_at_same_source_are_rejected(self):
+        loader = importlib.util.spec_from_file_location("intake", ROOT / "learning/intake.py")
+        intake = importlib.util.module_from_spec(loader)
+        loader.loader.exec_module(intake)
+        with repository({"README.md": "# Evidence\nOther evidence\n"}) as tree:
+            tree.git("remote", "add", "origin", "https://github.com/example/project.git")
+            source = {"id": "first", "checkout": str(tree.root), "ref": "HEAD",
+                      "repository": "example/project", "path": "README.md",
+                      "line": 1, "anchor": "# Evidence", "visibility": "public"}
+            alias = {**source, "id": "alias"}
+            other = {**source, "id": "other", "line": 2, "anchor": "Other evidence"}
+            first = {"source": "first", "technique": "first-success-milestone",
+                     "decision": "adopt", "rationale": "Explain the first result."}
+            second = {**first, "source": "alias", "decision": "declined"}
+            request = {"visibility": "public", "sources": [source, alias, other],
+                       "selected": ["first", "alias", "other"],
+                       "target": {**source, "audience": "reader", "capability": "audit"},
+                       "findings": [first, second]}
+            def fetch(route):
+                return ({"private": False, "visibility": "public"} if route == "example/project"
+                        else {"sha": tree.commit})
+            destination = tree.root / "receipts"
+            with self.assertRaisesRegex(ValueError, "conflicting recommendation decisions"):
+                intake.record_intake(request, destination, fetch=fetch)
+            self.assertFalse(destination.exists())
+            for sid, decision, count in (("alias", "adopt", 1), ("other", "declined", 2)):
+                request["findings"][1] = {**second, "source": sid, "decision": decision}
+                result = intake.record_intake(request, destination, fetch=fetch)
+                self.assertEqual(len(json.loads(result.read_bytes())["recommendations"]), count)
+
     def test_learning_hashes_the_registry_snapshot_used_by_the_decision(self):
         loader = importlib.util.spec_from_file_location("intake", ROOT / "learning/intake.py")
         intake = importlib.util.module_from_spec(loader)

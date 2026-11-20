@@ -66,6 +66,7 @@ def record_intake(specification, directory, *, fetch=fetch_github):
         raise ValueError("chosen learning sources must have independently verified intake evidence")
     uses = []
     candidates = []
+    decisions = {}
     for entry in specification["findings"]:
         source_id = entry["source"]
         if source_id not in sources:
@@ -88,6 +89,9 @@ def record_intake(specification, directory, *, fetch=fetch_github):
         rationale = entry.get("rationale")
         if not isinstance(rationale, str) or not rationale.strip():
             raise ValueError("recommendation needs a target-specific rationale")
+        identity = (technique, *sources[source_id]["identity"])
+        if decisions.setdefault(identity, decision) != decision:
+            raise ValueError(f"conflicting recommendation decisions for {technique} and the same source evidence")
         uses.append({"technique": technique, "decision": decision, "rationale": rationale,
                      "source": sources[source_id], "target": target_receipt})
     def unique(items):
