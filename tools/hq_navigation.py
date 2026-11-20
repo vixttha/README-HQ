@@ -69,6 +69,27 @@ class Link:
     coverage_gap: str | None = None
 
 
+def image_sources(value):
+    if "data:" in value.lower():
+        raise ValueError("unsupported inline image source")
+    candidates = []
+    remaining = value
+    while remaining := remaining.lstrip(" ,\t\r\n\f"):
+        match = re.match(r"([^ \t\r\n\f]+)(.*)", remaining, re.DOTALL)
+        url, remaining = match.groups()
+        if url.endswith(","):
+            candidates.append(url.rstrip(","))
+            continue
+        descriptor, _, remaining = remaining.partition(",")
+        descriptor = descriptor.strip()
+        if descriptor and not re.fullmatch(r"(?:[1-9]\d*w|(?:[0-9]+(?:\.[0-9]+)?|\.[0-9]+)x)", descriptor):
+            raise ValueError("unsupported image source descriptor")
+        candidates.append(url)
+    if not candidates:
+        raise ValueError("empty image source list")
+    return candidates
+
+
 class HtmlLinks(HTMLParser):
     def __init__(self, line):
         super().__init__(convert_charrefs=True)
@@ -87,13 +108,12 @@ class HtmlLinks(HTMLParser):
                 self.controls.append([attrs["href"], line, bool((attrs.get("aria-label") or "").strip())])
         if tag in {"source", "img"} and "srcset" in attrs:
             srcset = attrs["srcset"] or ""
-            candidates = [candidate.split() for candidate in srcset.split(",")]
-            if "data:" in srcset.lower() or not all(1 <= len(parts) <= 2 and (
-                len(parts) == 1 or re.fullmatch(r"(?:[1-9]\d*w|(?:[0-9]+(?:\.[0-9]+)?|\.[0-9]+)x)", parts[1])
-            ) for parts in candidates):
+            try:
+                sources = image_sources(srcset)
+            except ValueError:
                 self.links.append(Link(srcset, line, coverage_gap="unsupported image source list"))
             else:
-                self.links.extend(Link(parts[0], line, True) for parts in candidates)
+                self.links.extend(Link(url, line, True) for url in sources)
         if tag == "img" and attrs.get("src"):
             self.links.append(Link(attrs["src"], line, True))
             if self.controls and (attrs.get("alt") or "").strip():
@@ -179,6 +199,10 @@ def same_repo_target(tree, url):
             names = [ref]
         else:
             names = [f"refs/heads/{ref}", f"refs/remotes/origin/{ref}", f"refs/tags/{ref}"]
+            if re.fullmatch(r"[0-9a-f]{4,39}", ref):
+                objects = tree.git("rev-parse", f"--disambiguate={ref}").decode().split()
+                if len(objects) == 1:
+                    names.append(objects[0])
         resolved = set()
         for name in names:
             try:

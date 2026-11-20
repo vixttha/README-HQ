@@ -71,19 +71,22 @@ def verify_first_action(tree, path, *, allow_network=False):
         checkout = Path(temp) / "checkout"
         tree.git("worktree", "add", "--detach", str(checkout), tree.commit)
         try:
-            def file_digest():
+            def result_file():
                 if not name:
                     return None
                 path = (checkout / name).resolve()
-                if path.is_relative_to(checkout.resolve()) and path.is_file():
-                    with path.open("rb") as handle:
-                        checksum = sha256()
-                        for chunk in iter(lambda: handle.read(65536), b""):
-                            checksum.update(chunk)
-                    return checksum.hexdigest()
-                return None
+                return path if path.is_relative_to(checkout.resolve()) and path.is_file() else None
 
-            before = file_digest()
+            def file_digest(path):
+                if path is None:
+                    return None
+                with path.open("rb") as handle:
+                    checksum = sha256()
+                    for chunk in iter(lambda: handle.read(65536), b""):
+                        checksum.update(chunk)
+                return checksum.hexdigest()
+
+            before = file_digest(result_file()) if mode != "exists" else None
             timeout = spec.get("timeout", 60)
             if type(timeout) is not int or not 1 <= timeout <= 300:
                 raise ValueError("smoke timeout must be between 1 and 300 seconds")
@@ -95,9 +98,10 @@ def verify_first_action(tree, path, *, allow_network=False):
             matched = expected.get("contains") is None or expected["contains"].encode() in output
             observation = {}
             if name:
-                after = file_digest()
+                path = result_file()
+                after = file_digest(path) if mode != "exists" or digest is not None else None
                 changed = before != after
-                file_match = after is not None and (
+                file_match = path is not None and (
                     mode == "exists" or (changed and (
                         mode == "changed" or (mode == "created" and before is None)
                         or (mode == "updated" and before is not None)

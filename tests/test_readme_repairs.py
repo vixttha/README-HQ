@@ -121,6 +121,8 @@ A separate [same label](fourth.md).
             tree = GitTree(original.root)
             url = urlsplit("https://github.com/example/project/blob/release/next/README.md")
             self.assertEqual(same_repo_target(tree, url), ("README.md", tree.commit))
+            abbreviated = urlsplit(f"https://github.com/example/project/blob/{tree.commit[:12]}/README.md")
+            self.assertEqual(same_repo_target(tree, abbreviated), ("README.md", tree.commit))
             exact = urlsplit(f"https://github.com/example/project/blob/{tree.commit}/README.md")
             self.assertEqual(same_repo_target(tree, exact), ("README.md", tree.commit))
             tree.git("-c", "user.name=Fixture", "-c", "user.email=test@example.invalid",
@@ -157,6 +159,31 @@ A separate [same label](fourth.md).
                 if errors:
                     self.assertIn("dark-large.svg", errors[0])
                 self.assertTrue(any("unsupported image source list" in gap for gap in gaps))
+
+    def test_responsive_image_url_can_contain_a_comma(self):
+        svg = '<svg xmlns="http://www.w3.org/2000/svg"></svg>'
+        readme = ('<picture><source srcset="basic.svg 1x, diagram,large.svg 2x">'
+                  '<img src="basic.svg" alt="Diagram"></picture>')
+        with repository({"README.md": readme, "basic.svg": svg, "diagram,large.svg": svg}) as tree:
+            errors, gaps = [], []
+            self.assertEqual(check_document(tree, "README.md", errors, gaps), 3)
+            self.assertEqual((errors, gaps), ([], []))
+
+    def test_existence_only_smoke_never_opens_the_result(self):
+        with repository({"README.md": "# Example"}) as tree:
+            spec = tree.root / "smoke.json"
+            spec.write_text(json.dumps({
+                "commit": tree.commit, "argv": [sys.executable, "-c",
+                    "from pathlib import Path; Path('output.txt').touch()"],
+                "expected": {"exit": 0, "file": "output.txt", "file_mode": "exists"},
+            }), encoding="utf-8")
+            real_open = Path.open
+            def reject_result_read(path, *args, **kwargs):
+                if path.name == "output.txt":
+                    raise PermissionError("unreadable result")
+                return real_open(path, *args, **kwargs)
+            with patch.object(Path, "open", reject_result_read):
+                self.assertEqual(verify_first_action(tree, spec)["result"], "passed")
 
     def test_quality_and_smoke_have_separate_outcomes(self):
         with repository({"README.md": "# Package\n\nTODO: document the behavior.\n"}) as tree:
