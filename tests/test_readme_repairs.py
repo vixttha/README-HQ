@@ -77,6 +77,26 @@ Literal example `[Ignore](literal.md)`.
             self.assertFalse(any("literal.md" in issue for issue in errors))
             self.assertEqual(gaps, [])
 
+    def test_broken_inline_links_reference_the_exact_occurrence_line(self):
+        readme = """# Example
+
+An introductory sentence
+[same label](first.md) and [valid](README.md)
+[same label](second.md) plus a literal `[same label](ignored.md)`.
+
+> A quoted paragraph
+> [same label][missing]
+
+[missing]: third.md
+
+A separate [same label](fourth.md).
+"""
+        with repository({"README.md": readme}) as tree:
+            errors, gaps = [], []
+            self.assertEqual(check_document(tree, "README.md", errors, gaps), 1)
+            self.assertEqual([error.split(":")[1] for error in errors], ["4", "5", "8", "12"])
+            self.assertEqual(gaps, [])
+
     def test_root_fragments_follow_the_effective_homepage(self):
         layouts = [
             (".github/README.md", {"README.md": "# Wrong", "docs/README.md": "# Different"}),
