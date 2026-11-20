@@ -174,6 +174,13 @@ class ReaderTests(unittest.TestCase):
                         else:
                             docs.rmdir()
 
+    def test_public_reader_workflow_preserves_the_validator_exit(self):
+        config = (ROOT / ".github/workflows/readme-hq.yml").read_text(encoding="utf-8")
+        self.assertIn("\n        run: python tools/check_readme_hq.py --receipt readme-hq-result.json\n"
+                      "      - name: Run reader regressions\n"
+                      "        run: python -m unittest discover", config)
+        self.assertIn("      - name: Preserve the exact-SHA receipt\n        if: always()", config)
+
     def test_receipt_persistence_failure_preserves_audit_diagnostics(self):
         for good in (True, False):
             target = "README.md" if good else "missing.md"

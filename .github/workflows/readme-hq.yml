@@ -35,10 +35,10 @@ jobs:
           python-version: '3.12'
       - name: Install the README validator
         run: python -m pip install --require-hashes -r tools/requirements.txt
-      - name: Validate the pinned tree and run regressions
-        run: |
-          python tools/check_readme_hq.py --receipt readme-hq-result.json
-          python -m unittest discover -s tests -p 'test_readme*.py' -v
+      - name: Validate the pinned tree
+        run: python tools/check_readme_hq.py --receipt readme-hq-result.json
+      - name: Run reader regressions
+        run: python -m unittest discover -s tests -p 'test_readme*.py' -v
       - name: Preserve the exact-SHA receipt
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
