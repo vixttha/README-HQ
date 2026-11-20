@@ -252,6 +252,20 @@ A separate [same label](fourth.md).
             count, errors, gaps = audit()
             self.assertEqual((count, len(errors), gaps), (1, 1, []))
 
+    def test_lfs_rejects_malformed_extensions_and_reports_valid_ones(self):
+        lines = "version https://git-lfs.github.com/spec/v1\n"
+        fields = "oid sha256:" + "a" * 64 + "\nsize 128\n"
+        extension = "ext-0-foo sha256:" + "b" * 64 + "\n"
+        with repository({"README.md": "![Valid](valid.svg)\n![Invalid](invalid.svg)",
+                         "valid.svg": lines + extension + fields,
+                         "invalid.svg": lines + extension + extension + fields}) as tree:
+            errors, gaps = [], []
+            self.assertEqual(check_document(tree, "README.md", errors, gaps), 0)
+            self.assertEqual(len(errors), 1)
+            self.assertIn("malformed Git LFS media pointer", errors[0])
+            self.assertEqual(len(gaps), 1)
+            self.assertIn("Git LFS pointer extensions were not inspected", gaps[0])
+
     def test_responsive_image_sources_are_checked_alongside_fallback(self):
         body = ('<picture><source media="(prefers-color-scheme: dark)" '
                 'srcset="dark.svg 1x, dark-large.svg 2x"><source srcset="invalid.svg bad">'

@@ -21,9 +21,10 @@ from hq_data import REGULAR_MODES, SHA, physical_lines
 MARKDOWN = {".md", ".markdown", ".mdown", ".mkdn"}
 README_FORMATS = [".md", ".markdown", ".mdown", ".mkdn", ".rst", ".adoc", ".asciidoc", ".asc", ".txt", ""]
 IMAGE_FORMATS = {".png": "PNG", ".gif": "GIF", ".jpg": "JPEG", ".jpeg": "JPEG", ".webp": "WEBP"}
-LFS_VERSION = b"version https://git-lfs.github.com/spec/v1"
-LFS_POINTER = re.compile(rb"version https://git-lfs.github.com/spec/v1\r?\n"
-                         rb"oid sha256:([0-9a-f]{64})\r?\nsize (0|[1-9][0-9]*)\r?\n?")
+LFS_HOSTS = (b"version https://git-lfs.github.com/", b"version https://hawser.github.com/")
+LFS_POINTER = re.compile(rb"version https://(?:git-lfs|hawser)\.github\.com/spec/v1\n"
+                         rb"((?:ext-[0-9]-[a-z0-9][a-z0-9.-]* sha256:[0-9a-f]{64}\n)*)"
+                         rb"oid sha256:([0-9a-f]{64})\nsize (0|[1-9][0-9]*)\n")
 MAX_CACHED_MEDIA_BYTES = 50 * 1024 * 1024
 MAX_MEDIA_FRAMES = 256
 MAX_MEDIA_PIXELS = 100_000_000
@@ -158,9 +159,17 @@ def inline_links(children, line):
             current_line += 1
         elif token.type == "text" and not in_link:
             for match in BARE_WEB.finditer(token.content):
-                address = match[0].rstrip("?!.,:*_~")
-                while address.endswith(")") and address.count(")") > address.count("("):
-                    address = address[:-1].rstrip("?!.,:*_~")
+                candidate = match[0]
+                extra_closers = candidate.count(")") - candidate.count("(")
+                end = len(candidate)
+                while end:
+                    trailing = candidate[end - 1]
+                    if trailing == ")" and extra_closers > 0:
+                        extra_closers -= 1
+                    elif trailing not in "?!.,:*_~":
+                        break
+                    end -= 1
+                address = candidate[:end]
                 try:
                     hostname = urlsplit("http://" + address if address.startswith("www.") else address).hostname
                 except ValueError:
@@ -297,15 +306,20 @@ def check_fragment(tree, path, commit, fragment, *, plain=False):
 
 def media_bytes(tree, path, commit):
     data = tree.read(path, commit)
-    if not data.startswith(b"version https://git-lfs.github.com/"):
+    if not data.startswith(LFS_HOSTS):
         return data
-    pointer = LFS_POINTER.fullmatch(data) if len(data) <= 1024 else None
+    pointer = LFS_POINTER.fullmatch(data) if len(data) < 1024 else None
     if not pointer:
-        if data.startswith(LFS_VERSION + b"\n") and data.split(b"\n", 2)[1].startswith(b"ext-"):
-            raise LookupError("Git LFS pointer extensions were not inspected")
         raise ValueError("malformed Git LFS media pointer")
-    oid, raw_size = pointer.groups()
+    extensions, oid, raw_size = pointer.groups()
     size = int(raw_size)
+    if size > (1 << 63) - 1:
+        raise ValueError("malformed Git LFS media pointer size")
+    if extensions:
+        priorities = [line[4] for line in extensions.splitlines()]
+        if priorities != sorted(set(priorities)):
+            raise ValueError("malformed Git LFS media pointer extension order")
+        raise LookupError("Git LFS pointer extensions were not inspected")
     if size > MAX_CACHED_MEDIA_BYTES:
         raise LookupError("Git LFS media object exceeds the offline validation limit")
     digest = oid.decode()
