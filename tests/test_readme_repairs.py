@@ -15,7 +15,7 @@ sys.path.insert(0, str(ROOT / "tools"))
 from hq_data import GitTree, parse_json
 from hq_navigation import check_document, readme_path
 from hq_smoke import verify_first_action
-from check_readme_hq import check_evidence, evidence_identity, target_readme
+from check_readme_hq import check_evidence, check_registry, evidence_identity, target_readme
 from verify_plan import split_checkpoints, stage_partitions
 
 
@@ -119,6 +119,28 @@ class EvidenceTests(unittest.TestCase):
             evidence_identity({**first, "visibility": "private"})
         with self.assertRaisesRegex(ValueError, "receipt"):
             check_evidence({**first, "status": "verified"}, None)
+
+    def test_registry_and_inventory_cannot_vouch_for_each_other(self):
+        paths = ("techniques/registry.json", "techniques/public-source-inventory.json")
+        files = {name: (ROOT / name).read_bytes() for name in paths}
+        with repository(files) as tree:
+            problems = []
+            self.assertTrue(check_registry(problems, tree))
+            self.assertEqual(problems, [])
+            inventory = json.loads(files[paths[1]])
+            registry = json.loads(files[paths[0]])
+            inventory.append(["example/project", "a" * 40, "README.md", "b" * 40, "c" * 64, 2])
+            registry["techniques"][0]["evidence"] = [{
+                "status": "observed", "url": "https://github.com/example/project/blob/" + "a" * 40 + "/README.md",
+            }]
+            modified = {paths[0]: json.dumps(registry), paths[1]: json.dumps(inventory)}
+            with repository(modified) as edited:
+                with self.assertRaisesRegex(ValueError, "independently reviewed snapshot"):
+                    check_registry([], edited)
+            for invalid in (inventory + [inventory[-1]], [[42]]):
+                with repository({**modified, paths[1]: json.dumps(invalid)}) as edited:
+                    with self.assertRaisesRegex(ValueError, "duplicate|requires checked"):
+                        check_registry([], edited)
 
     def test_partition_capacity_preserves_order(self):
         features = list(range(100))

@@ -18,6 +18,8 @@ from hq_navigation import MARKDOWN, check_document, parse_markdown, readme_path,
 ROOT = Path(__file__).resolve().parents[1]
 BASELINE = "f50e3749dab90ddfe35894284d1660097a1fb1a8"
 INVENTORY_SHA256 = "d628a1c29fea09fff6063bdb85368a6b2d6969025161b1928d82838a2980cfbb"
+# Digest of the public inventory independently checked against the original Git blobs.
+PUBLIC_INVENTORY_SHA256 = "c0567553cd707ce8b67fb29a242d85d3ad4fa72264544c3365b220e7a746ebd7"
 SLUG = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*")
 VERSION = re.compile(r"v[0-9]+(?:\.[0-9]+){2,}")
 SOURCE_SPAN = re.compile(r"L[1-9]\d*(?:-L[1-9]\d*)?")
@@ -87,10 +89,25 @@ def check_registry(errors, tree=None):
     if type(data.get("schema")) is not int or data["schema"] != 1 or not isinstance(records, list) or not records:
         errors.append("technique registry must use integer schema 1 and a non-empty record array")
         return []
-    inventory = parse_json(tree.read("techniques/public-source-inventory.json"), "public source inventory")
-    if any(not isinstance(item, list) or len(item) != 6 for item in inventory):
-        raise ValueError("public source inventory requires checked blob digests and line counts")
-    checked_sources = {tuple(item[:3]): item[3:] for item in inventory}
+    inventory_path = "techniques/public-source-inventory.json"
+    inventory_bytes = tree.read(inventory_path)
+    inventory = parse_json(inventory_bytes, inventory_path)
+    if not isinstance(inventory, list):
+        raise ValueError("public source inventory must be a list")
+    checked_sources = {}
+    for item in inventory:
+        if (not isinstance(item, list) or len(item) != 6
+                or not all(isinstance(value, str) and value for value in item[:5])
+                or not REPOSITORY.fullmatch(item[0]) or not SHA.fullmatch(item[1])
+                or not SHA.fullmatch(item[3]) or not re.fullmatch(r"[0-9a-f]{64}", item[4])
+                or type(item[5]) is not int or item[5] < 1):
+            raise ValueError("public source inventory requires checked blob digests and line counts")
+        identity = tuple(item[:3])
+        if identity in checked_sources:
+            raise ValueError("duplicate public source inventory identity")
+        checked_sources[identity] = item[3:]
+    if hashlib.sha256(inventory_bytes).hexdigest() != PUBLIC_INVENTORY_SHA256:
+        raise ValueError("public source inventory differs from the independently reviewed snapshot")
     keys = ("title", "problem", "practice", "outcome")
     names, mechanisms, ids = {}, {}, set()
     for record in records:
