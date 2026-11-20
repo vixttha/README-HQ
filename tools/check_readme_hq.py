@@ -11,7 +11,7 @@ import sys
 import unicodedata
 from urllib.parse import unquote, urlsplit
 
-from hq_data import GitTree, UnavailableGitBlob, REPOSITORY, SHA, parse_json
+from hq_data import GitTree, REPOSITORY, SHA, parse_json
 from hq_navigation import MARKDOWN, check_document, parse_markdown, readme_path, suffix, rendered_table_rows
 
 
@@ -334,7 +334,7 @@ def main():
             records = check_registry(errors, tree)
             cases.update(standalone_versions=check_versions(errors, tree), techniques=len(records),
                          local_links=check_navigation(errors, tree, gaps), imported_files=check_history(errors, tree))
-    except (KeyError, OSError, TypeError, UnavailableGitBlob, ValueError) as error:
+    except (KeyError, OSError, TypeError, ValueError) as error:
         errors.append(str(error))
     if args.receipt:
         from hq_smoke import write_receipt

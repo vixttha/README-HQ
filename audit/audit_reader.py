@@ -136,7 +136,7 @@ def check_bounded_pr_history(provenance):
     def fetch(path):
         if path == route:
             return {"number": 7, "state": "open", "draft": False, "merged": False, "commits": 252,
-                    "base": {"repo": {"full_name": repository}},
+                    "base": {"repo": {"full_name": repository}, "ref": "main", "sha": "c" * 40},
                     "head": {"repo": {"full_name": repository}, "ref": expected["source_branch"], "sha": head}}
         if path.startswith(route + "/commits?"):
             page = int(path.rsplit("=", 1)[1])

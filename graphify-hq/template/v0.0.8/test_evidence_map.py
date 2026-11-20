@@ -52,9 +52,16 @@ class ManifestTests(unittest.TestCase):
         with patch("evidence_map.source_blob", return_value=binary):
             with self.assertRaisesRegex(ValueError, "require UTF-8"):
                 source_lines(self.manifest["source_commit"], name.decode())
-        with patch("evidence_map.source_blob", return_value=b"exact heading\n"):
+        anchor = "a" * 500
+        feature = self.manifest["features"][0]
+        feature["documented_in"] = [{"path": "README.md", "anchor": anchor, "line": 1}]
+        self.assertEqual(validate_manifest(self.manifest), self.manifest)
+        with patch("evidence_map.source_blob", return_value=(anchor + "\n").encode()):
             lines, _ = source_lines(self.manifest["source_commit"], "README.md")
-            self.assertEqual(locate(lines, "exact heading", "README.md", 1), 1)
+            self.assertEqual(locate(lines, anchor, "README.md", 1), 1)
+        feature["documented_in"][0]["anchor"] += "a"
+        with self.assertRaisesRegex(ValueError, "Invalid or duplicate source link"):
+            validate_manifest(self.manifest)
 
     def test_inventory_rejects_invalid_paths_and_duplicates(self):
         for paths in (["README.md", "README.md"], ["tools/../README.md"], [None], "README.md"):

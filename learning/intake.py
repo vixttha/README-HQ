@@ -12,7 +12,7 @@ from urllib.request import Request, urlopen
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
-from hq_data import GitTree, REPOSITORY, UnavailableGitBlob, parse_json, physical_lines, read_json
+from hq_data import GitTree, REPOSITORY, parse_json, physical_lines, read_json
 
 
 class UnknownTechniqueError(ValueError):
@@ -148,7 +148,7 @@ def main():
         if error.code == 429 or (error.code == 403 and error.headers and error.headers.get("X-RateLimit-Remaining") == "0"):
             parser.error(f"GitHub API rate limit reached (HTTP {error.code}); retry later")
         parser.error("learning request or source proof is invalid or unverified")
-    except (KeyError, OSError, TypeError, UnavailableGitBlob, ValueError):
+    except (KeyError, OSError, TypeError, ValueError):
         parser.error("learning request or source proof is invalid or unverified")
 
 

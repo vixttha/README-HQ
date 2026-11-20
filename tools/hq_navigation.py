@@ -182,8 +182,9 @@ def inline_links(children, line):
 
 
 def rendered_table_rows(text):
+    text = text.replace("\r\n", "\n").replace("\r", "\n")
     lines = text.split("\n")
-    return [lines[token.map[0]].rstrip("\r") for token in PARSER.parse(text)
+    return [lines[token.map[0]] for token in PARSER.parse(text)
             if token.type == "tr_open" and token.map is not None]
 
 
@@ -233,8 +234,6 @@ def github_route(url):
     if url.scheme != "https":
         return []
     if url.hostname == "raw.githubusercontent.com" and len(segments) >= 4:
-        if segments[2:4] in (["refs", "heads"], ["refs", "tags"]):
-            segments = [*segments[:2], *segments[4:]]
         return [*segments[:2], "raw", *segments[2:]]
     return segments if url.hostname == "github.com" else []
 
@@ -248,9 +247,14 @@ def same_repo_target(tree, url):
     if segments[2] not in {"blob", "tree", "raw"}:
         return None
     candidates = segments[3:]
-    for count in range(len(candidates) - (segments[2] != "tree"), 0, -1):
+    qualified_raw = segments[2] == "raw" and candidates[:2] in (["refs", "heads"], ["refs", "tags"])
+    stop = 2 if qualified_raw else 0
+    for count in range(len(candidates) - (segments[2] != "tree"), stop, -1):
         ref = "/".join(candidates[:count])
-        if ref == "HEAD":
+        if qualified_raw:
+            names = [ref.replace("refs/heads/", "refs/remotes/origin/", 1)
+                     if candidates[1] == "heads" else ref]
+        elif ref == "HEAD":
             try:
                 default = tree.git("symbolic-ref", "refs/remotes/origin/HEAD").decode().strip()
             except ValueError:

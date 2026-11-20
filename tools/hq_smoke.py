@@ -13,7 +13,7 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import urlsplit
 from urllib.request import Request, urlopen
 
-from hq_data import UnavailableGitBlob, read_json
+from hq_data import read_json
 
 
 def require_https_url(value, field):
@@ -107,10 +107,11 @@ def verify_first_action(tree, path, *, allow_network=False, subproject="."):
         local_git_variables = tree.git("rev-parse", "--local-env-vars").decode("ascii").splitlines()
         environment = {key: value for key, value in os.environ.items() if key not in local_git_variables}
 
+        if tree.allow_git_fetch:
+            tree.materialize_checkout_blobs()
+        setup_env = {**environment, "GIT_NO_LAZY_FETCH": "1", "GIT_ALLOW_PROTOCOL": "file"}
+
         def prepare(*args):
-            setup_env = environment if tree.allow_git_fetch else {
-                **environment, "GIT_NO_LAZY_FETCH": "1", "GIT_ALLOW_PROTOCOL": "file",
-            }
             result = subprocess.run(["git", *args], cwd=temp, env=setup_env, capture_output=True)
             if result.returncode:
                 raise ValueError("could not prepare the isolated smoke checkout")
@@ -177,7 +178,7 @@ def write_receipt(destination, tree, cases, errors, gaps, *, validator_path=None
             if path in tree.entries():
                 try:
                     sources[path] = sha256(tree.read(path)).hexdigest()
-                except (KeyError, OSError, UnavailableGitBlob, ValueError):
+                except (KeyError, OSError, ValueError):
                     unavailable_sources.append(path)
     hosted = os.environ.get("GITHUB_ACTIONS") == "true"
     run = os.environ.get("GITHUB_RUN_ID") if hosted else None

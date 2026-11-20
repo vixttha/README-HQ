@@ -52,7 +52,7 @@ def github_repository(remote):
     return name if REPOSITORY.fullmatch(name) else None
 
 
-class UnavailableGitBlob(LookupError):
+class UnavailableGitBlob(ValueError):
     """A tracked blob could not be read under the selected Git fetch policy."""
 
 
@@ -70,12 +70,14 @@ class GitTree:
         )
         self.repository = github_repository(remote.stdout.strip()) if remote.returncode == 0 else None
 
-    def git(self, *args, allow_fetch=False):
+    def git(self, *args, allow_fetch=False, input_bytes=None):
         env = os.environ.copy()
-        if not allow_fetch:
+        if allow_fetch:
+            env["GIT_NO_LAZY_FETCH"] = "0"
+        else:
             env.update(GIT_NO_LAZY_FETCH="1", GIT_ALLOW_PROTOCOL="")
         result = subprocess.run(["git", "--no-replace-objects", *args], cwd=self.root,
-                                env=env, capture_output=True)
+                                env=env, input=input_bytes, capture_output=True)
         if result.returncode:
             raise ValueError(result.stderr.decode("utf-8", "replace").strip() or "Git command failed")
         return result.stdout
@@ -122,6 +124,20 @@ class GitTree:
                 ):
                     raise ValueError(f"{path}: tracked draft path has a symlink or reparse point")
             return local.read_bytes()
+        return self._read_blob(path, digest)
+
+    def materialize_checkout_blobs(self):
+        blobs = {digest: path for path, (mode, digest) in self.entries().items() if mode != "160000"}
+        if not blobs:
+            return
+        listing = self.git("cat-file", "--batch-check=%(objectname) %(objecttype)",
+                           input_bytes=("\n".join(blobs) + "\n").encode("ascii"))
+        for line in listing.decode("ascii").splitlines():
+            digest, kind = line.split()
+            if kind != "blob":
+                self._read_blob(blobs[digest], digest)
+
+    def _read_blob(self, path, digest):
         try:
             return self.git("cat-file", "blob", digest)
         except ValueError as offline_error:

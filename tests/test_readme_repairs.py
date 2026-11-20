@@ -179,6 +179,56 @@ class ReaderTests(unittest.TestCase):
                 record = json.loads(receipt.read_bytes())
                 self.assertEqual(record["result"], "passed" if good else "failed")
 
+    def test_review_followup_partial_clone_smoke_and_missing_link_diagnostics(self):
+        description = "# Guide\n\nThis guide explains the source fixture.\n\n[Guide](extra.md#details)"
+        files = {"README.md": description, "extra.md": "# Details", "run.py": "print('ready')"}
+        with repository(files) as source, tempfile.TemporaryDirectory() as folder:
+            source.git("config", "uploadpack.allowFilter", "true")
+            source.git("config", "uploadpack.allowAnySHA1InWant", "true")
+            clone = Path(folder) / "clone"
+            subprocess.run(["git", "clone", "--quiet", "--no-checkout", "--filter=blob:none",
+                            source.root.as_uri(), str(clone)], check=True)
+            tree = GitTree(clone, allow_git_fetch=True)
+            tree.read("README.md")
+            runner_blob = tree.entries()["run.py"][1]
+            with self.assertRaises(ValueError):
+                tree.git("cat-file", "-e", runner_blob)
+            tree.git("remote", "set-url", "origin", str(Path(folder) / "missing"))
+            errors, gaps = [], []
+            self.assertEqual(check_document(tree, "README.md", errors, gaps), 0)
+            self.assertEqual(gaps, [])
+            self.assertIn("unavailable after permitted Git read", errors[0])
+            tree.git("remote", "set-url", "origin", source.root.as_uri())
+            spec = Path(folder) / "smoke.json"
+            spec.write_text(json.dumps({"commit": tree.commit, "argv": [sys.executable, "run.py"],
+                                        "expected": {"exit": 0, "contains": "ready"}}), encoding="utf-8")
+            with patch.dict(os.environ, {"GIT_NO_LAZY_FETCH": "1"}):
+                self.assertEqual(verify_first_action(tree, spec)["result"], "passed")
+            self.assertIn(runner_blob, tree.fetched_blobs)
+
+    def test_review_followup_raw_ref_namespace_is_explicit(self):
+        with repository({"guide.md": "# First"}) as tree:
+            repository_url = "https://github.com/example/project.git"
+            tree.git("remote", "add", "origin", repository_url)
+            tree.git("tag", "release", tree.commit)
+            tree.git("-c", "user.name=Fixture", "-c", "user.email=test@example.invalid",
+                     "commit", "--allow-empty", "-qm", "Branch release")
+            other = GitTree(tree.root)
+            tree.git("update-ref", "refs/remotes/origin/release", other.commit)
+            root = "https://raw.githubusercontent.com/example/project"
+            for ref, expected in (("refs/tags/release", tree.commit), ("refs/heads/release", other.commit)):
+                self.assertEqual(same_repo_target(other, urlsplit(f"{root}/{ref}/guide.md")),
+                                 ("guide.md", expected))
+            with self.assertRaisesRegex(ValueError, "conflicting commits"):
+                same_repo_target(other, urlsplit(f"{root}/release/guide.md"))
+
+    def test_review_followup_rendered_rows_normalize_line_endings(self):
+        from hq_navigation import rendered_table_rows
+
+        for newline in ("\n", "\r\n", "\r"):
+            content = newline.join(["| Name |", "| --- |", "| Value |", ""])
+            self.assertEqual(rendered_table_rows(content), ["| Name |", "| Value |"])
+
     def test_pinned_readme_and_monorepo_routes(self):
         with repository({"README.md": "# Root", ".github/README.md": "# Published",
                          "docs/README.md": "# Docs", "packages/example/README.md": "# Subproject"}) as tree:
