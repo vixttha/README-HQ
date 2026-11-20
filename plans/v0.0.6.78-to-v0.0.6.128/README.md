@@ -1,8 +1,8 @@
-# README HQ repair pipeline v0.0.6.78–v0.0.6.128
+# README HQ repair pipeline v0.0.6.78–v0.0.6.140
 
 **Status** Active planning. Implementation awaits owner approval. The sequence continues after checkpoint `v0.0.6.77` is verified.
 
-The plan covers 51 open GitHub issues at the planning snapshot. Checkpoint numbers match issues #78–#128 one to one, with a separate repair commit and a post-fix debug gate for each issue. The observed baseline is [draft PR #68 at `8d50cae`](https://github.com/vixttha/README-HQ/commit/8d50caec2bc6fcb998994a1fd302294a029325f9). [Checkpoints .1–.67](https://github.com/vixttha/README-HQ/blob/7f4562b8f44544bc9dd4b479fcd1bc30ca07ca94/plans/v0.0.6-repairs/README.md) · [Checkpoints .68–.77](https://github.com/vixttha/README-HQ/blob/ac07987cfe11d6592b8def2ff16b72a6b2c0a203/plans/v0.0.6.68-to-v0.0.6.77/README.md) · [Machine-readable ledger](checkpoints.json)
+This continuation covers 63 open GitHub issues in checkpoints .78–.140. Checkpoint numbers match issues #78–#140 in this snapshot. Each repair has its own commit and post-fix debug gate. The [full-stack triage](TRIAGE.md) covers all 139 open issues across this and the two earlier plans. The observed baseline is [draft PR #68 at `8d50cae`](https://github.com/vixttha/README-HQ/commit/8d50caec2bc6fcb998994a1fd302294a029325f9). [Checkpoints .1–.67](https://github.com/vixttha/README-HQ/blob/7f4562b8f44544bc9dd4b479fcd1bc30ca07ca94/plans/v0.0.6-repairs/README.md) · [Checkpoints .68–.77](https://github.com/vixttha/README-HQ/blob/ac07987cfe11d6592b8def2ff16b72a6b2c0a203/plans/v0.0.6.68-to-v0.0.6.77/README.md) · [Machine-readable ledger](checkpoints.json)
 
 | Checkpoint | GitHub issue | Repair | Priority | Start after |
 | --- | --- | --- | --- | --- |
@@ -57,6 +57,18 @@ The plan covers 51 open GitHub issues at the planning snapshot. Checkpoint numbe
 | `v0.0.6.126` | [#126](https://github.com/vixttha/README-HQ/issues/126) | Make required first-action verification distinguish skipped coverage | High | `v0.0.6.125` |
 | `v0.0.6.127` | [#127](https://github.com/vixttha/README-HQ/issues/127) | Preserve actionable first-action failure diagnostics | Medium | `v0.0.6.126` |
 | `v0.0.6.128` | [#128](https://github.com/vixttha/README-HQ/issues/128) | Distinguish retryable GitHub errors from invalid learning evidence | Medium | `v0.0.6.127` |
+| `v0.0.6.129` | [#129](https://github.com/vixttha/README-HQ/issues/129) | Bind smoke results to the documented first action | High | `v0.0.6.128` |
+| `v0.0.6.130` | [#130](https://github.com/vixttha/README-HQ/issues/130) | Record the identity of a required probe before it is skipped | Medium | `v0.0.6.129` |
+| `v0.0.6.131` | [#131](https://github.com/vixttha/README-HQ/issues/131) | Identify GitHub-selected Org homepages | Medium | `v0.0.6.130` |
+| `v0.0.6.132` | [#132](https://github.com/vixttha/README-HQ/issues/132) | Qualify the owner-controlled publication gate | High | `v0.0.6.131` |
+| `v0.0.6.133` | [#133](https://github.com/vixttha/README-HQ/issues/133) | Verify every published revision of the active repair ledger | Medium | `v0.0.6.132` |
+| `v0.0.6.134` | [#134](https://github.com/vixttha/README-HQ/issues/134) | Separate observed reviews from qualifying approvals | Medium | `v0.0.6.133` |
+| `v0.0.6.135` | [#135](https://github.com/vixttha/README-HQ/issues/135) | Qualify the supported Python and Pillow dependency combination | High | `v0.0.6.134` |
+| `v0.0.6.136` | [#136](https://github.com/vixttha/README-HQ/issues/136) | Preserve canonical GitHub identity in learning receipts | Medium | `v0.0.6.135` |
+| `v0.0.6.137` | [#137](https://github.com/vixttha/README-HQ/issues/137) | Retain the matched learning source anchor | Low | `v0.0.6.136` |
+| `v0.0.6.138` | [#138](https://github.com/vixttha/README-HQ/issues/138) | Verify the required local route behind a README Quickstart | High | `v0.0.6.137` |
+| `v0.0.6.139` | [#139](https://github.com/vixttha/README-HQ/issues/139) | Bind draft receipts to the checked media bytes | Medium | `v0.0.6.138` |
+| `v0.0.6.140` | [#140](https://github.com/vixttha/README-HQ/issues/140) | Honor accessible names in mixed Markdown and HTML image links | Medium | `v0.0.6.139` |
 
 ## Keeping the plan current
 
@@ -399,3 +411,87 @@ Keep the existing acceptance records for the 67-checkpoint candidate open until 
 - **Replay** Simulate HTTP 429 and a wrong pinned source anchor, then run the valid control.
 - **After the repair** The CLI reports distinct structured error categories and retry timing when provided, with sanitized context. Valid intake still succeeds.
 - **Public runners** `ubuntu-latest`, `windows-latest`. [#128](https://github.com/vixttha/README-HQ/issues/128) · [Existing audit evidence](https://github.com/vixttha/README-HQ/actions/runs/44635863502/job/135954070600)
+
+### v0.0.6.129
+
+- **Replay** Use a documented action that fails, an unrelated command that succeeds, and the repaired documented action.
+- **After the repair** Only verified source-bound actions qualify the documented Quickstart. Unrelated success stays supplemental, and the matched successful action passes.
+- **Public runners** `ubuntu-latest`, `windows-latest`. [#129](https://github.com/vixttha/README-HQ/issues/129) · [Existing audit evidence](https://github.com/vixttha/README-HQ/actions/runs/44637371509/job/135959236957)
+- **Related issues** [#27](https://github.com/vixttha/README-HQ/issues/27), [#71](https://github.com/vixttha/README-HQ/issues/71), [#120](https://github.com/vixttha/README-HQ/issues/120), [#126](https://github.com/vixttha/README-HQ/issues/126).
+
+### v0.0.6.130
+
+- **Replay** Request two distinct HTTPS probes without allowing network access. Repeat one request and compare with a passing authorized control.
+- **After the repair** Unchecked receipts remain network-free and distinguish each validated spec with a digest and safe subject. Identical specs retain the same input identity. Sensitive URL components stay out of public evidence.
+- **Public runners** `ubuntu-latest`, `windows-latest`. [#130](https://github.com/vixttha/README-HQ/issues/130) · [Existing audit evidence](https://github.com/vixttha/README-HQ/actions/runs/44637371509/job/135959236957)
+- **Related issues** [#96](https://github.com/vixttha/README-HQ/issues/96), [#99](https://github.com/vixttha/README-HQ/issues/99), [#126](https://github.com/vixttha/README-HQ/issues/126), [#129](https://github.com/vixttha/README-HQ/issues/129).
+
+### v0.0.6.131
+
+- **Replay** Compare a pinned public README.org with GitHub’s selected README blob. Include Markdown and truly missing homepage controls.
+- **After the repair** Report the effective Org path and actual format coverage. Markdown still resolves and genuinely missing homepages remain distinct.
+- **Public runners** `ubuntu-latest`, `windows-latest`. [#131](https://github.com/vixttha/README-HQ/issues/131) · [Existing audit evidence](https://github.com/vixttha/README-HQ/actions/runs/44637371509/job/135959236957)
+- **Related issues** [#13](https://github.com/vixttha/README-HQ/issues/13), [#63](https://github.com/vixttha/README-HQ/issues/63), [#80](https://github.com/vixttha/README-HQ/issues/80), [#119](https://github.com/vixttha/README-HQ/issues/119).
+
+### v0.0.6.132
+
+- **Replay** Read the effective GitHub rules for the intended publication branch and compare them with the owner-approved solo-maintainer release policy.
+- **After the repair** After separately authorized settings work, retain readback of the intended PR and status-check rules and the separate exact-SHA owner decision. Use a safe policy or disposable-target control with no test merge into main.
+- **Public runners** `ubuntu-latest`. [#132](https://github.com/vixttha/README-HQ/issues/132) · [Existing audit evidence](https://github.com/vixttha/README-HQ/actions/runs/44638933062/job/135964594883)
+- **Related issues** [#24](https://github.com/vixttha/README-HQ/issues/24), [#58](https://github.com/vixttha/README-HQ/issues/58), [#117](https://github.com/vixttha/README-HQ/issues/117), [#134](https://github.com/vixttha/README-HQ/issues/134).
+
+### v0.0.6.133
+
+- **Replay** Compare a valid current Markdown and JSON pair with fixtures containing a duplicate issue mapping, missing acceptance, reordered checkpoints, or a disabled debug gate.
+- **After the repair** The planning branch check accepts the valid current scope and rejects each mutation. Record structural validation independently of implementation and merge approval.
+- **Public runners** `ubuntu-latest`. [#133](https://github.com/vixttha/README-HQ/issues/133) · [Existing audit evidence](https://github.com/vixttha/README-HQ/actions/runs/44638933062/job/135964594883)
+- **Related issues** [#50](https://github.com/vixttha/README-HQ/issues/50), [#51](https://github.com/vixttha/README-HQ/issues/51), [#86](https://github.com/vixttha/README-HQ/issues/86), [#94](https://github.com/vixttha/README-HQ/issues/94), [#108](https://github.com/vixttha/README-HQ/issues/108), [#122](https://github.com/vixttha/README-HQ/issues/122).
+
+### v0.0.6.134
+
+- **Replay** Compare same-SHA eligible and ineligible reviews, a stale-SHA review, and unavailable authority in controlled fixtures.
+- **After the repair** Report observed review counts and verified qualifying approval separately. Unresolved eligibility remains explicit and base/head evidence matches the selected candidate.
+- **Public runners** `ubuntu-latest`, `windows-latest` and Graphify MCP. [#134](https://github.com/vixttha/README-HQ/issues/134) · [Existing audit evidence](https://github.com/vixttha/README-HQ/actions/runs/44638933062/job/135964594883)
+- **Related issues** [#44](https://github.com/vixttha/README-HQ/issues/44), [#58](https://github.com/vixttha/README-HQ/issues/58), [#59](https://github.com/vixttha/README-HQ/issues/59), [#62](https://github.com/vixttha/README-HQ/issues/62), [#98](https://github.com/vixttha/README-HQ/issues/98), [#132](https://github.com/vixttha/README-HQ/issues/132).
+
+### v0.0.6.135
+
+- **Replay** Inspect the pinned dependency, applicable public advisory data, declared Python support, and wheel availability on each supported public platform.
+- **After the repair** Use an owner-approved runtime/dependency combination covering the applicable fixes. Verify the hashed installation, supported wheel and runtime matrix, ordinary media fixtures, navigation and Graphify. Preserve the decision if minimum Python support changes.
+- **Public runners** `ubuntu-latest`, `windows-latest` and Graphify MCP. [#135](https://github.com/vixttha/README-HQ/issues/135) · [Existing audit evidence](https://github.com/vixttha/README-HQ/actions/runs/44641862533/job/135974636476)
+- **Related issues** [#11](https://github.com/vixttha/README-HQ/issues/11), [#28](https://github.com/vixttha/README-HQ/issues/28), [#95](https://github.com/vixttha/README-HQ/issues/95), [#106](https://github.com/vixttha/README-HQ/issues/106), [#117](https://github.com/vixttha/README-HQ/issues/117).
+
+### v0.0.6.136
+
+- **Replay** Verify same-name, renamed, and private metadata controls for a source selected by its prior repository name.
+- **After the repair** Record the requested name, verified canonical name, and stable repository ID or surface a clear mismatch. Repeat observations remain consistent and private source material is rejected.
+- **Public runners** `ubuntu-latest`. [#136](https://github.com/vixttha/README-HQ/issues/136) · [Existing audit evidence](https://github.com/vixttha/README-HQ/actions/runs/44641862533/job/135974636476)
+- **Related issues** [#19](https://github.com/vixttha/README-HQ/issues/19), [#23](https://github.com/vixttha/README-HQ/issues/23), [#70](https://github.com/vixttha/README-HQ/issues/70), [#76](https://github.com/vixttha/README-HQ/issues/76), [#109](https://github.com/vixttha/README-HQ/issues/109).
+
+### v0.0.6.137
+
+- **Replay** Pass two different valid fragments on the same pinned source line, repeat one, and include a nonmatching fragment.
+- **After the repair** Distinct matched fragments remain distinguishable through the retained anchor or stable span identity. Exact repeats remain idempotent and wrong anchors fail.
+- **Public runners** `ubuntu-latest`. [#137](https://github.com/vixttha/README-HQ/issues/137) · [Existing audit evidence](https://github.com/vixttha/README-HQ/actions/runs/44641862533/job/135974636476)
+- **Related issues** [#19](https://github.com/vixttha/README-HQ/issues/19), [#46](https://github.com/vixttha/README-HQ/issues/46), [#55](https://github.com/vixttha/README-HQ/issues/55), [#76](https://github.com/vixttha/README-HQ/issues/76), [#136](https://github.com/vixttha/README-HQ/issues/136).
+
+### v0.0.6.138
+
+- **Replay** Use a homepage whose declared Quickstart links to a local guide with a missing required install document. Compare the repaired route and an ordinary direct link.
+- **After the repair** The bounded first-action route reports the missing page, or reports explicit incomplete coverage. The repaired path passes and ordinary links retain their direct-target behavior.
+- **Public runners** `ubuntu-latest`, `windows-latest`. [#138](https://github.com/vixttha/README-HQ/issues/138) · [Existing audit evidence](https://github.com/vixttha/README-HQ/actions/runs/44642764179/job/135977711852)
+- **Related issues** [#14](https://github.com/vixttha/README-HQ/issues/14), [#45](https://github.com/vixttha/README-HQ/issues/45), [#118](https://github.com/vixttha/README-HQ/issues/118), [#120](https://github.com/vixttha/README-HQ/issues/120), [#126](https://github.com/vixttha/README-HQ/issues/126), [#129](https://github.com/vixttha/README-HQ/issues/129).
+
+### v0.0.6.139
+
+- **Replay** Validate two different valid tracked draft image versions at the same base commit. Repeat one version and test a corrupt image.
+- **After the repair** The receipt distinguishes the two inputs, identifies the base commit, and repeats the same input identity for unchanged bytes. Invalid media still fails.
+- **Public runners** `ubuntu-latest`, `windows-latest`. [#139](https://github.com/vixttha/README-HQ/issues/139) · [Existing audit evidence](https://github.com/vixttha/README-HQ/actions/runs/44642764179/job/135977711852)
+- **Related issues** [#74](https://github.com/vixttha/README-HQ/issues/74), [#78](https://github.com/vixttha/README-HQ/issues/78), [#102](https://github.com/vixttha/README-HQ/issues/102), [#111](https://github.com/vixttha/README-HQ/issues/111).
+
+### v0.0.6.140
+
+- **Replay** Compare a Markdown link with a named inline HTML image against pure Markdown, pure HTML, and empty-alt image-only controls.
+- **After the repair** The named mixed-markup fixture passes and both local resources are checked. Existing named controls pass and an image-only link with no accessible name fails.
+- **Public runners** `ubuntu-latest`, `windows-latest`. [#140](https://github.com/vixttha/README-HQ/issues/140) · [Existing audit evidence](https://github.com/vixttha/README-HQ/actions/runs/44642764179/job/135977711852)
+- **Related issues** [#28](https://github.com/vixttha/README-HQ/issues/28), [#74](https://github.com/vixttha/README-HQ/issues/74), [#113](https://github.com/vixttha/README-HQ/issues/113).

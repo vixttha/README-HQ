@@ -7,8 +7,8 @@
   "merge_authorized": false,
   "scope": {
     "first": "v0.0.6.78",
-    "last": "v0.0.6.128",
-    "checkpoint_count": 51
+    "last": "v0.0.6.140",
+    "checkpoint_count": 63
   },
   "debug_before_merge": true,
   "public_github_hosted_runners_only": true,
@@ -1041,6 +1041,340 @@
         ],
         "graphify_mcp": false
       }
+    },
+    {
+      "version": "v0.0.6.129",
+      "issue": 129,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.128",
+      "title": "Bind smoke results to the documented first action",
+      "priority": "High",
+      "affected_revision": "8d50caec2bc6fcb998994a1fd302294a029325f9",
+      "related_issues": [
+        27,
+        71,
+        120,
+        126
+      ],
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44637371509/job/135959236957",
+      "debug": {
+        "reproduce": "Use a documented action that fails, an unrelated command that succeeds, and the repaired documented action.",
+        "acceptance": "Only verified source-bound actions qualify the documented Quickstart. Unrelated success stays supplemental, and the matched successful action passes.",
+        "public_runners": [
+          "ubuntu-latest",
+          "windows-latest"
+        ],
+        "graphify_mcp": false
+      }
+    },
+    {
+      "version": "v0.0.6.130",
+      "issue": 130,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.129",
+      "title": "Record the identity of a required probe before it is skipped",
+      "priority": "Medium",
+      "affected_revision": "8d50caec2bc6fcb998994a1fd302294a029325f9",
+      "related_issues": [
+        96,
+        99,
+        126,
+        129
+      ],
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44637371509/job/135959236957",
+      "debug": {
+        "reproduce": "Request two distinct HTTPS probes without allowing network access. Repeat one request and compare with a passing authorized control.",
+        "acceptance": "Unchecked receipts remain network-free and distinguish each validated spec with a digest and safe subject. Identical specs retain the same input identity. Sensitive URL components stay out of public evidence.",
+        "public_runners": [
+          "ubuntu-latest",
+          "windows-latest"
+        ],
+        "graphify_mcp": false
+      }
+    },
+    {
+      "version": "v0.0.6.131",
+      "issue": 131,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.130",
+      "title": "Identify GitHub-selected Org homepages",
+      "priority": "Medium",
+      "affected_revision": "8d50caec2bc6fcb998994a1fd302294a029325f9",
+      "related_issues": [
+        13,
+        63,
+        80,
+        119
+      ],
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44637371509/job/135959236957",
+      "debug": {
+        "reproduce": "Compare a pinned public README.org with GitHub’s selected README blob. Include Markdown and truly missing homepage controls.",
+        "acceptance": "Report the effective Org path and actual format coverage. Markdown still resolves and genuinely missing homepages remain distinct.",
+        "public_runners": [
+          "ubuntu-latest",
+          "windows-latest"
+        ],
+        "graphify_mcp": false
+      }
+    },
+    {
+      "version": "v0.0.6.132",
+      "issue": 132,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.131",
+      "title": "Qualify the owner-controlled publication gate",
+      "priority": "High",
+      "affected_revision": "8d50caec2bc6fcb998994a1fd302294a029325f9",
+      "related_issues": [
+        24,
+        58,
+        117,
+        134
+      ],
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44638933062/job/135964594883",
+      "debug": {
+        "reproduce": "Read the effective GitHub rules for the intended publication branch and compare them with the owner-approved solo-maintainer release policy.",
+        "acceptance": "After separately authorized settings work, retain readback of the intended PR and status-check rules and the separate exact-SHA owner decision. Use a safe policy or disposable-target control with no test merge into main.",
+        "public_runners": [
+          "ubuntu-latest"
+        ],
+        "graphify_mcp": false
+      }
+    },
+    {
+      "version": "v0.0.6.133",
+      "issue": 133,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.132",
+      "title": "Verify every published revision of the active repair ledger",
+      "priority": "Medium",
+      "affected_revision": "8d50caec2bc6fcb998994a1fd302294a029325f9",
+      "related_issues": [
+        50,
+        51,
+        86,
+        94,
+        108,
+        122
+      ],
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44638933062/job/135964594883",
+      "debug": {
+        "reproduce": "Compare a valid current Markdown and JSON pair with fixtures containing a duplicate issue mapping, missing acceptance, reordered checkpoints, or a disabled debug gate.",
+        "acceptance": "The planning branch check accepts the valid current scope and rejects each mutation. Record structural validation independently of implementation and merge approval.",
+        "public_runners": [
+          "ubuntu-latest"
+        ],
+        "graphify_mcp": false
+      }
+    },
+    {
+      "version": "v0.0.6.134",
+      "issue": 134,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.133",
+      "title": "Separate observed reviews from qualifying approvals",
+      "priority": "Medium",
+      "affected_revision": "8d50caec2bc6fcb998994a1fd302294a029325f9",
+      "related_issues": [
+        44,
+        58,
+        59,
+        62,
+        98,
+        132
+      ],
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44638933062/job/135964594883",
+      "debug": {
+        "reproduce": "Compare same-SHA eligible and ineligible reviews, a stale-SHA review, and unavailable authority in controlled fixtures.",
+        "acceptance": "Report observed review counts and verified qualifying approval separately. Unresolved eligibility remains explicit and base/head evidence matches the selected candidate.",
+        "public_runners": [
+          "ubuntu-latest",
+          "windows-latest"
+        ],
+        "graphify_mcp": true
+      }
+    },
+    {
+      "version": "v0.0.6.135",
+      "issue": 135,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.134",
+      "title": "Qualify the supported Python and Pillow dependency combination",
+      "priority": "High",
+      "affected_revision": "8d50caec2bc6fcb998994a1fd302294a029325f9",
+      "related_issues": [
+        11,
+        28,
+        95,
+        106,
+        117
+      ],
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44641862533/job/135974636476",
+      "debug": {
+        "reproduce": "Inspect the pinned dependency, applicable public advisory data, declared Python support, and wheel availability on each supported public platform.",
+        "acceptance": "Use an owner-approved runtime/dependency combination covering the applicable fixes. Verify the hashed installation, supported wheel and runtime matrix, ordinary media fixtures, navigation and Graphify. Preserve the decision if minimum Python support changes.",
+        "public_runners": [
+          "ubuntu-latest",
+          "windows-latest"
+        ],
+        "graphify_mcp": true
+      }
+    },
+    {
+      "version": "v0.0.6.136",
+      "issue": 136,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.135",
+      "title": "Preserve canonical GitHub identity in learning receipts",
+      "priority": "Medium",
+      "affected_revision": "8d50caec2bc6fcb998994a1fd302294a029325f9",
+      "related_issues": [
+        19,
+        23,
+        70,
+        76,
+        109
+      ],
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44641862533/job/135974636476",
+      "debug": {
+        "reproduce": "Verify same-name, renamed, and private metadata controls for a source selected by its prior repository name.",
+        "acceptance": "Record the requested name, verified canonical name, and stable repository ID or surface a clear mismatch. Repeat observations remain consistent and private source material is rejected.",
+        "public_runners": [
+          "ubuntu-latest"
+        ],
+        "graphify_mcp": false
+      }
+    },
+    {
+      "version": "v0.0.6.137",
+      "issue": 137,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.136",
+      "title": "Retain the matched learning source anchor",
+      "priority": "Low",
+      "affected_revision": "8d50caec2bc6fcb998994a1fd302294a029325f9",
+      "related_issues": [
+        19,
+        46,
+        55,
+        76,
+        136
+      ],
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44641862533/job/135974636476",
+      "debug": {
+        "reproduce": "Pass two different valid fragments on the same pinned source line, repeat one, and include a nonmatching fragment.",
+        "acceptance": "Distinct matched fragments remain distinguishable through the retained anchor or stable span identity. Exact repeats remain idempotent and wrong anchors fail.",
+        "public_runners": [
+          "ubuntu-latest"
+        ],
+        "graphify_mcp": false
+      }
+    },
+    {
+      "version": "v0.0.6.138",
+      "issue": 138,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.137",
+      "title": "Verify the required local route behind a README Quickstart",
+      "priority": "High",
+      "affected_revision": "8d50caec2bc6fcb998994a1fd302294a029325f9",
+      "related_issues": [
+        14,
+        45,
+        118,
+        120,
+        126,
+        129
+      ],
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44642764179/job/135977711852",
+      "debug": {
+        "reproduce": "Use a homepage whose declared Quickstart links to a local guide with a missing required install document. Compare the repaired route and an ordinary direct link.",
+        "acceptance": "The bounded first-action route reports the missing page, or reports explicit incomplete coverage. The repaired path passes and ordinary links retain their direct-target behavior.",
+        "public_runners": [
+          "ubuntu-latest",
+          "windows-latest"
+        ],
+        "graphify_mcp": false
+      }
+    },
+    {
+      "version": "v0.0.6.139",
+      "issue": 139,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.138",
+      "title": "Bind draft receipts to the checked media bytes",
+      "priority": "Medium",
+      "affected_revision": "8d50caec2bc6fcb998994a1fd302294a029325f9",
+      "related_issues": [
+        74,
+        78,
+        102,
+        111
+      ],
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44642764179/job/135977711852",
+      "debug": {
+        "reproduce": "Validate two different valid tracked draft image versions at the same base commit. Repeat one version and test a corrupt image.",
+        "acceptance": "The receipt distinguishes the two inputs, identifies the base commit, and repeats the same input identity for unchanged bytes. Invalid media still fails.",
+        "public_runners": [
+          "ubuntu-latest",
+          "windows-latest"
+        ],
+        "graphify_mcp": false
+      }
+    },
+    {
+      "version": "v0.0.6.140",
+      "issue": 140,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.139",
+      "title": "Honor accessible names in mixed Markdown and HTML image links",
+      "priority": "Medium",
+      "affected_revision": "8d50caec2bc6fcb998994a1fd302294a029325f9",
+      "related_issues": [
+        28,
+        74,
+        113
+      ],
+      "existing_evidence": "https://github.com/vixttha/README-HQ/actions/runs/44642764179/job/135977711852",
+      "debug": {
+        "reproduce": "Compare a Markdown link with a named inline HTML image against pure Markdown, pure HTML, and empty-alt image-only controls.",
+        "acceptance": "The named mixed-markup fixture passes and both local resources are checked. Existing named controls pass and an image-only link with no accessible name fails.",
+        "public_runners": [
+          "ubuntu-latest",
+          "windows-latest"
+        ],
+        "graphify_mcp": false
+      }
     }
-  ]
+  ],
+  "triage": {
+    "path": "TRIAGE.md",
+    "open_issue_count": 139,
+    "new_issue_numbers": [
+      129,
+      130,
+      131,
+      132,
+      133,
+      134,
+      135,
+      136,
+      137,
+      138,
+      139,
+      140
+    ],
+    "existing_follow_up": {
+      "issue": 5,
+      "checkpoints": [
+        "v0.0.6.5",
+        "v0.0.6.77"
+      ]
+    },
+    "recommended_first_batch": [
+      "v0.0.6.68",
+      "v0.0.6.69",
+      "v0.0.6.70"
+    ]
+  }
 }
