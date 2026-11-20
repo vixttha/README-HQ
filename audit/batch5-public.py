@@ -26,8 +26,9 @@ FOLLOW_UPS = [
     ("7ac278c3b7e23775ea4001128e7ce6e999a3e4f7", "3c349cfbe3cc5b259656783321361e91ee0d3dec", "47fef24aacbb768215a92b5ae9c65b7e8c9ac342", ["learning_structured_rate_limit","required_smoke_needs_a_matching","shell_only_syntax_does_not_bind"]),
     ("bb2c3b89a5b470d9236ed9b76f7c5784a07a48b5", "7ac278c3b7e23775ea4001128e7ce6e999a3e4f7", "cbb5aec4967961d3703ea4da08cef5a9abd3f2f4", ["batch5_review_shell_matching","batch5_review_publication_rule_pages","batch5_review_quickstart_checks","active_plan_rejects_invalid","pr_review_totals_distinguish"]),
     ("aa07e7ab89e4bb2d3d28c9d0a5302394b9b1839b", "bb2c3b89a5b470d9236ed9b76f7c5784a07a48b5", "4ad9a1d50246f6dcc1d4066d693f0a50fbda4350", ["batch5_review_github_response_timeout"]),
+    ("bd47fa18607bbffb34345ff72d9ac3aeec3ea99f", "aa07e7ab89e4bb2d3d28c9d0a5302394b9b1839b", "27cbbe0a4d4bcc6ac70e3442c67304310f6a2840", []),
+    ("6c81133b912c08e998b227f03b5cff001b0118de", "bd47fa18607bbffb34345ff72d9ac3aeec3ea99f", "debb48c810c9429b7ff6885105dcc85c12a1c50a", ["batch5_review_logical_shell_commands","active_plan_rejects_invalid"]),
 ]
-DOCUMENTATION = ("bd47fa18607bbffb34345ff72d9ac3aeec3ea99f", "aa07e7ab89e4bb2d3d28c9d0a5302394b9b1839b", "27cbbe0a4d4bcc6ac70e3442c67304310f6a2840")
 READER = "tests/test_readme_repairs.py"
 GRAPHIFY = "graphify-hq/template/v0.0.8/test_evidence_map.py"
 LINUX_ONLY = {132, 133, 136, 137}
@@ -101,7 +102,7 @@ def main():
     is_linux = os.environ["RUNNER_OS"] == "Linux"
     result = {"observer_commit": os.environ["GITHUB_SHA"], "run": os.environ["GITHUB_RUN_ID"],
               "attempt": os.environ["GITHUB_RUN_ATTEMPT"], "runner": os.environ["RUNNER_OS"],
-              "base": POINTS[0][2], "candidate": DOCUMENTATION[0], "checkpoints": [], "follow_ups": []}
+              "base": POINTS[0][2], "candidate": FOLLOW_UPS[-1][0], "checkpoints": [], "follow_ups": []}
 
     def save():
         (out / "results.json").write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
@@ -148,8 +149,12 @@ def main():
                 provenance_test(root, sha, selector, before=True)
             else:
                 baseline(root, sha, READER, selector)
-        row["predecessor"] = "failure_reproduced"
+        row["predecessor"] = "failure_reproduced" if selectors else "prior_documentation_checked"
+        if not selectors:
+            assert "effective URL’s origin and SHA-256 digest" not in (root / "README.md").read_text(encoding="utf-8")
         select(root, sha, parent, tree)
+        if not selectors:
+            assert "effective URL’s origin and SHA-256 digest" in (root / "README.md").read_text(encoding="utf-8")
         for selector in selectors:
             if selector == "pr_review_totals_distinguish":
                 provenance_test(root, sha, selector, before=False)
@@ -157,18 +162,6 @@ def main():
                 test(root, READER, selector)
         row["result"] = "passed"
         save()
-    sha, parent, tree = DOCUMENTATION
-    row = {"commit": sha, "parent": parent, "tree": tree, "result": "started"}
-    result["follow_ups"].append(row)
-    save()
-    prior_readme = (root / "README.md").read_text(encoding="utf-8")
-    assert "the receipt includes the effective URL" in prior_readme
-    select(root, sha, parent, tree)
-    final_readme = (root / "README.md").read_text(encoding="utf-8")
-    assert "the receipt includes the effective URL" not in final_readme and "the receipt records the effective URL’s origin and SHA-256 digest" in final_readme
-    assert git(root, "diff", "--name-only", parent, sha).decode().splitlines() == ["README.md"]
-    row.update(result="passed", predecessor="stale_receipt_description_confirmed")
-    save()
     command(root, sys.executable, "tools/check_readme_hq.py", "--receipt", str(out / "reader.json")).check_returncode()
     result["combined"] = "passed"
     save()
