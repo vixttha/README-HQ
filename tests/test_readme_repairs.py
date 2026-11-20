@@ -14,7 +14,8 @@ import unittest
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 from hq_data import GitTree, parse_json
-from hq_navigation import check_document, readme_path
+from hq_navigation import check_document, readme_path, same_repo_target
+from urllib.parse import urlsplit
 from hq_smoke import verify_first_action
 from check_readme_hq import check_evidence, check_registry, evidence_identity, target_readme
 from verify_plan import split_checkpoints, stage_partitions
@@ -74,6 +75,24 @@ Literal example `[Ignore](literal.md)`.
             self.assertTrue(any("untracked.md" in issue for issue in errors))
             self.assertFalse(any("literal.md" in issue for issue in errors))
             self.assertEqual(gaps, [])
+
+    def test_fetched_repository_refs_are_resolved_without_a_local_branch(self):
+        with repository({"README.md": "# Guide"}) as original:
+            original.git("remote", "add", "origin", "https://github.com/example/project.git")
+            original.git("update-ref", "refs/remotes/origin/release/next", original.commit)
+            original.git("tag", "release/next", original.commit)
+            tree = GitTree(original.root)
+            url = urlsplit("https://github.com/example/project/blob/release/next/README.md")
+            self.assertEqual(same_repo_target(tree, url), ("README.md", tree.commit))
+            exact = urlsplit(f"https://github.com/example/project/blob/{tree.commit}/README.md")
+            self.assertEqual(same_repo_target(tree, exact), ("README.md", tree.commit))
+            tree.git("-c", "user.name=Fixture", "-c", "user.email=test@example.invalid",
+                     "commit", "--allow-empty", "-qm", "Different local commit")
+            tree.git("branch", "release/next")
+            with self.assertRaisesRegex(ValueError, "conflicting"):
+                same_repo_target(tree, url)
+            with self.assertRaisesRegex(LookupError, "unresolved"):
+                same_repo_target(tree, urlsplit("https://github.com/example/project/blob/absent/README.md"))
 
     def test_bad_image_and_unnamed_image_link_are_separate(self):
         readme = "# Images\n[![](broken.png)](README.md)\n[Another dead link](absent.md)\n"

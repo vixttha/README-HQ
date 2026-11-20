@@ -146,10 +146,21 @@ def same_repo_target(tree, url):
     candidates = segments[3:]
     for count in range(len(candidates) - (segments[2] != "tree"), 0, -1):
         ref = "/".join(candidates[:count])
-        try:
-            commit = tree.resolve(ref)
-        except ValueError:
+        if SHA.fullmatch(ref) or ref == "HEAD":
+            names = [ref]
+        else:
+            names = [f"refs/heads/{ref}", f"refs/remotes/origin/{ref}", f"refs/tags/{ref}"]
+        resolved = set()
+        for name in names:
+            try:
+                resolved.add(tree.resolve(name))
+            except ValueError:
+                continue
+        if not resolved:
             continue
+        if len(resolved) > 1:
+            raise ValueError(f"conflicting commits for same-repository ref: {ref}")
+        commit = resolved.pop()
         return "/".join(candidates[count:]), commit
     raise LookupError(f"unresolved same-repository ref: {url.path}")
 
