@@ -113,7 +113,7 @@ def verify_first_action(tree, path, *, allow_network=False):
             tree.git("worktree", "remove", "--force", str(checkout))
 
 
-def write_receipt(destination, tree, cases, errors, gaps):
+def write_receipt(destination, tree, cases, errors, gaps, *, validator_path=None):
     sources, unavailable_sources = {}, []
     if tree:
         name = cases.get("entrypoint") or "README.md"
@@ -136,4 +136,6 @@ def write_receipt(destination, tree, cases, errors, gaps):
     }
     if unavailable_sources:
         data["unavailable_sources"] = unavailable_sources
+    if validator_path is not None:
+        data["validator"] = {"filename": validator_path.name, "sha256": sha256(validator_path.read_bytes()).hexdigest()}
     destination.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")

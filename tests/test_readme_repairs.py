@@ -173,6 +173,23 @@ Literal example `[Ignore](literal.md)`.
             self.assertEqual(receipt["unavailable_sources"], ["README.md"])
             self.assertTrue(any("README.md" in error for error in receipt["errors"]))
 
+    def test_receipt_identifies_executing_validator_separately_from_target_bytes(self):
+        validator = ROOT / "tools/check_readme_hq.py"
+        target_path = "tools/check_readme_hq.py"
+        for marker in (None, b"unrelated tracked bytes"):
+            files = {"README.md": "# Guide\n\nThis repository has a reference guide."}
+            if marker is not None:
+                files[target_path] = marker
+            with repository(files) as tree:
+                receipt = tree.root / "audit.json"
+                result = subprocess.run([sys.executable, str(validator), "--repo", str(tree.root),
+                                         "--profile", "reference", "--receipt", str(receipt)],
+                                        capture_output=True, text=True)
+                self.assertEqual(result.returncode, 0, result.stderr)
+                audit = json.loads(receipt.read_bytes())
+                self.assertEqual(audit["validator"]["sha256"], sha256(validator.read_bytes()).hexdigest())
+                self.assertEqual(audit["sources"].get(target_path), sha256(marker).hexdigest() if marker else None)
+
     def test_ascii_technique_listing(self):
         result = subprocess.run([sys.executable, str(ROOT / "tools/check_readme_hq.py"), "--list"],
                                 cwd=ROOT, env={**os.environ, "PYTHONIOENCODING": "ascii"},

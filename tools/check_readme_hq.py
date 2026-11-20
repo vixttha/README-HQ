@@ -320,7 +320,7 @@ def main():
         errors.append(str(error))
     if args.receipt:
         from hq_smoke import write_receipt
-        write_receipt(args.receipt, locals().get("tree"), cases, errors, gaps)
+        write_receipt(args.receipt, locals().get("tree"), cases, errors, gaps, validator_path=Path(__file__).resolve())
     if errors:
         for error in errors:
             print(error, file=sys.stderr)
