@@ -6,7 +6,9 @@
 
 ## Techniques
 
-No active records on this page.
+- [Label the scope of compatibility evidence](../techniques/claim-scope-labels.md) · observed · State the version, platform, capability, and checks that support a compatibility claim.
+- [Route by reader task](../techniques/role-based-entry-points.md) · observed · Give distinct reader goals clear routes from the same homepage.
+- [State the project’s purpose](../techniques/project-purpose-statement.md) · observed · Tell a new reader what the project does and what they can accomplish with it.
 
 ## Combinations
 

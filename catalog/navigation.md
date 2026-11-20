@@ -6,7 +6,10 @@
 
 ## Techniques
 
-No active records on this page.
+- [Link authoritative agent instructions](../techniques/agent-instruction-pointer.md) · observed · Point an agent to the repository’s applicable instructions from the README.
+- [Relative navigation](../techniques/relative-navigation.md) · observed · Link same-checkout guides and assets with paths relative to the Markdown file.
+- [Route by reader task](../techniques/role-based-entry-points.md) · observed · Give distinct reader goals clear routes from the same homepage.
+- [Write image alternatives for their purpose](../techniques/purpose-specific-image-alternatives.md) · observed · Give informative, decorative, functional, and complex visuals the text treatment their roles require.
 
 ## Combinations
 

@@ -6,7 +6,9 @@
 
 ## Techniques
 
-No active records on this page.
+- [Execute the documented walkthrough](../techniques/exact-revision-walkthrough.md) · verified · Replay the reader’s published steps at the named revision and verify the result.
+- [Label the scope of compatibility evidence](../techniques/claim-scope-labels.md) · observed · State the version, platform, capability, and checks that support a compatibility claim.
+- [Permanent proof links](../techniques/permanent-proof-links.md) · verified · Keep verification traceable with a commit-pinned receipt and recorded run, attempt, artifact ID, and digest.
 
 ## Combinations
 

@@ -6,4 +6,13 @@
 
 Use your browser's Find command (Ctrl+F or Command+F). Offline search covers every page.
 
-No active records.
+- [Execute the documented walkthrough](../techniques/exact-revision-walkthrough.md) · `exact-revision-walkthrough` · technique · copy-and-run test, walkthrough replay, ci, commands, onboarding
+- [Label the scope of compatibility evidence](../techniques/claim-scope-labels.md) · `claim-scope-labels` · technique · release and development evidence, scoped compatibility claims, compatibility, release-evidence
+- [Link authoritative agent instructions](../techniques/agent-instruction-pointer.md) · `agent-instruction-pointer` · technique · agent entry point, agent instruction link, agents, onboarding
+- [Permanent proof links](../techniques/permanent-proof-links.md) · `permanent-proof-links` · technique · durable verification receipt, pinned proof links, ci, git, release-evidence
+- [Relative navigation](../techniques/relative-navigation.md) · `relative-navigation` · technique · same-checkout links, relative documentation links, links, git, onboarding
+- [Route by reader task](../techniques/role-based-entry-points.md) · `role-based-entry-points` · technique · audience routing, task-based entry points, audience, links, onboarding
+- [Show a recognizable first result](../techniques/first-success-milestone.md) · `first-success-milestone` · technique · first-use milestone, expected first output, expected-output, onboarding
+- [State the project’s purpose](../techniques/project-purpose-statement.md) · `project-purpose-statement` · technique · one-sentence project description, project introduction, positioning, orientation
+- [Write a copyable Quickstart](../techniques/copyable-quickstart.md) · `copyable-quickstart` · technique · copy-paste quickstart, runnable command block, commands, onboarding
+- [Write image alternatives for their purpose](../techniques/purpose-specific-image-alternatives.md) · `purpose-specific-image-alternatives` · technique · purpose-based alt text, accessible README images, accessibility, images

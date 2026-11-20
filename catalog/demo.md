@@ -6,7 +6,8 @@
 
 ## Techniques
 
-No active records on this page.
+- [Show a recognizable first result](../techniques/first-success-milestone.md) · observed · Tell the reader what success looks like immediately after the first real task.
+- [Write image alternatives for their purpose](../techniques/purpose-specific-image-alternatives.md) · observed · Give informative, decorative, functional, and complex visuals the text treatment their roles require.
 
 ## Combinations
 

@@ -6,7 +6,8 @@
 
 ## Techniques
 
-No active records on this page.
+- [Execute the documented walkthrough](../techniques/exact-revision-walkthrough.md) · verified · Replay the reader’s published steps at the named revision and verify the result.
+- [Show a recognizable first result](../techniques/first-success-milestone.md) · observed · Tell the reader what success looks like immediately after the first real task.
 
 ## Combinations
 

@@ -6,7 +6,9 @@
 
 ## Techniques
 
-No active records on this page.
+- [Link authoritative agent instructions](../techniques/agent-instruction-pointer.md) · observed · Point an agent to the repository’s applicable instructions from the README.
+- [Permanent proof links](../techniques/permanent-proof-links.md) · verified · Keep verification traceable with a commit-pinned receipt and recorded run, attempt, artifact ID, and digest.
+- [Route by reader task](../techniques/role-based-entry-points.md) · observed · Give distinct reader goals clear routes from the same homepage.
 
 ## Combinations
 
