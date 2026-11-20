@@ -28,7 +28,7 @@ def verify_anchor(tree, path, line, anchor):
     lines = physical_lines(body.decode("utf-8"))
     if line > len(lines) or anchor not in lines[line - 1]:
         raise ValueError("source anchor does not match the selected Git tree")
-    return {"commit": tree.commit, "path": path, "line": line, "sha256": sha256(body).hexdigest()}
+    return {"commit": tree.commit, "path": path, "line": line, "anchor": anchor, "sha256": sha256(body).hexdigest()}
 
 
 def fetch_github(route):
@@ -104,7 +104,8 @@ def record_intake(specification, directory, *, fetch=fetch_github):
         tree = GitTree(source["checkout"], source["ref"])
         provenance = public_checkpoint(tree, source["repository"], lookup)
         receipt = verify_anchor(tree, source["path"], source["line"], source["anchor"])
-        identity = (provenance["canonical_repository"].casefold(), tree.commit, source["path"], source["line"])
+        identity = (provenance["canonical_repository"].casefold(), tree.commit,
+                    receipt["path"], receipt["line"], receipt["anchor"])
         sources[source["id"]] = {"identity": list(identity), **provenance, **receipt}
     target = specification["target"]
     if target.get("visibility") != "public":

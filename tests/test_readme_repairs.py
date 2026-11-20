@@ -1443,6 +1443,34 @@ class EvidenceTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "anchor does not match"):
                 intake.record_intake(spec, destination, fetch=fetch)
 
+    def test_learning_distinguishes_matched_anchors_on_the_same_line(self):
+        loader = importlib.util.spec_from_file_location("intake", ROOT / "learning/intake.py")
+        intake = importlib.util.module_from_spec(loader)
+        loader.loader.exec_module(intake)
+        with repository({"README.md": "# Start and Verify"}) as tree:
+            tree.git("remote", "add", "origin", "https://github.com/example/project.git")
+            source = {"checkout": str(tree.root), "ref": "HEAD", "repository": "example/project",
+                      "path": "README.md", "line": 1, "visibility": "public"}
+            sources = [{**source, "id": name, "anchor": anchor}
+                       for name, anchor in (("first", "Start"), ("second", "Verify"), ("repeat", "Start"))]
+            request = {"visibility": "public", "sources": sources, "selected": ["first", "second", "repeat"],
+                       "findings": [], "target": {**sources[0], "audience": "reader", "capability": "verify"}}
+            facts = {"example/project": {"private": False, "visibility": "public",
+                                        "full_name": "example/project", "id": 17},
+                     f"example/project/commits/{tree.commit}": {"sha": tree.commit}}
+            destination = tree.root / "receipts"
+            path = intake.record_intake(request, destination, fetch=facts.__getitem__)
+            data = json.loads(path.read_bytes())
+            self.assertEqual({row["anchor"] for row in data["sources"]}, {"Start", "Verify"})
+            self.assertEqual(len(data["sources"]), 2)
+            self.assertEqual({row[-1] for row in data["selected"]}, {"Start", "Verify"})
+            request["sources"].pop()
+            request["selected"].pop()
+            self.assertEqual(path, intake.record_intake(request, destination, fetch=facts.__getitem__))
+            request["sources"][1]["anchor"] = "Unrelated"
+            with self.assertRaisesRegex(ValueError, "anchor does not match"):
+                intake.record_intake(request, destination, fetch=facts.__getitem__)
+
     def test_learning_records_verified_canonical_repository_identity(self):
         loader = importlib.util.spec_from_file_location("intake", ROOT / "learning/intake.py")
         intake = importlib.util.module_from_spec(loader)
