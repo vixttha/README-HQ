@@ -155,40 +155,40 @@ All 10 downloaded evidence ZIPs matched GitHub’s SHA-256 digests. The checkpoi
 
 Learning errors, first-action proof, homepage discovery, publication gates, dependency qualification, and reader-facing media and accessibility.
 
-[Draft PR #151](https://github.com/vixttha/README-HQ/pull/151) contains 13 checkpoint commits and six follow-ups at [`844f97a8`](https://github.com/vixttha/README-HQ/commit/844f97a8a140238411fb98cf584bf05a09aba1c4), stacked on verified Batch 4 at `921609e7`.
+[Draft PR #151](https://github.com/vixttha/README-HQ/pull/151) contains 13 checkpoint commits and seven follow-ups at [`d12d5c6b`](https://github.com/vixttha/README-HQ/commit/d12d5c6bd82fe448f64adb3ae48024296b8e6db4), stacked on verified Batch 4 at `921609e7`.
 
-The [exact checkpoint replay](https://github.com/vixttha/README-HQ/actions/runs/44687593258/attempts/1) passed 13/13 on Ubuntu and 9/9 applicable checkpoints on Windows. Checkpoints .132, .133, .136, and .137 ran on Ubuntu. Both systems passed all six follow-ups. Both receipts match all 19 commits, their parents, and their Git trees.
+The [exact checkpoint replay](https://github.com/vixttha/README-HQ/actions/runs/44688938710/attempts/1) passed 13/13 on Ubuntu and 9/9 applicable checkpoints on Windows. Checkpoints .132, .133, .136, and .137 ran on Ubuntu. Both systems passed all seven follow-ups. Both receipts match all 20 commits, their parents, and their Git trees.
 
-The [branch run](https://github.com/vixttha/README-HQ/actions/runs/44687526861/attempts/1) and [proposed merge run](https://github.com/vixttha/README-HQ/actions/runs/44687536250/attempts/1) each passed 92 reader tests per OS, 15 Graphify template tests, and 11 Graphify integration tests. Graphify MCP verified ten maps on each revision. The [proposed merge](https://github.com/vixttha/README-HQ/commit/35d25dfac3cedfba93101249fed533c407aaea9c) and the draft head have the same tree.
+The [branch run](https://github.com/vixttha/README-HQ/actions/runs/44688883294/attempts/1) and [proposed merge run](https://github.com/vixttha/README-HQ/actions/runs/44688891185/attempts/1) each passed 93 reader tests per OS, 15 Graphify template tests, and 11 Graphify integration tests. Graphify MCP verified ten maps on each revision. The [proposed merge](https://github.com/vixttha/README-HQ/commit/973cd56af55fa910d44b9bb9dade94a0d585a6f8) and the draft head have the same tree.
 
-Pillow 13.0.0 passed hashed wheel installation and reader tests on Ubuntu and Windows with Python 3.11 through 3.15. The [live controls ZIP](https://github.com/vixttha/README-HQ/actions/runs/44687593258/artifacts/14606359758) records GitHub’s selected Org homepage and the readback for `main`. The [planning branch workflow](https://github.com/vixttha/README-HQ/actions/runs/44687530289/attempts/1) accepted the live 63-checkpoint ledger. The final replay covers literal Markdown code spans and rejects acceptance text or issue links hidden in inline HTML comments.
+Pillow 13.0.0 passed hashed wheel installation and reader tests on Ubuntu and Windows with Python 3.11 through 3.15. The [live controls ZIP](https://github.com/vixttha/README-HQ/actions/runs/44688938710/artifacts/14608210049) records GitHub’s selected Org homepage and the readback for `main`. The [planning branch workflow](https://github.com/vixttha/README-HQ/actions/runs/44688936614/attempts/1) accepted the live 63-checkpoint ledger.
 
 The publication policy fixture passed. The live readback at `a7a989ff` reports that `main` is unprotected and has none of the three proposed required check contexts. The live settings change and the owner’s exact-SHA publication decision remain pending under [#132](https://github.com/vixttha/README-HQ/issues/132#issuecomment-7031938898).
 
-Follow-ups address the [initial review](https://github.com/vixttha/README-HQ/pull/151#pullrequestreview-5988216302), [timeout review](https://github.com/vixttha/README-HQ/pull/151#pullrequestreview-5988277263), and [shell and Markdown review](https://github.com/vixttha/README-HQ/pull/151#pullrequestreview-5988353628), including the README’s description of the redacted URL receipt. The final replays include these cases. [CodeRabbit check for `844f97a8`](https://github.com/vixttha/README-HQ/runs/136126056259).
+The final replay covers GitHub timeouts, Quickstart shell quoting and continuations, redacted URL receipts, and visible ledger obligations. The [last review follow-up](https://github.com/vixttha/README-HQ/pull/151#pullrequestreview-5988486095) requires a visible label on the matching issue link and scans each physical shell line once. [Exact-head CodeRabbit check](https://github.com/vixttha/README-HQ/runs/136130019963).
 
 <details>
 <summary>Verified artifact ZIPs and SHA-256 digests</summary>
 
 | Evidence | Artifact ID | SHA-256 |
 | --- | --- | --- |
-| Branch Graphify MCP | [14607156978](https://github.com/vixttha/README-HQ/actions/runs/44687526861/artifacts/14607156978) | `95278d67ced93cdc5b406ed63067926a7dbfba18b496de080624325bd43a318e` |
-| Branch reader, Ubuntu | [14606822950](https://github.com/vixttha/README-HQ/actions/runs/44687526861/artifacts/14606822950) | `fd3421f537a54bb102ce573b8b1eac397d0efcbbe8cd84bbc6b225eb44a3619d` |
-| Branch reader, Windows | [14606863530](https://github.com/vixttha/README-HQ/actions/runs/44687526861/artifacts/14606863530) | `ab117acff1b0c0e8877b4921bb6ca8678c9b7f0d5ac51818dbd730612be3ecaf` |
-| Org homepage, active plan, and publication rules | [14606359758](https://github.com/vixttha/README-HQ/actions/runs/44687593258/artifacts/14606359758) | `e4f9d92929233a3e634cd0aec3512b5a392de92a964d89350270ec3f5f12b37f` |
-| Pillow, Ubuntu, Python 3.11 | [14606454673](https://github.com/vixttha/README-HQ/actions/runs/44687593258/artifacts/14606454673) | `51e75b57ceb753b5015b3299ef9237bbf3d3a31ae0bbac445bab25cb024b0d01` |
-| Pillow, Ubuntu, Python 3.13 | [14607177030](https://github.com/vixttha/README-HQ/actions/runs/44687593258/artifacts/14607177030) | `a9b42b2d8a8b5c58ce4f0a0c558c5e0887b4100acd921920abdf50a589cb1633` |
-| Pillow, Ubuntu, Python 3.14 | [14606778105](https://github.com/vixttha/README-HQ/actions/runs/44687593258/artifacts/14606778105) | `839fbd98d37e33180d7a127f323c21374a785582ca89f0ffadd23ad93b1156ce` |
-| Pillow, Ubuntu, Python 3.15 | [14607346634](https://github.com/vixttha/README-HQ/actions/runs/44687593258/artifacts/14607346634) | `bb1c7920f71dbe53f2ded98d00ac0052e586bbe77be93b0549e3d552c2393ad5` |
-| Pillow, Windows, Python 3.11 | [14607037793](https://github.com/vixttha/README-HQ/actions/runs/44687593258/artifacts/14607037793) | `0f4ab685eb96386262570f69fa1108764c64370a3e5bafa36159dad9c8de052b` |
-| Pillow, Windows, Python 3.13 | [14607386807](https://github.com/vixttha/README-HQ/actions/runs/44687593258/artifacts/14607386807) | `54614e7d2e2bdb81f97cafb9aba8bbd430df7ceae8296136164d290f600009ba` |
-| Pillow, Windows, Python 3.14 | [14607740334](https://github.com/vixttha/README-HQ/actions/runs/44687593258/artifacts/14607740334) | `a5d36a7736dc1b3a51e143166aaeab9c509a0553cd9c904ec06d9764df7a8953` |
-| Pillow, Windows, Python 3.15 | [14607316827](https://github.com/vixttha/README-HQ/actions/runs/44687593258/artifacts/14607316827) | `c00e3765e02c74073037e6cebe67e3f64f8d2541e80691c8ccd8fdc06056ad06` |
-| Proposed merge Graphify MCP | [14607356593](https://github.com/vixttha/README-HQ/actions/runs/44687536250/artifacts/14607356593) | `f42e9fe98892845e166e13dbf9a6292200094eb204dadea3cd99188f0e52dc90` |
-| Proposed merge reader, Ubuntu | [14606952897](https://github.com/vixttha/README-HQ/actions/runs/44687536250/artifacts/14606952897) | `50250ee242652203d70b735eb49c411f618280a107674a9aa7e29ffd99cb63e1` |
-| Proposed merge reader, Windows | [14606843457](https://github.com/vixttha/README-HQ/actions/runs/44687536250/artifacts/14606843457) | `79a8d6d4a54365b77822cf53e9da22a8460e90f3c609121de3c70398b9ef4edd` |
-| Ubuntu checkpoint replay | [14607261605](https://github.com/vixttha/README-HQ/actions/runs/44687593258/artifacts/14607261605) | `d7ffc22b4ade2f6f75f0d1e3566688f87fd14045bfb8976202ac16b7a7bdb4a1` |
-| Windows checkpoint replay | [14607770004](https://github.com/vixttha/README-HQ/actions/runs/44687593258/artifacts/14607770004) | `31f82964c9bc45fd340c01652104d8be686cbb3dbd89bd5e84ed059de781f2f4` |
+| Branch Graphify MCP | [14608160357](https://github.com/vixttha/README-HQ/actions/runs/44688883294/artifacts/14608160357) | `ab056d80445281e254242aac93a3091b9d39a01c98dcf6173b7acf28427694a2` |
+| Branch reader, Ubuntu | [14607398377](https://github.com/vixttha/README-HQ/actions/runs/44688883294/artifacts/14607398377) | `055b95f286ef984de851078a2d572725bc1234214efafb67ea2eaa100c08e8fa` |
+| Branch reader, Windows | [14607059695](https://github.com/vixttha/README-HQ/actions/runs/44688883294/artifacts/14607059695) | `db9113c779de650d0edca7a5f8624a8cd3282ed5480580bd8dc983bf9e5f2a13` |
+| Org homepage, active plan, and publication rules | [14608210049](https://github.com/vixttha/README-HQ/actions/runs/44688938710/artifacts/14608210049) | `7a27fd781decf2c8d4517c823317a4475feed93422ed575810a09b5b6494ace5` |
+| Pillow, Ubuntu, Python 3.11 | [14608006109](https://github.com/vixttha/README-HQ/actions/runs/44688938710/artifacts/14608006109) | `dfa87e78c84c62f6d4888eb67d9a84bc2b8a11ef3f9b66545faace9d75d6e39f` |
+| Pillow, Ubuntu, Python 3.13 | [14607996362](https://github.com/vixttha/README-HQ/actions/runs/44688938710/artifacts/14607996362) | `d1c8751788a850e764f04d84787531a6e343ad8c39ecb5cc4a7934f92a957c8f` |
+| Pillow, Ubuntu, Python 3.14 | [14608080653](https://github.com/vixttha/README-HQ/actions/runs/44688938710/artifacts/14608080653) | `ec27cc5c94e98904eab323eb38048d92292a2e16ce7c3b8e65ae88d7a705d38f` |
+| Pillow, Ubuntu, Python 3.15 | [14607398483](https://github.com/vixttha/README-HQ/actions/runs/44688938710/artifacts/14607398483) | `80ba7f289049ac3b9821d4a3c3d666703e5526f9646afb9f5201c5d7f6970323` |
+| Pillow, Windows, Python 3.11 | [14607712364](https://github.com/vixttha/README-HQ/actions/runs/44688938710/artifacts/14607712364) | `c2abeb336015d93396ff8038b84baa74026deb0917b9b0e7e470eee3962481c0` |
+| Pillow, Windows, Python 3.13 | [14606889999](https://github.com/vixttha/README-HQ/actions/runs/44688938710/artifacts/14606889999) | `d1f6a49618b014196ae15f4f1467d6a058f79f3cdc7eee45aaa6859af03328e7` |
+| Pillow, Windows, Python 3.14 | [14607502732](https://github.com/vixttha/README-HQ/actions/runs/44688938710/artifacts/14607502732) | `c14d708a8db04a0571a951ee76cb3b732b7bdd17689bc21391ce25d5f55b33ab` |
+| Pillow, Windows, Python 3.15 | [14607687502](https://github.com/vixttha/README-HQ/actions/runs/44688938710/artifacts/14607687502) | `737ca074da9e5c7177deca711764200cf0ae81e40bacce360564993edd397122` |
+| Proposed merge Graphify MCP | [14606909466](https://github.com/vixttha/README-HQ/actions/runs/44688891185/artifacts/14606909466) | `34ffe9a2d82eefa5501577ee138503aabd82018a6d3ee40f36caab2eb7948de0` |
+| Proposed merge reader, Ubuntu | [14606849985](https://github.com/vixttha/README-HQ/actions/runs/44688891185/artifacts/14606849985) | `c0b87b24998e4444acae91dd6caff20a4675309c0c765710c256c0d03f8f2e41` |
+| Proposed merge reader, Windows | [14607433761](https://github.com/vixttha/README-HQ/actions/runs/44688891185/artifacts/14607433761) | `2892ea789f398fd48fedc8b8d9f3684106b74c033edd86e8400775fd83225494` |
+| Ubuntu checkpoint replay | [14607911609](https://github.com/vixttha/README-HQ/actions/runs/44688938710/artifacts/14607911609) | `1229f28adc171ba29b17911dfa6af2fc782c5b5294cf07d1d8f194fd098bbb88` |
+| Windows checkpoint replay | [14607054625](https://github.com/vixttha/README-HQ/actions/runs/44688938710/artifacts/14607054625) | `4cc709d73c6c475a33b1a2dda9c76e54c27e3105a4f10e2d8359f08750067157` |
 
 </details>
 
