@@ -256,6 +256,39 @@ def check_navigation(errors, tree=None, gaps=None):
     return count
 
 
+def has_first_action(blocks):
+    action = re.compile(r"^(?:quick[ -]?start|getting started|install(?:ation)?|setup|usage|use|run|try|play|build)\b", re.I)
+    label = re.compile(r"^(?:install(?:ation)?|setup|quick[ -]?start|getting started|run|try|play|build|launch|open)\b", re.I)
+    shell = {"", "sh", "shell", "bash", "zsh", "powershell", "pwsh", "cmd", "console", "terminal", "shell-session"}
+    action_level = None
+    for i, token in enumerate(blocks):
+        if token.type == "heading_open":
+            level = int(token.tag[1:])
+            if action_level is not None and level <= action_level:
+                action_level = None
+            heading = "".join(part.content for part in blocks[i + 1].children or []
+                              if part.type in {"text", "code_inline", "image"})
+            if action_level is None and action.search(heading):
+                action_level = level
+        elif action_level is not None and token.type == "fence":
+            language = token.info.strip().split()
+            if (not language or language[0].lower() in shell) and any(
+                line.strip() and not line.lstrip().startswith("#") for line in token.content.splitlines()
+            ):
+                return True
+        elif action_level is not None and token.type == "inline":
+            children = token.children or []
+            for index, item in enumerate(children):
+                if item.type != "link_open":
+                    continue
+                end = next((j for j in range(index + 1, len(children)) if children[j].type == "link_close"), len(children))
+                name = "".join(child.content for child in children[index + 1:end])
+                href = item.attrGet("href") or ""
+                if href and not href.startswith("#") and label.match(name.strip()):
+                    return True
+    return False
+
+
 def target_readme(tree, subproject, errors, gaps, profile):
     prefix = Path(subproject).as_posix().removeprefix("./")
     if Path(subproject).is_absolute() or ".." in Path(subproject).parts or "\\" in subproject:
@@ -271,18 +304,15 @@ def target_readme(tree, subproject, errors, gaps, profile):
         gaps.append(f"{source}: editorial and first-use checks for this format require review")
         return source, 0
     text = body.decode("utf-8")
-    _, links, blocks = parse_markdown(text)
+    _, _, blocks = parse_markdown(text)
     paragraphs = [blocks[i+1].content for i, token in enumerate(blocks)
                   if token.type == "paragraph_open" and blocks[i+1].type == "inline"]
     if not any(len(value.strip()) >= 20 for value in paragraphs):
         errors.append(f"{source}: README needs a meaningful project description")
     if any(re.search(r"^\s*(?:TODO|TBD|FIXME)(?:\b|:)", value, re.I) for value in paragraphs):
         errors.append(f"{source}: unresolved reader-facing placeholder")
-    if profile != "reference":
-        first_action = re.compile(r"\b(quick.?start|getting started|install|run|try|play|build|use|setup)\b", re.I)
-        first_screen = "\n".join(t.content for t in blocks[:35] if t.type == "inline")
-        if not first_action.search(first_screen) or not (links or any(t.type == "fence" for t in blocks)):
-            errors.append(f"{source}: no discoverable first action for {profile}")
+    if profile != "reference" and not has_first_action(blocks):
+        errors.append(f"{source}: no discoverable first action for {profile}")
     gaps.append(f"{source}: editorial quality and material claims require human or agent review")
     return source, check_document(tree, source, errors, gaps)
 
@@ -292,14 +322,29 @@ def main():
     parser.add_argument("--list", action="store_true", help="print the technique index after HQ validation")
     parser.add_argument("--repo", type=Path, help="audit a consumer Git repository instead of HQ")
     parser.add_argument("--ref", default="HEAD", help="local ref or commit to validate")
-    parser.add_argument("--subproject", default=".", help="repository-relative monorepo directory")
-    parser.add_argument("--profile", choices=("application", "library", "reference"), default="application")
+    parser.add_argument("--subproject", help="repository-relative monorepo directory")
+    parser.add_argument("--profile", choices=("application", "library", "reference"))
     parser.add_argument("--draft", action="store_true", help="inspect tracked working-tree bytes instead of the published tree")
     parser.add_argument("--receipt", type=Path, help="write a machine-readable check receipt")
     parser.add_argument("--smoke", type=Path, help="an explicit local first-action specification to execute")
     parser.add_argument("--allow-git-fetch", action="store_true", help="permit demand fetching missing Git blobs")
     parser.add_argument("--allow-network", action="store_true", help="allow the explicit remote first-action probe")
+    parser.add_argument("--require-smoke", action="store_true", help="return incomplete unless the requested smoke check passes")
+    parser.add_argument("--include-smoke-output", action="store_true",
+                        help="retain bounded command output in a private failure receipt")
     args = parser.parse_args()
+    if args.include_smoke_output and (not args.smoke or not args.receipt):
+        parser.error("--include-smoke-output requires --smoke and --receipt")
+    if args.require_smoke and not args.smoke:
+        parser.error("--require-smoke requires an explicit --smoke")
+    for option, value in (("--subproject", args.subproject), ("--profile", args.profile),
+                          ("--smoke", args.smoke), ("--allow-network", args.allow_network or None)):
+        if args.repo is None and value is not None:
+            parser.error(f"{option} requires an explicit --repo")
+    if args.subproject is None:
+        args.subproject = "."
+    if args.profile is None:
+        args.profile = "application"
     errors, gaps, records = [], [], []
     cases = {}
     scope = None
@@ -318,19 +363,25 @@ def main():
                      "commit": tree.commit}
             entry, count = target_readme(tree, args.subproject, errors, gaps, args.profile)
             cases.update(entrypoint=entry, local_links=count)
+            if entry and suffix(entry) not in MARKDOWN:
+                cases["navigation"] = {"result": "unchecked", "format": suffix(entry) or "extensionless"}
+                gaps.append(f"{entry}: rendered navigation, anchors, and first-use instructions remain unchecked")
             if args.smoke:
                 from hq_smoke import verify_first_action
-                outcome = verify_first_action(tree, args.smoke, allow_network=args.allow_network, subproject=args.subproject)
+                outcome = verify_first_action(tree, args.smoke, allow_network=args.allow_network,
+                                              subproject=args.subproject, include_output=args.include_smoke_output)
+                if args.require_smoke:
+                    outcome["required"] = True
                 cases["first_action"] = outcome
                 if outcome["result"] == "failed":
-                    errors.append("first action failed its expected result")
+                    codes = outcome.get("failure_codes", [])
+                    detail = ": " + ", ".join(codes) if codes else ""
+                    errors.append(f"first action failed its expected result{detail}")
                 elif outcome["result"] != "passed":
                     gaps.append(f"first action {outcome['result']}: {outcome['detail']}")
             else:
                 gaps.append("first action execution not checked: no explicit smoke spec")
         else:
-            if args.smoke:
-                raise ValueError("--smoke requires an explicit --repo")
             records = check_registry(errors, tree)
             cases.update(standalone_versions=check_versions(errors, tree), techniques=len(records),
                          local_links=check_navigation(errors, tree, gaps), imported_files=check_history(errors, tree))
@@ -352,6 +403,9 @@ def main():
         print(f"README: {cases['entrypoint']}; checked {cases['local_links']} local links")
         for gap in gaps:
             print(f"Unchecked: {gap}")
+        from hq_smoke import coverage_incomplete
+        if coverage_incomplete(cases):
+            return 2
     else:
         print(f"Validated {cases['standalone_versions']} standalone version(s), {cases['techniques']} techniques, "
               f"{cases['local_links']} local links, and {cases['imported_files']} imported files.")

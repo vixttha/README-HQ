@@ -51,6 +51,44 @@ class GraphifyRepairs(unittest.TestCase):
                              {"documented_in": 2, "changed_in": 1, "tested_by": 1})
             asyncio.run(verify_mcp(graph, receipt))
 
+    def test_existing_graphify_map_keeps_disambiguated_display_labels(self):
+        path = ROOT / "graphify-hq/maps/v0.0.1/graph.json"
+        data = json.loads(path.read_bytes())
+        self.assertTrue(any(node["id"].startswith("file:") and node["label"] != node["source_file"]
+                            for node in data["nodes"]))
+        receipt = json.loads(path.with_name("receipt.json").read_bytes())
+        asyncio.run(verify_mcp(path, receipt))
+
+    def test_graphify_evidence_line_links_use_source_mode_for_rendered_formats(self):
+        revision = "a" * 40
+        sources = [({"path": "doc/" + path}, line) for path, line in
+                   (("README.md", 2), ("read me.rst", 3), ("guide.adoc", 4), ("brief.asciidoc", 5), ("card.asc", 6))]
+        outline = [({"title": "Fixture", "summary": "Pinned lines"}, sources, ({"path": "CHANGELOG.txt"}, 7))]
+        body = maps.render_outline("v0.0.6", "example/project",
+                                   {"source_commit": revision, "nodes": 1, "edges": 0}, outline)
+        for ref, line in sources:
+            self.assertIn(f"{ref['path'].replace(' ', '%20')}?plain=1#L{line}", body)
+        self.assertIn("CHANGELOG.txt#L7", body)
+
+    def test_graphify_attempt_keeps_verified_evidence_after_a_failed_stage(self):
+        import os
+        from tools import verify_graphify_ci
+
+        with tempfile.TemporaryDirectory() as folder:
+            output = Path(folder) / "attempt"
+            tests = unittest.mock.Mock(returncode=0)
+            failed = unittest.mock.Mock(returncode=7)
+            with patch.object(verify_graphify_ci.subprocess, "run", side_effect=[tests, tests, tests, failed]):
+                self.assertEqual(verify_graphify_ci.verify(output), 7)
+            receipt = json.loads((output / "attempt.json").read_bytes())
+            self.assertEqual(receipt["result"], "failed")
+            self.assertEqual(receipt["steps"][-1]["name"], "repair plan")
+            self.assertFalse(receipt["prior_or_unchecked_receipts_included"])
+            saved = sorted((output / "verified").rglob("receipt.json"))
+            self.assertEqual(len(saved), 6)
+            self.assertTrue(all("maps" in item.parts for item in saved))
+            self.assertEqual(os.getcwd(), str(ROOT))
+
     def test_release_heading_beats_a_draft_placeholder(self):
         content = b"Release notes\n=============\n\nUnreleased\n----------\n\n- TODO\n\n2.34.2 (2026-05-14)\n-------------------\n"
         with patch.object(maps, "source_bytes", return_value=content):

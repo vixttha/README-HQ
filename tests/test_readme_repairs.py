@@ -62,8 +62,76 @@ class ReaderTests(unittest.TestCase):
                     else:
                         self.assertEqual(record["cases"]["entrypoint"], expected)
 
+    def test_adopter_selectors_require_an_explicit_repository(self):
+        argv = [sys.executable, str(ROOT / "tools/check_readme_hq.py")]
+        result = subprocess.run(argv, cwd=ROOT, capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("standalone version(s)", result.stdout)
+        for options in (["--subproject", "missing"], ["--subproject", "."], ["--profile", "application"],
+                        ["--profile", "reference"], ["--allow-network"]):
+            with self.subTest(options=options):
+                result = subprocess.run([*argv, *options], cwd=ROOT, capture_output=True, text=True)
+                self.assertEqual(result.returncode, 2, result.stderr)
+                self.assertIn(f"{options[0]} requires an explicit --repo", result.stderr)
+
+    def test_quickstart_recognizes_usage_rendering_and_nested_sections(self):
+        from check_readme_hq import has_first_action
+        from hq_navigation import parse_markdown
+
+        command = "\n\n```sh\npython run.py\n```\n"
+        fixtures = (
+            ("## Usage", True),
+            ("## **Quickstart**", True),
+            ("## Quickstart\n\n### Install\n\n### Configure", True),
+            ("## Quickstart\n\n### Install\n\n## Development", False),
+            ("## Development", False),
+        )
+        for heading, expected in fixtures:
+            with self.subTest(heading=heading):
+                self.assertEqual(has_first_action(parse_markdown(heading + command)[2]), expected)
+
+    def test_first_action_follows_a_real_quickstart_section(self):
+        from check_readme_hq import target_readme
+
+        own = GitTree(ROOT)
+        self.assertEqual(target_readme(own, ".", [], [], "application")[0], "README.md")
+        errors = []
+        target_readme(own, ".", errors, [], "application")
+        self.assertEqual(errors, [])
+        preamble = "# Demo\n\nThe demo verifies the first useful action.\n\n"
+        table = "| A | B |\n| --- | --- |\n" + "| Example | Note |\n" * 45
+        for ending, expected in (
+            ("## Quickstart\n\n```sh\npython run.py\n```", False),
+            ("## Quickstart\n\n[Launch the demo](launch.md)", False),
+            ("## Quickstart\n\n[License](LICENSE)\n\n## Development\n\n```sh\npython build.py\n```", True),
+        ):
+            content = preamble + table + "\n" + ending
+            with repository({"README.md": content, "launch.md": "# Launch", "LICENSE": "fixture"}) as tree:
+                errors = []
+                self.assertEqual(target_readme(tree, ".", errors, [], "application")[0], "README.md")
+                self.assertEqual(any("no discoverable first action" in error for error in errors), expected)
+
+    def test_rich_text_navigation_reports_explicit_incomplete_status(self):
+        cases = {"rst": "Guide\n=====\n\nSee `start <guide.rst#start>`_ and `lost <gone.rst#missing>`_.\n\n"
+                         "Quickstart\n----------\n\n::\n\n    python run.py\n",
+                 "adoc": "= Guide\n\nlink:guide.adoc#start[Start] and link:gone.adoc#missing[Lost].\n\n"
+                          "== Quickstart\n\n[source,shell]\n----\npython run.py\n----\n"}
+        for extension, body in cases.items():
+            source = "README." + extension
+            with self.subTest(extension=extension), repository({source: body, "guide." + extension: body}) as tree:
+                file = tree.root / "receipt.json"
+                result = subprocess.run([sys.executable, str(ROOT / "tools/check_readme_hq.py"), "--repo",
+                                         str(tree.root), "--receipt", str(file)], capture_output=True, text=True)
+                self.assertEqual(result.returncode, 2, result.stderr)
+                receipt = json.loads(file.read_bytes())
+                self.assertEqual(receipt["result"], "incomplete")
+                self.assertEqual(receipt["cases"]["entrypoint"], source)
+                self.assertEqual(receipt["cases"]["navigation"]["result"], "unchecked")
+                self.assertEqual(receipt["cases"]["local_links"], 0)
+                self.assertTrue(any("navigation, anchors, and first-use" in gap for gap in receipt["unchecked"]))
+
     def test_adopter_receipt_distinguishes_scope_at_one_commit(self):
-        readme = "# Guide\n\n## Quickstart\n\n[Read the guide](README.md)\n"
+        readme = "# Guide\n\nThis is a portable demonstration.\n\n## Quickstart\n\n```sh\npython run.py\n```\n"
         with repository({"README.md": readme, "packages/demo/README.md": readme}) as tree:
             receipt = tree.root / "audit.json"
             argv = [sys.executable, str(ROOT / "tools/check_readme_hq.py"), "--repo", str(tree.root),
@@ -161,6 +229,13 @@ class ReaderTests(unittest.TestCase):
                             docs.unlink()
                         else:
                             docs.rmdir()
+
+    def test_public_reader_workflow_preserves_the_validator_exit(self):
+        config = (ROOT / ".github/workflows/readme-hq.yml").read_text(encoding="utf-8")
+        self.assertIn("\n        run: python tools/check_readme_hq.py --receipt readme-hq-result.json\n"
+                      "      - name: Run reader regressions\n"
+                      "        run: python -m unittest discover", config)
+        self.assertIn("      - name: Preserve the exact-SHA receipt\n        if: always()", config)
 
     def test_receipt_persistence_failure_preserves_audit_diagnostics(self):
         for good in (True, False):
@@ -353,6 +428,36 @@ A separate [same label](fourth.md).
             self.assertEqual(len(errors), 1)
             self.assertIn("outside the file", errors[0])
 
+    def test_pinned_fragment_cache_reuses_objects_without_stale_drafts(self):
+        import hq_navigation
+
+        readme = "[Start](guide.md#start)\n" * 64 + "[Missing](guide.md#missing)\n"
+        with repository({"README.md": readme, "guide.md": "# Start"}) as tree:
+            errors = []
+            with (patch.object(tree, "read", wraps=tree.read) as read,
+                  patch.object(hq_navigation, "parse_markdown", wraps=hq_navigation.parse_markdown) as parse):
+                self.assertEqual(check_document(tree, "README.md", errors, []), 64)
+                self.assertEqual(sum(call.args[0] == "guide.md" for call in read.call_args_list), 1)
+                self.assertEqual(parse.call_count, 2)
+            self.assertEqual(len(errors), 1)
+            self.assertIn("missing local heading", errors[0])
+            path = tree.root / "guide.md"
+            old = tree.commit
+            path.write_text("# Other", encoding="utf-8")
+            draft = GitTree(tree.root, draft=True)
+            self.assertEqual(check_document(draft, "README.md", [], []), 0)
+            path.write_text("# Start", encoding="utf-8")
+            self.assertEqual(check_document(draft, "README.md", [], []), 64)
+            path.write_text("# Other", encoding="utf-8")
+            tree.git("add", "guide.md")
+            tree.git("-c", "user.name=Fixture", "-c", "user.email=test@example.invalid",
+                     "commit", "--quiet", "-m", "Change anchor")
+            current = GitTree(tree.root)
+            cache = {}
+            hq_navigation.check_fragment(current, "guide.md", old, "start", cache=cache)
+            with self.assertRaisesRegex(ValueError, "missing local heading"):
+                hq_navigation.check_fragment(current, "guide.md", current.commit, "start", cache=cache)
+
     def test_raw_github_files_do_not_verify_rendered_heading_fragments(self):
         with repository({"guide.md": "# Heading\n", "README.md": "# Links"}) as tree:
             tree.git("remote", "add", "origin", "https://github.com/example/project.git")
@@ -394,6 +499,78 @@ A separate [same label](fourth.md).
             self.assertEqual(resolve("release/next"), ("README.md", original.commit))
             original.git("update-ref", "refs/remotes/origin/origin/main", topic.commit)
             self.assertEqual(resolve("origin/main"), ("README.md", topic.commit))
+
+    def test_html_image_alt_distinguishes_missing_and_explicit_empty(self):
+        image = '<svg xmlns="http://www.w3.org/2000/svg"/>'
+        fields = ("", ' alt=""', ' alt="A schematic"')
+        for attributes in fields:
+            doc = f'<img src="diagram.svg"{attributes}>'
+            with self.subTest(attributes=attributes), repository({"README.md": doc, "diagram.svg": image}) as tree:
+                errors, gaps = [], []
+                self.assertEqual(check_document(tree, "README.md", errors, gaps), 1)
+                self.assertTrue(any("requires an alt attribute" in error for error in errors) if not attributes else not errors)
+                self.assertEqual(gaps, [])
+
+    def test_html_image_accepts_nonblank_aria_label(self):
+        image = '<svg xmlns="http://www.w3.org/2000/svg"/>'
+        cases = (
+            ('<img src="diagram.svg" aria-label="A schematic">', 1, False),
+            ('<img src="diagram.svg" aria-label=" ">', 1, True),
+            ('<a href="./guide.md"><img src="diagram.svg" aria-label="Open the guide"></a>', 2, False),
+        )
+        for readme, checked, missing in cases:
+            with self.subTest(readme=readme), repository({"README.md": readme, "diagram.svg": image,
+                                                        "guide.md": "# Guide"}) as tree:
+                errors, gaps = [], []
+                self.assertEqual(check_document(tree, "README.md", errors, gaps), checked)
+                self.assertEqual(len(errors), int(missing), errors)
+                if missing:
+                    self.assertIn("requires an alt attribute", errors[0])
+                self.assertEqual(gaps, [])
+
+    def test_html_srcset_link_uses_image_name(self):
+        image = '<svg xmlns="http://www.w3.org/2000/svg"/>'
+        for attrs, named in (('aria-label="Open the guide"', True), ('alt="Open the guide"', True),
+                             ('alt="" aria-label=" "', False)):
+            readme = f'<a href="./guide.md"><img srcset="diagram.svg 1x" {attrs}></a>'
+            with self.subTest(attrs=attrs), repository({"README.md": readme, "diagram.svg": image,
+                                                       "guide.md": "# Guide"}) as tree:
+                errors, gaps = [], []
+                self.assertEqual(check_document(tree, "README.md", errors, gaps), 2 if named else 1)
+                self.assertEqual(gaps, [])
+                if named:
+                    self.assertEqual(errors, [])
+                else:
+                    self.assertEqual(len(errors), 1)
+                    self.assertIn("link has no accessible name", errors[0])
+
+    def test_readme_html_hidden_image_does_not_name_link(self):
+        from hq_navigation import parse_markdown
+
+        for attrs, unnamed in (('aria-hidden="true"', True), ('hidden', True),
+                               ('aria-hidden="false"', False), ('', False)):
+            text = f'<a href="guide.md"><img srcset="diagram.svg 1x" alt="Guide" {attrs}></a>'
+            with self.subTest(attrs=attrs):
+                _, links, _ = parse_markdown(text)
+                self.assertEqual([(link.path, link.unnamed) for link in links],
+                                 [("diagram.svg", False), ("guide.md", unnamed)])
+
+    def test_readme_html_hidden_ancestors_do_not_name_links(self):
+        from hq_navigation import parse_markdown
+
+        image = '<img srcset="diagram.svg 1x" alt="Guide">'
+        invisible = f'<span aria-hidden="true"><span aria-hidden="false">{image}</span>Hidden</span>'
+        cases = (
+            (f'<a href="guide.md">{invisible}</a>', [True]),
+            (f'<a href="guide.md">{invisible}<br hidden>Visit the guide</a>', [False]),
+            (f'<div hidden><a href="guide.md">{image}</a></div><a href="guide.md">{image}</a>', [False, False]),
+        )
+        for markup, expected in cases:
+            for document in (markup, f"See {markup} for details."):
+                with self.subTest(document=document):
+                    _, links, _ = parse_markdown(document)
+                    self.assertEqual([link.unnamed for link in links if not link.image], expected)
+                    self.assertEqual(sum(link.image for link in links), len(expected))
 
     def test_svg_root_requires_the_svg_namespace(self):
         default = '<svg xmlns="http://www.w3.org/2000/svg"/>'
@@ -528,6 +705,21 @@ A separate [same label](fourth.md).
             self.assertEqual(check_document(tree, "README.md", errors, gaps), 3)
             self.assertEqual((errors, gaps), ([], []))
 
+    def test_documented_first_action_example_produces_pinned_receipts(self):
+        guide = (ROOT / "README-GUIDE.md").read_text(encoding="utf-8")
+        self.assertIn("python examples/first_action_demo.py first-action-evidence", guide)
+        with tempfile.TemporaryDirectory() as folder:
+            destination = Path(folder) / "first-action-evidence"
+            result = subprocess.run([sys.executable, str(ROOT / "examples/first_action_demo.py"), str(destination)],
+                                    cwd=ROOT, capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            receipts = [json.loads((destination / (name + ".json")).read_bytes())
+                        for name in ("passing", "failing", "url-unchecked")]
+            self.assertEqual(len({item["commit"] for item in receipts}), 1)
+            self.assertEqual([item["cases"]["first_action"]["result"] for item in receipts],
+                             ["passed", "failed", "unchecked"])
+            self.assertEqual(receipts[0]["cases"]["first_action"]["cwd"], "packages/demo")
+
     def test_smoke_runs_in_the_selected_monorepo_package(self):
         description = "# Guide\n\nThis guide documents the test fixture.\n"
         with repository({"README.md": description, "packages/demo/README.md": description,
@@ -619,6 +811,59 @@ A separate [same label](fourth.md).
             action["expected"]["contains"] = "wrong"
             self.assertEqual(smoke(action), "failed")
             self.assertEqual(smoke({"url": "https://example.invalid", "expected": {"http_status": 200}}), "unchecked")
+
+    def test_required_smoke_distinguishes_pass_failure_and_incomplete_coverage(self):
+        from check_readme_hq import main
+
+        with repository({"README.md": "# Guide\n\nThis is the first action fixture."}) as tree:
+            receipt, spec = tree.root / "receipt.json", tree.root / "spec.json"
+            url = "https://example.invalid/first-action"
+            remote = {"commit": tree.commit, "url": url, "expected": {"http_status": 200}}
+            local = {"commit": tree.commit, "argv": [sys.executable, "-c", "print('ready')"],
+                     "expected": {"exit": 0, "contains": "ready"}}
+            for values, observed, allow, exit_code, result in (
+                (remote, None, False, 2, "unchecked"),
+                (remote, HTTPError(url, 403, "gated", {}, BytesIO()), True, 2, "gated"),
+                (remote, OSError("not reachable"), True, 2, "unresolved"),
+                (remote, HTTPError(url, 404, "missing", {}, BytesIO()), True, 1, "failed"),
+                (local, None, False, 0, "passed"),
+            ):
+                with self.subTest(result=result):
+                    spec.write_text(json.dumps(values), encoding="utf-8")
+                    argv = ["check", "--repo", str(tree.root), "--profile", "reference", "--smoke", str(spec),
+                            "--require-smoke", "--receipt", str(receipt)]
+                    if allow:
+                        argv.append("--allow-network")
+                    with (patch.object(sys, "argv", argv), patch("hq_smoke.urlopen", side_effect=observed) as request,
+                          contextlib.redirect_stdout(StringIO()), contextlib.redirect_stderr(StringIO())):
+                        self.assertEqual(main(), exit_code)
+                        self.assertEqual(request.call_count, int(allow))
+                    data = json.loads(receipt.read_bytes())
+                    self.assertTrue(data["cases"]["first_action"]["required"])
+                    self.assertEqual(data["cases"]["first_action"]["result"], result)
+                    self.assertEqual(data["result"], {0: "passed", 1: "failed", 2: "incomplete"}[exit_code])
+
+    def test_smoke_failure_codes_and_private_output_distinguish_same_exit(self):
+        with repository({"README.md": "# Guide"}) as tree:
+            spec = tree.root / "smoke.json"
+            messages = ("network unavailable", "unsupported format")
+            digests = []
+            for message in messages:
+                action = {"commit": tree.commit,
+                          "argv": [sys.executable, "-c",
+                                   f"import sys; sys.stderr.write({message!r} + 'z' * 600); sys.exit(7)"],
+                          "expected": {"exit": 0, "contains": "ready", "file": "result.txt"}}
+                spec.write_text(json.dumps(action), encoding="utf-8")
+                result = verify_first_action(tree, spec)
+                self.assertEqual(result["failure_codes"], ["exit-mismatch", "output-marker-mismatch",
+                                                           "expected-file-missing"])
+                self.assertNotIn("private_output", result)
+                digests.append(result["observed"]["stream_sha256"]["stderr"])
+                private = verify_first_action(tree, spec, include_output=True)["private_output"]["stderr"]
+                self.assertTrue(private["text"].startswith(message))
+                self.assertEqual(len(private["text"]), 512)
+                self.assertTrue(private["truncated"])
+            self.assertNotEqual(*digests)
 
     def test_smoke_spec_modes_are_validated_before_execution(self):
         with repository({"README.md": "# Example"}) as tree:
@@ -928,6 +1173,25 @@ class EvidenceTests(unittest.TestCase):
         altered = plan.replace("This is literal", "Changed example")
         self.assertNotEqual(acceptance_sections(altered), acceptance_sections(plan))
 
+    def test_retained_plan_installs_reader_dependencies_before_validation(self):
+        config = (ROOT / ".github/workflows/verify-repair-plan.yml").read_text(encoding="utf-8")
+        reader = config.index("run: python -m pip install --require-hashes -r tools/requirements.txt")
+        validator = config.index("run: python tools/check_readme_hq.py")
+        graphify = config.index(" - name: Install pinned Graphify dependencies")
+        plan = config.index("Check checkpoint order and verify all three Graphify maps over MCP")
+        self.assertTrue(reader < validator < graphify < plan)
+
+    def test_retained_plan_pins_complete_published_bytes(self):
+        import re
+
+        plan = "plans/v0.0.6-repairs/README.md"
+        config = (ROOT / ".github/workflows/verify-repair-plan.yml").read_text(encoding="utf-8")
+        statement = rf"^ +git show ([0-9a-f]{{40}}):{re.escape(plan)} \| cmp - {re.escape(plan)}$"
+        pinned = re.search(statement, config, re.M)
+        self.assertIsNotNone(pinned)
+        tree = GitTree(ROOT)
+        self.assertEqual(tree.read(plan, pinned.group(1)), tree.read(plan))
+
     def test_plan_file_inventory_is_bound_to_approved_partition(self):
         from verify_plan import GRAPH, read_json
         original = read_json(GRAPH / "manifest.json")
@@ -949,6 +1213,23 @@ class EvidenceTests(unittest.TestCase):
         parts = split_checkpoints(features)
         self.assertEqual([len(part) for part in parts], [32, 32, 32, 4])
         self.assertEqual([item for part in parts for item in part], features)
+
+    def test_partition_late_write_failure_leaves_destination_available_for_retry(self):
+        features = [{"id": f"item-{i}", "documented_in": [], "changed_in": [], "tested_by": []}
+                    for i in range(33)]
+        with tempfile.TemporaryDirectory() as folder:
+            destination = Path(folder) / "output"
+            write_text = Path.write_text
+            def fail_second(path, *args, **kwargs):
+                if path.parent.name == "part-002":
+                    raise OSError("fixture later write failed")
+                return write_text(path, *args, **kwargs)
+            with patch.object(Path, "write_text", fail_second):
+                with self.assertRaisesRegex(OSError, "later write failed"):
+                    stage_partitions(features, destination, "a" * 40, "example/project")
+            self.assertFalse(destination.exists())
+            result = stage_partitions(features, destination, "a" * 40, "example/project")
+            self.assertEqual([len(json.loads(path.read_bytes())["features"]) for path in result], [32, 1])
 
     def test_partition_writer_handles_more_than_three_partitions(self):
         ref = [{"path": "README.md", "anchor": "# Evidence"}]
@@ -1046,6 +1327,32 @@ class EvidenceTests(unittest.TestCase):
             routes.clear()
             with self.assertRaisesRegex(ValueError, "anchor does not match"):
                 intake.record_intake(spec, destination, fetch=fetch)
+
+    def test_learning_rejects_malformed_request_before_io(self):
+        loader = importlib.util.spec_from_file_location("intake", ROOT / "learning/intake.py")
+        intake = importlib.util.module_from_spec(loader)
+        loader.loader.exec_module(intake)
+        source = {"checkout": ".", "ref": "HEAD", "repository": "example/project",
+                  "path": "README.md", "anchor": "Guide", "visibility": "public", "line": 1, "id": "one"}
+        good = {"visibility": "public", "sources": [source], "selected": [], "findings": [],
+                "target": {**source, "audience": "reader", "capability": "check"}}
+        with tempfile.TemporaryDirectory() as directory:
+            folder = Path(directory)
+            spec, output = folder / "request.json", folder / "receipts"
+            for request in ([], None, {**good, "sources": [None]}, {**good, "target": []},
+                            {**good, "target": {**good["target"], "line": True}},
+                            {**good, "selected": [["one"]]}, {**good, "findings": [{"source": "one", "candidate": []}]}):
+                with self.subTest(request=request), patch.object(intake, "GitTree") as git:
+                    spec.write_text(json.dumps(request), encoding="utf-8")
+                    stderr = StringIO()
+                    with (patch.object(sys, "argv", ["intake.py", str(spec), str(output)]),
+                          contextlib.redirect_stderr(stderr), self.assertRaises(SystemExit) as error):
+                        intake.main()
+                    self.assertEqual(error.exception.code, 2)
+                    self.assertIn("learning request or source proof is invalid or unverified", stderr.getvalue())
+                    git.assert_not_called()
+                    self.assertFalse(output.exists())
+            intake.validate_request(good)
 
     def test_learning_cli_distinguishes_secondary_rate_limits_from_forbidden(self):
         loader = importlib.util.spec_from_file_location("intake", ROOT / "learning/intake.py")
