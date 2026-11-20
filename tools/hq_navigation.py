@@ -10,7 +10,7 @@ import posixpath
 import re
 import struct
 import unicodedata
-from urllib.parse import unquote, urlsplit
+from urllib.parse import parse_qs, unquote, urlsplit
 
 from markdown_it import MarkdownIt
 from markdown_it.rules_inline import autolink, html_inline, image, link
@@ -181,6 +181,13 @@ def inline_links(children, line):
     return links
 
 
+def rendered_table_rows(text):
+    text = text.replace("\r\n", "\n").replace("\r", "\n")
+    lines = text.split("\n")
+    return [lines[token.map[0]] for token in PARSER.parse(text)
+            if token.type == "tr_open" and token.map is not None]
+
+
 def parse_markdown(text):
     anchors = set()
     generated = set()
@@ -222,18 +229,32 @@ def parse_markdown(text):
     return anchors | generated, links, blocks
 
 
-def same_repo_target(tree, url):
-    if url.scheme != "https" or url.hostname != "github.com" or not tree.repository:
-        return None
+def github_route(url):
     segments = unquote(url.path).strip("/").split("/")
+    if url.scheme != "https":
+        return []
+    if url.hostname == "raw.githubusercontent.com" and len(segments) >= 4:
+        return [*segments[:2], "raw", *segments[2:]]
+    return segments if url.hostname == "github.com" else []
+
+
+def same_repo_target(tree, url):
+    if not tree.repository:
+        return None
+    segments = github_route(url)
     if len(segments) < 4 or "/".join(segments[:2]).lower() != tree.repository.lower():
         return None
     if segments[2] not in {"blob", "tree", "raw"}:
         return None
     candidates = segments[3:]
-    for count in range(len(candidates) - (segments[2] != "tree"), 0, -1):
+    qualified_raw = segments[2] == "raw" and candidates[:2] in (["refs", "heads"], ["refs", "tags"])
+    stop = 2 if qualified_raw else 0
+    for count in range(len(candidates) - (segments[2] != "tree"), stop, -1):
         ref = "/".join(candidates[:count])
-        if ref == "HEAD":
+        if qualified_raw:
+            names = [ref.replace("refs/heads/", "refs/remotes/origin/", 1)
+                     if candidates[1] == "heads" else ref]
+        elif ref == "HEAD":
             try:
                 default = tree.git("symbolic-ref", "refs/remotes/origin/HEAD").decode().strip()
             except ValueError:
@@ -346,8 +367,8 @@ def verify_media(path, data):
             element = ElementTree.fromstring(data)
         except ElementTree.ParseError as error:
             raise ValueError("invalid SVG image") from error
-        if element.tag.rsplit("}", 1)[-1] != "svg":
-            raise ValueError("expected an SVG root")
+        if element.tag != "{http://www.w3.org/2000/svg}svg":
+            raise ValueError("expected an SVG root in the SVG namespace")
     elif extension in IMAGE_FORMATS:
         try:
             with Image.open(BytesIO(data)) as image:
@@ -406,7 +427,11 @@ def check_document(tree, source, errors, gaps, *, archive_scope=None):
                 if directory:
                     raise ValueError("image target is a directory")
                 verify_media(path, media_bytes(tree, path, commit))
-            check_fragment(tree, path, commit, unquote(url.fragment), plain=url.query in {"plain=1", "plain=true"})
+            if url.fragment and github_route(url)[2:3] == ["raw"]:
+                gaps.append(f"{source}:{link.line}: raw GitHub file fragment was not checked: {link.path}")
+            else:
+                check_fragment(tree, path, commit, unquote(url.fragment),
+                               plain=parse_qs(url.query).get("plain") in (["1"], ["true"]))
             count += 1
         except (ValueError, OSError, KeyError) as error:
             errors.append(f"{source}:{link.line}: {error}: {link.path}")

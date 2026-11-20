@@ -95,6 +95,8 @@ def validate_manifest(data):
     features = data["features"]
     if not isinstance(features, list) or len(features) > 32:
         raise ValueError("Expected at most 32 features")
+    if not features and not inventory:
+        raise ValueError("Graphify evidence requires at least one feature or inventory file")
     ids = set()
     for feature in features:
         if not isinstance(feature, dict) or set(feature) - {OPTIONAL_RELATION} != {"id", "label", *RELATIONS}:
@@ -144,7 +146,7 @@ def source_blob(commit, path):
         raise ValueError(f"{path}: expected regular Git blob, got mode {mode}")
     size = int(git("cat-file", "-s", blob))
     if not 0 <= size <= MAX_SOURCE_BYTES:
-        raise ValueError(f"{path}: source blob size exceeds limit")
+        raise ValueError(f"{path}: source blob size {size} exceeds limit of {MAX_SOURCE_BYTES} bytes")
     return git("cat-file", "blob", blob)
 
 

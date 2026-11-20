@@ -1,11 +1,13 @@
 """Verify public-source findings and save project-specific recommendation receipts."""
 
 import argparse
+from functools import lru_cache
 from hashlib import sha256
 import json
 from pathlib import Path
 import sys
 from tempfile import NamedTemporaryFile
+from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -35,6 +37,7 @@ def fetch_github(route):
 def public_checkpoint(tree, repo, fetch=fetch_github):
     if not REPOSITORY.fullmatch(repo) or not tree.repository or tree.repository.casefold() != repo.casefold():
         raise ValueError("GitHub repository identity is not independently established")
+    repo = repo.casefold()
     metadata = fetch(repo)
     if metadata.get("private") is not False or metadata.get("visibility") != "public":
         raise ValueError("source or target is not confirmed public")
@@ -45,6 +48,7 @@ def public_checkpoint(tree, repo, fetch=fetch_github):
 def record_intake(specification, directory, *, fetch=fetch_github):
     if specification.get("visibility") != "public":
         raise ValueError("only public requests use this shared intake")
+    lookup = lru_cache(maxsize=None)(fetch)
     sources = {}
     for source in specification["sources"]:
         if source.get("visibility") != "public":
@@ -52,7 +56,7 @@ def record_intake(specification, directory, *, fetch=fetch_github):
         if source["id"] in sources:
             raise ValueError("learning source IDs must be unique")
         tree = GitTree(source["checkout"], source["ref"])
-        public_checkpoint(tree, source["repository"], fetch)
+        public_checkpoint(tree, source["repository"], lookup)
         receipt = verify_anchor(tree, source["path"], source["line"], source["anchor"])
         identity = (source["repository"].casefold(), tree.commit, source["path"], source["line"])
         sources[source["id"]] = {"identity": list(identity), **receipt}
@@ -60,7 +64,7 @@ def record_intake(specification, directory, *, fetch=fetch_github):
     if target.get("visibility") != "public":
         raise ValueError("only verified public targets enter shared intake")
     target_tree = GitTree(target["checkout"], target["ref"])
-    public_checkpoint(target_tree, target["repository"], fetch)
+    public_checkpoint(target_tree, target["repository"], lookup)
     target_receipt = verify_anchor(target_tree, target["path"], target["line"], target["anchor"])
     registry = ROOT / "techniques/registry.json"
     registry_bytes = registry.read_bytes()
@@ -131,6 +135,24 @@ def record_intake(specification, directory, *, fetch=fetch_github):
     return receipt
 
 
+def is_github_rate_limit(error):
+    if error.code == 429:
+        return True
+    if error.code != 403:
+        return False
+    if error.headers and (
+        error.headers.get("X-RateLimit-Remaining") == "0" or error.headers.get("Retry-After")
+    ):
+        return True
+    try:
+        with error:
+            payload = json.loads(error.read(8192))
+    except (OSError, ValueError):
+        return False
+    message = payload.get("message") if isinstance(payload, dict) else None
+    return isinstance(message, str) and "secondary rate limit" in message.casefold()
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("spec", type=Path, help="public sources, selected references, and target evidence")
@@ -140,6 +162,10 @@ def main():
         print(record_intake(read_json(args.spec), args.output))
     except UnknownTechniqueError as error:
         parser.error(str(error))
+    except HTTPError as error:
+        if is_github_rate_limit(error):
+            parser.error(f"GitHub API rate limit reached (HTTP {error.code}); retry later")
+        parser.error("learning request or source proof is invalid or unverified")
     except (KeyError, OSError, TypeError, ValueError):
         parser.error("learning request or source proof is invalid or unverified")
 

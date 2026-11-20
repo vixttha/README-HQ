@@ -1,10 +1,13 @@
+import asyncio
+from hashlib import sha256
 import json
+import subprocess
 import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from evidence_map import build, locate, validate_manifest
+from evidence_map import MAX_SOURCE_BYTES, build, locate, source_blob, source_lines, validate_manifest, verify_mcp
 from github_provenance import verify_pull_request
 
 class ManifestTests(unittest.TestCase):
@@ -32,6 +35,33 @@ class ManifestTests(unittest.TestCase):
             {"path": "export.py", "anchor": "def export():"},
         ]
         self.assertEqual(validate_manifest(self.manifest), self.manifest)
+
+    def test_inventory_blob_cap_and_text_anchor_boundary(self):
+        binary = b"\xff" * MAX_SOURCE_BYTES
+        name = b"inventory.bin"
+        entry = b"100644 blob " + b"a" * 40 + b"\t" + name + b"\0"
+        for size in (MAX_SOURCE_BYTES - 1, MAX_SOURCE_BYTES, MAX_SOURCE_BYTES + 1):
+            responses = [entry, str(size).encode(), binary[:size]]
+            with self.subTest(size=size), patch("evidence_map.git", side_effect=responses) as git:
+                if size > MAX_SOURCE_BYTES:
+                    with self.assertRaisesRegex(ValueError, f"{size} exceeds limit of {MAX_SOURCE_BYTES} bytes"):
+                        source_blob(self.manifest["source_commit"], name.decode())
+                    self.assertEqual(git.call_count, 2)
+                else:
+                    self.assertEqual(source_blob(self.manifest["source_commit"], name.decode()), binary[:size])
+        with patch("evidence_map.source_blob", return_value=binary):
+            with self.assertRaisesRegex(ValueError, "require UTF-8"):
+                source_lines(self.manifest["source_commit"], name.decode())
+        anchor = "a" * 500
+        feature = self.manifest["features"][0]
+        feature["documented_in"] = [{"path": "README.md", "anchor": anchor, "line": 1}]
+        self.assertEqual(validate_manifest(self.manifest), self.manifest)
+        with patch("evidence_map.source_blob", return_value=(anchor + "\n").encode()):
+            lines, _ = source_lines(self.manifest["source_commit"], "README.md")
+            self.assertEqual(locate(lines, anchor, "README.md", 1), 1)
+        feature["documented_in"][0]["anchor"] += "a"
+        with self.assertRaisesRegex(ValueError, "Invalid or duplicate source link"):
+            validate_manifest(self.manifest)
 
     def test_inventory_rejects_invalid_paths_and_duplicates(self):
         for paths in (["README.md", "README.md"], ["tools/../README.md"], [None], "README.md"):
@@ -65,9 +95,24 @@ class ManifestTests(unittest.TestCase):
         self.assertIn((anchor, "file:export.py", "located_in"), edges)
         self.assertEqual(receipt["source_files"], ["export.py"])
 
-    def test_feature_links_are_optional(self):
+    def test_evidence_map_requires_features_or_inventory(self):
+        feature = self.manifest["features"][0]
         self.manifest["features"] = []
-        self.assertEqual(validate_manifest(self.manifest)["features"], [])
+        with self.assertRaisesRegex(ValueError, "at least one feature or inventory"):
+            validate_manifest(self.manifest)
+        commit = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
+        self.manifest.update(source_commit=commit, source_files=["README.md"])
+        checkout_bytes = subprocess.check_output(["git", "show", f"{commit}:README.md"])
+        anchor = checkout_bytes.decode("utf-8").splitlines()[0]
+        reference = {"path": "README.md", "anchor": anchor, "line": 1}
+        mapped = {**feature, **dict.fromkeys(("documented_in", "changed_in", "tested_by"), [reference])}
+        for features, nodes, edges in (([], 2, 1), ([mapped], 6, 8)):
+            self.manifest["features"] = features
+            with self.subTest(features=features), tempfile.TemporaryDirectory() as folder:
+                graph, receipt = build(validate_manifest(self.manifest), Path(folder))
+                self.assertEqual((receipt["nodes"], receipt["edges"]), (nodes, edges))
+                self.assertEqual(receipt["source_sha256"]["README.md"], sha256(checkout_bytes).hexdigest())
+                asyncio.run(verify_mcp(graph, receipt))
 
     def test_source_path_must_stay_inside_commit(self):
         test = self.manifest["features"][0]["tested_by"][0]
@@ -93,7 +138,7 @@ class ProvenanceTests(unittest.TestCase):
         self.expected = {"number": 3, "source_branch": "topic"}
         self.pr = {
             "number": 3, "state": "open", "draft": False, "merged": False,
-            "base": {"repo": {"full_name": self.repo}},
+            "base": {"repo": {"full_name": self.repo}, "ref": "main", "sha": "c" * 40},
             "head": {"repo": {"full_name": self.repo}, "ref": "topic", "sha": self.head},
             "merge_commit_sha": None,
         }
@@ -109,6 +154,19 @@ class ProvenanceTests(unittest.TestCase):
 
     def verify(self):
         return verify_pull_request(self.repo, self.source, self.expected, self.fetch)
+
+    def test_base_provenance_rejects_retargeting_with_the_same_head(self):
+        outcome = verify_pull_request(self.repo, self.head, self.expected, self.fetch)
+        self.assertEqual((outcome["base_ref"], outcome["base_commit"], outcome["head_commit"]),
+                         ("main", "c" * 40, self.head))
+        for change in ({"ref": "develop"}, {"sha": "d" * 40}):
+            with self.subTest(change=change):
+                retargeted = {**self.pr, "base": {**self.pr["base"], **change}}
+                metadata = iter((self.pr, retargeted))
+                def fetch(route):
+                    return next(metadata) if route == "pulls/3" else self.fetch(route)
+                with self.assertRaisesRegex(ValueError, "changed during provenance verification"):
+                    verify_pull_request(self.repo, self.head, self.expected, fetch)
 
     def test_historical_commit_requires_github_membership(self):
         self.assertEqual(self.verify()["source_relation"], "historical PR commit")
