@@ -1,4 +1,4 @@
-name: README HQ Batch 5 checkpoint replay
+name: README HQ Batch 5 public qualification
 on:
   push:
     branches: [audit/v0.0.6-batch-5-evidence]
@@ -24,7 +24,7 @@ jobs:
           persist-credentials: false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
-          ref: 3c349cfbe3cc5b259656783321361e91ee0d3dec
+          ref: 7ac278c3b7e23775ea4001128e7ce6e999a3e4f7
           path: candidate
           fetch-depth: 0
           persist-credentials: false
@@ -41,4 +41,105 @@ jobs:
         with:
           name: batch-5-${{ matrix.os }}-${{ github.run_attempt }}
           path: evidence/
+          if-no-files-found: error
+  compatibility:
+    if: github.event.repository.visibility == 'public'
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.11', '3.13', '3.14', '3.15']
+    name: Pillow 13 on ${{ matrix.os }} with Python ${{ matrix.python }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: 7ac278c3b7e23775ea4001128e7ce6e999a3e4f7
+          path: candidate
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install pinned reader wheels
+        run: |
+          python -m pip install --require-hashes --only-binary=:all: -r candidate/tools/requirements.txt
+      - name: Check wheel, reader regressions, and media fixtures
+        shell: bash
+        working-directory: candidate
+        run: |
+          python -m pip check
+          python -c 'from importlib.metadata import version; assert version("Pillow") == "13.0.0"'
+          python -m unittest discover -s tests -p 'test_readme*.py' -v
+          python tools/check_readme_hq.py --receipt "../reader.json"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: pillow-${{ matrix.os }}-${{ matrix.python }}-${{ github.run_attempt }}
+          path: reader.json
+          if-no-files-found: error
+  hosted-controls:
+    if: github.event.repository.visibility == 'public'
+    name: Live Org homepage, publication rules, and active plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: 7ac278c3b7e23775ea4001128e7ce6e999a3e4f7
+          path: candidate
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.12'
+      - name: Install pinned reader wheels
+        run: |
+          python -m pip install --require-hashes --only-binary=:all: -r candidate/tools/requirements.txt
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: eec859e2284d6e2229128341b224b5f703d574c3
+          path: plan
+          persist-credentials: false
+      - name: Compare pinned public Org homepage and audit receipt
+        shell: bash
+        env:
+          PUBLIC_GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p external-proof
+          sha=f8a453725586c8225e47afca4c8cbc2c5585bf33
+          git init -q org-fixture
+          git -C org-fixture fetch -q --depth=1 https://github.com/magit/git-modes.git "$sha"
+          git -C org-fixture checkout -q --detach "$sha"
+          curl -fsS -H "Authorization: Bearer $PUBLIC_GITHUB_TOKEN" "https://api.github.com/repos/magit/git-modes/readme?ref=$sha" | jq '{path, sha}' > external-proof/github-org.json
+          code=0
+          python candidate/tools/check_readme_hq.py --repo org-fixture --ref "$sha" --receipt external-proof/org.json || code=$?
+          test "$code" -eq 2
+          path=$(jq -r .path external-proof/github-org.json)
+          test "$path" = README.org
+          test "$(git -C org-fixture rev-parse "HEAD:$path")" = "$(jq -r .sha external-proof/github-org.json)"
+          jq -e --arg path "$path" --arg sha "$sha" '.commit == $sha and .result == "incomplete" and .cases.entrypoint == $path and .cases.navigation.format == ".org"' external-proof/org.json
+      - name: Read the live GitHub publication gate
+        shell: bash
+        run: |
+          code=0
+          python candidate/tools/check_publication_rules.py vixttha/README-HQ main \
+            --require-check 'README HQ on ubuntu-latest' --require-check 'README HQ on windows-latest' \
+            --require-check 'Recoverable Graphify evidence and plan' > external-proof/publication.json || code=$?
+          case "$code" in 0|2) ;; *) exit "$code";; esac
+          jq -e 'has("branch_commit") and .owner_exact_sha_publication_decision == "separate"' external-proof/publication.json
+      - name: Verify the current active planning ledger
+        run: python candidate/tools/check_active_plan.py plan/plans/v0.0.6.78-to-v0.0.6.128
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: batch-5-live-qualification-${{ github.run_attempt }}
+          path: external-proof/
           if-no-files-found: error

@@ -22,6 +22,9 @@ POINTS = [
     (139, "cccef67e3f534928dde32b37f63c806136b40e79", "3031e45d1691d68745319ad6350d42fbd265fa45", "a795ae47b33e44020d56abdb2fc6fa1d0bc5278e", "draft_receipt_fingerprints"),
     (140, "3c349cfbe3cc5b259656783321361e91ee0d3dec", "cccef67e3f534928dde32b37f63c806136b40e79", "a5402be4a167b9ba210aab7fa396697ac70d4695", "mixed_markdown_html_image_link"),
 ]
+FOLLOW_UPS = [
+    ("7ac278c3b7e23775ea4001128e7ce6e999a3e4f7", "3c349cfbe3cc5b259656783321361e91ee0d3dec", "47fef24aacbb768215a92b5ae9c65b7e8c9ac342", ["learning_structured_rate_limit","required_smoke_needs_a_matching","shell_only_syntax_does_not_bind"]),
+]
 READER = "tests/test_readme_repairs.py"
 GRAPHIFY = "graphify-hq/template/v0.0.8/test_evidence_map.py"
 LINUX_ONLY = {132, 133, 136, 137}
@@ -95,7 +98,7 @@ def main():
     is_linux = os.environ["RUNNER_OS"] == "Linux"
     result = {"observer_commit": os.environ["GITHUB_SHA"], "run": os.environ["GITHUB_RUN_ID"],
               "attempt": os.environ["GITHUB_RUN_ATTEMPT"], "runner": os.environ["RUNNER_OS"],
-              "base": POINTS[0][2], "candidate": POINTS[-1][1], "checkpoints": []}
+              "base": POINTS[0][2], "candidate": FOLLOW_UPS[-1][0], "checkpoints": [], "follow_ups": []}
 
     def save():
         (out / "results.json").write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
@@ -133,6 +136,18 @@ def main():
         finally:
             save()
             print("::endgroup::", flush=True)
+    for sha, parent, tree, selectors in FOLLOW_UPS:
+        row = {"commit": sha, "parent": parent, "tree": tree, "result": "started"}
+        result["follow_ups"].append(row)
+        save()
+        for selector in selectors:
+            baseline(root, sha, READER, selector)
+        row["predecessor"] = "failure_reproduced"
+        select(root, sha, parent, tree)
+        for selector in selectors:
+            test(root, READER, selector)
+        row["result"] = "passed"
+        save()
     command(root, sys.executable, "tools/check_readme_hq.py", "--receipt", str(out / "reader.json")).check_returncode()
     result["combined"] = "passed"
     save()
