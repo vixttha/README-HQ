@@ -104,58 +104,66 @@ def verify_first_action(tree, path, *, allow_network=False, subproject="."):
         raise ValueError("smoke working directory must be relative to the selected repository")
     with TemporaryDirectory(prefix="readme-hq-smoke-") as temp:
         checkout = Path(temp) / "checkout"
-        tree.git("worktree", "add", "--detach", str(checkout), tree.commit)
+        local_git_variables = tree.git("rev-parse", "--local-env-vars").decode("ascii").splitlines()
+        environment = {key: value for key, value in os.environ.items() if key not in local_git_variables}
+
+        def prepare(*args):
+            result = subprocess.run(["git", *args], cwd=temp, env=environment, capture_output=True)
+            if result.returncode:
+                raise ValueError("could not prepare the isolated smoke checkout")
+
+        prepare("init", "--quiet", str(checkout))
+        prepare("-C", str(checkout), "fetch", "--quiet", "--no-tags", "--depth=1", "--",
+                str(tree.root), tree.commit)
+        prepare("-C", str(checkout), "checkout", "--quiet", "--detach", tree.commit)
+        cwd = (checkout / selected).resolve()
+        if not cwd.is_relative_to(checkout.resolve()) or not cwd.is_dir():
+            raise ValueError("smoke working directory is outside the checkout or unavailable")
+        directory = selected.as_posix()
+
+        def result_file():
+            if not name:
+                return None
+            path = (cwd / name).resolve()
+            return path if path.is_relative_to(cwd) and path.is_file() else None
+
+        def file_digest(path):
+            if path is None:
+                return None
+            with path.open("rb") as handle:
+                checksum = sha256()
+                for chunk in iter(lambda: handle.read(65536), b""):
+                    checksum.update(chunk)
+            return checksum.hexdigest()
+
+        before = file_digest(result_file()) if mode != "exists" else None
         try:
-            cwd = (checkout / selected).resolve()
-            if not cwd.is_relative_to(checkout.resolve()) or not cwd.is_dir():
-                raise ValueError("smoke working directory is outside the checkout or unavailable")
-            directory = selected.as_posix()
-
-            def result_file():
-                if not name:
-                    return None
-                path = (cwd / name).resolve()
-                return path if path.is_relative_to(cwd) and path.is_file() else None
-
-            def file_digest(path):
-                if path is None:
-                    return None
-                with path.open("rb") as handle:
-                    checksum = sha256()
-                    for chunk in iter(lambda: handle.read(65536), b""):
-                        checksum.update(chunk)
-                return checksum.hexdigest()
-
-            before = file_digest(result_file()) if mode != "exists" else None
-            try:
-                result = subprocess.run(argv, cwd=cwd, capture_output=True, timeout=timeout, check=False)
-            except (OSError, subprocess.TimeoutExpired) as error:
-                return {"result": "failed", "detail": str(error), "argv": argv, "cwd": directory, "expected": expected}
-            streams = {"stdout": result.stdout, "stderr": result.stderr}
-            marker_bytes = marker.encode() if marker is not None else None
-            matched_streams = [key for key, data in streams.items() if marker_bytes is not None and marker_bytes in data]
-            matched = marker is None or (bool(matched_streams) if stream == "either" else stream in matched_streams)
-            observation = {}
-            if name:
-                path = result_file()
-                after = file_digest(path) if mode != "exists" or digest is not None else None
-                changed = before != after
-                file_match = path is not None and (
-                    mode == "exists" or (changed and (
-                        mode == "changed" or (mode == "created" and before is None)
-                        or (mode == "updated" and before is not None)
-                    ))
-                ) and (digest is None or after == digest)
-                matched &= file_match
-                observation = {"file_before_sha256": before, "file_after_sha256": after, "file_match": file_match}
-            return {"result": "passed" if result.returncode == expected["exit"] and matched else "failed",
-                    "argv": argv, "cwd": directory, "expected": expected,
-                    "observed": {"exit": result.returncode, "outcome_match": bool(matched),
-                                 "output_sha256": sha256(result.stdout + result.stderr).hexdigest(),
-                                 "stream_sha256": {key: sha256(data).hexdigest() for key, data in streams.items()},
-                                 "matched_streams": matched_streams, **observation}}
-        finally:
-            tree.git("worktree", "remove", "--force", str(checkout))
+            result = subprocess.run(argv, cwd=cwd, env=environment, capture_output=True, timeout=timeout, check=False)
+        except (OSError, subprocess.TimeoutExpired) as error:
+            return {"result": "failed", "detail": str(error), "argv": argv, "cwd": directory, "expected": expected}
+        streams = {"stdout": result.stdout, "stderr": result.stderr}
+        marker_bytes = marker.encode() if marker is not None else None
+        matched_streams = [key for key, data in streams.items() if marker_bytes is not None and marker_bytes in data]
+        matched = marker is None or (bool(matched_streams) if stream == "either" else stream in matched_streams)
+        observation = {}
+        if name:
+            path = result_file()
+            after = file_digest(path) if mode != "exists" or digest is not None else None
+            changed = before != after
+            file_match = path is not None and (
+                mode == "exists" or (changed and (
+                    mode == "changed" or (mode == "created" and before is None)
+                    or (mode == "updated" and before is not None)
+                ))
+            ) and (digest is None or after == digest)
+            matched &= file_match
+            observation = {"file_before_sha256": before, "file_after_sha256": after, "file_match": file_match}
+        return {"result": "passed" if result.returncode == expected["exit"] and matched else "failed",
+                "argv": argv, "cwd": directory, "expected": expected,
+                "observed": {"exit": result.returncode, "outcome_match": bool(matched),
+                             "output_sha256": sha256(result.stdout + result.stderr).hexdigest(),
+                             "stream_sha256": {key: sha256(data).hexdigest() for key, data in streams.items()},
+                             "matched_streams": matched_streams, **observation}}
 
 
 def write_receipt(destination, tree, cases, errors, gaps, *, validator_path=None):

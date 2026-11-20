@@ -335,6 +335,25 @@ A separate [same label](fourth.md).
                     action = json.loads(receipt.read_bytes())["cases"]["first_action"]
                     self.assertEqual((action["result"], action["cwd"]), (expected, subproject))
 
+    def test_smoke_checkout_keeps_git_metadata_and_files_isolated(self):
+        readme = "# Original"
+        with repository({"README.md": readme}) as tree:
+            tree.git("config", "readme-hq.fixture", "original")
+            before = tree.git("show-ref")
+            command = (
+                "import pathlib, subprocess; "
+                "subprocess.run(['git', 'config', 'readme-hq.fixture', 'changed'], check=True); "
+                "subprocess.run(['git', 'branch', 'smoke-fixture'], check=True); "
+                "pathlib.Path('README.md').write_text('changed'); print('ready')"
+            )
+            spec = tree.root / "smoke.json"
+            spec.write_text(json.dumps({"commit": tree.commit, "argv": [sys.executable, "-c", command],
+                                        "expected": {"exit": 0, "contains": "ready"}}), encoding="utf-8")
+            self.assertEqual(verify_first_action(tree, spec)["result"], "passed")
+            self.assertEqual(tree.git("config", "readme-hq.fixture").strip(), b"original")
+            self.assertEqual(tree.git("show-ref"), before)
+            self.assertEqual((tree.root / "README.md").read_text(encoding="utf-8"), readme)
+
     def test_smoke_marker_checks_each_stream_independently(self):
         with repository({"README.md": "# Guide"}) as tree:
             spec = tree.root / "smoke.json"
