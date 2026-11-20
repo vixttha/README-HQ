@@ -32,6 +32,7 @@ FOLLOW_UPS = [
     ("CodeRabbit review follow-up", "bd393f5e023178a89ff36c4fda803590b5d5fbac", "be9930deba418067a95e695f87a4916e4920540b", [(113, "html_image_accepts"), (118, "quickstart_recognizes_usage")]),
     ("CodeRabbit responsive image follow-up", "9236e5ee294feee4f9b7e69e12758da0ab1db322", "672b1d3a7afff80282ca1d91b88c60fe34b799d1", [(113, "html_srcset_link_uses")]),
     ("CodeRabbit hidden-image and retained-plan follow-up", "fed6ae338df9d984ce9fe767cd1f0857c89a770f", "e6784fed1ffd491aa51295384b352bdf7930f47a", [(113, "readme_html_hidden_image_does"), (122, "retained_plan_pins_complete")]),
+    ("CodeRabbit hidden HTML ancestors follow-up", "921609e7a037d0ca37c66d8ef6438642cbeb17ea", "a69e2abf2cb6728242bd3d6207541134911369ac", [(113, "readme_html_hidden_ancestors")]),
 ]
 GRAPHIFY_ONLY = {116, 122, 123, 124}
 KIT = Path("graphify-hq/template/v0.0.8")
