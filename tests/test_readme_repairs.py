@@ -1328,6 +1328,30 @@ class EvidenceTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "anchor does not match"):
                 intake.record_intake(spec, destination, fetch=fetch)
 
+    def test_learning_structured_rate_limit_and_invalid_anchor_diagnostics(self):
+        loader = importlib.util.spec_from_file_location("intake", ROOT / "learning/intake.py")
+        intake = importlib.util.module_from_spec(loader)
+        loader.loader.exec_module(intake)
+        limited = HTTPError("https://secret.invalid/path?token=hidden", 429,
+                            "private body", {"Retry-After": "15"}, BytesIO())
+        argv = ["intake", "request.json", "receipts", "--json-errors"]
+        for returned, expected in (
+            (limited, {"code": "github-rate-limited", "retryable": True,
+                       "http_status": 429, "retry_after_seconds": 15}),
+            (ValueError("source anchor does not match"), {"code": "invalid-or-unverified-evidence",
+                                                        "retryable": False}),
+        ):
+            err = StringIO()
+            with (patch.object(sys, "argv", argv), patch.object(intake, "read_json"),
+                  patch.object(intake, "record_intake", side_effect=returned), contextlib.redirect_stderr(err),
+                  self.assertRaises(SystemExit) as exited):
+                intake.main()
+            self.assertEqual(exited.exception.code, 2)
+            data = json.loads(err.getvalue())
+            data.pop("message")
+            self.assertEqual(data, expected)
+            self.assertNotIn("secret", err.getvalue())
+
     def test_learning_rejects_malformed_request_before_io(self):
         loader = importlib.util.spec_from_file_location("intake", ROOT / "learning/intake.py")
         intake = importlib.util.module_from_spec(loader)

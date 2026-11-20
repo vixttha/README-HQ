@@ -1,6 +1,8 @@
 """Verify public-source findings and save project-specific recommendation receipts."""
 
 import argparse
+from datetime import datetime, timezone
+from email.utils import parsedate_to_datetime
 from functools import lru_cache
 from hashlib import sha256
 import json
@@ -180,21 +182,44 @@ def is_github_rate_limit(error):
     return isinstance(message, str) and "secondary rate limit" in message.casefold()
 
 
+def intake_error(error):
+    if isinstance(error, HTTPError) and is_github_rate_limit(error):
+        result = {"code": "github-rate-limited", "retryable": True, "http_status": error.code}
+        retry = error.headers.get("Retry-After", "") if error.headers else ""
+        if len(retry) <= 9 and retry.isascii() and retry.isdecimal():
+            result["retry_after_seconds"] = int(retry)
+        elif retry:
+            try:
+                when = parsedate_to_datetime(retry)
+                if when.tzinfo is not None:
+                    result["retry_at"] = when.astimezone(timezone.utc).isoformat()
+            except (TypeError, ValueError, OverflowError):
+                pass
+        elif error.headers:
+            reset = error.headers.get("X-RateLimit-Reset", "")
+            if len(reset) <= 10 and reset.isascii() and reset.isdecimal():
+                result["retry_at"] = datetime.fromtimestamp(int(reset), timezone.utc).isoformat()
+        return result, f"GitHub API rate limit reached (HTTP {error.code}); retry later"
+    if isinstance(error, UnknownTechniqueError):
+        return {"code": "unknown-technique", "retryable": False}, str(error)
+    return {"code": "invalid-or-unverified-evidence", "retryable": False}, (
+        "learning request or source proof is invalid or unverified")
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("spec", type=Path, help="public sources, selected references, and target evidence")
     parser.add_argument("output", type=Path, help="directory for reviewed public receipt records")
+    parser.add_argument("--json-errors", action="store_true", help="emit structured diagnostics on standard error")
     args = parser.parse_args()
     try:
         print(record_intake(read_json(args.spec), args.output))
-    except UnknownTechniqueError as error:
-        parser.error(str(error))
-    except HTTPError as error:
-        if is_github_rate_limit(error):
-            parser.error(f"GitHub API rate limit reached (HTTP {error.code}); retry later")
-        parser.error("learning request or source proof is invalid or unverified")
-    except (KeyError, OSError, TypeError, ValueError):
-        parser.error("learning request or source proof is invalid or unverified")
+    except (KeyError, OSError, TypeError, ValueError) as error:
+        diagnostic, message = intake_error(error)
+        if args.json_errors:
+            print(json.dumps({**diagnostic, "message": message}), file=sys.stderr)
+            raise SystemExit(2)
+        parser.error(message)
 
 
 if __name__ == "__main__":
