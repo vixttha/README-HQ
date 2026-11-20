@@ -49,3 +49,5 @@ For saved maps, start an MCP server with
 `python -m graphify.serve evidence/graph.json`. The kit runs from a manifest
 and pinned Git blobs without credentials. Optional PR provenance can use a
 read-only `GH_TOKEN`.
+
+During an update, readers that need a consistent graph and receipt can use `read_published_pair(output)` from `evidence_map.py`. It checks the graph digest and can read the retained previous generation during promotion. `--check` uses this reader. Keep the hidden publication journal beside the destination so the next writer can recover an interrupted update.
