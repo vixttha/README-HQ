@@ -1,12 +1,12 @@
 # README Technique Library
 
-A field guide to reusable README techniques, organized by what the reader is trying to do. Each entry explains when to use the technique, shows how it works, and links to the source behind it. This branch starts as a blank template. Add reviewed entries as the research comes in.
+A field guide to reusable README techniques, organized by what the reader is trying to do. Each entry explains when to use the technique, shows how it works, and links to the source behind it. The catalog is empty. To add the first entry, follow the research guide and use the record templates.
 
 ## Start here
 
-- **Find a technique.** Pick a reader task below. Read the one-line recommendation, then open the record for an example, the limits, and the evidence.
-- **Combine techniques.** Find a recurring reader task in the combinations table. Read the techniques in order and check which steps fit your project.
-- **Research repositories.** Use the [research guide](RESEARCH.md) to review a list of repos and turn relevant findings into records. Use the [record templates](TEMPLATES.md) to add a technique or a combination.
+- **Research supplied repositories.** Follow the [research guide](RESEARCH.md) to turn findings into reusable practices.
+- **Add a technique or combination.** Use the [record templates](TEMPLATES.md) for file paths, evidence, and index links.
+- **Use a populated library.** Pick a reader task and open a linked technique record. For a combination, follow the linked records in order and check which steps fit your project.
 
 Use this page as the one-to-two-minute entry point. Keep each summary short enough to decide whether to open the record. Follow the source links when a project decision depends on the evidence.
 
@@ -22,7 +22,7 @@ Use this page as the one-to-two-minute entry point. Keep each summary short enou
 | Verify a claim about a release or revision | — | — | — |
 | Hand the project to another maintainer or agent | — | — | — |
 
-Add a row for each technique when it is ready to share. Link its title to the full record and summarize the strongest evidence and its scope in the last column. As the catalog grows, keep frequently useful techniques here and link to a task-specific index for the full list.
+As reviews produce publishable records, replace the placeholder for the relevant task with a linked title and a scoped evidence summary. Update the catalog status above when the first record is added. As the catalog grows, keep frequently useful techniques here and link to a task-specific index for the full list.
 
 ## Technique combinations
 
@@ -37,7 +37,7 @@ A combination should explain what each step contributes, when a step can be adap
 | Status | Meaning |
 | --- | --- |
 | Observed | The technique appears in a pinned source. Its effect on the reader task still needs a check. |
-| Verified | A named check produced the recorded result at a stated revision and, where relevant, environment. |
+| Verified | A named check was run at a stated revision and, where relevant, environment. State whether it passed or failed, and which outcome was checked. |
 | Unverified | The research or check is incomplete. The record says what is missing. |
 
 The catalog describes what was observed or tested in specific projects. Use the scope and limitations in each record to judge whether it transfers to your project.
