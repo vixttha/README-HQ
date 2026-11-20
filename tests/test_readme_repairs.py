@@ -111,6 +111,35 @@ class ReaderTests(unittest.TestCase):
                 self.assertEqual(target_readme(tree, ".", errors, [], "application")[0], "README.md")
                 self.assertEqual(any("no discoverable first action" in error for error in errors), expected)
 
+    def test_active_plan_rejects_invalid_checkpoint_obligations(self):
+        from check_active_plan import check_plan, REQUIRED_PROOF
+
+        def item(n):
+            return {"version": f"v0.0.6.{n}", "issue": n, "after": f"v0.0.6.{n - 1}", "debug": {
+                "reproduce": "Replay", "acceptance": "Pass", "public_runners": ["ubuntu-latest"], "graphify_mcp": False}}
+
+        ledger = {"schema": 1, "scope": {"first": "v0.0.6.78", "last": "v0.0.6.79", "checkpoint_count": 2},
+                  "debug_before_merge": True, "public_github_hosted_runners_only": True,
+                  "post_fix_debug_gate": {"required_before": ["advance", "merge_consideration"],
+                                          "evidence_on_exact_repair_sha": sorted(REQUIRED_PROOF)},
+                  "checkpoints": [item(78), item(79)]}
+        rows = [f"| `v0.0.6.{i}` | [#{i}](https://github.com/vixttha/README-HQ/issues/{i}) | Fixture |"
+                for i in (78, 79)]
+        sections = [f"### v0.0.6.{i}\n- **Replay** Repeat the test.\n- **After the repair** Pass it.\n"
+                    f"- **Public runners** Ubuntu [#{i}](https://github.com/vixttha/README-HQ/issues/{i})\n"
+                    for i in (78, 79)]
+        markdown = "\n".join(rows + sections)
+        self.assertEqual(check_plan(markdown, ledger, ledger), 2)
+        controls = (
+            (markdown, {**ledger, "debug_before_merge": False}),
+            (markdown, {**ledger, "checkpoints": [item(78), {**item(79), "issue": 78}]}),
+            ("\n".join(rows[::-1] + sections), ledger),
+            (markdown.replace("- **After the repair** Pass it.", "```\n- **After the repair** Pass it.\n```"), ledger),
+        )
+        for changed, data in controls:
+            with self.assertRaises(ValueError):
+                check_plan(changed, data)
+
     def test_publication_gate_checks_pr_and_status_rules_without_inventing_owner_approval(self):
         from check_publication_rules import evaluate_rules
 
