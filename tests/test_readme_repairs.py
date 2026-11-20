@@ -139,24 +139,73 @@ class EvidenceTests(unittest.TestCase):
         spec = importlib.util.spec_from_file_location("intake", ROOT / "learning/intake.py")
         intake = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(intake)
-        with repository({"README.md": "# Evidence\\n"}) as tree:
+        def catalog_body(status="active", **fields):
+            return "<!-- catalog\n" + json.dumps({"status": status, **fields}) + "\n-->\n# Catalog record\n"
+
+        files = {
+            "techniques/relative-navigation.md": catalog_body(),
+            "techniques/another-technique.md": catalog_body(),
+            "techniques/retired-technique.md": catalog_body("retired"),
+            "combinations/first-reader-path.md": catalog_body(
+                steps=["relative-navigation", "another-technique"]),
+            "combinations/missing-step.md": catalog_body(
+                steps=["relative-navigation", "not-in-catalog"]),
+        }
+        with repository({"README.md": "# Evidence\\n"}) as tree, repository(files) as catalog:
             tree.git("remote", "add", "origin", "https://github.com/example/project.git")
+            catalog.git("remote", "add", "origin", "https://github.com/vixttha/README-HQ.git")
             record = {"id": "example", "checkout": str(tree.root), "ref": "HEAD",
                       "repository": "example/project", "path": "README.md",
                       "line": 1, "anchor": "# Evidence", "visibility": "public"}
+            rationale = {"source": "example", "decision": "adapt", "rationale": "Explain the first result."}
             spec = {"visibility": "public", "sources": [record], "selected": ["example"],
+                    "catalog": {"checkout": str(catalog.root), "commit": catalog.commit},
                     "target": {**record, "audience": "developer", "capability": "command line"},
-                    "findings": [{"source": "example", "technique": "first-success-milestone",
-                                  "decision": "adapt", "rationale": "Explain the first result."}]}
+                    "findings": [{**rationale, "technique": "relative-navigation"},
+                                 {**rationale, "combination": "first-reader-path"}]}
+
             def fetch(route):
-                if route == "example/project":
+                if route in {"example/project", "vixttha/README-HQ"}:
                     return {"private": False, "visibility": "public"}
-                return {"sha": tree.commit}
+                if route == f"vixttha/README-HQ/compare/{catalog.commit}...README-Technique-Library":
+                    return {"status": "ahead"}
+                if route == f"vixttha/README-HQ/commits/{catalog.commit}":
+                    return {"sha": catalog.commit}
+                if route == f"example/project/commits/{tree.commit}":
+                    return {"sha": tree.commit}
+                self.fail(f"Unexpected GitHub request {route}")
+
             destination = tree.root / "receipts"
             first = intake.record_intake(spec, destination, fetch=fetch)
+            (catalog.root / "techniques/relative-navigation.md").write_text(catalog_body("retired"))
             self.assertEqual(first, intake.record_intake(spec, destination, fetch=fetch))
             result = json.loads(first.read_bytes())
-            self.assertEqual(result["recommendations"][0]["target"]["commit"], tree.commit)
+            self.assertEqual(result["schema"], 2)
+            self.assertEqual(result["catalog"]["commit"], catalog.commit)
+            self.assertEqual(result["catalog"]["branch"], "README-Technique-Library")
+            technique = next(row for row in result["recommendations"] if "technique" in row)
+            self.assertEqual(technique["technique"], "relative-navigation")
+            self.assertEqual(technique["target"]["commit"], tree.commit)
+            combination = next(row for row in result["recommendations"] if "combination" in row)
+            self.assertEqual(combination["catalog_record"]["steps"], ["relative-navigation", "another-technique"])
+            for choice, error in (
+                ({"technique": "first-success-milestone"}, "absent from the pinned external catalog"),
+                ({"technique": "retired-technique"}, "expected an active record"),
+                ({"combination": "missing-step"}, "absent from the pinned external catalog"),
+            ):
+                with self.subTest(choice=choice), self.assertRaisesRegex(ValueError, error):
+                    intake.record_intake({**spec, "findings": [{**rationale, **choice}]}, destination, fetch=fetch)
+            without_catalog = {key: value for key, value in spec.items() if key != "catalog"}
+            with self.assertRaisesRegex(ValueError, "requires an external catalog"):
+                intake.record_intake(without_catalog, destination, fetch=fetch)
+            def unrelated_branch(route):
+                if "/compare/" in route:
+                    return {"status": "diverged"}
+                return fetch(route)
+
+            with self.assertRaisesRegex(ValueError, "not on README-Technique-Library"):
+                intake.record_intake(spec, destination, fetch=unrelated_branch)
+            self.assertEqual(list(destination.iterdir()), [first])
             spec["selected"] = []
             second = intake.record_intake(spec, destination, fetch=fetch)
             self.assertNotEqual(first, second)
