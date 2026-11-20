@@ -1070,6 +1070,32 @@ class EvidenceTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "anchor does not match"):
                 intake.record_intake(spec, destination, fetch=fetch)
 
+    def test_learning_rejects_malformed_request_before_io(self):
+        loader = importlib.util.spec_from_file_location("intake", ROOT / "learning/intake.py")
+        intake = importlib.util.module_from_spec(loader)
+        loader.loader.exec_module(intake)
+        source = {"checkout": ".", "ref": "HEAD", "repository": "example/project",
+                  "path": "README.md", "anchor": "Guide", "visibility": "public", "line": 1, "id": "one"}
+        good = {"visibility": "public", "sources": [source], "selected": [], "findings": [],
+                "target": {**source, "audience": "reader", "capability": "check"}}
+        with tempfile.TemporaryDirectory() as directory:
+            folder = Path(directory)
+            spec, output = folder / "request.json", folder / "receipts"
+            for request in ([], None, {**good, "sources": [None]}, {**good, "target": []},
+                            {**good, "target": {**good["target"], "line": True}},
+                            {**good, "selected": [["one"]]}, {**good, "findings": [{"source": "one", "candidate": []}]}):
+                with self.subTest(request=request), patch.object(intake, "GitTree") as git:
+                    spec.write_text(json.dumps(request), encoding="utf-8")
+                    stderr = StringIO()
+                    with (patch.object(sys, "argv", ["intake.py", str(spec), str(output)]),
+                          contextlib.redirect_stderr(stderr), self.assertRaises(SystemExit) as error):
+                        intake.main()
+                    self.assertEqual(error.exception.code, 2)
+                    self.assertIn("learning request or source proof is invalid or unverified", stderr.getvalue())
+                    git.assert_not_called()
+                    self.assertFalse(output.exists())
+            intake.validate_request(good)
+
     def test_learning_cli_distinguishes_secondary_rate_limits_from_forbidden(self):
         loader = importlib.util.spec_from_file_location("intake", ROOT / "learning/intake.py")
         intake = importlib.util.module_from_spec(loader)
