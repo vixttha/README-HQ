@@ -1,0 +1,389 @@
+{
+  "schema": 1,
+  "audit": "README HQ v0.0.6.67 full stack",
+  "candidate": {
+    "pr": 68,
+    "commit": "8d50caec2bc6fcb998994a1fd302294a029325f9",
+    "tree": "0e4717b433e783700640086751a8c827752347bd"
+  },
+  "fixture": {
+    "commit": "1a94c7558f11870986dba2ba6b15aa08c43db24c",
+    "path": "audit/audit_v00667_full_stack.py",
+    "workflow": ".github/workflows/audit-full-stack.yml"
+  },
+  "run": {
+    "id": 44642764179,
+    "attempt": 1,
+    "url": "https://github.com/vixttha/README-HQ/actions/runs/44642764179"
+  },
+  "findings": [
+    {
+      "issue": 138,
+      "case": "linked_quickstart",
+      "priority": "high"
+    },
+    {
+      "issue": 139,
+      "case": "draft_asset_receipts",
+      "priority": "medium"
+    },
+    {
+      "issue": 140,
+      "case": "mixed_image_link",
+      "priority": "medium"
+    }
+  ],
+  "runners": [
+    {
+      "label": "ubuntu-latest",
+      "job_id": 135977711852,
+      "url": "https://github.com/vixttha/README-HQ/actions/runs/44642764179/job/135977711852",
+      "tools": {
+        "python": "3.12.16",
+        "platform": "Linux-7.0.0-1019-azure-x86_64-with-glibc2.43"
+      },
+      "committed_baseline": {
+        "result": "passed",
+        "cases": {
+          "standalone_versions": 2,
+          "techniques": 17,
+          "local_links": 193,
+          "imported_files": 159
+        },
+        "unchecked_count": 87
+      },
+      "reader_regressions": 10,
+      "archive": {
+        "id": 14586129125,
+        "name": "stack-audit-Linux-attempt-1",
+        "sha256": "76f0c57da3c3885d93632899a3ff4f742946cfea8d0341d5c6c1284b3deb0da7",
+        "digest_matched": true
+      },
+      "observations": {
+        "linked_quickstart": {
+          "fixture_commit": "19c91cde67c4be2cd3dc10af0eb0e259045072ae",
+          "homepage": {
+            "exit": 0,
+            "result": "passed",
+            "cases": {
+              "entrypoint": "README.md",
+              "local_links": 1
+            },
+            "errors": [],
+            "unchecked": [
+              "README.md: editorial quality and material claims require human or agent review",
+              "first action execution not checked: no explicit smoke spec"
+            ]
+          },
+          "linked_quickstart_guide": {
+            "exit": 1,
+            "result": "failed",
+            "cases": {
+              "entrypoint": "docs/README.md",
+              "local_links": 0
+            },
+            "errors": [
+              "docs/README.md:5: missing tracked local target: install.md"
+            ],
+            "unchecked": [
+              "docs/README.md: editorial quality and material claims require human or agent review",
+              "first action execution not checked: no explicit smoke spec"
+            ]
+          },
+          "repaired_guide_control": {
+            "exit": 0,
+            "result": "passed",
+            "cases": {
+              "entrypoint": "docs/README.md",
+              "local_links": 1
+            },
+            "errors": [],
+            "unchecked": [
+              "docs/README.md: editorial quality and material claims require human or agent review",
+              "first action execution not checked: no explicit smoke spec"
+            ]
+          }
+        },
+        "draft_asset_receipts": {
+          "fixture_commit": "17e306e4c6ecd137dda09998fe74dde514a886d0",
+          "asset_sha256": [
+            "b251520f6c92d11fcb7584e5bd4af040ff75ca0be879f9b294e915a16b0b7863",
+            "de7c62cb63ea634e445216b830c5567ef69958df3e0672d926300d2979fb436d"
+          ],
+          "passing_receipts_byte_identical": true,
+          "receipt_sha256": "233c8948f3ca15a2915dec79af2ec42c35ea9fc6f53cf1fa9e4bc83e09378265",
+          "corrupt_media_control": {
+            "exit": 1,
+            "result": "failed",
+            "cases": {
+              "entrypoint": "README.md",
+              "local_links": 0
+            },
+            "errors": [
+              "README.md:5: invalid or unreadable image: report.png"
+            ],
+            "unchecked": [
+              "README.md: editorial quality and material claims require human or agent review",
+              "first action execution not checked: no explicit smoke spec"
+            ]
+          }
+        },
+        "mixed_image_link": {
+          "markdown_control": {
+            "rendered": "<p><a href=\"report.md\"><img src=\"report.png\" alt=\"View report\" /></a></p>",
+            "audit": {
+              "exit": 0,
+              "result": "passed",
+              "cases": {
+                "entrypoint": "README.md",
+                "local_links": 2
+              },
+              "errors": [],
+              "unchecked": [
+                "README.md: editorial quality and material claims require human or agent review",
+                "first action execution not checked: no explicit smoke spec"
+              ]
+            }
+          },
+          "html_control": {
+            "rendered": "<p><a href=\"report.md\"><img src=\"report.png\" alt=\"View report\"></a></p>",
+            "audit": {
+              "exit": 0,
+              "result": "passed",
+              "cases": {
+                "entrypoint": "README.md",
+                "local_links": 2
+              },
+              "errors": [],
+              "unchecked": [
+                "README.md: editorial quality and material claims require human or agent review",
+                "first action execution not checked: no explicit smoke spec"
+              ]
+            }
+          },
+          "mixed_markup": {
+            "rendered": "<p><a href=\"report.md\"><img src=\"report.png\" alt=\"View report\"></a></p>",
+            "audit": {
+              "exit": 1,
+              "result": "failed",
+              "cases": {
+                "entrypoint": "README.md",
+                "local_links": 1
+              },
+              "errors": [
+                "README.md:5: link has no accessible name: report.md"
+              ],
+              "unchecked": [
+                "README.md: editorial quality and material claims require human or agent review",
+                "first action execution not checked: no explicit smoke spec"
+              ]
+            }
+          },
+          "empty_alt_control": {
+            "rendered": "<p><a href=\"report.md\"><img src=\"report.png\" alt=\"\" /></a></p>",
+            "audit": {
+              "exit": 1,
+              "result": "failed",
+              "cases": {
+                "entrypoint": "README.md",
+                "local_links": 1
+              },
+              "errors": [
+                "README.md:5: link has no accessible name: report.md"
+              ],
+              "unchecked": [
+                "README.md: editorial quality and material claims require human or agent review",
+                "first action execution not checked: no explicit smoke spec"
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "label": "windows-latest",
+      "job_id": 135977711369,
+      "url": "https://github.com/vixttha/README-HQ/actions/runs/44642764179/job/135977711369",
+      "tools": {
+        "python": "3.12.10",
+        "platform": "Windows-2025Server-10.0.26100-SP0"
+      },
+      "committed_baseline": {
+        "result": "passed",
+        "cases": {
+          "standalone_versions": 2,
+          "techniques": 17,
+          "local_links": 193,
+          "imported_files": 159
+        },
+        "unchecked_count": 87
+      },
+      "reader_regressions": 10,
+      "archive": {
+        "id": 14586962508,
+        "name": "stack-audit-Windows-attempt-1",
+        "sha256": "c47a864e0ec74b25a7e86698e9a16fdcee9da97d935e49b22b60cd4c9572249a",
+        "digest_matched": true
+      },
+      "observations": {
+        "linked_quickstart": {
+          "fixture_commit": "f01f32c72c548147a42c5a8773503c4901f3ebe9",
+          "homepage": {
+            "exit": 0,
+            "result": "passed",
+            "cases": {
+              "entrypoint": "README.md",
+              "local_links": 1
+            },
+            "errors": [],
+            "unchecked": [
+              "README.md: editorial quality and material claims require human or agent review",
+              "first action execution not checked: no explicit smoke spec"
+            ]
+          },
+          "linked_quickstart_guide": {
+            "exit": 1,
+            "result": "failed",
+            "cases": {
+              "entrypoint": "docs/README.md",
+              "local_links": 0
+            },
+            "errors": [
+              "docs/README.md:5: missing tracked local target: install.md"
+            ],
+            "unchecked": [
+              "docs/README.md: editorial quality and material claims require human or agent review",
+              "first action execution not checked: no explicit smoke spec"
+            ]
+          },
+          "repaired_guide_control": {
+            "exit": 0,
+            "result": "passed",
+            "cases": {
+              "entrypoint": "docs/README.md",
+              "local_links": 1
+            },
+            "errors": [],
+            "unchecked": [
+              "docs/README.md: editorial quality and material claims require human or agent review",
+              "first action execution not checked: no explicit smoke spec"
+            ]
+          }
+        },
+        "draft_asset_receipts": {
+          "fixture_commit": "ab2e0dfcf4cf755eb804d166e32f7eb1bba18960",
+          "asset_sha256": [
+            "f51fc64785d79272f740891377a0aef1467be9fe24d9df14b399c6a6c497fa2f",
+            "1c0e648a70da8afbaf923fa3f3e414b2902a33aa55446e3305e7d280507e4f1e"
+          ],
+          "passing_receipts_byte_identical": true,
+          "receipt_sha256": "6e9df440a2452e09f630cfdea3289f5d649ffbb0c3762d82c18f15b563a6e734",
+          "corrupt_media_control": {
+            "exit": 1,
+            "result": "failed",
+            "cases": {
+              "entrypoint": "README.md",
+              "local_links": 0
+            },
+            "errors": [
+              "README.md:5: invalid or unreadable image: report.png"
+            ],
+            "unchecked": [
+              "README.md: editorial quality and material claims require human or agent review",
+              "first action execution not checked: no explicit smoke spec"
+            ]
+          }
+        },
+        "mixed_image_link": {
+          "markdown_control": {
+            "rendered": "<p><a href=\"report.md\"><img src=\"report.png\" alt=\"View report\" /></a></p>",
+            "audit": {
+              "exit": 0,
+              "result": "passed",
+              "cases": {
+                "entrypoint": "README.md",
+                "local_links": 2
+              },
+              "errors": [],
+              "unchecked": [
+                "README.md: editorial quality and material claims require human or agent review",
+                "first action execution not checked: no explicit smoke spec"
+              ]
+            }
+          },
+          "html_control": {
+            "rendered": "<p><a href=\"report.md\"><img src=\"report.png\" alt=\"View report\"></a></p>",
+            "audit": {
+              "exit": 0,
+              "result": "passed",
+              "cases": {
+                "entrypoint": "README.md",
+                "local_links": 2
+              },
+              "errors": [],
+              "unchecked": [
+                "README.md: editorial quality and material claims require human or agent review",
+                "first action execution not checked: no explicit smoke spec"
+              ]
+            }
+          },
+          "mixed_markup": {
+            "rendered": "<p><a href=\"report.md\"><img src=\"report.png\" alt=\"View report\"></a></p>",
+            "audit": {
+              "exit": 1,
+              "result": "failed",
+              "cases": {
+                "entrypoint": "README.md",
+                "local_links": 1
+              },
+              "errors": [
+                "README.md:5: link has no accessible name: report.md"
+              ],
+              "unchecked": [
+                "README.md: editorial quality and material claims require human or agent review",
+                "first action execution not checked: no explicit smoke spec"
+              ]
+            }
+          },
+          "empty_alt_control": {
+            "rendered": "<p><a href=\"report.md\"><img src=\"report.png\" alt=\"\" /></a></p>",
+            "audit": {
+              "exit": 1,
+              "result": "failed",
+              "cases": {
+                "entrypoint": "README.md",
+                "local_links": 1
+              },
+              "errors": [
+                "README.md:5: link has no accessible name: report.md"
+              ],
+              "unchecked": [
+                "README.md: editorial quality and material claims require human or agent review",
+                "first action execution not checked: no explicit smoke spec"
+              ]
+            }
+          }
+        }
+      }
+    }
+  ],
+  "graphify": {
+    "runner": "ubuntu-latest",
+    "result": "passed",
+    "regressions": 17,
+    "version_maps": 6,
+    "version_records": 17,
+    "repair_checkpoints": 67,
+    "plan_partitions": 3
+  },
+  "coverage": {
+    "status": "bounded reproduction of open findings with positive and negative controls",
+    "excluded": [
+      "Invoking actual README first actions across a representative project matrix",
+      "Editorial scoring of rendered README output",
+      "Runtime and CI corroboration from Sentry and CircleCI",
+      "Independent CodeRabbit review"
+    ]
+  },
+  "release_state": "draft PR and planning-only repair branches"
+}
