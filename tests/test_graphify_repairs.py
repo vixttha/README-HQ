@@ -51,6 +51,17 @@ class GraphifyRepairs(unittest.TestCase):
                              {"documented_in": 2, "changed_in": 1, "tested_by": 1})
             asyncio.run(verify_mcp(graph, receipt))
 
+    def test_graphify_evidence_line_links_use_source_mode_for_rendered_formats(self):
+        revision = "a" * 40
+        sources = [({"path": "doc/" + path}, line) for path, line in
+                   (("README.md", 2), ("read me.rst", 3), ("guide.adoc", 4), ("brief.asciidoc", 5), ("card.asc", 6))]
+        outline = [({"title": "Fixture", "summary": "Pinned lines"}, sources, ({"path": "CHANGELOG.txt"}, 7))]
+        body = maps.render_outline("v0.0.6", "example/project",
+                                   {"source_commit": revision, "nodes": 1, "edges": 0}, outline)
+        for ref, line in sources:
+            self.assertIn(f"{ref['path'].replace(' ', '%20')}?plain=1#L{line}", body)
+        self.assertIn("CHANGELOG.txt#L7", body)
+
     def test_release_heading_beats_a_draft_placeholder(self):
         content = b"Release notes\n=============\n\nUnreleased\n----------\n\n- TODO\n\n2.34.2 (2026-05-14)\n-------------------\n"
         with patch.object(maps, "source_bytes", return_value=content):
