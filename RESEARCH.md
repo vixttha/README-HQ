@@ -31,3 +31,13 @@ One cross-domain pass broadened the [technique map](TECHNIQUE-MAP.md) from 86 to
 - The new entries describe observed documentation mechanisms and how to adapt them. Separate execution checks establish whether a practice works in a specific project.
 
 For future saturation reviews, record which source families were searched, which plausible additions matched existing entries, and any areas left open. This approach shows what the pass covered and makes later research easier to target.
+
+### Hardware, games, integrations, and research artifacts
+
+A specialist pass expanded the [technique map](TECHNIQUE-MAP.md) from 108 to 120 practices. It compared OSHWA and QMK guidance, game READMEs and control accessibility guidance, service sandboxes, GitHub Actions documentation, teaching material, and scientific artifact evaluation guides.
+
+- The hardware and games sources contributed parts lists, revision-specific firmware, editable design files, control mapping, separately distributed assets, and saved-data compatibility.
+- Service and automation documentation contributed sandbox setup, caller permissions, and examples of downstream consumers. Research and teaching sources contributed separate smoke and full runs, reproducible claim mapping, and exercises with worked solutions.
+- The closing cross-check revisited keyboard setup, game launch, action inputs and outputs, lesson structure, and Markdown rendering. Those examples fit techniques already in the map. The map retains useful source links under those entries.
+
+The result records qualitative coverage of the public sources surveyed. A statistical completeness estimate would require a defined corpus and independent classification.
