@@ -74,8 +74,29 @@ class ReaderTests(unittest.TestCase):
                 self.assertEqual(result.returncode, 2, result.stderr)
                 self.assertIn(f"{options[0]} requires an explicit --repo", result.stderr)
 
+    def test_first_action_follows_a_real_quickstart_section(self):
+        from check_readme_hq import target_readme
+
+        own = GitTree(ROOT)
+        self.assertEqual(target_readme(own, ".", [], [], "application")[0], "README.md")
+        errors = []
+        target_readme(own, ".", errors, [], "application")
+        self.assertEqual(errors, [])
+        preamble = "# Demo\n\nThe demo verifies the first useful action.\n\n"
+        table = "| A | B |\n| --- | --- |\n" + "| Example | Note |\n" * 45
+        for ending, expected in (
+            ("## Quickstart\n\n```sh\npython run.py\n```", False),
+            ("## Quickstart\n\n[Launch the demo](launch.md)", False),
+            ("## Quickstart\n\n[License](LICENSE)\n\n## Development\n\n```sh\npython build.py\n```", True),
+        ):
+            content = preamble + table + "\n" + ending
+            with repository({"README.md": content, "launch.md": "# Launch", "LICENSE": "fixture"}) as tree:
+                errors = []
+                self.assertEqual(target_readme(tree, ".", errors, [], "application")[0], "README.md")
+                self.assertEqual(any("no discoverable first action" in error for error in errors), expected)
+
     def test_adopter_receipt_distinguishes_scope_at_one_commit(self):
-        readme = "# Guide\n\n## Quickstart\n\n[Read the guide](README.md)\n"
+        readme = "# Guide\n\nThis is a portable demonstration.\n\n## Quickstart\n\n```sh\npython run.py\n```\n"
         with repository({"README.md": readme, "packages/demo/README.md": readme}) as tree:
             receipt = tree.root / "audit.json"
             argv = [sys.executable, str(ROOT / "tools/check_readme_hq.py"), "--repo", str(tree.root),
