@@ -1,0 +1,51 @@
+name: README HQ Batch 1 checkpoint evidence
+on:
+  push:
+    branches: [audit/v0.0.6-batch-1-evidence]
+    paths: ['.github/workflows/verify-batch-1.yml', 'audit/batch1-public.py']
+permissions:
+  contents: read
+env:
+  PYTHONHASHSEED: '0'
+  PYTHONDONTWRITEBYTECODE: '1'
+  PIP_DISABLE_PIP_VERSION_CHECK: '1'
+  GRAPHIFY_QUERY_LOG_DISABLE: '1'
+jobs:
+  checkpoint:
+    name: Exact checkpoint qualification on ${{ matrix.os }}
+    if: github.event.repository.private == false && github.event.repository.visibility == 'public'
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: cf7871eb2af31c6f3da9af3acf92715b388f2868
+          path: candidate
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.12'
+      - name: Install pinned reader dependencies
+        run: python -m pip install --require-hashes -r candidate/tools/requirements.txt
+      - name: Install pinned Graphify MCP dependencies
+        shell: bash
+        run: |
+          python -m pip install --require-hashes --only-binary=:all: --no-deps -r candidate/graphify-hq/template/v0.0.8/requirements.txt
+          python -m pip check
+      - name: Qualify every checkpoint and run combined regressions
+        run: python audit/batch1-public.py candidate evidence
+      - name: Retain exact checkpoint results
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: batch-1-${{ matrix.os }}-${{ github.run_attempt }}
+          path: evidence/
+          if-no-files-found: error
