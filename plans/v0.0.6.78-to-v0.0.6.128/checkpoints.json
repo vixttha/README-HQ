@@ -1463,7 +1463,46 @@
             "version": "v0.0.6.82",
             "issue": 82
           }
-        ]
+        ],
+        "status": "public_runner_verified",
+        "verification": {
+          "pull_request": "https://github.com/vixttha/README-HQ/pull/141",
+          "head": "cf7871eb2af31c6f3da9af3acf92715b388f2868",
+          "base": "8d50caec2bc6fcb998994a1fd302294a029325f9",
+          "post_fix_run": "https://github.com/vixttha/README-HQ/actions/runs/44646802615/attempts/1",
+          "push_run": "https://github.com/vixttha/README-HQ/actions/runs/44646364029/attempts/1",
+          "review_run": "https://github.com/vixttha/README-HQ/actions/runs/44646414531/attempts/1",
+          "proposed_merge": "245f4e29873707e0bd58248e38ed26aee7a43fcd",
+          "artifacts": [
+            {
+              "id": 14589181376,
+              "name": "batch-1-ubuntu-latest-1",
+              "sha256": "c630d91135eb520420cd137ffcd5670bc3e75fb7e4d5bc68248567f5b2d872c6"
+            },
+            {
+              "id": 14588253371,
+              "name": "batch-1-windows-latest-1",
+              "sha256": "4cc804effe7fdf2dcd9b6828d072145b02c3460ca30414fdf0af2325cc298eb4"
+            }
+          ],
+          "repair_commits": [
+            "f8be66616e362202705814fc977c615bd128eca2",
+            "732861b547b4fc725505ae7b3ce3cc7fb85ac51e",
+            "b094f18500fc4ca8b91e30889fd03a8709b17c97",
+            "372ec50185b29077071d43320204d8c64405f6d0",
+            "457a2301ba5b453e9e0251b6bab91db8ca68d95b",
+            "f8784358ad4cb9a5d459e7f9386ac233af98f997",
+            "80c2acb21f91d08727227a099836cc2ed2a7de98",
+            "7db8db996cb0dc3dfb44a9589d67c27f86691fcf",
+            "f1b074945300a8a28b296a850c7bcd107d26f4e8",
+            "a19af307781f0ff223141f790257247bcd3b6d07",
+            "9505ce3bbbbbe38799cfad27d037e012d9b9d9c2",
+            "f575045d36593dfc32300f79452d5ffb7792a5b6",
+            "f64c6ba4e718b501a4f3e75725bdec1e79a649d4",
+            "31f49b5e723e791dea81003bc1581d23829b07c8",
+            "cf7871eb2af31c6f3da9af3acf92715b388f2868"
+          ]
+        }
       },
       {
         "id": 2,

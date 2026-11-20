@@ -1,12 +1,12 @@
 # README HQ repair batches
 
-**Status** Planning. The next repair has not started. The pending sequence follows the combined [v0.0.6.67 candidate](https://github.com/vixttha/README-HQ/commit/8d50caec2bc6fcb998994a1fd302294a029325f9) in [draft PR #68](https://github.com/vixttha/README-HQ/pull/68).
+**Status** Batch 1 is verified on public runners in [draft PR #141](https://github.com/vixttha/README-HQ/pull/141). Later batches remain planned. The pending sequence follows the combined [v0.0.6.67 candidate](https://github.com/vixttha/README-HQ/commit/8d50caec2bc6fcb998994a1fd302294a029325f9) in [draft PR #68](https://github.com/vixttha/README-HQ/pull/68).
 
 Work on one batch at a time, with up to 15 sequential checkpoints per batch. This schedule covers the 73 pending checkpoints from `v0.0.6.68` through `v0.0.6.140`. The original [v0.0.6.1–v0.0.6.67 plan](https://github.com/vixttha/README-HQ/blob/7f4562b8f44544bc9dd4b479fcd1bc30ca07ca94/plans/v0.0.6-repairs/README.md) remains the record for qualifying its open criteria. The already-planned .77 follow-up stays with [issue #5](https://github.com/vixttha/README-HQ/issues/5).
 
 | Batch | Checkpoints | Count | Start after |
 | --- | --- | ---: | --- |
-| [Batch 1](#batch-1) | `v0.0.6.68`–`v0.0.6.82` | 15 | Owner approval and baseline confirmation |
+| [Batch 1](#batch-1) | `v0.0.6.68`–`v0.0.6.82` | 15 | Public runner evidence recorded in draft PR #141 |
 | [Batch 2](#batch-2) | `v0.0.6.83`–`v0.0.6.97` | 15 | `v0.0.6.82` passes and batch evidence is reviewed |
 | [Batch 3](#batch-3) | `v0.0.6.98`–`v0.0.6.112` | 15 | `v0.0.6.97` passes and batch evidence is reviewed |
 | [Batch 4](#batch-4) | `v0.0.6.113`–`v0.0.6.127` | 15 | `v0.0.6.112` passes and batch evidence is reviewed |
@@ -26,6 +26,8 @@ The final batch currently has 13 checkpoints. Append later confirmed issues in s
 ## Batch 1
 
 Agent entry, public technique evidence, first-use output, Graphify recovery, and receipt and navigation basics.
+
+[Draft PR #141](https://github.com/vixttha/README-HQ/pull/141) records all 15 repair SHAs at batch head [`cf7871e`](https://github.com/vixttha/README-HQ/commit/cf7871eb2af31c6f3da9af3acf92715b388f2868). [Exact checkpoint verification](https://github.com/vixttha/README-HQ/actions/runs/44646802615/attempts/1) passed 15 checks on Ubuntu and 14 applicable checks on Windows. The Graphify recovery check (.76) used Ubuntu. The [batch push](https://github.com/vixttha/README-HQ/actions/runs/44646364029/attempts/1) and [proposed merge](https://github.com/vixttha/README-HQ/actions/runs/44646414531/attempts/1) passed the combined Ubuntu, Windows, and Graphify jobs.
 
 | Checkpoint | Issue | Planned repair |
 | --- | --- | --- |
