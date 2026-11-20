@@ -51,6 +51,14 @@ class GraphifyRepairs(unittest.TestCase):
                              {"documented_in": 2, "changed_in": 1, "tested_by": 1})
             asyncio.run(verify_mcp(graph, receipt))
 
+    def test_existing_graphify_map_keeps_disambiguated_display_labels(self):
+        path = ROOT / "graphify-hq/maps/v0.0.1/graph.json"
+        data = json.loads(path.read_bytes())
+        self.assertTrue(any(node["id"].startswith("file:") and node["label"] != node["source_file"]
+                            for node in data["nodes"]))
+        receipt = json.loads(path.with_name("receipt.json").read_bytes())
+        asyncio.run(verify_mcp(path, receipt))
+
     def test_graphify_evidence_line_links_use_source_mode_for_rendered_formats(self):
         revision = "a" * 40
         sources = [({"path": "doc/" + path}, line) for path, line in

@@ -354,9 +354,10 @@ async def verify_mcp(graph, receipt):
     destinations = {key: list(items) for key, items in receipt["feature_destinations"].items()}
     inventory = set(receipt["source_files"])
     root = "source:" + receipt["source_commit"]
-    files = {node["id"]: (node["label"], node["source_file"]) for node in saved["nodes"]
-             if node["id"].startswith("file:")}
-    if files != {"file:" + path: (path, path) for path in inventory}:
+    files = {node["id"]: node for node in saved["nodes"] if node["id"].startswith("file:")}
+    if {identity: node["source_file"] for identity, node in files.items()} != {
+        "file:" + path: path for path in inventory
+    }:
         raise ValueError("Graph inventory identities differ from the pinned manifest")
     for path in sorted(inventory):
         destinations.setdefault(root, []).append(["contains_source", "file:" + path, path, None])
@@ -400,7 +401,7 @@ async def verify_mcp(graph, receipt):
                     if any(token.startswith("... (truncated") for token in response.splitlines()):
                         raise ValueError(f"Graphify MCP readback was truncated for {node}")
                     expected_rows = Counter(
-                        ((path if identity.startswith("file:") else f"{path} {line}"),
+                        ((files[identity]["label"] if identity in files else f"{path} {line}"),
                          path if line else None, line)
                         for relationship, identity, path, line in targets if relationship == relation
                     )
