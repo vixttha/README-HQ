@@ -7,8 +7,8 @@
   "merge_authorized": false,
   "scope": {
     "first": "v0.0.6.78",
-    "last": "v0.0.6.140",
-    "checkpoint_count": 63
+    "last": "v0.0.6.141",
+    "checkpoint_count": 64
   },
   "debug_before_merge": true,
   "public_github_hosted_runners_only": true,
@@ -1344,6 +1344,55 @@
           "windows-latest"
         ],
         "graphify_mcp": false
+      }
+    },
+    {
+      "version": "v0.0.6.141",
+      "issue": 147,
+      "status": "awaiting_approval",
+      "after": "v0.0.6.140",
+      "title": "Resolve learning intake against a pinned external technique catalog",
+      "priority": "Unassigned — issue does not establish severity",
+      "affected_revision": "8d50caec2bc6fcb998994a1fd302294a029325f9",
+      "issue_url": "https://github.com/vixttha/README-HQ/issues/147",
+      "related_issues": [
+        18,
+        22,
+        47,
+        55,
+        79,
+        97,
+        109,
+        115,
+        128,
+        146,
+        148,
+        149
+      ],
+      "existing_evidence": "https://github.com/vixttha/README-HQ/issues/147",
+      "related_repairs": [
+        "Draft PR #150 at 90c2944f9c293313af42042fa9a782a69f4e431b (not merged or approved)",
+        "#146 resolved at 788f212 on readme-hq",
+        "#148 resolved at 5eb7412 on README-Technique-Library",
+        "#149 resolved at e0ffb32 on Provenistem"
+      ],
+      "evidence_links": [
+        "https://github.com/vixttha/README-HQ/blob/8d50caec2bc6fcb998994a1fd302294a029325f9/learning/intake.py#L55-L103",
+        "https://github.com/vixttha/README-HQ/pull/150",
+        "https://github.com/vixttha/README-HQ/commit/90c2944f9c293313af42042fa9a782a69f4e431b",
+        "https://github.com/vixttha/README-HQ/actions/runs/44671236678/attempts/1"
+      ],
+      "scope_limitations": "The existing bundled registry remains for historical receipts; this issue concerns new learning intake only. Draft passing jobs are reported by the issue but are not owner approval, merge qualification, or independent readback of receipt contents. Do not treat closure of cross-branch issues #146/#148/#149 as this checkpoint's acceptance.",
+      "debug": {
+        "reproduce": "At the affected draft intake SHA, feed a valid external-only technique (relative-navigation) and an ordered external-library combination. Confirm the external-only ID is discarded or the bundled registry is used. Include a legacy template-only ID, unavailable catalog ref, retired or missing combination step, and repeated same-source observation.",
+        "acceptance": "At the exact repair SHA, new receipts bind to an explicitly pinned external catalog revision, retain relative-navigation and the valid ordered five-step combination, and never silently fall back to bundled entries when the catalog is missing or invalid. Retired/missing steps fail explicitly, unchanged observations are idempotent, and old schema receipts remain readable. Replay the original failing case and every control at that same SHA; record post-fix debug results before advancement.",
+        "passing_control": "Pinned valid external-only technique and complete ordered combination succeed with stable provenance; historical bundled-registry receipt remains readable, while missing catalog and retired step controls fail explicitly.",
+        "public_runners": [
+          "ubuntu-latest",
+          "windows-latest"
+        ],
+        "graphify_mcp": true,
+        "qualification": "Awaiting owner approval; draft CI evidence does not bypass exact-SHA post-fix debug and acceptance gates."
       }
     }
   ],

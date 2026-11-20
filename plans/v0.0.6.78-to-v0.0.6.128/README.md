@@ -1,8 +1,8 @@
-# README HQ repair pipeline v0.0.6.78–v0.0.6.140
+# README HQ repair pipeline v0.0.6.78–v0.0.6.141
 
 **Status** Active planning. Implementation awaits owner approval. The sequence continues after checkpoint `v0.0.6.77` is verified.
 
-This continuation covers 63 open GitHub issues in checkpoints .78–.140. Checkpoint numbers match issues #78–#140 in this snapshot. Each repair has its own commit and post-fix debug gate. The [full-stack triage](TRIAGE.md) covers all 139 open issues across this and the two earlier plans. The observed baseline is [draft PR #68 at `8d50cae`](https://github.com/vixttha/README-HQ/commit/8d50caec2bc6fcb998994a1fd302294a029325f9). [Checkpoints .1–.67](https://github.com/vixttha/README-HQ/blob/7f4562b8f44544bc9dd4b479fcd1bc30ca07ca94/plans/v0.0.6-repairs/README.md) · [Checkpoints .68–.77](https://github.com/vixttha/README-HQ/blob/ac07987cfe11d6592b8def2ff16b72a6b2c0a203/plans/v0.0.6.68-to-v0.0.6.77/README.md) · [Machine-readable ledger](checkpoints.json)
+This continuation covers 64 assigned GitHub issues in checkpoints .78–.141 (historical assignments retained; current issue states may differ). Checkpoint numbers match issues #78–#140 in this snapshot. Each repair has its own commit and post-fix debug gate. The [full-stack triage](TRIAGE.md) covers all 139 open issues across this and the two earlier plans. The observed baseline is [draft PR #68 at `8d50cae`](https://github.com/vixttha/README-HQ/commit/8d50caec2bc6fcb998994a1fd302294a029325f9). [Checkpoints .1–.67](https://github.com/vixttha/README-HQ/blob/7f4562b8f44544bc9dd4b479fcd1bc30ca07ca94/plans/v0.0.6-repairs/README.md) · [Checkpoints .68–.77](https://github.com/vixttha/README-HQ/blob/ac07987cfe11d6592b8def2ff16b72a6b2c0a203/plans/v0.0.6.68-to-v0.0.6.77/README.md) · [Machine-readable ledger](checkpoints.json)
 
 | Checkpoint | GitHub issue | Repair | Priority | Start after |
 | --- | --- | --- | --- | --- |
@@ -69,10 +69,11 @@ This continuation covers 63 open GitHub issues in checkpoints .78–.140. Checkp
 | `v0.0.6.138` | [#138](https://github.com/vixttha/README-HQ/issues/138) | Verify the required local route behind a README Quickstart | High | `v0.0.6.137` |
 | `v0.0.6.139` | [#139](https://github.com/vixttha/README-HQ/issues/139) | Bind draft receipts to the checked media bytes | Medium | `v0.0.6.138` |
 | `v0.0.6.140` | [#140](https://github.com/vixttha/README-HQ/issues/140) | Honor accessible names in mixed Markdown and HTML image links | Medium | `v0.0.6.139` |
+| `v0.0.6.141` | [#147](https://github.com/vixttha/README-HQ/issues/147) | Resolve learning intake against a pinned external technique catalog | Unassigned (severity not evidenced) | `v0.0.6.140` |
 
 ## Repair batches
 
-The [batch schedule](BATCHES.md) groups the existing checkpoints .68–.140 into batches of up to 15. Batch 1 covers .68–.82, spanning the earlier ten-checkpoint plan and this plan's first five checkpoints. Review the exact batch head and checkpoint evidence before moving on.
+The [batch schedule](BATCHES.md) groups the existing checkpoints .68–.141 into batches of up to 15. Batch 1 covers .68–.82, spanning the earlier ten-checkpoint plan and this plan's first five checkpoints. Review the exact batch head and checkpoint evidence before moving on.
 
 ## Keeping the plan current
 
@@ -499,3 +500,11 @@ Keep the existing acceptance records for the 67-checkpoint candidate open until 
 - **After the repair** The named mixed-markup fixture passes and both local resources are checked. Existing named controls pass and an image-only link with no accessible name fails.
 - **Public runners** `ubuntu-latest`, `windows-latest`. [#140](https://github.com/vixttha/README-HQ/issues/140) · [Existing audit evidence](https://github.com/vixttha/README-HQ/actions/runs/44642764179/job/135977711852)
 - **Related issues** [#28](https://github.com/vixttha/README-HQ/issues/28), [#74](https://github.com/vixttha/README-HQ/issues/74), [#113](https://github.com/vixttha/README-HQ/issues/113).
+
+### v0.0.6.141
+
+- **Issue and disposition** [#147](https://github.com/vixttha/README-HQ/issues/147) remains open. New checkpoint awaits owner approval. Severity is unassigned because the issue supplies no supported priority. This is distinct from the historical registry integrity and unknown-ID gates in #79/#97 and from the separately closed ownership/catalog issues [#146](https://github.com/vixttha/README-HQ/issues/146), [#148](https://github.com/vixttha/README-HQ/issues/148), and [#149](https://github.com/vixttha/README-HQ/issues/149).
+- **Affected baseline** [Draft intake at `8d50cae`](https://github.com/vixttha/README-HQ/blob/8d50caec2bc6fcb998994a1fd302294a029325f9/learning/intake.py#L55-L103). Reproduce external-only `relative-navigation` being discarded while a bundled-only ID can still be recommended; include a complete external ordered combination, unavailable catalog, retired/missing step, and repeated observation.
+- **Post-fix acceptance** New receipts pin the external catalog commit and preserve `relative-navigation` plus the valid ordered five-step combination; unavailable or invalid catalogs never silently fall back to bundled entries. Missing/retired steps fail explicitly, repeated inputs are idempotent, and legacy receipts remain readable. Replay the original failure and passing control at the **exact repair SHA**, with post-fix debug before advancement or merge consideration.
+- **Passing control and platforms** Pinned valid external-only entry and complete combination succeed with stable provenance; historical receipt remains readable; unavailable catalog and retired-step negative controls fail explicitly. Standard public `ubuntu-latest` and `windows-latest`, plus Graphify MCP for catalog provenance and graph relations.
+- **Evidence and limits** [Draft PR #150](https://github.com/vixttha/README-HQ/pull/150) at [`90c2944`](https://github.com/vixttha/README-HQ/commit/90c2944f9c293313af42042fa9a782a69f4e431b) reports a successful [Ubuntu, Windows, and Graphify run](https://github.com/vixttha/README-HQ/actions/runs/44671236678/attempts/1). This is draft evidence, not independent acceptance or owner approval. #146 was addressed on `readme-hq` at `788f212`, #148 on `README-Technique-Library` at `5eb7412`, and #149 on `Provenistem` at `e0ffb32`; preserve their separate issue records and gates. No implementation or runner action is authorized by this plan.
