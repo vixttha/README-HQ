@@ -1,0 +1,25 @@
+name: Veraphify v0.0.9 adoption
+
+on:
+  push:
+    branches: ["readme-hq", "chore/veraphify-v0.0.9"]
+    paths:
+      - ".github/workflows/veraphify-adoption.yml"
+      - "graphify-hq/README.md"
+  pull_request:
+    branches: ["readme-hq"]
+    paths:
+      - ".github/workflows/veraphify-adoption.yml"
+      - "graphify-hq/README.md"
+
+permissions:
+  contents: read
+
+jobs:
+  adoption:
+    if: github.event.repository.private == false
+    uses: vixttha/Veraphify/.github/workflows/verify-adopter-v0.0.9.yml@156331636fab4fafdd4ca8d05c5047cb14e5385e
+    with:
+      source_sha: "f50e3749dab90ddfe35894284d1660097a1fb1a8"
+      source_file: "tools/check_readme_hq.py"
+      source_anchor: "def check_registry("
