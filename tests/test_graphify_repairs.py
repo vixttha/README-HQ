@@ -62,6 +62,25 @@ class GraphifyRepairs(unittest.TestCase):
             self.assertIn(f"{ref['path'].replace(' ', '%20')}?plain=1#L{line}", body)
         self.assertIn("CHANGELOG.txt#L7", body)
 
+    def test_graphify_attempt_keeps_verified_evidence_after_a_failed_stage(self):
+        import os
+        from tools import verify_graphify_ci
+
+        with tempfile.TemporaryDirectory() as folder:
+            output = Path(folder) / "attempt"
+            tests = unittest.mock.Mock(returncode=0)
+            failed = unittest.mock.Mock(returncode=7)
+            with patch.object(verify_graphify_ci.subprocess, "run", side_effect=[tests, tests, tests, failed]):
+                self.assertEqual(verify_graphify_ci.verify(output), 7)
+            receipt = json.loads((output / "attempt.json").read_bytes())
+            self.assertEqual(receipt["result"], "failed")
+            self.assertEqual(receipt["steps"][-1]["name"], "repair plan")
+            self.assertFalse(receipt["prior_or_unchecked_receipts_included"])
+            saved = sorted((output / "verified").rglob("receipt.json"))
+            self.assertEqual(len(saved), 6)
+            self.assertTrue(all("maps" in item.parts for item in saved))
+            self.assertEqual(os.getcwd(), str(ROOT))
+
     def test_release_heading_beats_a_draft_placeholder(self):
         content = b"Release notes\n=============\n\nUnreleased\n----------\n\n- TODO\n\n2.34.2 (2026-05-14)\n-------------------\n"
         with patch.object(maps, "source_bytes", return_value=content):

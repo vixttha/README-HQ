@@ -71,19 +71,11 @@ jobs:
           python -m pip check
       - name: Verify Graphify, repair plan, and packaged self-map
         shell: bash
-        run: |
-          python -m unittest discover -s graphify-hq/template/v0.0.8 -p 'test_*.py' -v
-          python -m unittest discover -s tests -p 'test_graphify*.py' -v
-          python graphify-hq/version_maps.py --check
-          python tools/verify_plan.py --mcp
-          kit=graphify-hq/template/v0.0.8
-          python "$kit/self_map.py" "$RUNNER_TEMP/self-map.json"
-          python "$kit/evidence_map.py" "$RUNNER_TEMP/self-map.json" "$RUNNER_TEMP/self-map"
-      - name: Preserve Graphify receipts
+        run: python tools/verify_graphify_ci.py "$RUNNER_TEMP/graphify-evidence"
+      - name: Preserve Graphify receipts and attempt diagnostic
+        if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: graphify-receipts-${{ github.sha }}-attempt-${{ github.run_attempt }}
-          path: |
-            graphify-hq/maps/**/receipt.json
-            graphify-hq/plans/**/receipt.json
-            ${{ runner.temp }}/self-map/receipt.json
+          path: ${{ runner.temp }}/graphify-evidence/
+          if-no-files-found: ignore
