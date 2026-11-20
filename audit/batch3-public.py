@@ -24,7 +24,9 @@ POINTS = [
     (111, "5786639b128fa5db83663b7fee8b8c6c1d4926a7", "89c29a7274f1af1fabf191690ebf6826ef69fa5c", "draft_rejects_symlink"),
     (112, "44174db2d70c6af6a7fb58d5fa5683bf64c48458", "808446d8de38e5dfe7e87224b090b69d8389e59b", "receipt_persistence_failure"),
 ]
-FOLLOW_UPS = []
+FIXTURE_CONTROL = "2ff499ee9918d3c202f708bad58ab341944b7848"
+FIXTURE_TREE = "be8ceb465556e953544b85c844a868fe9b2dff49"
+FIXTURE_ISSUES = {104, 108, 112}
 GRAPHIFY_ONLY = {98, 100, 105}
 KIT = Path("graphify-hq/template/v0.0.8")
 READER_TEST = Path("tests/test_readme_repairs.py")
@@ -56,14 +58,14 @@ def focused(checkout, path, selector, *, baseline=False):
         result.check_returncode()
 
 
-def repro(checkout, repair, test, selector):
+def focused_from(checkout, repair, test, selector, *, baseline):
     content = subprocess.check_output(["git", "show", f"{repair}:{test.as_posix()}"], cwd=checkout)
-    temporary = test.with_name("_batch3_predecessor_test.py")
+    temporary = test.with_name("_batch3_fixture_test.py")
     target = checkout / temporary
     with target.open("xb") as handle:
         handle.write(content)
     try:
-        focused(checkout, temporary, selector, baseline=True)
+        focused(checkout, temporary, selector, baseline=baseline)
     finally:
         target.unlink()
 
@@ -129,7 +131,7 @@ def main():
 
     parent = BASE
     run(checkout, "git", "checkout", "--detach", parent)
-    for issue, sha, tree, selector in [*POINTS, *FOLLOW_UPS]:
+    for issue, sha, tree, selector in POINTS:
         row = {"checkpoint": f"v0.0.6.{issue}", "commit": sha, "parent": parent,
                "tree": tree, "test": selector, "result": "started"}
         report["checkpoints"].append(row)
@@ -139,7 +141,8 @@ def main():
             applicable = linux or issue not in GRAPHIFY_ONLY
             test = GRAPHIFY_TEST if issue in GRAPHIFY_ONLY else READER_TEST
             if applicable:
-                repro(checkout, sha, test, selector)
+                revision = FIXTURE_CONTROL if issue in FIXTURE_ISSUES else sha
+                focused_from(checkout, revision, test, selector, baseline=True)
                 row["baseline"] = "reproduced"
             run(checkout, "git", "checkout", "--detach", sha)
             actual = run(checkout, "git", "rev-parse", "HEAD", "HEAD^", "HEAD^{tree}").split()
@@ -148,7 +151,11 @@ def main():
             if not applicable:
                 row.update(result="not_applicable", detail="Graphify compiler and MCP run on Ubuntu")
                 continue
-            focused(checkout, test, selector)
+            if issue in FIXTURE_ISSUES:
+                focused_from(checkout, FIXTURE_CONTROL, test, selector, baseline=False)
+                row["fixture_revision"] = FIXTURE_CONTROL
+            else:
+                focused(checkout, test, selector)
             if issue == 100:
                 inventory_boundary(checkout, output)
             if issue == 108:
@@ -166,6 +173,20 @@ def main():
             parent = sha
             save()
             print("::endgroup::", flush=True)
+    run(checkout, "git", "checkout", "--detach", FIXTURE_CONTROL)
+    if run(checkout, "git", "rev-parse", "HEAD", "HEAD^", "HEAD^{tree}").split() != [FIXTURE_CONTROL, parent, FIXTURE_TREE]:
+        raise ValueError("Fixture-control revision differs from its pinned parent or tree")
+    follow_up = {"label": "fixture-control follow-up", "commit": FIXTURE_CONTROL, "parent": parent,
+                 "tree": FIXTURE_TREE, "result": "started"}
+    report["follow_ups"] = [follow_up]
+    try:
+        for issue, _, _, selector in POINTS:
+            if issue in FIXTURE_ISSUES:
+                focused(checkout, READER_TEST, selector)
+        follow_up["result"] = "passed"
+    finally:
+        save()
+    parent = FIXTURE_CONTROL
     report["candidate"] = parent
     tasks = [
         ("reader CLI", ("tools/check_readme_hq.py", "--receipt", str(output / "reader.json"))),
