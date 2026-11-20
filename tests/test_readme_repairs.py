@@ -21,7 +21,7 @@ from urllib.error import HTTPError
 from urllib.parse import urlsplit
 from hq_smoke import verify_first_action
 from check_readme_hq import check_evidence, check_registry, check_versions, evidence_identity, target_readme
-from verify_plan import verify, split_checkpoints, stage_partitions
+from verify_plan import acceptance_sections, split_checkpoints, stage_partitions, verify
 
 
 @contextlib.contextmanager
@@ -597,6 +597,17 @@ class EvidenceTests(unittest.TestCase):
                 verify_with(original[:start] + body + original[end:])
         with contextlib.redirect_stdout(StringIO()):
             verify_with(original)
+
+    def test_plan_acceptance_preserves_heading_text_inside_fenced_examples(self):
+        documented = "### v0.0.6.1\n\n- Run the example.\n"
+        example = ("   ````markdown\n## This is literal\n```\n"
+                   "### v0.0.6.99\n~~~\n````\n"
+                   "~~~markdown\n## Also literal\n~~~\n")
+        next_checkpoint = "### v0.0.6.2\n\n- Check the result.\n"
+        plan = "# Plan\n" + documented + example + next_checkpoint
+        self.assertEqual(acceptance_sections(plan), [(documented + example).rstrip(), next_checkpoint.rstrip()])
+        altered = plan.replace("This is literal", "Changed example")
+        self.assertNotEqual(acceptance_sections(altered), acceptance_sections(plan))
 
     def test_plan_file_inventory_is_bound_to_approved_partition(self):
         from verify_plan import GRAPH, read_json

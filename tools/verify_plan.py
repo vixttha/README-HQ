@@ -69,7 +69,22 @@ def rows(content):
 
 def acceptance_sections(content):
     verified = []
-    sections = re.split(r"(?m)(?=^#{1,3} )", content)
+    sections = []
+    fence = None
+    start = offset = 0
+    for line in content.splitlines(keepends=True):
+        delimiter = re.match(r"^ {0,3}(`{3,}|~{3,})(.*)$", line.rstrip("\r\n"))
+        if delimiter:
+            marker, rest = delimiter.groups()
+            if fence is None and (marker[0] == "~" or "`" not in rest):
+                fence = marker
+            elif fence and marker[0] == fence[0] and len(marker) >= len(fence) and not rest.strip():
+                fence = None
+        elif fence is None and re.match(r"^#{1,3} ", line):
+            sections.append(content[start:offset])
+            start = offset
+        offset += len(line)
+    sections.append(content[start:])
     for section in sections:
         heading = section.split("\n", 1)[0].rstrip()
         if re.fullmatch(r"### v0\.0\.6\.[0-9]+", heading) or heading in {
