@@ -730,6 +730,50 @@ class EvidenceTests(unittest.TestCase):
                 self.assertEqual(result["registry_sha256"], sha256(retired).hexdigest())
                 self.assertEqual(result["recommendations"], [])
 
+    def test_learning_distinguishes_unknown_retired_and_unselected_ids(self):
+        loader = importlib.util.spec_from_file_location("intake", ROOT / "learning/intake.py")
+        intake = importlib.util.module_from_spec(loader)
+        loader.loader.exec_module(intake)
+        with repository({"README.md": "# Evidence"}) as tree:
+            tree.git("remote", "add", "origin", "https://github.com/example/project.git")
+            source = {"id": "example", "checkout": str(tree.root), "ref": "HEAD",
+                      "repository": "example/project", "path": "README.md",
+                      "line": 1, "anchor": "# Evidence", "visibility": "public"}
+            finding = {"source": "example", "decision": "adapt", "rationale": "Explain the result."}
+            request = {"visibility": "public", "sources": [source], "selected": [],
+                       "target": {**source, "audience": "reader", "capability": "audit"},
+                       "findings": [{**finding, "technique": "typo"}]}
+            registry = tree.root / "techniques/registry.json"
+            registry.parent.mkdir()
+            registry.write_text(json.dumps({"techniques": [
+                {"id": "sample", "status": "active"}, {"id": "old", "status": "retired"},
+            ]}), encoding="utf-8")
+
+            def fetch(route):
+                return ({"private": False, "visibility": "public"} if route == "example/project"
+                        else {"sha": tree.commit})
+
+            destination = tree.root / "evidence"
+            with patch.object(intake, "ROOT", tree.root):
+                with self.assertRaisesRegex(ValueError, "unknown technique ID"):
+                    intake.record_intake(request, destination, fetch=fetch)
+                self.assertFalse(destination.exists())
+                for identifier, selected, reason in (
+                    ("old", [], "retired"),
+                    ("sample", [], "source not selected"),
+                    ("sample", ["example"], None),
+                ):
+                    request["selected"] = selected
+                    request["findings"][0]["technique"] = identifier
+                    receipt = intake.record_intake(request, destination, fetch=fetch)
+                    record = json.loads(receipt.read_bytes())
+                    if reason:
+                        self.assertEqual(record["recommendations"], [])
+                        self.assertEqual(record["excluded"][0]["reason"], reason)
+                    else:
+                        self.assertEqual(record["recommendations"][0]["technique"], identifier)
+                        self.assertNotIn("excluded", record)
+
     def test_public_learning_refusal_writes_nothing(self):
         spec = importlib.util.spec_from_file_location("intake", ROOT / "learning/intake.py")
         intake = importlib.util.module_from_spec(spec)
