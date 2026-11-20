@@ -170,6 +170,12 @@ def verify_first_action(tree, path, *, allow_network=False, subproject="."):
                              "matched_streams": matched_streams, **observation}}
 
 
+def coverage_incomplete(cases):
+    smoke = cases.get("first_action", {})
+    return (cases.get("navigation", {}).get("result") == "unchecked"
+            or (smoke.get("required") is True and smoke.get("result") != "passed"))
+
+
 def write_receipt(destination, tree, cases, errors, gaps, *, validator_path=None, scope=None):
     sources, unavailable_sources = {}, []
     if tree:
@@ -199,8 +205,7 @@ def write_receipt(destination, tree, cases, errors, gaps, *, validator_path=None
             "runner_os": os.environ.get("RUNNER_OS") if hosted else None,
         },
         "sources": sources, "cases": cases, "errors": errors, "unchecked": gaps,
-        "result": ("failed" if errors else
-                   "incomplete" if cases.get("navigation", {}).get("result") == "unchecked" else "passed"),
+        "result": "failed" if errors else "incomplete" if coverage_incomplete(cases) else "passed",
     }
     if tree is not None:
         data["git_objects"] = {"fetch_policy": "allow" if tree.allow_git_fetch else "offline",

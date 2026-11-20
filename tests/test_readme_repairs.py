@@ -735,6 +735,37 @@ A separate [same label](fourth.md).
             self.assertEqual(smoke(action), "failed")
             self.assertEqual(smoke({"url": "https://example.invalid", "expected": {"http_status": 200}}), "unchecked")
 
+    def test_required_smoke_distinguishes_pass_failure_and_incomplete_coverage(self):
+        from check_readme_hq import main
+
+        with repository({"README.md": "# Guide\n\nThis is the first action fixture."}) as tree:
+            receipt, spec = tree.root / "receipt.json", tree.root / "spec.json"
+            url = "https://example.invalid/first-action"
+            remote = {"commit": tree.commit, "url": url, "expected": {"http_status": 200}}
+            local = {"commit": tree.commit, "argv": [sys.executable, "-c", "print('ready')"],
+                     "expected": {"exit": 0, "contains": "ready"}}
+            for values, observed, allow, exit_code, result in (
+                (remote, None, False, 2, "unchecked"),
+                (remote, HTTPError(url, 403, "gated", {}, BytesIO()), True, 2, "gated"),
+                (remote, OSError("not reachable"), True, 2, "unresolved"),
+                (remote, HTTPError(url, 404, "missing", {}, BytesIO()), True, 1, "failed"),
+                (local, None, False, 0, "passed"),
+            ):
+                with self.subTest(result=result):
+                    spec.write_text(json.dumps(values), encoding="utf-8")
+                    argv = ["check", "--repo", str(tree.root), "--profile", "reference", "--smoke", str(spec),
+                            "--require-smoke", "--receipt", str(receipt)]
+                    if allow:
+                        argv.append("--allow-network")
+                    with (patch.object(sys, "argv", argv), patch("hq_smoke.urlopen", side_effect=observed) as request,
+                          contextlib.redirect_stdout(StringIO()), contextlib.redirect_stderr(StringIO())):
+                        self.assertEqual(main(), exit_code)
+                        self.assertEqual(request.call_count, int(allow))
+                    data = json.loads(receipt.read_bytes())
+                    self.assertTrue(data["cases"]["first_action"]["required"])
+                    self.assertEqual(data["cases"]["first_action"]["result"], result)
+                    self.assertEqual(data["result"], {0: "passed", 1: "failed", 2: "incomplete"}[exit_code])
+
     def test_smoke_spec_modes_are_validated_before_execution(self):
         with repository({"README.md": "# Example"}) as tree:
             spec = tree.root / "smoke.json"

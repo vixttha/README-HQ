@@ -327,7 +327,10 @@ def main():
     parser.add_argument("--smoke", type=Path, help="an explicit local first-action specification to execute")
     parser.add_argument("--allow-git-fetch", action="store_true", help="permit demand fetching missing Git blobs")
     parser.add_argument("--allow-network", action="store_true", help="allow the explicit remote first-action probe")
+    parser.add_argument("--require-smoke", action="store_true", help="return incomplete unless the requested smoke check passes")
     args = parser.parse_args()
+    if args.require_smoke and not args.smoke:
+        parser.error("--require-smoke requires an explicit --smoke")
     for option, value in (("--subproject", args.subproject), ("--profile", args.profile),
                           ("--smoke", args.smoke), ("--allow-network", args.allow_network or None)):
         if args.repo is None and value is not None:
@@ -360,6 +363,8 @@ def main():
             if args.smoke:
                 from hq_smoke import verify_first_action
                 outcome = verify_first_action(tree, args.smoke, allow_network=args.allow_network, subproject=args.subproject)
+                if args.require_smoke:
+                    outcome["required"] = True
                 cases["first_action"] = outcome
                 if outcome["result"] == "failed":
                     errors.append("first action failed its expected result")
@@ -389,7 +394,8 @@ def main():
         print(f"README: {cases['entrypoint']}; checked {cases['local_links']} local links")
         for gap in gaps:
             print(f"Unchecked: {gap}")
-        if cases.get("navigation", {}).get("result") == "unchecked":
+        from hq_smoke import coverage_incomplete
+        if coverage_incomplete(cases):
             return 2
     else:
         print(f"Validated {cases['standalone_versions']} standalone version(s), {cases['techniques']} techniques, "
