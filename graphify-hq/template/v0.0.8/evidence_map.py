@@ -95,6 +95,8 @@ def validate_manifest(data):
     features = data["features"]
     if not isinstance(features, list) or len(features) > 32:
         raise ValueError("Expected at most 32 features")
+    if not features and not inventory:
+        raise ValueError("Graphify evidence requires at least one feature or inventory file")
     ids = set()
     for feature in features:
         if not isinstance(feature, dict) or set(feature) - {OPTIONAL_RELATION} != {"id", "label", *RELATIONS}:

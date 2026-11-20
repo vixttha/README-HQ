@@ -24,7 +24,8 @@ connects matching evidence anchors to their files. The compiler accepts up to
 64 inventory files and 1,000,000 bytes per Git blob for both inventory and line
 references. Inventory hashing accepts binary bytes, while a line reference
 requires UTF-8 text and an exact anchor of up to 500 characters. The compiler
-reports the observed size when a blob exceeds the cap.
+reports the observed size when a blob exceeds the cap. A manifest needs at
+least one feature or an inventory file.
 
 Test links identify definitions. The associated runner job records the
 execution result. The [self-map manifest](self-map.json) supplies feature

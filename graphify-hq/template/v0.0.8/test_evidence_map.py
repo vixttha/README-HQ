@@ -1,10 +1,13 @@
+import asyncio
+from hashlib import sha256
 import json
+import subprocess
 import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from evidence_map import MAX_SOURCE_BYTES, build, locate, source_blob, source_lines, validate_manifest
+from evidence_map import MAX_SOURCE_BYTES, build, locate, source_blob, source_lines, validate_manifest, verify_mcp
 from github_provenance import verify_pull_request
 
 class ManifestTests(unittest.TestCase):
@@ -85,9 +88,24 @@ class ManifestTests(unittest.TestCase):
         self.assertIn((anchor, "file:export.py", "located_in"), edges)
         self.assertEqual(receipt["source_files"], ["export.py"])
 
-    def test_feature_links_are_optional(self):
+    def test_evidence_map_requires_features_or_inventory(self):
+        feature = self.manifest["features"][0]
         self.manifest["features"] = []
-        self.assertEqual(validate_manifest(self.manifest)["features"], [])
+        with self.assertRaisesRegex(ValueError, "at least one feature or inventory"):
+            validate_manifest(self.manifest)
+        commit = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
+        self.manifest.update(source_commit=commit, source_files=["README.md"])
+        checkout_bytes = subprocess.check_output(["git", "show", f"{commit}:README.md"])
+        anchor = checkout_bytes.decode("utf-8").splitlines()[0]
+        reference = {"path": "README.md", "anchor": anchor, "line": 1}
+        mapped = {**feature, **dict.fromkeys(("documented_in", "changed_in", "tested_by"), [reference])}
+        for features, nodes, edges in (([], 2, 1), ([mapped], 6, 8)):
+            self.manifest["features"] = features
+            with self.subTest(features=features), tempfile.TemporaryDirectory() as folder:
+                graph, receipt = build(validate_manifest(self.manifest), Path(folder))
+                self.assertEqual((receipt["nodes"], receipt["edges"]), (nodes, edges))
+                self.assertEqual(receipt["source_sha256"]["README.md"], sha256(checkout_bytes).hexdigest())
+                asyncio.run(verify_mcp(graph, receipt))
 
     def test_source_path_must_stay_inside_commit(self):
         test = self.manifest["features"][0]["tested_by"][0]
