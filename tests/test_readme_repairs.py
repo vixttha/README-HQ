@@ -155,6 +155,23 @@ Literal example `[Ignore](literal.md)`.
                 self.assertNotEqual(outcome["observed"]["file_before_sha256"], outcome["observed"]["file_after_sha256"])
                 self.assertEqual(smoke(code, name, file_sha256="0" * 64)["result"], "failed")
 
+    def test_deleted_draft_still_writes_failure_receipt(self):
+        with repository({"README.md": "# Guide\n\nThis repository has a reference guide."}) as tree:
+            path = tree.root / "audit.json"
+            argv = [sys.executable, str(ROOT / "tools/check_readme_hq.py"), "--repo", str(tree.root),
+                    "--profile", "reference", "--draft", "--receipt", str(path)]
+            good = subprocess.run(argv, capture_output=True, text=True)
+            self.assertEqual(good.returncode, 0, good.stderr)
+            self.assertIn("README.md", json.loads(path.read_bytes())["sources"])
+            (tree.root / "README.md").unlink()
+            failed = subprocess.run(argv, capture_output=True, text=True)
+            receipt = json.loads(path.read_bytes())
+            self.assertEqual(failed.returncode, 1, failed.stderr)
+            self.assertNotIn("Traceback", failed.stderr)
+            self.assertEqual(receipt["result"], "failed")
+            self.assertEqual(receipt["unavailable_sources"], ["README.md"])
+            self.assertTrue(any("README.md" in error for error in receipt["errors"]))
+
     def test_ascii_technique_listing(self):
         result = subprocess.run([sys.executable, str(ROOT / "tools/check_readme_hq.py"), "--list"],
                                 cwd=ROOT, env={**os.environ, "PYTHONIOENCODING": "ascii"},

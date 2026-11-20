@@ -114,12 +114,15 @@ def verify_first_action(tree, path, *, allow_network=False):
 
 
 def write_receipt(destination, tree, cases, errors, gaps):
-    sources = {}
+    sources, unavailable_sources = {}, []
     if tree:
         name = cases.get("entrypoint") or "README.md"
         for path in (name, "tools/check_readme_hq.py"):
             if path in tree.entries():
-                sources[path] = sha256(tree.read(path)).hexdigest()
+                try:
+                    sources[path] = sha256(tree.read(path)).hexdigest()
+                except (KeyError, OSError, ValueError):
+                    unavailable_sources.append(path)
     run = os.environ.get("GITHUB_RUN_ID")
     repo = os.environ.get("GITHUB_REPOSITORY")
     data = {
@@ -131,4 +134,6 @@ def write_receipt(destination, tree, cases, errors, gaps):
         "sources": sources, "cases": cases, "errors": errors, "unchecked": gaps,
         "result": "failed" if errors else "passed",
     }
+    if unavailable_sources:
+        data["unavailable_sources"] = unavailable_sources
     destination.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
