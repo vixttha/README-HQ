@@ -10,7 +10,8 @@ Set `repository` to the GitHub owner and repository and `source_commit` to the
 full SHA already fetched into the checkout. For a same-repository pull request,
 add `pull_request` with its `number` and `source_branch`. Running with
 `--verify-pr` queries GitHub for commit membership and exact-SHA reviews. The
-live observation is printed separately from the deterministic receipt.
+live observation identifies the base ref, base commit, and head commit. It is
+printed separately from the deterministic receipt.
 
 ## Feature evidence links
 

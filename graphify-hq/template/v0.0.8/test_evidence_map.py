@@ -93,7 +93,7 @@ class ProvenanceTests(unittest.TestCase):
         self.expected = {"number": 3, "source_branch": "topic"}
         self.pr = {
             "number": 3, "state": "open", "draft": False, "merged": False,
-            "base": {"repo": {"full_name": self.repo}},
+            "base": {"repo": {"full_name": self.repo}, "ref": "main", "sha": "c" * 40},
             "head": {"repo": {"full_name": self.repo}, "ref": "topic", "sha": self.head},
             "merge_commit_sha": None,
         }
@@ -109,6 +109,19 @@ class ProvenanceTests(unittest.TestCase):
 
     def verify(self):
         return verify_pull_request(self.repo, self.source, self.expected, self.fetch)
+
+    def test_base_provenance_rejects_retargeting_with_the_same_head(self):
+        outcome = verify_pull_request(self.repo, self.head, self.expected, self.fetch)
+        self.assertEqual((outcome["base_ref"], outcome["base_commit"], outcome["head_commit"]),
+                         ("main", "c" * 40, self.head))
+        for change in ({"ref": "develop"}, {"sha": "d" * 40}):
+            with self.subTest(change=change):
+                retargeted = {**self.pr, "base": {**self.pr["base"], **change}}
+                metadata = iter((self.pr, retargeted))
+                def fetch(route):
+                    return next(metadata) if route == "pulls/3" else self.fetch(route)
+                with self.assertRaisesRegex(ValueError, "changed during provenance verification"):
+                    verify_pull_request(self.repo, self.head, self.expected, fetch)
 
     def test_historical_commit_requires_github_membership(self):
         self.assertEqual(self.verify()["source_relation"], "historical PR commit")
