@@ -91,16 +91,20 @@ def verify(check_mcp):
     plan_rows = rows((ROOT / PLAN).read_text(encoding="utf-8"))
     if plan_rows != rows(git.read(PLAN, BASELINE_PLAN).decode()):
         raise ValueError("repair rows differ from the approved checkpoint ledger")
-    canonical = {}
+    canonical, inventories = {}, {}
     prefix = GRAPH.relative_to(ROOT).as_posix() + "/"
     for path in sorted(git.entries(BASELINE_PLAN)):
         if path.startswith(prefix) and path.endswith("/manifest.json"):
             manifest = parse_json(git.read(path, BASELINE_PLAN), path)
+            inventories[path] = sorted(manifest["source_files"])
             canonical.update((feature["id"], feature) for feature in manifest["features"])
     validated, partitions, commits = {}, [], set()
     manifests = [GRAPH / "manifest.json", *sorted(GRAPH.glob("*/manifest.json"))]
     for manifest in manifests:
         data = read_json(manifest)
+        path = manifest.relative_to(ROOT).as_posix()
+        if path not in inventories or sorted(data.get("source_files", [])) != inventories[path]:
+            raise ValueError(f"{path}: source inventory differs from the approved partition")
         features = data["features"]
         if not features or len(features) > 32:
             raise ValueError(f"{manifest}: invalid feature partition size")

@@ -3,6 +3,7 @@
 import contextlib
 from hashlib import sha256
 import importlib.util
+from io import StringIO
 import json
 import os
 from pathlib import Path
@@ -19,7 +20,7 @@ from hq_navigation import check_document, readme_path, same_repo_target
 from urllib.parse import urlsplit
 from hq_smoke import verify_first_action
 from check_readme_hq import check_evidence, check_registry, check_versions, evidence_identity, target_readme
-from verify_plan import split_checkpoints, stage_partitions
+from verify_plan import verify, split_checkpoints, stage_partitions
 
 
 @contextlib.contextmanager
@@ -381,6 +382,22 @@ class EvidenceTests(unittest.TestCase):
                 with repository({**modified, paths[1]: json.dumps(invalid)}) as edited:
                     with self.assertRaisesRegex(ValueError, "duplicate|requires checked"):
                         check_registry([], edited)
+
+    def test_plan_file_inventory_is_bound_to_approved_partition(self):
+        from verify_plan import GRAPH, read_json
+        original = read_json(GRAPH / "manifest.json")
+        unchanged = {**original, "source_files": list(reversed(original["source_files"]))}
+        with contextlib.redirect_stdout(StringIO()):
+            for files in (original["source_files"][1:], [*original["source_files"], "README.md"]):
+                with patch("verify_plan.read_json", side_effect=lambda path: (
+                    {**original, "source_files": files} if path == GRAPH / "manifest.json" else read_json(path)
+                )):
+                    with self.assertRaisesRegex(ValueError, "source inventory differs"):
+                        verify(False)
+            with patch("verify_plan.read_json", side_effect=lambda path: (
+                unchanged if path == GRAPH / "manifest.json" else read_json(path)
+            )):
+                verify(False)
 
     def test_partition_capacity_preserves_order(self):
         features = list(range(100))
