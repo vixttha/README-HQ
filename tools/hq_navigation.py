@@ -346,8 +346,8 @@ def verify_media(path, data):
             element = ElementTree.fromstring(data)
         except ElementTree.ParseError as error:
             raise ValueError("invalid SVG image") from error
-        if element.tag.rsplit("}", 1)[-1] != "svg":
-            raise ValueError("expected an SVG root")
+        if element.tag != "{http://www.w3.org/2000/svg}svg":
+            raise ValueError("expected an SVG root in the SVG namespace")
     elif extension in IMAGE_FORMATS:
         try:
             with Image.open(BytesIO(data)) as image:

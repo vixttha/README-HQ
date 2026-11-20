@@ -264,6 +264,21 @@ A separate [same label](fourth.md).
             original.git("update-ref", "refs/remotes/origin/origin/main", topic.commit)
             self.assertEqual(resolve("origin/main"), ("README.md", topic.commit))
 
+    def test_svg_root_requires_the_svg_namespace(self):
+        default = '<svg xmlns="http://www.w3.org/2000/svg"/>'
+        prefixed = '<s:svg xmlns:s="http://www.w3.org/2000/svg"/>'
+        invalid = {"foreign.svg": '<svg xmlns="urn:other"/>', "bare.svg": "<svg/>",
+                   "broken.svg": '<svg xmlns="http://www.w3.org/2000/svg">'}
+        images = {"default.svg": default, "prefixed.svg": prefixed, **invalid}
+        readme = "\n".join(f"![Diagram]({name})" for name in images)
+        with repository({"README.md": readme, **images}) as tree:
+            errors, gaps = [], []
+            self.assertEqual(check_document(tree, "README.md", errors, gaps), 2)
+            self.assertEqual(gaps, [])
+            self.assertEqual(len(errors), 3)
+            self.assertTrue(all("SVG namespace" in error for error in errors[:2]))
+            self.assertIn("invalid SVG image", errors[2])
+
     def test_animated_media_decodes_later_frames_and_bounds_coverage(self):
         from PIL import Image
         from hq_navigation import verify_media
