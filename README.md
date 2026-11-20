@@ -26,7 +26,7 @@ python3 -m pip install --require-hashes -r tools/requirements.txt
 python3 tools/check_readme_hq.py
 ```
 
-To audit a consumer, run `python3 tools/check_readme_hq.py --repo /path/to/project --ref HEAD --receipt audit.json`. Use `--subproject` for a monorepo package or `--profile reference` for reference-only documentation.
+To audit a consumer, run `python3 tools/check_readme_hq.py --repo /path/to/project --ref HEAD --receipt audit.json`. Point `--repo` at the Git root. Use `--subproject` for a monorepo package or `--profile reference` for reference-only documentation.
 
 On Windows, install the same requirements with `py -3 -m pip install --require-hashes -r tools/requirements.txt` and use `py -3 tools/check_readme_hq.py`. A passing check prints counts for the version index, technique catalog, local navigation, and archived source files.
 

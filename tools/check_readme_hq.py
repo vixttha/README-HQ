@@ -301,6 +301,10 @@ def main():
             raise ValueError("--draft applies to the current checkout only")
         tree = GitTree(args.repo or ROOT, args.ref, draft=args.draft)
         if args.repo:
+            top_level = Path(tree.git("rev-parse", "--show-toplevel").decode("utf-8").rstrip("\r\n")).resolve()
+            if tree.root != top_level:
+                tree = None
+                raise ValueError("--repo must name the Git root; select a nested README with --subproject")
             entry, count = target_readme(tree, args.subproject, errors, gaps, args.profile)
             cases.update(entrypoint=entry, local_links=count)
             if args.smoke:

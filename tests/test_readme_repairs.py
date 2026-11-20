@@ -39,6 +39,28 @@ def repository(files):
 
 
 class ReaderTests(unittest.TestCase):
+    def test_repo_cli_requires_root_and_supports_explicit_subproject(self):
+        body = "# Guide\n\nThis guide explains the reference fixture.\n"
+        with repository({"README.md": body, "packages/demo/README.md": body}) as tree:
+            receipt = tree.root / "audit.json"
+            argv = [sys.executable, str(ROOT / "tools/check_readme_hq.py"), "--profile", "reference",
+                    "--receipt", str(receipt), "--repo"]
+            for path, options, expected in (
+                (tree.root, [], "README.md"),
+                (tree.root / "packages/demo", [], None),
+                (tree.root, ["--subproject", "packages/demo"], "packages/demo/README.md"),
+            ):
+                with self.subTest(path=path, options=options):
+                    result = subprocess.run([*argv, str(path), *options], capture_output=True)
+                    record = json.loads(receipt.read_bytes())
+                    self.assertEqual(result.returncode, int(expected is None), result.stderr)
+                    if expected is None:
+                        self.assertIn(b"--repo must name the Git root", result.stderr)
+                        self.assertIn(b"--subproject", result.stderr)
+                        self.assertIsNone(record["commit"])
+                    else:
+                        self.assertEqual(record["cases"]["entrypoint"], expected)
+
     def test_pinned_readme_and_monorepo_routes(self):
         with repository({"README.md": "# Root", ".github/README.md": "# Published",
                          "docs/README.md": "# Docs", "packages/example/README.md": "# Subproject"}) as tree:
