@@ -351,13 +351,26 @@ async def verify_mcp(graph, receipt):
         raise ValueError("Graph digest differs from the expected receipt")
     saved = json.loads(graph.read_bytes())
     actual = {}
+    destinations = {key: list(items) for key, items in receipt["feature_destinations"].items()}
+    inventory = set(receipt["source_files"])
+    root = "source:" + receipt["source_commit"]
+    files = {node["id"]: (node["label"], node["source_file"]) for node in saved["nodes"]
+             if node["id"].startswith("file:")}
+    if files != {"file:" + path: (path, path) for path in inventory}:
+        raise ValueError("Graph inventory identities differ from the pinned manifest")
+    for path in sorted(inventory):
+        destinations.setdefault(root, []).append(["contains_source", "file:" + path, path, None])
+    for refs in receipt["feature_destinations"].values():
+        for _, target, path, line in refs:
+            if path in inventory:
+                destinations[target] = [["located_in", "file:" + path, path, line]]
     for edge in saved["links"]:
-        if edge["source"] in receipt["feature_destinations"]:
+        if edge["source"] in receipt["feature_destinations"] or edge["relation"] in {"contains_source", "located_in"}:
             actual.setdefault(edge["source"], []).append([
                 edge["relation"], edge["target"], edge["source_file"], edge["source_location"],
             ])
     if {key: sorted(items) for key, items in actual.items()} != {
-        key: sorted(items) for key, items in receipt["feature_destinations"].items()
+        key: sorted(items) for key, items in destinations.items()
     }:
         raise ValueError("Graph evidence destinations differ from the pinned manifest")
 
@@ -379,7 +392,7 @@ async def verify_mcp(graph, receipt):
             }
             if not expected <= set(stats.splitlines()):
                 raise ValueError("Graphify MCP returned different graph statistics or source SHA")
-            for node, targets in receipt["feature_destinations"].items():
+            for node, targets in destinations.items():
                 for relation in sorted({item[0] for item in targets}):
                     response = await query("get_neighbors", {
                         "node_id": node, "relation_filter": relation, "token_budget": 16000,
@@ -387,11 +400,13 @@ async def verify_mcp(graph, receipt):
                     if any(token.startswith("... (truncated") for token in response.splitlines()):
                         raise ValueError(f"Graphify MCP readback was truncated for {node}")
                     expected_rows = Counter(
-                        (f"{path} {line}", path, line)
-                        for relationship, _, path, line in targets if relationship == relation
+                        ((path if identity.startswith("file:") else f"{path} {line}"),
+                         path if line else None, line)
+                        for relationship, identity, path, line in targets if relationship == relation
                     )
                     actual_rows = Counter()
-                    pattern = re.compile(r"^  --> (.+) \[" + re.escape(relation) + r"\] \[[^\]]+\] at=(.+):(L[0-9]+)$")
+                    pattern = re.compile(r"^  --> (.+) \[" + re.escape(relation)
+                                         + r"\] \[[^\]]+\](?: at=(.+):(L[0-9]+))?$")
                     for row in response.splitlines():
                         if match := pattern.fullmatch(row):
                             actual_rows[match.groups()] += 1
