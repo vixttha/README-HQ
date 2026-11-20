@@ -49,6 +49,7 @@ class Link:
     line: int
     image: bool = False
     unnamed: bool = False
+    coverage_gap: str | None = None
 
 
 class HtmlLinks(HTMLParser):
@@ -67,6 +68,15 @@ class HtmlLinks(HTMLParser):
                 self.anchors.add(attrs["name"])
             if attrs.get("href"):
                 self.controls.append([attrs["href"], line, bool((attrs.get("aria-label") or "").strip())])
+        if tag in {"source", "img"} and "srcset" in attrs:
+            srcset = attrs["srcset"] or ""
+            candidates = [candidate.split() for candidate in srcset.split(",")]
+            if "data:" in srcset.lower() or not all(1 <= len(parts) <= 2 and (
+                len(parts) == 1 or re.fullmatch(r"(?:[1-9]\d*w|(?:[0-9]+(?:\.[0-9]+)?|\.[0-9]+)x)", parts[1])
+            ) for parts in candidates):
+                self.links.append(Link(srcset, line, coverage_gap="unsupported image source list"))
+            else:
+                self.links.extend(Link(parts[0], line, True) for parts in candidates)
         if tag == "img" and attrs.get("src"):
             self.links.append(Link(attrs["src"], line, True))
             if self.controls and (attrs.get("alt") or "").strip():
@@ -234,6 +244,9 @@ def check_document(tree, source, errors, gaps, *, archive_scope=None):
     count = 0
     for link in links:
         try:
+            if link.coverage_gap:
+                gaps.append(f"{source}:{link.line}: {link.coverage_gap}")
+                continue
             if link.unnamed:
                 raise ValueError("link has no accessible name")
             url = urlsplit(link.path)

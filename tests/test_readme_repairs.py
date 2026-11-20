@@ -104,6 +104,23 @@ Literal example `[Ignore](literal.md)`.
             self.assertTrue(any("unreadable image" in issue for issue in errors))
             self.assertTrue(any("absent.md" in issue for issue in errors))
 
+    def test_responsive_image_sources_are_checked_alongside_fallback(self):
+        body = ('<picture><source media="(prefers-color-scheme: dark)" '
+                'srcset="dark.svg 1x, dark-large.svg 2x"><source srcset="invalid.svg bad">'
+                '<img src="light.svg" alt="Diagram"></picture>')
+        svg = '<svg xmlns="http://www.w3.org/2000/svg"></svg>'
+        for include_large in (False, True):
+            files = {"README.md": body, "dark.svg": svg, "light.svg": svg}
+            if include_large:
+                files["dark-large.svg"] = svg
+            with repository(files) as tree:
+                errors, gaps = [], []
+                self.assertEqual(check_document(tree, "README.md", errors, gaps), 3 if include_large else 2)
+                self.assertEqual(bool(errors), not include_large)
+                if errors:
+                    self.assertIn("dark-large.svg", errors[0])
+                self.assertTrue(any("unsupported image source list" in gap for gap in gaps))
+
     def test_quality_and_smoke_have_separate_outcomes(self):
         with repository({"README.md": "# Package\n\nTODO: document the behavior.\n"}) as tree:
             errors, gaps = [], []
