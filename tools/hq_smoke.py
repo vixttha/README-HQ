@@ -16,6 +16,14 @@ from urllib.request import Request, urlopen
 from hq_data import read_json
 
 
+def require_https_url(value, field):
+    if not isinstance(value, str):
+        raise ValueError(f"{field} must be an HTTPS URL without credentials")
+    url = urlsplit(value)
+    if url.scheme != "https" or not url.hostname or url.username is not None or url.password is not None:
+        raise ValueError(f"{field} must be an HTTPS URL without credentials")
+
+
 def verify_first_action(tree, path, *, allow_network=False, subproject="."):
     spec = read_json(path)
     expected = spec.get("expected")
@@ -27,9 +35,10 @@ def verify_first_action(tree, path, *, allow_network=False, subproject="."):
         raise ValueError("smoke specification does not match the selected commit")
     if "url" in spec:
         target = spec["url"]
-        url = urlsplit(target)
-        if url.scheme != "https" or not url.hostname or url.username or url.password:
-            raise ValueError("an HTTPS reader URL without credentials is required")
+        require_https_url(target, "url")
+        final_url = expected.get("final_url")
+        if "final_url" in expected:
+            require_https_url(final_url, "expected.final_url")
         if not allow_network:
             return {"result": "unchecked", "detail": "network probe not authorized"}
         if type(expected.get("http_status")) is not int:
@@ -43,16 +52,21 @@ def verify_first_action(tree, path, *, allow_network=False, subproject="."):
                 response = error
             with response:
                 status = response.status
+                effective_url = response.geturl()
+                observation = {"http_status": status, "final_url": effective_url,
+                               "final_url_match": None if final_url is None else final_url == effective_url}
                 if status in (401, 403, 429):
-                    return {"result": "gated", "detail": f"HTTP {status}"}
+                    return {"result": "gated", "detail": f"HTTP {status}",
+                            "url": target, "expected": expected, "observed": observation}
                 matched = True
                 if "contains" in expected:
                     body = response.read(1_000_000).decode("utf-8", "replace")
                     matched = expected["contains"] in body
         except (OSError, URLError):
             return {"result": "unresolved", "detail": "network destination could not be reached"}
-        return {"result": "passed" if matched and status == expected["http_status"] else "failed",
-                "url": target, "expected": expected, "observed": {"http_status": status, "content_match": matched}}
+        passed = matched and status == expected["http_status"] and observation["final_url_match"] is not False
+        return {"result": "passed" if passed else "failed", "url": target, "expected": expected,
+                "observed": {**observation, "content_match": matched}}
     argv = spec.get("argv")
     if not isinstance(argv, list) or not argv or not all(isinstance(arg, str) and arg for arg in argv):
         raise ValueError("local smoke needs a nonempty argv array")

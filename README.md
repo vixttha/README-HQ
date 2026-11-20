@@ -28,6 +28,10 @@ python3 tools/check_readme_hq.py
 
 To audit a consumer, run `python3 tools/check_readme_hq.py --repo /path/to/project --ref HEAD --receipt audit.json`. Point `--repo` at the Git root. Use `--subproject` for a monorepo package or `--profile reference` for reference-only documentation.
 
+Pass `--smoke smoke.json` to check a documented first action at the selected commit. A local spec uses `commit`, `argv`, and `expected.exit` with an output marker (`expected.contains`) or a file outcome (`expected.file`). Commands and expected files use the selected subproject as their working directory. A marker can select `expected.stream` as `stdout` or `stderr`. The default, `either`, matches within a single stream.
+
+A remote spec uses `commit`, an HTTPS `url`, and `expected.http_status`. With `--allow-network`, the receipt includes the effective URL and can require an exact `expected.final_url`. Use `expected.contains` for a marker in the first 1,000,000 bytes of the response body. HTTP 401, 403, and 429 are reported as gated.
+
 On Windows, install the same requirements with `py -3 -m pip install --require-hashes -r tools/requirements.txt` and use `py -3 tools/check_readme_hq.py`. A passing check prints counts for the version index, technique catalog, local navigation, and archived source files.
 
 The branch keeps versions and audit findings available between sessions. An authorized human or agent starts each audit, records each new finding, and reviews any resulting project changes.

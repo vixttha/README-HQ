@@ -11,7 +11,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
-from unittest.mock import Mock, patch
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
@@ -378,6 +378,33 @@ A separate [same label](fourth.md).
                         else:
                             read.assert_called_once_with(1_000_000)
                     self.assertTrue(content.closed)
+
+    def test_http_smoke_records_and_can_require_the_effective_url(self):
+        with repository({"README.md": "# Guide"}) as tree:
+            spec = tree.root / "smoke.json"
+            url = "https://example.invalid/guide"
+            final = "https://example.invalid/start"
+            for landing, expected, result in (
+                (final, final, "passed"),
+                ("https://example.invalid/unrelated", final, "failed"),
+                (url, url, "passed"),
+                (final, None, "passed"),
+            ):
+                with self.subTest(landing=landing, expected=expected):
+                    requirements = {"http_status": 200, "contains": "ready"}
+                    if expected is not None:
+                        requirements["final_url"] = expected
+                    spec.write_text(json.dumps({"commit": tree.commit, "url": url, "expected": requirements}),
+                                    encoding="utf-8")
+                    response = HTTPError(landing, 200, "fixture", {}, BytesIO(b"ready"))
+                    with patch("hq_smoke.urlopen", return_value=response) as request:
+                        self.assertEqual(verify_first_action(tree, spec)["result"], "unchecked")
+                        request.assert_not_called()
+                        outcome = verify_first_action(tree, spec, allow_network=True)
+                    self.assertEqual(outcome["result"], result)
+                    self.assertEqual(outcome["url"], url)
+                    self.assertEqual(outcome["observed"]["final_url"], landing)
+                    self.assertIs(outcome["observed"]["final_url_match"], None if expected is None else landing == expected)
 
     def test_smoke_file_checks_prove_a_change(self):
         with repository({"README.md": "# Example", "existing.txt": "old"}) as tree:
