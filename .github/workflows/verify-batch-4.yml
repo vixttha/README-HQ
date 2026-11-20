@@ -25,7 +25,7 @@ jobs:
           persist-credentials: false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
-          ref: 9236e5ee294feee4f9b7e69e12758da0ab1db322
+          ref: fed6ae338df9d984ce9fe767cd1f0857c89a770f
           path: candidate
           fetch-depth: 0
           persist-credentials: false
@@ -57,7 +57,7 @@ jobs:
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
-          ref: 9236e5ee294feee4f9b7e69e12758da0ab1db322
+          ref: fed6ae338df9d984ce9fe767cd1f0857c89a770f
           fetch-depth: 0
           persist-credentials: false
       - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
@@ -67,6 +67,19 @@ jobs:
         run: python -m pip install --require-hashes -r tools/requirements.txt
       - name: Verify the README HQ baseline
         run: python tools/check_readme_hq.py
+      - name: Check published plan bytes and reject a prose-only mismatch
+        shell: bash
+        run: |
+          statement=$(sed -n 's/^          \(git show .* | cmp .*\)$/\1/p' .github/workflows/verify-repair-plan.yml)
+          test -n "$statement"
+          bash -eo pipefail -c "$statement"
+          plan=plans/v0.0.6-repairs/README.md
+          printf '\nIntentional off-ledger mismatch.\n' >> "$plan"
+          if bash -eo pipefail -c "$statement"; then
+            echo 'Published plan mismatch should fail' >&2
+            exit 1
+          fi
+          git restore -- "$plan"
       - name: Install pinned Graphify dependencies
         run: |
           python -m pip install --require-hashes --no-cache-dir --only-binary=:all: --no-deps -r graphify-hq/template/v0.0.8/requirements.txt
