@@ -1,13 +1,13 @@
 # README HQ repair batches
 
-**Status** Batch 1 is verified on public runners in [draft PR #141](https://github.com/vixttha/README-HQ/pull/141). Later batches remain planned. The pending sequence follows the combined [v0.0.6.67 candidate](https://github.com/vixttha/README-HQ/commit/8d50caec2bc6fcb998994a1fd302294a029325f9) in [draft PR #68](https://github.com/vixttha/README-HQ/pull/68).
+**Status** Batches 1 and 2 are verified on public runners in [draft PR #141](https://github.com/vixttha/README-HQ/pull/141) and [draft PR #142](https://github.com/vixttha/README-HQ/pull/142). Later batches remain planned. The pending sequence follows the combined [v0.0.6.67 candidate](https://github.com/vixttha/README-HQ/commit/8d50caec2bc6fcb998994a1fd302294a029325f9) in [draft PR #68](https://github.com/vixttha/README-HQ/pull/68).
 
 Work on one batch at a time, with up to 15 sequential checkpoints per batch. This schedule covers the 73 checkpoints from `v0.0.6.68` through `v0.0.6.140`. The original [v0.0.6.1–v0.0.6.67 plan](https://github.com/vixttha/README-HQ/blob/7f4562b8f44544bc9dd4b479fcd1bc30ca07ca94/plans/v0.0.6-repairs/README.md) remains the record for qualifying its open criteria. The already-planned .77 follow-up stays with [issue #5](https://github.com/vixttha/README-HQ/issues/5).
 
 | Batch | Checkpoints | Count | Start after |
 | --- | --- | ---: | --- |
 | [Batch 1](#batch-1) | `v0.0.6.68`–`v0.0.6.82` | 15 | Public runner evidence recorded in draft PR #141 |
-| [Batch 2](#batch-2) | `v0.0.6.83`–`v0.0.6.97` | 15 | `v0.0.6.82` passes and batch evidence is reviewed |
+| [Batch 2](#batch-2) | `v0.0.6.83`–`v0.0.6.97` | 15 | Public runner evidence recorded in draft PR #142 |
 | [Batch 3](#batch-3) | `v0.0.6.98`–`v0.0.6.112` | 15 | `v0.0.6.97` passes and batch evidence is reviewed |
 | [Batch 4](#batch-4) | `v0.0.6.113`–`v0.0.6.127` | 15 | `v0.0.6.112` passes and batch evidence is reviewed |
 | [Batch 5](#batch-5) | `v0.0.6.128`–`v0.0.6.140` | 13 | `v0.0.6.127` passes and batch evidence is reviewed |
@@ -50,6 +50,10 @@ Agent entry, public technique evidence, first-use output, Graphify recovery, and
 ## Batch 2
 
 Graphify evidence, package-context smoke checks, plan integrity, published links, and learning input handling.
+
+[Draft PR #142](https://github.com/vixttha/README-HQ/pull/142) records all 15 repair commits and the two follow-ups at [`0009e519`](https://github.com/vixttha/README-HQ/commit/0009e51957713dde538ffc8d1ee0f7aae9bbf2ad). [Exact checkpoint verification](https://github.com/vixttha/README-HQ/actions/runs/44655788783/attempts/1) passed 15 checks on Ubuntu and all 14 applicable checks on Windows. Graphify .83 ran on Ubuntu. Both platforms passed both follow-ups. [Push](https://github.com/vixttha/README-HQ/actions/runs/44655781419/attempts/1) and [proposed merge](https://github.com/vixttha/README-HQ/actions/runs/44655788903/attempts/1) passed Ubuntu, Windows, and Graphify MCP.
+
+[CodeRabbit](https://github.com/vixttha/README-HQ/pull/142#pullrequestreview-5986271037) found a fenced Markdown heading could hide an acceptance obligation. The fix and regression are in [`0009e519`](https://github.com/vixttha/README-HQ/commit/0009e51957713dde538ffc8d1ee0f7aae9bbf2ad). CodeRabbit marked the [thread](https://github.com/vixttha/README-HQ/pull/142#discussion_r4637469492) addressed and it is resolved. The earlier [navigation follow-up](https://github.com/vixttha/README-HQ/commit/cd3cc3c07e528b3222c9b1da4579191e6920d7a3) validates LFS pointer extension syntax and bounds bare URL scanning.
 
 | Checkpoint | Issue | Planned repair |
 | --- | --- | --- |
