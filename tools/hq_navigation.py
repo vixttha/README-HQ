@@ -192,7 +192,7 @@ def check_fragment(tree, path, commit, fragment, *, plain=False):
         return
     entries = tree.entries(commit)
     if path not in entries:
-        target = readme_path(entries, path)
+        target = readme_path(entries, path, homepage=not path)
         if not target:
             raise LookupError("directory has no supported README for the fragment")
         path = target

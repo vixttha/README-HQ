@@ -77,6 +77,22 @@ Literal example `[Ignore](literal.md)`.
             self.assertFalse(any("literal.md" in issue for issue in errors))
             self.assertEqual(gaps, [])
 
+    def test_root_fragments_follow_the_effective_homepage(self):
+        layouts = [
+            (".github/README.md", {"README.md": "# Wrong", "docs/README.md": "# Different"}),
+            ("README.md", {"docs/README.md": "# Wrong"}),
+            ("docs/README.md", {}),
+        ]
+        reader = "[Preferred](/#preferred) [Wrong](/#wrong) [Package](/packages/widget/#separate)"
+        for path, fallback in layouts:
+            with repository({**fallback, path: "# Preferred", "guide.md": reader,
+                             "packages/widget/README.md": "# Separate"}) as tree:
+                errors, gaps = [], []
+                self.assertEqual(check_document(tree, "guide.md", errors, gaps), 2)
+                self.assertEqual(len(errors), 1)
+                self.assertIn("/#wrong", errors[0])
+                self.assertEqual(gaps, [])
+
     def test_fetched_repository_refs_are_resolved_without_a_local_branch(self):
         with repository({"README.md": "# Guide"}) as original:
             original.git("remote", "add", "origin", "https://github.com/example/project.git")
