@@ -885,6 +885,49 @@ class EvidenceTests(unittest.TestCase):
             self.assertNotEqual(first, second)
             self.assertEqual(json.loads(second.read_bytes())["recommendations"], [])
 
+    def test_learning_reuses_metadata_and_verifies_each_source_anchor(self):
+        loader = importlib.util.spec_from_file_location("intake", ROOT / "learning/intake.py")
+        intake = importlib.util.module_from_spec(loader)
+        loader.loader.exec_module(intake)
+        headings = ["# Evidence"] + [f"Unique source {i}" for i in range(32)]
+        with repository({"README.md": "\n".join(headings)}) as tree:
+            tree.git("remote", "add", "origin", "https://github.com/example/project.git")
+            first = [{"id": f"source-{i}", "checkout": str(tree.root), "ref": tree.commit,
+                      "repository": "Example/Project", "path": "README.md", "line": i+2,
+                      "anchor": headings[i+1], "visibility": "public"} for i in range(32)]
+            tree.git("-c", "user.name=Fixture", "-c", "user.email=test@example.invalid",
+                     "commit", "--allow-empty", "-qm", "Distinct source revision")
+            later = GitTree(tree.root).commit
+            target = {**first[0], "ref": later, "repository": "example/project",
+                      "audience": "reader", "capability": "audit"}
+            spec = {"visibility": "public", "sources": first, "target": target,
+                    "selected": [], "findings": []}
+            routes = []
+
+            def fetch(route):
+                routes.append(route)
+                if len(routes) > 3:
+                    raise HTTPError("https://api.github.com", 429, "fixture budget", {}, None)
+                return {"private": False, "visibility": "public"} if "/commits/" not in route else {
+                    "sha": route.rsplit("/", 1)[1]}
+
+            destination = tree.root / "receipts"
+            record = json.loads(intake.record_intake(spec, destination, fetch=fetch).read_bytes())
+            self.assertEqual({row["line"] for row in record["sources"]}, set(range(2, 34)))
+            self.assertEqual(routes, ["example/project", f"example/project/commits/{tree.commit}",
+                                      f"example/project/commits/{later}"])
+            limited = HTTPError("https://api.github.com", 429, "fixture budget", {}, None)
+            def reject(route):
+                raise limited
+
+            with self.assertRaises(HTTPError) as raised:
+                intake.record_intake(spec, destination, fetch=reject)
+            self.assertEqual(raised.exception.code, 429)
+            spec["sources"][-1] = {**spec["sources"][-1], "anchor": "absent"}
+            routes.clear()
+            with self.assertRaisesRegex(ValueError, "anchor does not match"):
+                intake.record_intake(spec, destination, fetch=fetch)
+
     def test_learning_conflicting_decisions_at_same_source_are_rejected(self):
         loader = importlib.util.spec_from_file_location("intake", ROOT / "learning/intake.py")
         intake = importlib.util.module_from_spec(loader)
