@@ -1,6 +1,6 @@
 # README HQ repair batches
 
-**Status** Batches 1–3 are verified on public runners in [draft PR #141](https://github.com/vixttha/README-HQ/pull/141), [draft PR #142](https://github.com/vixttha/README-HQ/pull/142), and [draft PR #144](https://github.com/vixttha/README-HQ/pull/144). Batches 4 and 5 remain planned. The pending sequence follows the combined [v0.0.6.67 candidate](https://github.com/vixttha/README-HQ/commit/8d50caec2bc6fcb998994a1fd302294a029325f9) in [draft PR #68](https://github.com/vixttha/README-HQ/pull/68).
+**Status** Batches 1–4 are verified on public runners in [draft PR #141](https://github.com/vixttha/README-HQ/pull/141), [draft PR #142](https://github.com/vixttha/README-HQ/pull/142), [draft PR #144](https://github.com/vixttha/README-HQ/pull/144), and [draft PR #145](https://github.com/vixttha/README-HQ/pull/145). Batch 5 remains planned. The pending sequence follows the combined [v0.0.6.67 candidate](https://github.com/vixttha/README-HQ/commit/8d50caec2bc6fcb998994a1fd302294a029325f9) in [draft PR #68](https://github.com/vixttha/README-HQ/pull/68).
 
 Work on one batch at a time, with up to 15 sequential checkpoints per batch. This schedule covers the 73 checkpoints from `v0.0.6.68` through `v0.0.6.140`. The original [v0.0.6.1–v0.0.6.67 plan](https://github.com/vixttha/README-HQ/blob/7f4562b8f44544bc9dd4b479fcd1bc30ca07ca94/plans/v0.0.6-repairs/README.md) remains the record for qualifying its open criteria. The already-planned .77 follow-up stays with [issue #5](https://github.com/vixttha/README-HQ/issues/5).
 
@@ -9,7 +9,7 @@ Work on one batch at a time, with up to 15 sequential checkpoints per batch. Thi
 | [Batch 1](#batch-1) | `v0.0.6.68`–`v0.0.6.82` | 15 | Public runner evidence recorded in draft PR #141 |
 | [Batch 2](#batch-2) | `v0.0.6.83`–`v0.0.6.97` | 15 | Public runner evidence recorded in draft PR #142 |
 | [Batch 3](#batch-3) | `v0.0.6.98`–`v0.0.6.112` | 15 | Public runner evidence recorded in draft PR #144 |
-| [Batch 4](#batch-4) | `v0.0.6.113`–`v0.0.6.127` | 15 | `v0.0.6.112` passes and batch evidence is reviewed |
+| [Batch 4](#batch-4) | `v0.0.6.113`–`v0.0.6.127` | 15 | Public runner evidence recorded in draft PR #145 |
 | [Batch 5](#batch-5) | `v0.0.6.128`–`v0.0.6.140` | 13 | `v0.0.6.127` passes and batch evidence is reviewed |
 
 ## Verification at each batch boundary
@@ -106,6 +106,14 @@ The [Ubuntu rerun](https://github.com/vixttha/README-HQ/actions/runs/44662322632
 ## Batch 4
 
 Adopter scope, Windows CI, Quickstart discoverability, Graphify evidence retention, and smoke check diagnostics.
+
+[Draft PR #145](https://github.com/vixttha/README-HQ/pull/145) records 15 repair commits and six follow-ups at [`921609e7`](https://github.com/vixttha/README-HQ/commit/921609e7a037d0ca37c66d8ef6438642cbeb17ea). [Exact checkpoint run](https://github.com/vixttha/README-HQ/actions/runs/44673218112/attempts/1) reproduced and passed all 15 checkpoints on Ubuntu and all 11 applicable checkpoints on Windows. Graphify checkpoints .116 and .122–.124 ran on Ubuntu. Both systems passed all six follow-ups and replayed the CodeRabbit findings on the predecessor. The [batch push](https://github.com/vixttha/README-HQ/actions/runs/44673187407/attempts/1) and [proposed merge](https://github.com/vixttha/README-HQ/actions/runs/44673195360/attempts/1) passed Ubuntu, Windows, and Graphify MCP.
+
+[The clean retained-plan job](https://github.com/vixttha/README-HQ/actions/runs/44673218112/job/136078814812) installed the hashed reader dependencies before validating the candidate and running Graphify MCP. The workflow accepted the published plan byte for byte and rejected a prose-only change outside the checkpoint table. In the intentional failure controls, [Windows retained the failed validator receipt](https://github.com/vixttha/README-HQ/actions/runs/44673218127/artifacts/14599849742) and skipped the next command. The [Graphify failure archive](https://github.com/vixttha/README-HQ/actions/runs/44673218127/artifacts/14600828501) retains the diagnostic for the injected plan mismatch and six previously verified maps from that attempt. Both control jobs kept their failed status.
+
+[CodeRabbit](https://github.com/vixttha/README-HQ/pull/145#pullrequestreview-5987209395) found three Quickstart edge cases and raised an HTML image naming case separately. The [first follow-up](https://github.com/vixttha/README-HQ/commit/bd393f5e023178a89ff36c4fda803590b5d5fbac) handles Usage, formatted headings, nested action sections, and nonblank `aria-label` for images. The [second review](https://github.com/vixttha/README-HQ/pull/145#pullrequestreview-5987282066) found a linked image could still be unnamed when it used only `srcset`. The [responsive-image follow-up](https://github.com/vixttha/README-HQ/commit/9236e5ee294feee4f9b7e69e12758da0ab1db322) covers that case. The [third review](https://github.com/vixttha/README-HQ/pull/145#pullrequestreview-5987342693) found that hidden images could still name links and called out the missing full-file plan comparison. The [next follow-up](https://github.com/vixttha/README-HQ/commit/fed6ae338df9d984ce9fe767cd1f0857c89a770f) covers both. The [last finding](https://github.com/vixttha/README-HQ/pull/145#pullrequestreview-5987394078) showed that hidden containers could still contribute image names. The [final follow-up](https://github.com/vixttha/README-HQ/commit/921609e7a037d0ca37c66d8ef6438642cbeb17ea) checks ancestor visibility. All six review threads are resolved. [Exact-head CodeRabbit check](https://github.com/vixttha/README-HQ/runs/136080253566).
+
+All 10 downloaded evidence ZIPs matched GitHub’s SHA-256 digests. The checkpoint receipts match all 21 Git commit, parent, and tree records. [Ubuntu receipt](https://github.com/vixttha/README-HQ/actions/runs/44673218112/artifacts/14601265274) · [Windows receipt](https://github.com/vixttha/README-HQ/actions/runs/44673218112/artifacts/14601071769).
 
 | Checkpoint | Issue | Planned repair |
 | --- | --- | --- |

@@ -2066,7 +2066,325 @@
             "version": "v0.0.6.127",
             "issue": 127
           }
-        ]
+        ],
+        "status": "public_runner_verified",
+        "verification": {
+          "pull_request": "https://github.com/vixttha/README-HQ/pull/145",
+          "head": "921609e7a037d0ca37c66d8ef6438642cbeb17ea",
+          "base": "dc8ef21763240168227d67445f02fc4a05ea071c",
+          "post_fix_run": "https://github.com/vixttha/README-HQ/actions/runs/44673218112/attempts/1",
+          "push_run": "https://github.com/vixttha/README-HQ/actions/runs/44673187407/attempts/1",
+          "review_run": "https://github.com/vixttha/README-HQ/actions/runs/44673195360/attempts/1",
+          "proposed_merge": "6808968025c9e7a408ca415b70327512e2d1fe49",
+          "observer": "6b8c0ed10d000a38c22612b614ea0233fa8d51db",
+          "artifacts": [
+            {
+              "id": 14600074188,
+              "name": "graphify-receipts-921609e7a037d0ca37c66d8ef6438642cbeb17ea-attempt-1",
+              "run_id": 44673187407,
+              "attempt": 1,
+              "sha256": "88cff924b5b2b20b4435b240b2144080872e9880ef4226ccba65d0acdc913388"
+            },
+            {
+              "id": 14600908072,
+              "name": "readme-hq-ubuntu-latest-921609e7a037d0ca37c66d8ef6438642cbeb17ea-attempt-1",
+              "run_id": 44673187407,
+              "attempt": 1,
+              "sha256": "88e36ac7ee48be2efc96af7f765948d04319efcc5a15e7a3d2377089eb0bdfc4"
+            },
+            {
+              "id": 14601425348,
+              "name": "readme-hq-windows-latest-921609e7a037d0ca37c66d8ef6438642cbeb17ea-attempt-1",
+              "run_id": 44673187407,
+              "attempt": 1,
+              "sha256": "d14e92504c574b624df21cacee6ceee73fced4bbc3b30a728457a6d555190a2a"
+            },
+            {
+              "id": 14600533487,
+              "name": "graphify-receipts-6808968025c9e7a408ca415b70327512e2d1fe49-attempt-1",
+              "run_id": 44673195360,
+              "attempt": 1,
+              "sha256": "c0d5429fd45de0c484a97cc0b42f79622844bfc617805628304dea479292f760"
+            },
+            {
+              "id": 14600808104,
+              "name": "readme-hq-ubuntu-latest-6808968025c9e7a408ca415b70327512e2d1fe49-attempt-1",
+              "run_id": 44673195360,
+              "attempt": 1,
+              "sha256": "4e0a6a7da7424c172cf176dff61601a462f8fe164f737049212779a02636efd4"
+            },
+            {
+              "id": 14601130962,
+              "name": "readme-hq-windows-latest-6808968025c9e7a408ca415b70327512e2d1fe49-attempt-1",
+              "run_id": 44673195360,
+              "attempt": 1,
+              "sha256": "10c055c6621e17dad237d7b261cffd0f5f1317c6457dd1c0c65bba35fb62e874"
+            },
+            {
+              "id": 14601265274,
+              "name": "batch-4-ubuntu-latest-1",
+              "run_id": 44673218112,
+              "attempt": 1,
+              "sha256": "a79c1d1a897cb2fa7e2200b24cbe4171631f3efd5dcf22e27fd4ab9a243bc068"
+            },
+            {
+              "id": 14601071769,
+              "name": "batch-4-windows-latest-1",
+              "run_id": 44673218112,
+              "attempt": 1,
+              "sha256": "41037147eed6104835910c3809ab6620b7cc5298a8163c02049fa06fa1727972"
+            },
+            {
+              "id": 14600828501,
+              "name": "batch-4-graphify-expected-failure-1",
+              "run_id": 44673218127,
+              "attempt": 1,
+              "sha256": "5876f0d5dcccbff26fe3e55e45eda6cbf96cb68e918150a747902ffa8c204762"
+            },
+            {
+              "id": 14599849742,
+              "name": "batch-4-windows-expected-failure-1",
+              "run_id": 44673218127,
+              "attempt": 1,
+              "sha256": "c32b0757af033c1a5119c23be567e0aba298dde141e98d99bd85e5e62f25017f"
+            }
+          ],
+          "repair_commits": [
+            {
+              "issue": 113,
+              "commit": "c66d5abc6cd2f05677b29f814c3c1d9ec91e8645",
+              "parent": "dc8ef21763240168227d67445f02fc4a05ea071c",
+              "tree": "14ec4f8469ddba514fefbf45709dcb99e99fa637",
+              "message": "v0.0.6.113 Require explicit alternatives for HTML images (refs #113)"
+            },
+            {
+              "issue": 114,
+              "commit": "5fd3a97996409836d406b6fdf26019576fb1d623",
+              "parent": "c66d5abc6cd2f05677b29f814c3c1d9ec91e8645",
+              "tree": "d9946682967b76c2f5588a6f58a3b8b2925969b3",
+              "message": "v0.0.6.114 Reject standalone invocation with adopter-only selectors (refs #114)"
+            },
+            {
+              "issue": 115,
+              "commit": "51698997a54659d0f21078adfe87e2bef3062f40",
+              "parent": "5fd3a97996409836d406b6fdf26019576fb1d623",
+              "tree": "5594747f886c7e65f71828ac3e947aeec9ec42d2",
+              "message": "v0.0.6.115 Validate learning intake shape before reading evidence (refs #115)"
+            },
+            {
+              "issue": 116,
+              "commit": "2cd471c3d12dbff258d88431f29456ba395e87a6",
+              "parent": "51698997a54659d0f21078adfe87e2bef3062f40",
+              "tree": "3b7fb99c4c6a959ffccb405071cabb0affaf8460",
+              "message": "v0.0.6.116 Verify Graphify inventory identities and relations across MCP (refs #116)"
+            },
+            {
+              "issue": 117,
+              "commit": "845599f6a5c3ff9e0ec6ccab05f0e36ca9a5be1c",
+              "parent": "2cd471c3d12dbff258d88431f29456ba395e87a6",
+              "tree": "14d50a6f91f2cbf9e6f7f64a4d70c7baaf18e774",
+              "message": "v0.0.6.117 Preserve native validator failure as a separate runner step (refs #117)"
+            },
+            {
+              "issue": 118,
+              "commit": "3fca076c946f48a107ab8f79282b4a1c20cc242b",
+              "parent": "845599f6a5c3ff9e0ec6ccab05f0e36ca9a5be1c",
+              "tree": "744f33acd0acb1e628e585cf25477febeb5be78e",
+              "message": "v0.0.6.118 Detect first actions inside rendered Quickstart sections (refs #118)"
+            },
+            {
+              "issue": 119,
+              "commit": "329b66d05eb789e52b1a1da6d6fd54ae2a4acf01",
+              "parent": "3fca076c946f48a107ab8f79282b4a1c20cc242b",
+              "tree": "64f7c069ff924d726ba9efb75826015741834dc8",
+              "message": "v0.0.6.119 Report unsupported rich-text audit coverage as incomplete (refs #119)"
+            },
+            {
+              "issue": 120,
+              "commit": "f038580d06db9fe296c52f3531c874289437e758",
+              "parent": "329b66d05eb789e52b1a1da6d6fd54ae2a4acf01",
+              "tree": "6179cf940277af791c804c430851f3f05fa60373",
+              "message": "v0.0.6.120 Publish a copyable pinned first-action receipt example (refs #120)"
+            },
+            {
+              "issue": 121,
+              "commit": "5d853265fda236b67fd61cd8fe54d2511ec4c955",
+              "parent": "f038580d06db9fe296c52f3531c874289437e758",
+              "tree": "2325f9003745e93924333a91b06f968222352088",
+              "message": "v0.0.6.121 Reuse parsed anchors for each pinned Git blob and rendering mode (refs #121)"
+            },
+            {
+              "issue": 122,
+              "commit": "233c8296b8b91f348ce9e999ce617b8ffe8226a3",
+              "parent": "5d853265fda236b67fd61cd8fe54d2511ec4c955",
+              "tree": "358c2448018ac481e6cc0762cb9a0c79046b03af",
+              "message": "v0.0.6.122 Install pinned reader dependencies before retained plan validation (refs #122)"
+            },
+            {
+              "issue": 123,
+              "commit": "210f3a62c21baadbe64af3c66cded808b4a9d6b2",
+              "parent": "233c8296b8b91f348ce9e999ce617b8ffe8226a3",
+              "tree": "f34f949f49c080eef68aadffd81d6a1c04f5d683",
+              "message": "v0.0.6.123 Link rich-text Graphify evidence to exact physical source lines (refs #123)"
+            },
+            {
+              "issue": 124,
+              "commit": "0caafcb1830823758ec4c46a4b1be30be7c2fd15",
+              "parent": "210f3a62c21baadbe64af3c66cded808b4a9d6b2",
+              "tree": "a6d8566149727d522aeae251fe4f0752f8fe5f81",
+              "message": "v0.0.6.124 Preserve completed Graphify evidence and failure diagnostics per attempt (refs #124)"
+            },
+            {
+              "issue": 125,
+              "commit": "156e79849bdeb356219de4b6e18b6cd9362a1dc1",
+              "parent": "0caafcb1830823758ec4c46a4b1be30be7c2fd15",
+              "tree": "003447666df6a3fb7e015970c17cbb925c43ba6c",
+              "message": "v0.0.6.125 Publish Graphify plan partitions only after every write succeeds (refs #125)"
+            },
+            {
+              "issue": 126,
+              "commit": "7768439b8822f59955284aa29d171ea6641a0cd5",
+              "parent": "156e79849bdeb356219de4b6e18b6cd9362a1dc1",
+              "tree": "1eee8a085161f11774364490a4ed8586ead03613",
+              "message": "v0.0.6.126 Distinguish incomplete required smoke checks from a passing audit (refs #126)"
+            },
+            {
+              "issue": 127,
+              "commit": "b43c8c0299d5065e08b045a0ce627342e2c75e1f",
+              "parent": "7768439b8822f59955284aa29d171ea6641a0cd5",
+              "tree": "afdf729bd7d3975599a674618ce91b9cacc956ef",
+              "message": "v0.0.6.127 Expose structured smoke failures with an explicit private output option (refs #127)"
+            }
+          ],
+          "follow_ups": [
+            {
+              "commit": "f696cec1c74897298deb6c75aba4206fe9728688",
+              "tree": "885539e9ab0f72e83bdba434cf82aaa9d0280b97",
+              "parent": "b43c8c0299d5065e08b045a0ce627342e2c75e1f",
+              "label": "Graphify and retained plan integration follow-up",
+              "issues": [
+                116,
+                122
+              ]
+            },
+            {
+              "commit": "92ae3fc3db62ebe69404d8a253c7dfef6114b3d4",
+              "tree": "8e88b42fc61477fc23c67ea203099a3efb3da91b",
+              "parent": "f696cec1c74897298deb6c75aba4206fe9728688",
+              "label": "Graphify self-map workflow anchor follow-up",
+              "issues": [
+                117
+              ]
+            },
+            {
+              "commit": "bd393f5e023178a89ff36c4fda803590b5d5fbac",
+              "tree": "be9930deba418067a95e695f87a4916e4920540b",
+              "parent": "92ae3fc3db62ebe69404d8a253c7dfef6114b3d4",
+              "label": "CodeRabbit review follow-up",
+              "issues": [
+                113,
+                118
+              ]
+            },
+            {
+              "commit": "9236e5ee294feee4f9b7e69e12758da0ab1db322",
+              "tree": "672b1d3a7afff80282ca1d91b88c60fe34b799d1",
+              "parent": "bd393f5e023178a89ff36c4fda803590b5d5fbac",
+              "label": "CodeRabbit responsive image follow-up",
+              "issues": [
+                113
+              ]
+            },
+            {
+              "commit": "fed6ae338df9d984ce9fe767cd1f0857c89a770f",
+              "tree": "e6784fed1ffd491aa51295384b352bdf7930f47a",
+              "parent": "9236e5ee294feee4f9b7e69e12758da0ab1db322",
+              "label": "CodeRabbit hidden-image and retained-plan follow-up",
+              "issues": [
+                113,
+                122
+              ]
+            },
+            {
+              "commit": "921609e7a037d0ca37c66d8ef6438642cbeb17ea",
+              "tree": "a69e2abf2cb6728242bd3d6207541134911369ac",
+              "parent": "fed6ae338df9d984ce9fe767cd1f0857c89a770f",
+              "label": "CodeRabbit hidden HTML ancestors follow-up",
+              "issues": [
+                113
+              ]
+            }
+          ],
+          "coderabbit_review": "https://github.com/vixttha/README-HQ/pull/145#pullrequestreview-5987209395",
+          "coderabbit_follow_up_review": "https://github.com/vixttha/README-HQ/pull/145#pullrequestreview-5987282066",
+          "coderabbit_retained_plan_review": "https://github.com/vixttha/README-HQ/pull/145#pullrequestreview-5987342693",
+          "coderabbit_hidden_ancestors_review": "https://github.com/vixttha/README-HQ/pull/145#pullrequestreview-5987394078",
+          "coderabbit_final_check": "https://github.com/vixttha/README-HQ/runs/136080253566",
+          "issue_evidence": [
+            {
+              "issue": 113,
+              "url": "https://github.com/vixttha/README-HQ/issues/113#issuecomment-7030193071"
+            },
+            {
+              "issue": 114,
+              "url": "https://github.com/vixttha/README-HQ/issues/114#issuecomment-7030014005"
+            },
+            {
+              "issue": 115,
+              "url": "https://github.com/vixttha/README-HQ/issues/115#issuecomment-7030014263"
+            },
+            {
+              "issue": 116,
+              "url": "https://github.com/vixttha/README-HQ/issues/116#issuecomment-7029959934"
+            },
+            {
+              "issue": 117,
+              "url": "https://github.com/vixttha/README-HQ/issues/117#issuecomment-7030014707"
+            },
+            {
+              "issue": 118,
+              "url": "https://github.com/vixttha/README-HQ/issues/118#issuecomment-7030014486"
+            },
+            {
+              "issue": 119,
+              "url": "https://github.com/vixttha/README-HQ/issues/119#issuecomment-7030014968"
+            },
+            {
+              "issue": 120,
+              "url": "https://github.com/vixttha/README-HQ/issues/120#issuecomment-7030015235"
+            },
+            {
+              "issue": 121,
+              "url": "https://github.com/vixttha/README-HQ/issues/121#issuecomment-7030015954"
+            },
+            {
+              "issue": 122,
+              "url": "https://github.com/vixttha/README-HQ/issues/122#issuecomment-7029960171"
+            },
+            {
+              "issue": 123,
+              "url": "https://github.com/vixttha/README-HQ/issues/123#issuecomment-7029959675"
+            },
+            {
+              "issue": 124,
+              "url": "https://github.com/vixttha/README-HQ/issues/124#issuecomment-7029959364"
+            },
+            {
+              "issue": 125,
+              "url": "https://github.com/vixttha/README-HQ/issues/125#issuecomment-7030015716"
+            },
+            {
+              "issue": 126,
+              "url": "https://github.com/vixttha/README-HQ/issues/126#issuecomment-7030016223"
+            },
+            {
+              "issue": 127,
+              "url": "https://github.com/vixttha/README-HQ/issues/127#issuecomment-7030015502"
+            }
+          ],
+          "expected_failure_run": "https://github.com/vixttha/README-HQ/actions/runs/44673218127/attempts/1",
+          "retained_plan_job": "https://github.com/vixttha/README-HQ/actions/runs/44673218112/job/136078814812"
+        }
       },
       {
         "id": 5,
