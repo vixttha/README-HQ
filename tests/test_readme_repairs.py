@@ -815,7 +815,10 @@ A separate [same label](fourth.md).
     def test_required_smoke_distinguishes_pass_failure_and_incomplete_coverage(self):
         from check_readme_hq import main
 
-        with repository({"README.md": "# Guide\n\nThis is the first action fixture."}) as tree:
+        readme = ("# Guide\n\nThis is the first action fixture.\n\n## Quickstart\n\n"
+                  "[Open demo](https://example.invalid/first-action)\n\n"
+                  "```sh\npython -c \"print('ready')\"\n```")
+        with repository({"README.md": readme}) as tree:
             receipt, spec = tree.root / "receipt.json", tree.root / "spec.json"
             url = "https://example.invalid/first-action"
             remote = {"commit": tree.commit, "url": url, "expected": {"http_status": 200}}
@@ -842,6 +845,31 @@ A separate [same label](fourth.md).
                     self.assertTrue(data["cases"]["first_action"]["required"])
                     self.assertEqual(data["cases"]["first_action"]["result"], result)
                     self.assertEqual(data["result"], {0: "passed", 1: "failed", 2: "incomplete"}[exit_code])
+
+    def test_required_smoke_needs_a_matching_documented_action(self):
+        from check_readme_hq import main
+
+        readme = "# Demo\n\nA meaningful description of the demo.\n\n## Quickstart\n\n```sh\npython demo.py\n```"
+        for actual_script, requested, expected in (
+            ("raise SystemExit(1)", "other.py", 2),
+            ("raise SystemExit(1)", "demo.py", 1),
+            ("print('ready')", "demo.py", 0),
+        ):
+            files = {"README.md": readme, "demo.py": actual_script, "other.py": "print('ready')"}
+            with self.subTest(requested=requested, expected=expected), repository(files) as tree:
+                spec, receipt = tree.root / "smoke.json", tree.root / "receipt.json"
+                spec.write_text(json.dumps({"commit": tree.commit, "argv": [sys.executable, requested],
+                                            "expected": {"exit": 0, "contains": "ready"}}), encoding="utf-8")
+                argv = ["check", "--repo", str(tree.root), "--smoke", str(spec),
+                        "--require-smoke", "--receipt", str(receipt)]
+                with (patch.object(sys, "argv", argv), contextlib.redirect_stdout(StringIO()),
+                      contextlib.redirect_stderr(StringIO())):
+                    self.assertEqual(main(), expected)
+                binding = json.loads(receipt.read_bytes())["cases"]["first_action"]["documentation"]
+                if expected == 2:
+                    self.assertEqual(binding, {"status": "supplemental"})
+                else:
+                    self.assertEqual(binding, {"status": "matched", "path": "README.md", "line": 8})
 
     def test_smoke_failure_codes_and_private_output_distinguish_same_exit(self):
         with repository({"README.md": "# Guide"}) as tree:

@@ -6,6 +6,7 @@ import os
 from pathlib import Path
 import platform
 import re
+import shlex
 import subprocess
 import sys
 from tempfile import TemporaryDirectory
@@ -24,8 +25,39 @@ def require_https_url(value, field):
         raise ValueError(f"{field} must be an HTTPS URL without credentials")
 
 
-def verify_first_action(tree, path, *, allow_network=False, subproject=".", include_output=False):
+def verify_first_action(tree, path, *, allow_network=False, subproject=".", include_output=False,
+                        entrypoint=None, actions=None):
     spec = read_json(path)
+    result = run_first_action(tree, spec, allow_network=allow_network, subproject=subproject,
+                              include_output=include_output)
+    if actions is not None:
+        binding = next((action for action in actions if matches_documented_action(action, spec)), None)
+        result["documentation"] = ({"status": "matched", "path": entrypoint, "line": binding["line"]}
+                                   if binding else {"status": "supplemental"})
+    return result
+
+
+def matches_documented_action(action, spec):
+    if action["kind"] == "url":
+        return action["value"] == spec.get("url")
+    actual = spec.get("argv")
+    if not isinstance(actual, list) or not actual or not all(isinstance(arg, str) for arg in actual):
+        return False
+    lexer = shlex.shlex(action["value"], posix=True, punctuation_chars=True)
+    lexer.whitespace_split = True
+    lexer.commenters = ""
+    try:
+        documented = list(lexer)
+    except ValueError:
+        return False
+    if not documented:
+        return False
+    if documented[0] in {"python", "python3", "python.exe", "python3.exe"} and actual[0] == sys.executable:
+        documented[0] = sys.executable
+    return documented == actual
+
+
+def run_first_action(tree, spec, *, allow_network=False, subproject=".", include_output=False):
     if not isinstance(spec, dict) or ("url" in spec) == ("argv" in spec):
         raise ValueError("smoke specification requires exactly one of argv and url")
     expected = spec.get("expected")
@@ -204,7 +236,8 @@ def bounded_output(data):
 def coverage_incomplete(cases):
     smoke = cases.get("first_action", {})
     return (cases.get("navigation", {}).get("result") == "unchecked"
-            or (smoke.get("required") is True and smoke.get("result") != "passed"))
+            or (smoke.get("required") is True
+                and (smoke.get("result") != "passed" or smoke.get("documentation", {}).get("status") != "matched")))
 
 
 def write_receipt(destination, tree, cases, errors, gaps, *, validator_path=None, scope=None):

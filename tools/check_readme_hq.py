@@ -256,7 +256,7 @@ def check_navigation(errors, tree=None, gaps=None):
     return count
 
 
-def has_first_action(blocks):
+def documented_actions(blocks):
     action = re.compile(r"^(?:quick[ -]?start|getting started|install(?:ation)?|setup|usage|use|run|try|play|build)\b", re.I)
     label = re.compile(r"^(?:install(?:ation)?|setup|quick[ -]?start|getting started|run|try|play|build|launch|open)\b", re.I)
     shell = {"", "sh", "shell", "bash", "zsh", "powershell", "pwsh", "cmd", "console", "terminal", "shell-session"}
@@ -272,10 +272,11 @@ def has_first_action(blocks):
                 action_level = level
         elif action_level is not None and token.type == "fence":
             language = token.info.strip().split()
-            if (not language or language[0].lower() in shell) and any(
-                line.strip() and not line.lstrip().startswith("#") for line in token.content.splitlines()
-            ):
-                return True
+            if not language or language[0].lower() in shell:
+                for offset, command in enumerate(token.content.splitlines(), 2):
+                    if command.strip() and not command.lstrip().startswith("#"):
+                        yield {"kind": "argv", "value": command.strip(), "line": token.map[0] + offset}
+                        break
         elif action_level is not None and token.type == "inline":
             children = token.children or []
             for index, item in enumerate(children):
@@ -285,8 +286,12 @@ def has_first_action(blocks):
                 name = "".join(child.content for child in children[index + 1:end])
                 href = item.attrGet("href") or ""
                 if href and not href.startswith("#") and label.match(name.strip()):
-                    return True
-    return False
+                    offset = item.meta.get("source_line_offset", 0)
+                    yield {"kind": "url", "value": href, "line": token.map[0] + offset + 1}
+
+
+def has_first_action(blocks):
+    return next(documented_actions(blocks), None) is not None
 
 
 def target_readme(tree, subproject, errors, gaps, profile):
@@ -368,8 +373,12 @@ def main():
                 gaps.append(f"{entry}: rendered navigation, anchors, and first-use instructions remain unchecked")
             if args.smoke:
                 from hq_smoke import verify_first_action
+                actions = []
+                if entry and suffix(entry) in MARKDOWN:
+                    actions = list(documented_actions(parse_markdown(tree.read(entry).decode("utf-8"))[2]))
                 outcome = verify_first_action(tree, args.smoke, allow_network=args.allow_network,
-                                              subproject=args.subproject, include_output=args.include_smoke_output)
+                                              subproject=args.subproject, include_output=args.include_smoke_output,
+                                              entrypoint=entry, actions=actions)
                 if args.require_smoke:
                     outcome["required"] = True
                 cases["first_action"] = outcome
@@ -379,6 +388,8 @@ def main():
                     errors.append(f"first action failed its expected result{detail}")
                 elif outcome["result"] != "passed":
                     gaps.append(f"first action {outcome['result']}: {outcome['detail']}")
+                elif outcome["documentation"]["status"] != "matched":
+                    gaps.append("first action passed as supplemental evidence without a matching documented action")
             else:
                 gaps.append("first action execution not checked: no explicit smoke spec")
         else:

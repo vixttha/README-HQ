@@ -43,3 +43,5 @@ To adapt a spec, set its `commit` to the full SHA selected by `--ref`. Pass it w
 Use [the audit workflow](audits/README.md) to examine an existing repository before drafting. The [technique library](techniques/README.md) holds reusable practices to choose from.
 
 A local smoke check with an expected file requires new or changed bytes by default. Use `expected.file_mode` to require `created` or `updated` specifically, or specify `exists` when existence alone is the intended result. Use `expected.file_sha256` for an exact expected digest.
+
+A required smoke result must match a rendered Quickstart action in the pinned README. The receipt records the README path and line for a match. Other successful probes are supplemental.
