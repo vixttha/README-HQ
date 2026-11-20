@@ -255,6 +255,25 @@ A separate [same label](fourth.md).
             self.assertEqual(len(errors), 1)
             self.assertIn("outside the file", errors[0])
 
+    def test_raw_github_files_do_not_verify_rendered_heading_fragments(self):
+        with repository({"guide.md": "# Heading\n", "README.md": "# Links"}) as tree:
+            tree.git("remote", "add", "origin", "https://github.com/example/project.git")
+            github = "https://github.com/example/project"
+            raw = "https://raw.githubusercontent.com/example/project"
+            routes = (f"{github}/raw/{tree.commit}/guide.md#heading",
+                      f"{raw}/{tree.commit}/guide.md#heading",
+                      f"{github}/blob/{tree.commit}/guide.md#heading",
+                      f"{raw}/{tree.commit}/guide.md",
+                      f"{raw}/{tree.commit}/missing.md#heading")
+            readme = "\n".join(f"[File]({route})" for route in routes)
+            (tree.root / "README.md").write_text(readme, encoding="utf-8")
+            errors, gaps = [], []
+            self.assertEqual(check_document(GitTree(tree.root, draft=True), "README.md", errors, gaps), 4)
+            self.assertEqual(len(gaps), 2)
+            self.assertTrue(all("raw GitHub file fragment was not checked" in gap for gap in gaps))
+            self.assertEqual(len(errors), 1)
+            self.assertIn("missing tracked local target", errors[0])
+
     def test_public_refs_ignore_local_aliases_and_use_the_remote_default(self):
         with repository({"README.md": "# Default"}) as original:
             original.git("remote", "add", "origin", "https://github.com/example/project.git")

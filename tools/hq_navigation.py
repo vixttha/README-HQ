@@ -228,10 +228,21 @@ def parse_markdown(text):
     return anchors | generated, links, blocks
 
 
-def same_repo_target(tree, url):
-    if url.scheme != "https" or url.hostname != "github.com" or not tree.repository:
-        return None
+def github_route(url):
     segments = unquote(url.path).strip("/").split("/")
+    if url.scheme != "https":
+        return []
+    if url.hostname == "raw.githubusercontent.com" and len(segments) >= 4:
+        if segments[2:4] in (["refs", "heads"], ["refs", "tags"]):
+            segments = [*segments[:2], *segments[4:]]
+        return [*segments[:2], "raw", *segments[2:]]
+    return segments if url.hostname == "github.com" else []
+
+
+def same_repo_target(tree, url):
+    if not tree.repository:
+        return None
+    segments = github_route(url)
     if len(segments) < 4 or "/".join(segments[:2]).lower() != tree.repository.lower():
         return None
     if segments[2] not in {"blob", "tree", "raw"}:
@@ -412,7 +423,11 @@ def check_document(tree, source, errors, gaps, *, archive_scope=None):
                 if directory:
                     raise ValueError("image target is a directory")
                 verify_media(path, media_bytes(tree, path, commit))
-            check_fragment(tree, path, commit, unquote(url.fragment), plain=parse_qs(url.query).get("plain") in (["1"], ["true"]))
+            if url.fragment and github_route(url)[2:3] == ["raw"]:
+                gaps.append(f"{source}:{link.line}: raw GitHub file fragment was not checked: {link.path}")
+            else:
+                check_fragment(tree, path, commit, unquote(url.fragment),
+                               plain=parse_qs(url.query).get("plain") in (["1"], ["true"]))
             count += 1
         except (ValueError, OSError, KeyError) as error:
             errors.append(f"{source}:{link.line}: {error}: {link.path}")
