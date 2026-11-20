@@ -13,7 +13,7 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import urlsplit
 from urllib.request import Request, urlopen
 
-from hq_data import read_json
+from hq_data import UnavailableGitBlob, read_json
 
 
 def require_https_url(value, field):
@@ -108,7 +108,10 @@ def verify_first_action(tree, path, *, allow_network=False, subproject="."):
         environment = {key: value for key, value in os.environ.items() if key not in local_git_variables}
 
         def prepare(*args):
-            result = subprocess.run(["git", *args], cwd=temp, env=environment, capture_output=True)
+            setup_env = environment if tree.allow_git_fetch else {
+                **environment, "GIT_NO_LAZY_FETCH": "1", "GIT_ALLOW_PROTOCOL": "file",
+            }
+            result = subprocess.run(["git", *args], cwd=temp, env=setup_env, capture_output=True)
             if result.returncode:
                 raise ValueError("could not prepare the isolated smoke checkout")
 
@@ -174,7 +177,7 @@ def write_receipt(destination, tree, cases, errors, gaps, *, validator_path=None
             if path in tree.entries():
                 try:
                     sources[path] = sha256(tree.read(path)).hexdigest()
-                except (KeyError, OSError, ValueError):
+                except (KeyError, OSError, UnavailableGitBlob, ValueError):
                     unavailable_sources.append(path)
     hosted = os.environ.get("GITHUB_ACTIONS") == "true"
     run = os.environ.get("GITHUB_RUN_ID") if hosted else None
@@ -197,6 +200,9 @@ def write_receipt(destination, tree, cases, errors, gaps, *, validator_path=None
         "sources": sources, "cases": cases, "errors": errors, "unchecked": gaps,
         "result": "failed" if errors else "passed",
     }
+    if tree is not None:
+        data["git_objects"] = {"fetch_policy": "allow" if tree.allow_git_fetch else "offline",
+                               "fetched_blobs": sorted(tree.fetched_blobs)}
     if scope is not None:
         data["scope"] = scope
     if unavailable_sources:

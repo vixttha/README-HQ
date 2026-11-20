@@ -26,7 +26,7 @@ python3 -m pip install --require-hashes -r tools/requirements.txt
 python3 tools/check_readme_hq.py
 ```
 
-To audit a consumer, run `python3 tools/check_readme_hq.py --repo /path/to/project --ref HEAD --receipt audit.json`. Point `--repo` at the Git root. Use `--subproject` for a monorepo package or `--profile reference` for reference-only documentation. The receipt records the selected scope and identifies an origin-derived repository name as inferred.
+To audit a consumer, run `python3 tools/check_readme_hq.py --repo /path/to/project --ref HEAD --receipt audit.json`. Point `--repo` at the Git root. Use `--subproject` for a monorepo package or `--profile reference` for reference-only documentation. The receipt records the selected scope and identifies an origin-derived repository name as inferred. Git blob reads are offline by default. Use `--allow-git-fetch` for a partial clone when its promisor may supply missing blobs. The receipt lists blobs retrieved under that option.
 
 Pass `--smoke smoke.json` to check a documented first action at the selected commit. A local spec uses `commit`, `argv`, and `expected.exit` with an output marker (`expected.contains`) or a file outcome (`expected.file`). Commands and expected files use the selected subproject in a temporary shallow Git checkout with independent metadata. The command runs with the caller’s privileges. A marker can select `expected.stream` as `stdout` or `stderr`. The default, `either`, matches within a single stream.
 

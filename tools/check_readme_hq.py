@@ -11,7 +11,7 @@ import sys
 import unicodedata
 from urllib.parse import unquote, urlsplit
 
-from hq_data import GitTree, REPOSITORY, SHA, parse_json
+from hq_data import GitTree, UnavailableGitBlob, REPOSITORY, SHA, parse_json
 from hq_navigation import MARKDOWN, check_document, parse_markdown, readme_path, suffix
 
 
@@ -292,6 +292,7 @@ def main():
     parser.add_argument("--draft", action="store_true", help="inspect tracked working-tree bytes instead of the published tree")
     parser.add_argument("--receipt", type=Path, help="write a machine-readable check receipt")
     parser.add_argument("--smoke", type=Path, help="an explicit local first-action specification to execute")
+    parser.add_argument("--allow-git-fetch", action="store_true", help="permit demand fetching missing Git blobs")
     parser.add_argument("--allow-network", action="store_true", help="allow the explicit remote first-action probe")
     args = parser.parse_args()
     errors, gaps, records = [], [], []
@@ -300,7 +301,7 @@ def main():
     try:
         if args.draft and args.ref != "HEAD":
             raise ValueError("--draft applies to the current checkout only")
-        tree = GitTree(args.repo or ROOT, args.ref, draft=args.draft)
+        tree = GitTree(args.repo or ROOT, args.ref, draft=args.draft, allow_git_fetch=args.allow_git_fetch)
         if args.repo:
             top_level = Path(tree.git("rev-parse", "--show-toplevel").decode("utf-8").rstrip("\r\n")).resolve()
             if tree.root != top_level:
@@ -328,7 +329,7 @@ def main():
             records = check_registry(errors, tree)
             cases.update(standalone_versions=check_versions(errors, tree), techniques=len(records),
                          local_links=check_navigation(errors, tree, gaps), imported_files=check_history(errors, tree))
-    except (KeyError, OSError, TypeError, ValueError) as error:
+    except (KeyError, OSError, TypeError, UnavailableGitBlob, ValueError) as error:
         errors.append(str(error))
     if args.receipt:
         from hq_smoke import write_receipt

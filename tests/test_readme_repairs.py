@@ -105,6 +105,32 @@ class ReaderTests(unittest.TestCase):
             self.assertEqual(result["github_actions"]["status"], "unavailable")
             self.assertIsNone(result["github_actions"]["job"])
 
+    def test_partial_clone_blob_fetch_requires_explicit_permission(self):
+        with repository({"README.md": "# Partial clone fixture"}) as source, tempfile.TemporaryDirectory() as folder:
+            source.git("config", "uploadpack.allowFilter", "true")
+            source.git("config", "uploadpack.allowAnySHA1InWant", "true")
+            clone = Path(folder) / "clone"
+            subprocess.run(["git", "clone", "--quiet", "--no-checkout", "--filter=blob:none",
+                            source.root.as_uri(), str(clone)], check=True)
+            tree = GitTree(clone)
+            blob = tree.entries()["README.md"][1]
+            receipt = Path(folder) / "audit.json"
+            argv = [sys.executable, str(ROOT / "tools/check_readme_hq.py"), "--repo", str(clone),
+                    "--profile", "reference", "--receipt", str(receipt)]
+            offline = subprocess.run(argv, capture_output=True, text=True)
+            self.assertEqual(offline.returncode, 1)
+            self.assertIn("unavailable with Git fetching disabled", offline.stderr)
+            with self.assertRaises(ValueError):
+                tree.git("cat-file", "-e", blob)
+            record = json.loads(receipt.read_bytes())
+            self.assertEqual(record["git_objects"], {"fetch_policy": "offline", "fetched_blobs": []})
+            for extra, mode, fetched in ((["--allow-git-fetch"], "allow", [blob]), ([], "offline", [])):
+                result = subprocess.run([*argv, *extra], capture_output=True, text=True)
+                self.assertEqual(result.returncode, 0, result.stderr)
+                record = json.loads(receipt.read_bytes())
+                self.assertEqual(record["git_objects"], {"fetch_policy": mode, "fetched_blobs": fetched})
+            self.assertEqual(source.read("README.md"), tree.read("README.md"))
+
     def test_pinned_readme_and_monorepo_routes(self):
         with repository({"README.md": "# Root", ".github/README.md": "# Published",
                          "docs/README.md": "# Docs", "packages/example/README.md": "# Subproject"}) as tree:

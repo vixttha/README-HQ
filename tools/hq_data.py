@@ -1,6 +1,7 @@
 """Read structured evidence and Git objects without working-tree substitution."""
 
 import json
+import os
 from pathlib import Path
 import re
 import subprocess
@@ -50,9 +51,15 @@ def github_repository(remote):
     return name if REPOSITORY.fullmatch(name) else None
 
 
+class UnavailableGitBlob(LookupError):
+    """A tracked blob could not be read under the selected Git fetch policy."""
+
+
 class GitTree:
-    def __init__(self, root, ref="HEAD", *, draft=False):
+    def __init__(self, root, ref="HEAD", *, draft=False, allow_git_fetch=False):
         self.root = Path(root).resolve()
+        self.allow_git_fetch = allow_git_fetch
+        self.fetched_blobs = set()
         self.commit = self.git("rev-parse", "--verify", "--end-of-options", f"{ref}^{{commit}}").decode().strip()
         self.draft = draft
         self._entries = {}
@@ -62,8 +69,12 @@ class GitTree:
         )
         self.repository = github_repository(remote.stdout.strip()) if remote.returncode == 0 else None
 
-    def git(self, *args):
-        result = subprocess.run(["git", "--no-replace-objects", *args], cwd=self.root, capture_output=True)
+    def git(self, *args, allow_fetch=False):
+        env = os.environ.copy()
+        if not allow_fetch:
+            env.update(GIT_NO_LAZY_FETCH="1", GIT_ALLOW_PROTOCOL="")
+        result = subprocess.run(["git", "--no-replace-objects", *args], cwd=self.root,
+                                env=env, capture_output=True)
         if result.returncode:
             raise ValueError(result.stderr.decode("utf-8", "replace").strip() or "Git command failed")
         return result.stdout
@@ -103,4 +114,14 @@ class GitTree:
             if local.is_symlink() or not local.resolve().is_relative_to(self.root):
                 raise ValueError(f"{path}: draft path leaves the repository or is a symlink")
             return local.read_bytes()
-        return self.git("cat-file", "blob", digest)
+        try:
+            return self.git("cat-file", "blob", digest)
+        except ValueError as offline_error:
+            if not self.allow_git_fetch:
+                raise UnavailableGitBlob(f"{path}: Git blob {digest} unavailable with Git fetching disabled") from offline_error
+        try:
+            body = self.git("cat-file", "blob", digest, allow_fetch=True)
+        except ValueError as error:
+            raise UnavailableGitBlob(f"{path}: Git blob {digest} unavailable after permitted Git read: {error}") from error
+        self.fetched_blobs.add(digest)
+        return body
