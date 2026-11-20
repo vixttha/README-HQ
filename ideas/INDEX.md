@@ -18,3 +18,4 @@ Use this index to pick up a thought from an earlier session. The record holds it
 | [IDEA-000010](records/IDEA-000010.json) | Keep a post-fix debug record for every checkpoint | Captured on 2026-11-19 |
 | [IDEA-000011](records/IDEA-000011.json) | Show which reader tasks actually ran | Captured on 2026-11-19 |
 | [IDEA-000012](records/IDEA-000012.json) | Combine README techniques around a reader task | Captured on 2026-11-19 |
+| [IDEA-000013](records/IDEA-000013.json) | Link the Technique Library from the main README | Captured on 2026-11-19 |

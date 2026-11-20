@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "id": "IDEA-000013",
+  "title": "Link the Technique Library from the main README",
+  "summary": "Add a short discovery link near the top of the README HQ homepage so a person or agent starting on main can reach the external Technique Library and search by reader task, alias, or stable technique ID. Keep the technique files and combination records on the dedicated library branch.",
+  "kind": "process",
+  "origin": {
+    "created_by": "human",
+    "source": "README HQ project discussion on 2026-11-19. The owner asked to capture main README discovery as an idea after locking the 144-technique v0.0.1 baseline."
+  },
+  "lifecycle_status": "captured",
+  "implementation_status": "not_planned",
+  "testing": {
+    "status": "untested"
+  },
+  "importance": "unknown",
+  "complexity": "unknown",
+  "categories": [
+    "readme",
+    "discovery",
+    "agent-navigation"
+  ],
+  "benefits": [
+    "A reader starting on the default branch can find the library without knowing its branch name.",
+    "The stable version can be cited while the library remains available as an external reference."
+  ],
+  "risks": [
+    "A branch-relative URL from main would point into main. Use an explicit cross-branch URL and verify it from the rendered homepage.",
+    "Copying library records into main would create a second source that can drift."
+  ],
+  "related_ideas": [
+    "IDEA-000001",
+    "IDEA-000012"
+  ],
+  "evidence": []
+}
