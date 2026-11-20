@@ -45,3 +45,5 @@ Use [the audit workflow](audits/README.md) to examine an existing repository bef
 A local smoke check with an expected file requires new or changed bytes by default. Use `expected.file_mode` to require `created` or `updated` specifically, or specify `exists` when existence alone is the intended result. Use `expected.file_sha256` for an exact expected digest.
 
 A required smoke result must match a rendered Quickstart action in the pinned README. The receipt records the README path and line for a match. Other successful probes are supplemental.
+
+HTTP smoke receipts include a digest of the validated specification and an origin and digest for each recorded URL. Paths, query strings, fragments, and content markers stay in the spec.

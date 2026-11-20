@@ -25,6 +25,12 @@ def require_https_url(value, field):
         raise ValueError(f"{field} must be an HTTPS URL without credentials")
 
 
+def url_subject(value):
+    parsed = urlsplit(value)
+    return {"origin": f"{parsed.scheme}://{parsed.hostname}",
+            "sha256": sha256(value.encode()).hexdigest()}
+
+
 def verify_first_action(tree, path, *, allow_network=False, subproject=".", include_output=False,
                         entrypoint=None, actions=None):
     spec = read_json(path)
@@ -63,8 +69,6 @@ def run_first_action(tree, spec, *, allow_network=False, subproject=".", include
     expected = spec.get("expected")
     if not isinstance(expected, dict) or not expected:
         raise ValueError("first action requires an expected result")
-    if tree.draft:
-        return {"result": "unchecked", "detail": "an exact commit is required"}
     if spec.get("commit") != tree.commit:
         raise ValueError("smoke specification does not match the selected commit")
     if "contains" in expected and (
@@ -81,8 +85,16 @@ def run_first_action(tree, spec, *, allow_network=False, subproject=".", include
         final_url = expected.get("final_url")
         if "final_url" in expected:
             require_https_url(final_url, "expected.final_url")
-        if not allow_network:
-            return {"result": "unchecked", "detail": "network probe not authorized"}
+        identity = {"subject": url_subject(target), "spec_sha256": sha256(
+            json.dumps(spec, sort_keys=True, separators=(",", ":")).encode()).hexdigest()}
+        if tree.draft or not allow_network:
+            detail = "an exact commit is required" if tree.draft else "network probe not authorized"
+            return {"result": "unchecked", "detail": detail, **identity}
+        requirements = {"http_status": expected["http_status"]}
+        if "contains" in expected:
+            requirements["has_content_marker"] = True
+        if final_url is not None:
+            requirements["final_url"] = url_subject(final_url)
         try:
             try:
                 response = urlopen(Request(target, headers={"User-Agent": "README-HQ"}), timeout=20)
@@ -91,17 +103,17 @@ def run_first_action(tree, spec, *, allow_network=False, subproject=".", include
             with response:
                 status = response.status
                 effective_url = response.geturl()
-                observation = {"http_status": status, "final_url": effective_url,
+                observation = {"http_status": status, "final_url": url_subject(effective_url),
                                "final_url_match": None if final_url is None else final_url == effective_url}
                 if status in (401, 403, 429):
                     return {"result": "gated", "detail": f"HTTP {status}",
-                            "url": target, "expected": expected, "observed": observation}
+                            "expected": requirements, "observed": observation, **identity}
                 matched = True
                 if "contains" in expected:
                     body = response.read(1_000_000).decode("utf-8", "replace")
                     matched = expected["contains"] in body
         except (OSError, URLError):
-            return {"result": "unresolved", "detail": "network destination could not be reached"}
+            return {"result": "unresolved", "detail": "network destination could not be reached", **identity}
         failures = []
         if status != expected["http_status"]:
             failures.append("http-status-mismatch")
@@ -109,8 +121,10 @@ def run_first_action(tree, spec, *, allow_network=False, subproject=".", include
             failures.append("output-marker-mismatch")
         if observation["final_url_match"] is False:
             failures.append("final-url-mismatch")
-        return {"result": "failed" if failures else "passed", "url": target, "expected": expected,
+        return {"result": "failed" if failures else "passed", "expected": requirements, **identity,
                 "observed": {**observation, "content_match": matched}, "failure_codes": failures}
+    if tree.draft:
+        return {"result": "unchecked", "detail": "an exact commit is required"}
     if expected.keys() & {"http_status", "final_url"}:
         raise ValueError("argv smoke does not support URL action expectations")
     argv = spec["argv"]

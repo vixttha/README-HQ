@@ -976,9 +976,34 @@ A separate [same label](fourth.md).
                         request.assert_not_called()
                         outcome = verify_first_action(tree, spec, allow_network=True)
                     self.assertEqual(outcome["result"], result)
-                    self.assertEqual(outcome["url"], url)
-                    self.assertEqual(outcome["observed"]["final_url"], landing)
+                    from hq_smoke import url_subject
+                    self.assertEqual(outcome["subject"], url_subject(url))
+                    self.assertEqual(outcome["observed"]["final_url"], url_subject(landing))
                     self.assertIs(outcome["observed"]["final_url_match"], None if expected is None else landing == expected)
+
+    def test_unchecked_http_probes_keep_stable_redacted_spec_identity(self):
+        with repository({"README.md": "# Guide"}) as tree:
+            spec = tree.root / "smoke.json"
+
+            def check(token, allow=False):
+                url = "https://example.invalid/private-destination?token=" + token + "#secret"
+                spec.write_text(json.dumps({"commit": tree.commit, "url": url,
+                                            "expected": {"http_status": 200}}), encoding="utf-8")
+                return verify_first_action(tree, spec, allow_network=allow)
+
+            with patch("hq_smoke.urlopen", return_value=HTTPError(
+                "https://example.invalid/landing?token=private", 200, "fixture", {}, BytesIO()
+            )) as request:
+                first, second, repeated = check("aaa"), check("bbb"), check("aaa")
+                request.assert_not_called()
+                passed = check("aaa", True)
+            self.assertEqual(first, repeated)
+            self.assertEqual(first["result"], "unchecked")
+            self.assertNotEqual(first["spec_sha256"], second["spec_sha256"])
+            self.assertEqual(passed["spec_sha256"], first["spec_sha256"])
+            self.assertEqual(first["subject"]["origin"], "https://example.invalid")
+            for item in (first, second, passed):
+                self.assertNotRegex(json.dumps(item), r"private-destination|token=|#secret")
 
     def test_smoke_file_checks_prove_a_change(self):
         with repository({"README.md": "# Example", "existing.txt": "old"}) as tree:
