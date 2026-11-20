@@ -528,6 +528,22 @@ A separate [same label](fourth.md).
                     self.assertIn("requires an alt attribute", errors[0])
                 self.assertEqual(gaps, [])
 
+    def test_html_srcset_link_uses_image_name(self):
+        image = '<svg xmlns="http://www.w3.org/2000/svg"/>'
+        for attrs, named in (('aria-label="Open the guide"', True), ('alt="Open the guide"', True),
+                             ('alt="" aria-label=" "', False)):
+            readme = f'<a href="./guide.md"><img srcset="diagram.svg 1x" {attrs}></a>'
+            with self.subTest(attrs=attrs), repository({"README.md": readme, "diagram.svg": image,
+                                                       "guide.md": "# Guide"}) as tree:
+                errors, gaps = [], []
+                self.assertEqual(check_document(tree, "README.md", errors, gaps), 2 if named else 1)
+                self.assertEqual(gaps, [])
+                if named:
+                    self.assertEqual(errors, [])
+                else:
+                    self.assertEqual(len(errors), 1)
+                    self.assertIn("link has no accessible name", errors[0])
+
     def test_svg_root_requires_the_svg_namespace(self):
         default = '<svg xmlns="http://www.w3.org/2000/svg"/>'
         prefixed = '<s:svg xmlns:s="http://www.w3.org/2000/svg"/>'

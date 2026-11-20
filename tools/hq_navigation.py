@@ -131,8 +131,9 @@ class HtmlLinks(HTMLParser):
                 self.links.append(Link(srcset, line, coverage_gap="unsupported image source list"))
             else:
                 self.links.extend(Link(url, line, True) for url in sources)
-        if tag == "img" and attrs.get("src"):
-            self.links.append(Link(attrs["src"], line, True))
+        if tag == "img":
+            if attrs.get("src"):
+                self.links.append(Link(attrs["src"], line, True))
             if self.controls and (aria_label or (attrs.get("alt") or "").strip()):
                 self.controls[-1][2] = True
 
