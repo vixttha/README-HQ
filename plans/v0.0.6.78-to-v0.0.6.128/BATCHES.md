@@ -155,18 +155,55 @@ All 10 downloaded evidence ZIPs matched GitHub’s SHA-256 digests. The checkpoi
 
 Learning errors, first-action proof, homepage discovery, publication gates, dependency qualification, and reader-facing media and accessibility.
 
+[Draft PR #151](https://github.com/vixttha/README-HQ/pull/151) contains 13 checkpoint commits and three follow-ups at [`aa07e7ab`](https://github.com/vixttha/README-HQ/commit/aa07e7ab89e4bb2d3d28c9d0a5302394b9b1839b), stacked on verified Batch 4 at `921609e7`.
+
+The [exact checkpoint replay](https://github.com/vixttha/README-HQ/actions/runs/44685725350/attempts/1) passed 13/13 on Ubuntu and 9/9 applicable checkpoints on Windows. Checkpoints .132, .133, .136, and .137 ran on Ubuntu. Both systems passed all three follow-ups. Both receipts match all 16 commits, their parents, and their Git trees.
+
+The [branch run](https://github.com/vixttha/README-HQ/actions/runs/44685722539/attempts/1) and [proposed merge run](https://github.com/vixttha/README-HQ/actions/runs/44685729266/attempts/1) each passed 91 reader tests per OS, 15 Graphify template tests, and 11 Graphify integration tests. Graphify MCP verified ten maps on each revision. The [proposed merge](https://github.com/vixttha/README-HQ/commit/ae460cb3658401e181a06148926bf5f58f2737da) and the draft head have the same tree.
+
+Pillow 13.0.0 passed hashed wheel installation and reader tests on public Ubuntu and Windows with Python 3.11 through 3.15. The [live controls ZIP](https://github.com/vixttha/README-HQ/actions/runs/44685725350/artifacts/14606297122) records GitHub’s selected Org homepage and the readback for `main`. The [active planning branch workflow](https://github.com/vixttha/README-HQ/actions/runs/44685215438/attempts/1) verified the 63-checkpoint ledger after the visibility repair.
+
+The publication policy fixture passed. The live readback at `a7a989ff` reports that `main` is unprotected and has none of the three proposed required check contexts. Live settings and the owner’s exact-SHA publication decision remain separate under [#132](https://github.com/vixttha/README-HQ/issues/132#issuecomment-7031938898).
+
+CodeRabbit reported [eight initial findings](https://github.com/vixttha/README-HQ/pull/151#pullrequestreview-5988216302) and [two findings on the first follow-up](https://github.com/vixttha/README-HQ/pull/151#pullrequestreview-5988277263). The final replay covered the corrections and confirmed the timeout and quoted-literal cases. The [exact-head CodeRabbit check](https://github.com/vixttha/README-HQ/runs/136119772280) is in progress.
+
+<details>
+<summary>Verified artifact ZIPs and SHA-256 digests</summary>
+
+| Evidence | Artifact ID | SHA-256 |
+| --- | --- | --- |
+| Ubuntu checkpoint replay | [14606770742](https://github.com/vixttha/README-HQ/actions/runs/44685725350/artifacts/14606770742) | `827e6082c377ac2a77376c08c5f8649ab9e28a61fed5f80c5833a773705fbe61` |
+| Windows checkpoint replay | [14606127780](https://github.com/vixttha/README-HQ/actions/runs/44685725350/artifacts/14606127780) | `c0f2faafc8793ebb6656408014b0e0e9e5392211a7c7b780ee3bb454afae7966` |
+| Branch reader, Ubuntu | [14606596699](https://github.com/vixttha/README-HQ/actions/runs/44685722539/artifacts/14606596699) | `b66ff2900f85da415ae81c83485c5e897ec0b1f224537a82bc96b8c3047c9922` |
+| Branch reader, Windows | [14606547176](https://github.com/vixttha/README-HQ/actions/runs/44685722539/artifacts/14606547176) | `77df4212e8c9c1d9bf39d2dec9a2c3113d2cd922480d11320485f0e046f13b19` |
+| Branch Graphify MCP | [14605784035](https://github.com/vixttha/README-HQ/actions/runs/44685722539/artifacts/14605784035) | `126a8eb397e37c1bb72ac1a3d41bbe6b3f27d9ee78f81e0ea2c70eaa209e9256` |
+| Proposed merge reader, Ubuntu | [14606611339](https://github.com/vixttha/README-HQ/actions/runs/44685729266/artifacts/14606611339) | `7b84e0da16c4c577a34485c43f6b9a0dacf9ef30676ff1b1d872df3a5bd4e6fc` |
+| Proposed merge reader, Windows | [14606920596](https://github.com/vixttha/README-HQ/actions/runs/44685729266/artifacts/14606920596) | `74f11a0128bcec2a2b494fc20f805f1b75af8beeaa105db80af5ec84676af019` |
+| Proposed merge Graphify MCP | [14606556783](https://github.com/vixttha/README-HQ/actions/runs/44685729266/artifacts/14606556783) | `e8015af6f1c28638e3fa5fe622e0775ecc2a55fc731ebf7f5251ca25294ae6a2` |
+| Org homepage, active plan, and publication rules | [14606297122](https://github.com/vixttha/README-HQ/actions/runs/44685725350/artifacts/14606297122) | `7b028085125590a2b799f0923ac83642494674d9f14055ffd492499ff73d67c1` |
+| Pillow, Ubuntu, Python 3.11 | [14605977811](https://github.com/vixttha/README-HQ/actions/runs/44685725350/artifacts/14605977811) | `223120b15fe694b9fef79b40ffbbbaccf1b553cd1c684cae391bd49e6c321863` |
+| Pillow, Ubuntu, Python 3.13 | [14605798791](https://github.com/vixttha/README-HQ/actions/runs/44685725350/artifacts/14605798791) | `0d366fab87bafa85cb831a3869797c3056744e1b74905e4baf502f963bde8f54` |
+| Pillow, Ubuntu, Python 3.14 | [14606840565](https://github.com/vixttha/README-HQ/actions/runs/44685725350/artifacts/14606840565) | `20bbd632ca870cc4ec13dbc7b2bf8582a5fa8ab63cf825c638648a5e55d765bc` |
+| Pillow, Ubuntu, Python 3.15 | [14606940017](https://github.com/vixttha/README-HQ/actions/runs/44685725350/artifacts/14606940017) | `1e63f3ebfe6b1514a7a9a0ea0a3659cd5adc12b9f4c6b0e057f7130834c667f5` |
+| Pillow, Windows, Python 3.11 | [14605958670](https://github.com/vixttha/README-HQ/actions/runs/44685725350/artifacts/14605958670) | `dfef8d5bd7dcaed1acd92cedc5ef2de88af3f4d06aab9779b6ce895b8650e0a3` |
+| Pillow, Windows, Python 3.13 | [14606771134](https://github.com/vixttha/README-HQ/actions/runs/44685725350/artifacts/14606771134) | `1c24dad96b0f1685bcd5d70e4262d333ef8c6cec86fadce415ee59346a35f82c` |
+| Pillow, Windows, Python 3.14 | [14606905671](https://github.com/vixttha/README-HQ/actions/runs/44685725350/artifacts/14606905671) | `21aa3dc3392f251c0f9eff3697e61d57e18b33085023ef45eab28a00309e4f47` |
+| Pillow, Windows, Python 3.15 | [14605784463](https://github.com/vixttha/README-HQ/actions/runs/44685725350/artifacts/14605784463) | `9e8672c6789fb5256dd64688df67b8c340c7128329b84bc35d6a7ff87df3ecd2` |
+
+</details>
+
 | Checkpoint | Issue | Planned repair |
 | --- | --- | --- |
-| [`v0.0.6.128`](README.md#v006128) | [#128](https://github.com/vixttha/README-HQ/issues/128) | Distinguish retryable GitHub errors from invalid learning evidence |
-| [`v0.0.6.129`](README.md#v006129) | [#129](https://github.com/vixttha/README-HQ/issues/129) | Bind smoke results to the documented first action |
-| [`v0.0.6.130`](README.md#v006130) | [#130](https://github.com/vixttha/README-HQ/issues/130) | Record the identity of a required probe before it is skipped |
-| [`v0.0.6.131`](README.md#v006131) | [#131](https://github.com/vixttha/README-HQ/issues/131) | Identify GitHub-selected Org homepages |
-| [`v0.0.6.132`](README.md#v006132) | [#132](https://github.com/vixttha/README-HQ/issues/132) | Qualify the owner-controlled publication gate |
-| [`v0.0.6.133`](README.md#v006133) | [#133](https://github.com/vixttha/README-HQ/issues/133) | Verify every published revision of the active repair ledger |
-| [`v0.0.6.134`](README.md#v006134) | [#134](https://github.com/vixttha/README-HQ/issues/134) | Separate observed reviews from qualifying approvals |
-| [`v0.0.6.135`](README.md#v006135) | [#135](https://github.com/vixttha/README-HQ/issues/135) | Qualify the supported Python and Pillow dependency combination |
-| [`v0.0.6.136`](README.md#v006136) | [#136](https://github.com/vixttha/README-HQ/issues/136) | Preserve canonical GitHub identity in learning receipts |
-| [`v0.0.6.137`](README.md#v006137) | [#137](https://github.com/vixttha/README-HQ/issues/137) | Retain the matched learning source anchor |
-| [`v0.0.6.138`](README.md#v006138) | [#138](https://github.com/vixttha/README-HQ/issues/138) | Verify the required local route behind a README Quickstart |
-| [`v0.0.6.139`](README.md#v006139) | [#139](https://github.com/vixttha/README-HQ/issues/139) | Bind draft receipts to the checked media bytes |
-| [`v0.0.6.140`](README.md#v006140) | [#140](https://github.com/vixttha/README-HQ/issues/140) | Honor accessible names in mixed Markdown and HTML image links |
+| [`v0.0.6.128`](README.md#v006128) | [#128](https://github.com/vixttha/README-HQ/issues/128#issuecomment-7031939204) | Distinguish retryable GitHub errors from invalid learning evidence |
+| [`v0.0.6.129`](README.md#v006129) | [#129](https://github.com/vixttha/README-HQ/issues/129#issuecomment-7031935946) | Bind smoke results to the documented first action |
+| [`v0.0.6.130`](README.md#v006130) | [#130](https://github.com/vixttha/README-HQ/issues/130#issuecomment-7031935673) | Record the identity of a required probe before it is skipped |
+| [`v0.0.6.131`](README.md#v006131) | [#131](https://github.com/vixttha/README-HQ/issues/131#issuecomment-7031937685) | Identify GitHub-selected Org homepages |
+| [`v0.0.6.132`](README.md#v006132) | [#132](https://github.com/vixttha/README-HQ/issues/132#issuecomment-7031938898) | Qualify the owner-controlled publication gate |
+| [`v0.0.6.133`](README.md#v006133) | [#133](https://github.com/vixttha/README-HQ/issues/133#issuecomment-7031936880) | Verify every published revision of the active repair ledger |
+| [`v0.0.6.134`](README.md#v006134) | [#134](https://github.com/vixttha/README-HQ/issues/134#issuecomment-7031938484) | Separate observed reviews from qualifying approvals |
+| [`v0.0.6.135`](README.md#v006135) | [#135](https://github.com/vixttha/README-HQ/issues/135#issuecomment-7031937418) | Qualify the supported Python and Pillow dependency combination |
+| [`v0.0.6.136`](README.md#v006136) | [#136](https://github.com/vixttha/README-HQ/issues/136#issuecomment-7031937933) | Preserve canonical GitHub identity in learning receipts |
+| [`v0.0.6.137`](README.md#v006137) | [#137](https://github.com/vixttha/README-HQ/issues/137#issuecomment-7031936577) | Retain the matched learning source anchor |
+| [`v0.0.6.138`](README.md#v006138) | [#138](https://github.com/vixttha/README-HQ/issues/138#issuecomment-7031936329) | Verify the required local route behind a README Quickstart |
+| [`v0.0.6.139`](README.md#v006139) | [#139](https://github.com/vixttha/README-HQ/issues/139#issuecomment-7031938195) | Bind draft receipts to the checked media bytes |
+| [`v0.0.6.140`](README.md#v006140) | [#140](https://github.com/vixttha/README-HQ/issues/140#issuecomment-7031937163) | Honor accessible names in mixed Markdown and HTML image links |
