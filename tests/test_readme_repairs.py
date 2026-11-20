@@ -172,6 +172,29 @@ A separate [same label](fourth.md).
             with self.assertRaisesRegex(LookupError, "unresolved"):
                 same_repo_target(tree, urlsplit("https://github.com/example/project/blob/absent/README.md"))
 
+    def test_public_refs_ignore_local_aliases_and_use_the_remote_default(self):
+        with repository({"README.md": "# Default"}) as original:
+            original.git("remote", "add", "origin", "https://github.com/example/project.git")
+            original.git("update-ref", "refs/remotes/origin/main", original.commit)
+            original.git("update-ref", "refs/remotes/origin/release/next", original.commit)
+            original.git("switch", "-c", "topic")
+            original.git("-c", "user.name=Fixture", "-c", "user.email=test@example.invalid",
+                         "commit", "--allow-empty", "-qm", "Topic revision")
+            topic = GitTree(original.root)
+            self.assertNotEqual(topic.commit, original.commit)
+
+            def resolve(ref):
+                return same_repo_target(topic, urlsplit(f"https://github.com/example/project/blob/{ref}/README.md"))
+
+            for ref in ("origin/main", "topic", "HEAD"):
+                with self.assertRaisesRegex(LookupError, "unresolved"):
+                    resolve(ref)
+            original.git("symbolic-ref", "refs/remotes/origin/HEAD", "refs/remotes/origin/main")
+            self.assertEqual(resolve("HEAD"), ("README.md", original.commit))
+            self.assertEqual(resolve("release/next"), ("README.md", original.commit))
+            original.git("update-ref", "refs/remotes/origin/origin/main", topic.commit)
+            self.assertEqual(resolve("origin/main"), ("README.md", topic.commit))
+
     def test_bad_image_and_unnamed_image_link_are_separate(self):
         readme = "# Images\n[![](broken.png)](README.md)\n[Another dead link](absent.md)\n"
         with repository({"README.md": readme, "broken.png": b"not a PNG"}) as tree:

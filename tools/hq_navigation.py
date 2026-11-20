@@ -221,10 +221,23 @@ def same_repo_target(tree, url):
     candidates = segments[3:]
     for count in range(len(candidates) - (segments[2] != "tree"), 0, -1):
         ref = "/".join(candidates[:count])
-        if SHA.fullmatch(ref) or ref == "HEAD":
+        if ref == "HEAD":
+            try:
+                default = tree.git("symbolic-ref", "refs/remotes/origin/HEAD").decode().strip()
+            except ValueError:
+                continue
+            names = [default] if default.startswith("refs/remotes/origin/") else []
+        elif SHA.fullmatch(ref):
             names = [ref]
         else:
-            names = [f"refs/heads/{ref}", f"refs/remotes/origin/{ref}", f"refs/tags/{ref}"]
+            remote = f"refs/remotes/origin/{ref}"
+            names = [remote, f"refs/tags/{ref}"]
+            try:
+                tree.resolve(remote)
+            except ValueError:
+                pass
+            else:
+                names.append(f"refs/heads/{ref}")
             if re.fullmatch(r"[0-9a-f]{4,39}", ref):
                 objects = tree.git("rev-parse", f"--disambiguate={ref}").decode().split()
                 if len(objects) == 1:
