@@ -205,7 +205,22 @@ def main():
         review["result"] = "passed"
     finally:
         save()
-    parent = final
+    latest = "dc8ef21763240168227d67445f02fc4a05ea071c"
+    latest_tree = "d887e7a52c7790e4a02c4ea792b792e5a7a0f213"
+    selector = "learning_cli_distinguishes_secondary_rate_limits"
+    focused_from(checkout, latest, READER_TEST, selector, baseline=True)
+    run(checkout, "git", "checkout", "--detach", latest)
+    if run(checkout, "git", "rev-parse", "HEAD", "HEAD^", "HEAD^{tree}").split() != [latest, final, latest_tree]:
+        raise ValueError("Secondary-rate-limit revision differs from its pinned parent or tree")
+    rate_limit = {"label": "secondary-rate-limit follow-up", "commit": latest, "parent": final,
+                  "tree": latest_tree, "baseline": "reproduced", "result": "started"}
+    report["follow_ups"].append(rate_limit)
+    try:
+        focused(checkout, READER_TEST, selector)
+        rate_limit["result"] = "passed"
+    finally:
+        save()
+    parent = latest
     report["candidate"] = parent
     tasks = [
         ("reader CLI", ("tools/check_readme_hq.py", "--receipt", str(output / "reader.json"))),
