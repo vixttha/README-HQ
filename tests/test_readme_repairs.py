@@ -111,6 +111,34 @@ class ReaderTests(unittest.TestCase):
                 self.assertEqual(target_readme(tree, ".", errors, [], "application")[0], "README.md")
                 self.assertEqual(any("no discoverable first action" in error for error in errors), expected)
 
+    def test_draft_receipt_fingerprints_the_media_bytes_actually_checked(self):
+        from check_readme_hq import main
+        from hashlib import sha256
+
+        first = b'<svg xmlns="http://www.w3.org/2000/svg"><title>First</title></svg>'
+        second = first.replace(b"First", b"Second")
+        readme = "# Fixture\n\nThis fixture contains a checked image.\n\n![Diagram](diagram.svg)"
+        with repository({"README.md": readme, "diagram.svg": first}) as tree:
+            receipt, image = tree.root / "receipt.json", tree.root / "diagram.svg"
+            argv = ["check", "--repo", str(tree.root), "--profile", "reference", "--draft", "--receipt", str(receipt)]
+            media = []
+            for data, code in ((first, 0), (second, 0), (second, 0), (b"<bad", 1)):
+                image.write_bytes(data)
+                with (patch.object(sys, "argv", argv), contextlib.redirect_stdout(StringIO()),
+                      contextlib.redirect_stderr(StringIO())):
+                    self.assertEqual(main(), code)
+                output = json.loads(receipt.read_bytes())
+                self.assertEqual(output["commit"], tree.commit)
+                if code == 0:
+                    checked = output["cases"]["checked_media"]
+                    self.assertEqual(checked, [{"path": "diagram.svg", "base_commit": tree.commit, "draft": True,
+                                                "sha256": sha256(data).hexdigest()}])
+                    media.append(checked[0]["sha256"])
+                else:
+                    self.assertNotIn("checked_media", output["cases"])
+            self.assertNotEqual(media[0], media[1])
+            self.assertEqual(media[1], media[2])
+
     def test_quickstart_validates_the_local_guide_route_without_following_ordinary_links(self):
         from check_readme_hq import main
 

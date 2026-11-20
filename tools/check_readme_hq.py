@@ -240,7 +240,7 @@ def check_versions(errors, tree=None):
     return len(dirs)
 
 
-def check_navigation(errors, tree=None, gaps=None):
+def check_navigation(errors, tree=None, gaps=None, *, checked_media=None):
     tree = tree or GitTree(ROOT)
     gaps = gaps if gaps is not None else []
     entries = tree.entries()
@@ -249,10 +249,12 @@ def check_navigation(errors, tree=None, gaps=None):
     documents.update(name for name in ("REUSE.md", "learning/README.md") if name in entries)
     documents.update(name for name in entries if suffix(name) in MARKDOWN and
                      name.startswith(("audits/", "versions/", "graphify-hq/maps/")))
-    count = sum(check_document(tree, path, errors, gaps) for path in sorted(documents))
+    count = sum(check_document(tree, path, errors, gaps, checked_media=checked_media)
+                for path in sorted(documents))
     for name in sorted(entries):
         if re.fullmatch(r"history/[^/]+/(?:published-v[^/]+|main-rebrand-v[^/]+)/README\.md", name):
-            count += check_document(tree, name, errors, gaps, archive_scope=name.rsplit("/", 1)[0])
+            count += check_document(tree, name, errors, gaps, archive_scope=name.rsplit("/", 1)[0],
+                                    checked_media=checked_media)
     return count
 
 
@@ -297,7 +299,7 @@ def has_first_action(blocks):
     return next(documented_actions(blocks), None) is not None
 
 
-def check_first_action_route(tree, source, actions, errors, gaps, route):
+def check_first_action_route(tree, source, actions, errors, gaps, route, *, checked_media=None):
     """Check local guide links selected by Quickstart, one guide hop deep."""
     guides = set()
     route["guides"] = []
@@ -327,14 +329,14 @@ def check_first_action_route(tree, source, actions, errors, gaps, route):
             route["result"] = "unchecked"
             continue
         before = len(errors)
-        check_document(tree, guide, errors, gaps)
+        check_document(tree, guide, errors, gaps, checked_media=checked_media)
         if len(errors) != before:
             route["result"] = "failed"
     if any(error.split(":", 1)[0] in guides for error in errors):
         route["result"] = "failed"
 
 
-def target_readme(tree, subproject, errors, gaps, profile, *, route=None):
+def target_readme(tree, subproject, errors, gaps, profile, *, route=None, checked_media=None):
     prefix = Path(subproject).as_posix().removeprefix("./")
     if Path(subproject).is_absolute() or ".." in Path(subproject).parts or "\\" in subproject:
         raise ValueError("subproject must be relative to the selected repository")
@@ -359,9 +361,10 @@ def target_readme(tree, subproject, errors, gaps, profile, *, route=None):
     if profile != "reference" and not has_first_action(blocks):
         errors.append(f"{source}: no discoverable first action for {profile}")
     gaps.append(f"{source}: editorial quality and material claims require human or agent review")
-    count = check_document(tree, source, errors, gaps)
+    count = check_document(tree, source, errors, gaps, checked_media=checked_media)
     if route is not None and profile != "reference":
-        check_first_action_route(tree, source, documented_actions(blocks), errors, gaps, route)
+        check_first_action_route(tree, source, documented_actions(blocks), errors, gaps, route,
+                                 checked_media=checked_media)
     return source, count
 
 
@@ -395,6 +398,7 @@ def main():
         args.profile = "application"
     errors, gaps, records = [], [], []
     cases = {}
+    checked_media = set() if args.receipt else None
     scope = None
     try:
         if args.draft and args.ref != "HEAD":
@@ -410,7 +414,8 @@ def main():
                      "profile": args.profile, "subproject": PurePosixPath(args.subproject).as_posix(),
                      "commit": tree.commit}
             route = {}
-            entry, count = target_readme(tree, args.subproject, errors, gaps, args.profile, route=route)
+            entry, count = target_readme(tree, args.subproject, errors, gaps, args.profile, route=route,
+                                         checked_media=checked_media)
             cases.update(entrypoint=entry, local_links=count)
             if route:
                 cases["first_action_route"] = route
@@ -441,10 +446,16 @@ def main():
         else:
             records = check_registry(errors, tree)
             cases.update(standalone_versions=check_versions(errors, tree), techniques=len(records),
-                         local_links=check_navigation(errors, tree, gaps), imported_files=check_history(errors, tree))
+                         local_links=check_navigation(errors, tree, gaps, checked_media=checked_media),
+                         imported_files=check_history(errors, tree))
     except (KeyError, OSError, TypeError, ValueError) as error:
         errors.append(str(error))
     if args.receipt:
+        if checked_media:
+            cases["checked_media"] = [
+                {"path": path, "base_commit": revision, "draft": draft, "sha256": digest}
+                for path, revision, draft, digest in sorted(checked_media)
+            ]
         from hq_smoke import write_receipt
         try:
             write_receipt(args.receipt, locals().get("tree"), cases, errors, gaps,

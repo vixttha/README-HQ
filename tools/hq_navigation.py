@@ -417,7 +417,7 @@ def verify_media(path, data):
         raise LookupError("media format was not inspected")
 
 
-def check_document(tree, source, errors, gaps, *, archive_scope=None):
+def check_document(tree, source, errors, gaps, *, archive_scope=None, checked_media=None):
     if suffix(source) not in MARKDOWN:
         gaps.append(f"{source}: link checking for this README format is unavailable")
         return 0
@@ -452,7 +452,11 @@ def check_document(tree, source, errors, gaps, *, archive_scope=None):
             if link.image:
                 if directory:
                     raise ValueError("image target is a directory")
-                verify_media(path, media_bytes(tree, path, commit))
+                contents = media_bytes(tree, path, commit)
+                verify_media(path, contents)
+                if checked_media is not None:
+                    identity = (path, commit or tree.commit, tree.draft and commit is None, sha256(contents).hexdigest())
+                    checked_media.add(identity)
             if url.fragment and github_route(url)[2:3] == ["raw"]:
                 gaps.append(f"{source}:{link.line}: raw GitHub file fragment was not checked: {link.path}")
             else:
