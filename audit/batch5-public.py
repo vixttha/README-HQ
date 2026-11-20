@@ -28,6 +28,7 @@ FOLLOW_UPS = [
     ("aa07e7ab89e4bb2d3d28c9d0a5302394b9b1839b", "bb2c3b89a5b470d9236ed9b76f7c5784a07a48b5", "4ad9a1d50246f6dcc1d4066d693f0a50fbda4350", ["batch5_review_github_response_timeout"]),
     ("bd47fa18607bbffb34345ff72d9ac3aeec3ea99f", "aa07e7ab89e4bb2d3d28c9d0a5302394b9b1839b", "27cbbe0a4d4bcc6ac70e3442c67304310f6a2840", []),
     ("6c81133b912c08e998b227f03b5cff001b0118de", "bd47fa18607bbffb34345ff72d9ac3aeec3ea99f", "debb48c810c9429b7ff6885105dcc85c12a1c50a", ["batch5_review_logical_shell_commands","active_plan_rejects_invalid"]),
+    ("844f97a8a140238411fb98cf584bf05a09aba1c4", "6c81133b912c08e998b227f03b5cff001b0118de", "691778d256a07e6553d9a90843dfbdf17a55ea0a", ["active_plan_rejects_invalid"]),
 ]
 READER = "tests/test_readme_repairs.py"
 GRAPHIFY = "graphify-hq/template/v0.0.8/test_evidence_map.py"

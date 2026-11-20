@@ -24,7 +24,7 @@ jobs:
           persist-credentials: false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
-          ref: 6c81133b912c08e998b227f03b5cff001b0118de
+          ref: 844f97a8a140238411fb98cf584bf05a09aba1c4
           path: candidate
           fetch-depth: 0
           persist-credentials: false
@@ -58,7 +58,7 @@ jobs:
           persist-credentials: false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
-          ref: 6c81133b912c08e998b227f03b5cff001b0118de
+          ref: 844f97a8a140238411fb98cf584bf05a09aba1c4
           path: candidate
           fetch-depth: 0
           persist-credentials: false
@@ -93,7 +93,7 @@ jobs:
           persist-credentials: false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
-          ref: 6c81133b912c08e998b227f03b5cff001b0118de
+          ref: 844f97a8a140238411fb98cf584bf05a09aba1c4
           path: candidate
           fetch-depth: 0
           persist-credentials: false
@@ -105,7 +105,7 @@ jobs:
           python -m pip install --require-hashes --only-binary=:all: -r candidate/tools/requirements.txt
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
-          ref: eec859e2284d6e2229128341b224b5f703d574c3
+          ref: 3761affb222611331b8959d3dc0e5b2b1d24e77e
           path: plan
           persist-credentials: false
       - name: Compare pinned public Org homepage and audit receipt
