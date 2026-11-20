@@ -21,3 +21,13 @@ When bringing over an existing README HQ technique, keep its registry ID and lin
 | [Repo and SHA] | [Pinned file and section] | [Existing or proposed ID] | [Observation, verified result, or reason review was incomplete] |
 
 **Gaps and disagreements.** [Platforms, project types, unavailable sources, inconsistent outcomes, and checks still needed.]
+
+## Research coverage
+
+One cross-domain pass broadened the [technique map](TECHNIQUE-MAP.md) from 86 to 108 practices. It compared public examples and primary guidance across onboarding, configuration, recovery, verification, publishing, accessibility, localization, governance, and research data.
+
+- Later searches for captions, page headings, collapsible sections, artifact retention, and executable examples confirmed existing practices. The map links relevant sources under those entries.
+- The final search across research repositories added a data dictionary and host-readable discovery metadata. That search also surfaced reproducibility and attribution guidance already covered by earlier entries.
+- The new entries describe observed documentation mechanisms and how to adapt them. Separate execution checks establish whether a practice works in a specific project.
+
+For future saturation reviews, record which source families were searched, which plausible additions matched existing entries, and any areas left open. This approach shows what the pass covered and makes later research easier to target.
