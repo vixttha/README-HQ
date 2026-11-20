@@ -412,6 +412,36 @@ A separate [same label](fourth.md).
             self.assertEqual(len(errors), 1)
             self.assertIn("outside the file", errors[0])
 
+    def test_pinned_fragment_cache_reuses_objects_without_stale_drafts(self):
+        import hq_navigation
+
+        readme = "[Start](guide.md#start)\n" * 64 + "[Missing](guide.md#missing)\n"
+        with repository({"README.md": readme, "guide.md": "# Start"}) as tree:
+            errors = []
+            with (patch.object(tree, "read", wraps=tree.read) as read,
+                  patch.object(hq_navigation, "parse_markdown", wraps=hq_navigation.parse_markdown) as parse):
+                self.assertEqual(check_document(tree, "README.md", errors, []), 64)
+                self.assertEqual(sum(call.args[0] == "guide.md" for call in read.call_args_list), 1)
+                self.assertEqual(parse.call_count, 2)
+            self.assertEqual(len(errors), 1)
+            self.assertIn("missing local heading", errors[0])
+            path = tree.root / "guide.md"
+            old = tree.commit
+            path.write_text("# Other", encoding="utf-8")
+            draft = GitTree(tree.root, draft=True)
+            self.assertEqual(check_document(draft, "README.md", [], []), 0)
+            path.write_text("# Start", encoding="utf-8")
+            self.assertEqual(check_document(draft, "README.md", [], []), 64)
+            path.write_text("# Other", encoding="utf-8")
+            tree.git("add", "guide.md")
+            tree.git("-c", "user.name=Fixture", "-c", "user.email=test@example.invalid",
+                     "commit", "--quiet", "-m", "Change anchor")
+            current = GitTree(tree.root)
+            cache = {}
+            hq_navigation.check_fragment(current, "guide.md", old, "start", cache=cache)
+            with self.assertRaisesRegex(ValueError, "missing local heading"):
+                hq_navigation.check_fragment(current, "guide.md", current.commit, "start", cache=cache)
+
     def test_raw_github_files_do_not_verify_rendered_heading_fragments(self):
         with repository({"guide.md": "# Heading\n", "README.md": "# Links"}) as tree:
             tree.git("remote", "add", "origin", "https://github.com/example/project.git")

@@ -306,7 +306,7 @@ def target_for(tree, source, url):
     return "" if path == "." else path, None
 
 
-def check_fragment(tree, path, commit, fragment, *, plain=False):
+def check_fragment(tree, path, commit, fragment, *, plain=False, cache=None):
     if not fragment:
         return
     entries = tree.entries(commit)
@@ -315,18 +315,23 @@ def check_fragment(tree, path, commit, fragment, *, plain=False):
         if not target:
             raise LookupError("directory has no supported README for the fragment")
         path = target
-    data = tree.read(path, commit)
-    text = data.decode("utf-8")
-    if plain or suffix(path) not in MARKDOWN:
+    line_mode = plain or suffix(path) not in MARKDOWN
+    draft = tree.draft and commit is None
+    key = (entries[path][1], line_mode)
+    available = cache if cache is not None and not draft else {}
+    if key not in available:
+        text = tree.read(path, commit).decode("utf-8")
+        available[key] = ((len(physical_lines(text.removesuffix("\n"))) if text else 0)
+                          if line_mode else parse_markdown(text)[0])
+    if line_mode:
         coordinates = LINE_RANGE.fullmatch(fragment)
         if not coordinates:
             raise LookupError("fragment format is unsupported for this file")
         start, end = coordinates.groups()
         first, last = int(start), int(end or start)
-        line_count = len(physical_lines(text.removesuffix("\n"))) if text else 0
-        if not 1 <= first <= last <= line_count:
+        if not 1 <= first <= last <= available[key]:
             raise ValueError("source line fragment outside the file or reversed")
-    elif fragment not in parse_markdown(text)[0]:
+    elif fragment not in available[key]:
         raise ValueError("missing local heading or named anchor")
 
 
@@ -405,6 +410,7 @@ def check_document(tree, source, errors, gaps, *, archive_scope=None):
     text = tree.read(source).decode("utf-8")
     _, links, _ = parse_markdown(text)
     count = 0
+    anchor_cache = {}
     for link in links:
         try:
             if link.coverage_gap:
@@ -437,7 +443,7 @@ def check_document(tree, source, errors, gaps, *, archive_scope=None):
                 gaps.append(f"{source}:{link.line}: raw GitHub file fragment was not checked: {link.path}")
             else:
                 check_fragment(tree, path, commit, unquote(url.fragment),
-                               plain=parse_qs(url.query).get("plain") in (["1"], ["true"]))
+                               plain=parse_qs(url.query).get("plain") in (["1"], ["true"]), cache=anchor_cache)
             count += 1
         except (ValueError, OSError, KeyError) as error:
             errors.append(f"{source}:{link.line}: {error}: {link.path}")
