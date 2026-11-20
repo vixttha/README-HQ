@@ -1,6 +1,7 @@
 """Regression tests for selected-tree navigation and verified reader outcomes."""
 
 import contextlib
+from hashlib import sha256
 import importlib.util
 import json
 import os
@@ -98,6 +99,25 @@ Literal example `[Ignore](literal.md)`.
             action["expected"]["contains"] = "wrong"
             self.assertEqual(smoke(action), "failed")
             self.assertEqual(smoke({"url": "https://example.invalid", "expected": {"http_status": 200}}), "unchecked")
+
+    def test_smoke_file_checks_prove_a_change(self):
+        with repository({"README.md": "# Example", "existing.txt": "old"}) as tree:
+            spec = tree.root / "smoke.json"
+            def smoke(code, name, **expected):
+                spec.write_text(json.dumps({
+                    "commit": tree.commit, "argv": [sys.executable, "-c", code],
+                    "expected": {"exit": 0, "file": name, **expected},
+                }), encoding="utf-8")
+                return verify_first_action(tree, spec)
+
+            self.assertEqual(smoke("pass", "existing.txt")["result"], "failed")
+            self.assertEqual(smoke("pass", "existing.txt", file_mode="exists")["result"], "passed")
+            for name, mode in (("new.txt", "created"), ("existing.txt", "updated")):
+                code = f"from pathlib import Path; Path({name!r}).write_bytes(b'new')"
+                outcome = smoke(code, name, file_mode=mode, file_sha256=sha256(b"new").hexdigest())
+                self.assertEqual(outcome["result"], "passed")
+                self.assertNotEqual(outcome["observed"]["file_before_sha256"], outcome["observed"]["file_after_sha256"])
+                self.assertEqual(smoke(code, name, file_sha256="0" * 64)["result"], "failed")
 
     def test_ascii_technique_listing(self):
         result = subprocess.run([sys.executable, str(ROOT / "tools/check_readme_hq.py"), "--list"],

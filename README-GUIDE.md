@@ -28,3 +28,5 @@ Review how the README renders at standard desktop and narrow widths. Check relat
 5. Link to the frozen copy when answering a request for a specific version. Report a working draft, an accepted archive, and a published homepage with their observed statuses.
 
 Use [the audit workflow](audits/README.md) to examine an existing repository before drafting. The [technique library](techniques/README.md) holds reusable practices to choose from.
+
+A local smoke check with an expected file requires new or changed bytes by default. Use `expected.file_mode` to require `created` or `updated` specifically, or specify `exists` when existence alone is the intended result. Use `expected.file_sha256` for an exact expected digest.
