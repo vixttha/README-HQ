@@ -158,6 +158,21 @@ class HtmlLinks(HTMLParser):
             self.links.append(Link(path, line, unnamed=not named))
 
 
+def inline_link_has_name(children, line):
+    if not any(item.type == "html_inline" for item in children):
+        return any(item.content.strip() for item in children if item.type in {"text", "code_inline", "image"})
+    html = HtmlLinks(line)
+    outer = ["", line, False]
+    html.controls.append(outer)
+    for item in children:
+        if item.type == "html_inline":
+            html.feed(item.content)
+        elif item.type in {"text", "code_inline", "image"}:
+            html.handle_data(item.content)
+    html.close()
+    return outer[2]
+
+
 def inline_links(children, line):
     links = []
     current_line = line
@@ -169,9 +184,8 @@ def inline_links(children, line):
         elif token.type == "link_open":
             in_link = True
             end = next((i for i in range(index + 1, len(children)) if children[i].type == "link_close"), len(children))
-            name = "".join(item.content for item in children[index + 1:end]
-                           if item.type in {"text", "code_inline", "image"})
-            links.append(Link(token.attrGet("href"), occurrence, unnamed=not name.strip()))
+            named = inline_link_has_name(children[index + 1:end], occurrence)
+            links.append(Link(token.attrGet("href"), occurrence, unnamed=not named))
         elif token.type == "link_close":
             in_link = False
         elif token.type in {"hardbreak", "softbreak"}:

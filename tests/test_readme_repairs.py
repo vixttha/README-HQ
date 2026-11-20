@@ -111,6 +111,25 @@ class ReaderTests(unittest.TestCase):
                 self.assertEqual(target_readme(tree, ".", errors, [], "application")[0], "README.md")
                 self.assertEqual(any("no discoverable first action" in error for error in errors), expected)
 
+    def test_mixed_markdown_html_image_link_names_keep_both_targets(self):
+        from hq_navigation import check_document
+
+        image = '<img src="diagram.svg" alt="Open the guide">'
+        for content, named in (
+            (f"[{image}](guide.md)", True),
+            ('[![Open the guide](diagram.svg)](guide.md)', True),
+            (f'<a href="guide.md">{image}</a>', True),
+            ('[<img src="diagram.svg" alt="">](guide.md)', False),
+            (f'[<span aria-hidden="true">{image}</span>](guide.md)', False),
+        ):
+            files = {"README.md": content, "guide.md": "# Guide",
+                     "diagram.svg": '<svg xmlns="http://www.w3.org/2000/svg"/>'}
+            with self.subTest(content=content), repository(files) as tree:
+                errors, gaps = [], []
+                self.assertEqual(check_document(tree, "README.md", errors, gaps), 2 if named else 1)
+                self.assertEqual(any("no accessible name" in error for error in errors), not named)
+                self.assertFalse(gaps)
+
     def test_draft_receipt_fingerprints_the_media_bytes_actually_checked(self):
         from check_readme_hq import main
         from hashlib import sha256
