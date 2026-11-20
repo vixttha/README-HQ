@@ -2,7 +2,7 @@
   "schema_version": 1,
   "id": "FEAT-000010",
   "title": "Reusable README technique registry",
-  "summary": "Catalog evidence-backed README practices with stable IDs and references so audits can reuse known techniques and extend their evidence.",
+  "summary": "Maintain evidence-linked README techniques and combinations with stable IDs on the separate README-Technique-Library branch. The original README HQ registry remains available for historical evidence and snapshot checks.",
   "kind": "capability",
   "lifecycle_status": "implemented",
   "implementation_status": "implemented",
@@ -10,8 +10,9 @@
     "IDEA-000005"
   ],
   "acceptance_criteria": [
-    "The public registry provides stable technique records that reviewers can cite from audits.",
-    "The guide describes checking active and retired entries for overlap before adding a record."
+    "The dedicated library is the maintained source for technique and combination definitions.",
+    "The library supports searching stable IDs, reader tasks, and aliases, including separate discovery of retired records.",
+    "The README HQ guide routes current choices to the library and documents the role of the historical registry."
   ],
   "testing": {
     "status": "untested"
@@ -23,6 +24,20 @@
       "source_sha": "f50e3749dab90ddfe35894284d1660097a1fb1a8",
       "source_path": "techniques/README.md",
       "receipt": "https://github.com/vixttha/README-HQ/blob/f50e3749dab90ddfe35894284d1660097a1fb1a8/techniques/README.md"
+    },
+    {
+      "kind": "implementation",
+      "claim": "The dedicated library publishes the catalog and its search interface.",
+      "source_sha": "5eb7412e306f4fcaa7315cb1b97485ae177e6b48",
+      "source_path": "README.md",
+      "receipt": "https://github.com/vixttha/README-HQ/blob/5eb7412e306f4fcaa7315cb1b97485ae177e6b48/README.md"
+    },
+    {
+      "kind": "implementation",
+      "claim": "The guide routes current choices to the library and identifies the older registry as historical.",
+      "source_sha": "788f2127d3cf004ac5615d21364f5b56e4f7dd31",
+      "source_path": "techniques/README.md",
+      "receipt": "https://github.com/vixttha/README-HQ/blob/788f2127d3cf004ac5615d21364f5b56e4f7dd31/techniques/README.md"
     }
   ],
   "release_membership": "NOT_ASSERTED"

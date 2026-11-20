@@ -2,7 +2,7 @@
   "schema_version": 1,
   "id": "FEAT-000012",
   "title": "Reusable README technique combinations",
-  "summary": "Let README HQ recommend an ordered set of known techniques for a scoped reader task and let adopters retain applicability decisions and outcome evidence.",
+  "summary": "Help an adopter choose and adapt a pinned combination from README-Technique-Library. Keep the selection, rationale, and outcome with the project and use README HQ's drafting and verification workflow.",
   "kind": "workflow",
   "lifecycle_status": "proposed",
   "implementation_status": "not_planned",
@@ -11,7 +11,9 @@
     "IDEA-000011"
   ],
   "acceptance_criteria": [
-    "Record the reader task, prerequisites, ordered active technique IDs at a pinned registry revision, and reasons to apply, adapt, or skip the combination.",
+    "From a clean adopter checkout, find eligible combinations in the external library and resolve their active technique IDs at a full library commit.",
+    "Explain each option's applicability, prerequisites, and tradeoffs. Record which combination the adopter chooses, adapts, or skips and why.",
+    "Store project-specific choices and results with the adopter. Keep reusable combination definitions on README-Technique-Library.",
     "Record discovery, execution, and fresh-agent handoff independently with expected and observed results, the tested revisions, and explicit gaps.",
     "Use a same-checkout relative link for supporting docs and immutable source links for claims about another revision. Retain an outcome record alongside workflow and artifact identifiers.",
     "A command unrelated to the advertised first action cannot satisfy the execution check."
@@ -33,6 +35,13 @@
       "source_sha": "91ccf6bdc4ac4645006151d68605c2b77239d651",
       "source_path": "docs/adopter-walkthrough.md",
       "receipt": "https://github.com/vixttha/Veraphify/actions/runs/44640005952/job/135968332305"
+    },
+    {
+      "kind": "other",
+      "claim": "The owning catalog publishes the pilot's five-step combination and links the original trial, including the partial handoff.",
+      "source_sha": "5eb7412e306f4fcaa7315cb1b97485ae177e6b48",
+      "source_path": "combinations/pinned-walkthrough-with-evidence.md",
+      "receipt": "https://github.com/vixttha/README-HQ/blob/5eb7412e306f4fcaa7315cb1b97485ae177e6b48/combinations/pinned-walkthrough-with-evidence.md"
     }
   ],
   "release_membership": "NOT_ASSERTED"

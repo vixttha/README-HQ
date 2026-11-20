@@ -2,7 +2,7 @@
   "schema_version": 1,
   "id": "IDEA-000012",
   "title": "Combine README techniques around a reader task",
-  "summary": "Record when complementary README techniques belong together and evaluate whether a reader or agent can complete the intended task at the pinned adopter revision.",
+  "summary": "Use the separate README Technique Library to find complementary techniques for a reader task. The agent explains the options and helps the adopter choose or adapt them, then the project records its decision and the outcome.",
   "kind": "process",
   "origin": {
     "created_by": "joint",
@@ -21,7 +21,7 @@
     "adoption"
   ],
   "benefits": [
-    "Adopters can apply and adapt proven practices around a concrete task and retain what worked."
+    "Adopters can choose proven practices for a concrete task from an independently maintained catalog and retain what worked."
   ],
   "risks": [
     "A generic checklist can hide which technique applies, and a successful command can be mistaken for a successful reader or agent journey."
@@ -46,6 +46,13 @@
       "repository": "vixttha/Veraphify",
       "commit": "c0a03f7e40b115c51fbc4be2a45f50ce1dee46f7",
       "path": "README.md"
+    },
+    {
+      "relation": "context",
+      "claim": "The dedicated library holds the reusable definition and ordered steps.",
+      "repository": "vixttha/README-HQ",
+      "commit": "5eb7412e306f4fcaa7315cb1b97485ae177e6b48",
+      "path": "combinations/pinned-walkthrough-with-evidence.md"
     }
   ]
 }
