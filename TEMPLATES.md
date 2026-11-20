@@ -1,8 +1,26 @@
 # Record templates
 
-Copy the relevant section into a Markdown file under `techniques/<stable-id>.md` or `combinations/<stable-id>.md`. Use a lowercase slug with hyphens for the filename and ID. Reuse the technique ID when adding evidence for the same practice. Identify the kind by its directory. Link each reviewed record from the [library index](README.md).
+Save one record per lowercase, hyphenated ID as `techniques/<id>.md` or `combinations/<id>.md`. IDs, titles, and aliases must identify one record across both directories. Use tags for terms shared across records. Keep IDs stable when editing titles or adding evidence.
 
-From the root index, link to a technique with `[Relative navigation](techniques/relative-navigation.md)`. From a combination record, link to that same technique with `[Relative navigation](../techniques/relative-navigation.md)`. These paths are examples to adapt once the record exists.
+Start the file with the metadata comment below, then write the matching Markdown section. Set `tasks` to one or more IDs from the [task index](catalog/README.md). Use `observed`, `verified`, or `unverified` for evidence and `active` or `retired` for status.
+
+```markdown
+<!-- catalog
+{
+  "title": "Relative navigation",
+  "summary": "Link readers to a guide shipped in the same checkout.",
+  "tasks": ["navigation", "quickstart"],
+  "tags": ["links", "onboarding"],
+  "aliases": ["same-checkout links"],
+  "evidence": "observed",
+  "status": "active"
+}
+-->
+```
+
+For a combination, add a `"steps"` field to the same metadata object. For example, `"steps": ["relative-navigation", "expected-first-output"]` lists two technique IDs in reading order. Save both technique files before adding the combination. The generated task page links each step automatically.
+
+From a combination record, link to a technique with `[Relative navigation](../techniques/relative-navigation.md)`. Change the filename to the technique’s real ID. Rebuild and check the indexes using the [maintenance commands](README.md#maintain-the-catalog).
 
 ## Technique record
 
