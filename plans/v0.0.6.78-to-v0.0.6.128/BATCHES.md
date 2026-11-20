@@ -115,6 +115,24 @@ Adopter scope, Windows CI, Quickstart discoverability, Graphify evidence retenti
 
 All 10 downloaded evidence ZIPs matched GitHub’s SHA-256 digests. The checkpoint receipts match all 21 Git commit, parent, and tree records. [Ubuntu receipt](https://github.com/vixttha/README-HQ/actions/runs/44673218112/artifacts/14601265274) · [Windows receipt](https://github.com/vixttha/README-HQ/actions/runs/44673218112/artifacts/14601071769).
 
+<details>
+<summary>Verified artifact ZIPs and SHA-256 digests</summary>
+
+| Evidence | Artifact ID | SHA-256 |
+| --- | --- | --- |
+| Checkpoint replay, Ubuntu | [14601265274](https://github.com/vixttha/README-HQ/actions/runs/44673218112/artifacts/14601265274) | `a79c1d1a897cb2fa7e2200b24cbe4171631f3efd5dcf22e27fd4ab9a243bc068` |
+| Checkpoint replay, Windows | [14601071769](https://github.com/vixttha/README-HQ/actions/runs/44673218112/artifacts/14601071769) | `41037147eed6104835910c3809ab6620b7cc5298a8163c02049fa06fa1727972` |
+| Branch reader, Ubuntu | [14600908072](https://github.com/vixttha/README-HQ/actions/runs/44673187407/artifacts/14600908072) | `88e36ac7ee48be2efc96af7f765948d04319efcc5a15e7a3d2377089eb0bdfc4` |
+| Branch reader, Windows | [14601425348](https://github.com/vixttha/README-HQ/actions/runs/44673187407/artifacts/14601425348) | `d14e92504c574b624df21cacee6ceee73fced4bbc3b30a728457a6d555190a2a` |
+| Branch Graphify MCP | [14600074188](https://github.com/vixttha/README-HQ/actions/runs/44673187407/artifacts/14600074188) | `88cff924b5b2b20b4435b240b2144080872e9880ef4226ccba65d0acdc913388` |
+| Proposed merge reader, Ubuntu | [14600808104](https://github.com/vixttha/README-HQ/actions/runs/44673195360/artifacts/14600808104) | `4e0a6a7da7424c172cf176dff61601a462f8fe164f737049212779a02636efd4` |
+| Proposed merge reader, Windows | [14601130962](https://github.com/vixttha/README-HQ/actions/runs/44673195360/artifacts/14601130962) | `10c055c6621e17dad237d7b261cffd0f5f1317c6457dd1c0c65bba35fb62e874` |
+| Proposed merge Graphify MCP | [14600533487](https://github.com/vixttha/README-HQ/actions/runs/44673195360/artifacts/14600533487) | `c0d5429fd45de0c484a97cc0b42f79622844bfc617805628304dea479292f760` |
+| Windows failure control | [14599849742](https://github.com/vixttha/README-HQ/actions/runs/44673218127/artifacts/14599849742) | `c32b0757af033c1a5119c23be567e0aba298dde141e98d99bd85e5e62f25017f` |
+| Graphify failure control | [14600828501](https://github.com/vixttha/README-HQ/actions/runs/44673218127/artifacts/14600828501) | `5876f0d5dcccbff26fe3e55e45eda6cbf96cb68e918150a747902ffa8c204762` |
+
+</details>
+
 | Checkpoint | Issue | Planned repair |
 | --- | --- | --- |
 | [`v0.0.6.113`](README.md#v006113) | [#113](https://github.com/vixttha/README-HQ/issues/113) | Detect missing HTML image alternatives |
