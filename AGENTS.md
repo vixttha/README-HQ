@@ -5,10 +5,10 @@ Use the `readme-hq` branch as the durable workspace when asked to use README HQ.
 | Request | Work |
 | --- | --- |
 | Show the versions | Read [the version index](versions/README.md). Return the requested project's HQ and homepage versions with status and pinned links. |
-| Inspect a repository | Follow [the audit workflow](audits/README.md). Give ranked findings with source and validation status, then update the technique catalog when the review uncovers a genuinely new reusable practice. |
-| Draft or update a README | Use [the README guide](README-GUIDE.md). Draft on a working branch and verify changes against the target's entry points. |
+| Inspect a repository | Follow [the audit workflow](audits/README.md). Give ranked findings with source and validation status, then record any reusable discovery with its source evidence. |
+| Draft or update a README | Use [the README guide](README-GUIDE.md). Use the external library to help the owner select or adapt suitable techniques, then draft on a working branch and verify the target entry points. |
 | Archive or publish a README | Use the guide's version workflow and the target repository's acceptance rules. Return the approved archive and homepage publication evidence independently. |
 
-For each audit, read [the technique catalog](techniques/registry.json) before recording discoveries. Compare the problem, intervention, and outcome with active and retired records. Add evidence and aliases to an existing record when the mechanism matches. Use new IDs for distinct techniques, and cite source commits in the catalog. Keep repo-specific recommendations in the audit.
+Use [README-Technique-Library](https://github.com/vixttha/README-HQ/tree/README-Technique-Library) for reusable technique and combination definitions. Compare a new observation with active and retired library records before suggesting an addition. Record the library commit, selected IDs, applicability, and evidence with the target project.
 
 Use the public branch for public-safe evidence and general techniques. Keep private repository identities, original files, and private evidence with the owner. Verify changes with `python3 tools/check_readme_hq.py` and report what was actually tested. The owner decides homepage publication and releases.

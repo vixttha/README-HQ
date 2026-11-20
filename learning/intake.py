@@ -4,13 +4,18 @@ import argparse
 from hashlib import sha256
 import json
 from pathlib import Path
+import re
 import sys
 from tempfile import NamedTemporaryFile
 from urllib.request import Request, urlopen
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
-from hq_data import GitTree, REPOSITORY, physical_lines, read_json
+from hq_data import GitTree, REPOSITORY, SHA, parse_json, physical_lines, read_json
+
+CATALOG_REPOSITORY = "vixttha/README-HQ"
+CATALOG_BRANCH = "README-Technique-Library"
+CATALOG_ID = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*")
 
 
 def verify_anchor(tree, path, line, anchor):
@@ -38,9 +43,48 @@ def public_checkpoint(tree, repo, fetch=fetch_github):
         raise ValueError("GitHub did not verify this source revision")
 
 
+def catalog_checkout(specification, fetch):
+    catalog = specification.get("catalog")
+    if not isinstance(catalog, dict) or not isinstance(catalog.get("commit"), str) or not SHA.fullmatch(catalog["commit"]):
+        raise ValueError("learning requires an external catalog checkout and full commit")
+    tree = GitTree(catalog["checkout"], catalog["commit"])
+    public_checkpoint(tree, CATALOG_REPOSITORY, fetch)
+    comparison = fetch(f"{CATALOG_REPOSITORY}/compare/{tree.commit}...{CATALOG_BRANCH}")
+    if comparison.get("status") not in {"ahead", "identical"}:
+        raise ValueError("catalog commit is not on README-Technique-Library")
+    return tree
+
+
+def catalog_record(tree, kind, identifier):
+    if not isinstance(identifier, str) or len(identifier) > 80 or not CATALOG_ID.fullmatch(identifier):
+        raise ValueError("catalog record IDs must use lowercase hyphenated slugs")
+    folder = {"technique": "techniques", "combination": "combinations"}[kind]
+    path = f"{folder}/{identifier}.md"
+    if path not in tree.entries():
+        raise ValueError(f"{kind} {identifier!r} is absent from the pinned external catalog")
+    body = tree.read(path).decode("utf-8").replace("\r\n", "\n")
+    marker = "<!-- catalog\n"
+    header, end, text = body.removeprefix(marker).partition("\n-->\n")
+    if not body.startswith(marker) or not end or not text.strip():
+        raise ValueError(f"{path}: missing catalog metadata or record body")
+    metadata = parse_json(header, path)
+    if not isinstance(metadata, dict) or metadata.get("status") != "active":
+        raise ValueError(f"{path}: expected an active record in the pinned catalog")
+    if kind == "technique":
+        return {"path": path}
+    steps = metadata.get("steps")
+    if (not isinstance(steps, list) or not 2 <= len(steps) <= 12
+            or any(not isinstance(step, str) for step in steps) or len(set(steps)) != len(steps)):
+        raise ValueError(f"{path}: expected distinct ordered technique steps")
+    for step in steps:
+        catalog_record(tree, "technique", step)
+    return {"path": path, "steps": steps}
+
+
 def record_intake(specification, directory, *, fetch=fetch_github):
     if specification.get("visibility") != "public":
         raise ValueError("only public requests use this shared intake")
+    catalog = catalog_checkout(specification, fetch)
     sources = {}
     for source in specification["sources"]:
         if source.get("visibility") != "public":
@@ -58,8 +102,6 @@ def record_intake(specification, directory, *, fetch=fetch_github):
     target_tree = GitTree(target["checkout"], target["ref"])
     public_checkpoint(target_tree, target["repository"], fetch)
     target_receipt = verify_anchor(target_tree, target["path"], target["line"], target["anchor"])
-    registry = ROOT / "techniques/registry.json"
-    active = {row["id"] for row in read_json(registry)["techniques"] if row["status"] == "active"}
     selected = set(specification["selected"])
     if not selected <= set(sources):
         raise ValueError("chosen learning sources must have independently verified intake evidence")
@@ -78,16 +120,22 @@ def record_intake(specification, directory, *, fetch=fetch_github):
                 raise ValueError("copied material requires an owner-approved rights review outside shared intake")
             candidates.append({"definition": {key: draft[key] for key in fields},
                                "evidence": sources[source_id], "state": "review-required"})
-        technique = entry.get("technique")
-        if technique not in active or source_id not in selected:
+        if source_id not in selected:
             continue
+        if "technique" in entry and "combination" in entry:
+            raise ValueError("a recommendation selects one technique or one combination")
+        kind = "combination" if "combination" in entry else "technique"
+        if kind not in entry:
+            continue
+        identifier = entry[kind]
+        record = catalog_record(catalog, kind, identifier)
         decision = entry.get("decision")
         if decision not in {"adopt", "adapt", "already present", "declined", "irrelevant", "insufficient evidence"}:
             raise ValueError("recommendation needs a supported target decision")
         rationale = entry.get("rationale")
         if not isinstance(rationale, str) or not rationale.strip():
             raise ValueError("recommendation needs a target-specific rationale")
-        uses.append({"technique": technique, "decision": decision, "rationale": rationale,
+        uses.append({kind: identifier, "catalog_record": record, "decision": decision, "rationale": rationale,
                      "source": sources[source_id], "target": target_receipt})
     def unique(items):
         return [json.loads(record) for record in sorted({json.dumps(item, sort_keys=True) for item in items})]
@@ -95,9 +143,9 @@ def record_intake(specification, directory, *, fetch=fetch_github):
     audience, capability = target["audience"], target["capability"]
     if not isinstance(audience, str) or not audience.strip() or not isinstance(capability, str) or not capability.strip():
         raise ValueError("target receipts require an audience and capability")
-    data = {"schema": 1, "visibility": "public", "target": {"repository": target["repository"],
+    data = {"schema": 2, "visibility": "public", "target": {"repository": target["repository"],
             "audience": audience, "capability": capability, **target_receipt},
-            "registry_sha256": sha256(registry.read_bytes()).hexdigest(),
+            "catalog": {"repository": CATALOG_REPOSITORY, "branch": CATALOG_BRANCH, "commit": catalog.commit},
             "sources": unique(sources.values()), "selected": sorted(selected),
             "candidates": unique(candidates), "recommendations": unique(uses)}
     body = (json.dumps(data, indent=2, sort_keys=True) + "\n").encode()
