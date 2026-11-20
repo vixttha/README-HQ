@@ -89,36 +89,41 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(self.search("--limit", "1", "--offset", "2")["results"], [])
         self.invoke("search", "--offset", "-1", expected=2)
 
-    def test_600_records_browse_and_paginate(self):
-        for i in range(600):
-            self.record(f"fixture-{i:03}", f"Fixture {i:03}", tags=["synthetic"])
+    def test_catalog_grows_from_10_to_1000_records(self):
+        for i in range(10):
+            self.record(f"fixture-{i:04}", f"Fixture {i:04}", tags=["synthetic"])
         self.invoke("build")
         self.invoke("check")
-        result = self.search("fixture", "--limit", "25", "--offset", "575")
-        self.assertEqual(result["total"], 600)
+        self.assertEqual(self.search("fixture")["total"], 10)
+        for i in range(10, 1000):
+            self.record(f"fixture-{i:04}", f"Fixture {i:04}", tags=["synthetic"])
+        self.invoke("build")
+        self.invoke("check")
+        result = self.search("fixture", "--limit", "25", "--offset", "975")
+        self.assertEqual(result["total"], 1000)
         self.assertEqual(len(result["results"]), 25)
-        self.assertEqual(result["results"][0]["id"], "fixture-575")
-        self.assertEqual(result["results"][-1]["id"], "fixture-599")
+        self.assertEqual(result["results"][0]["id"], "fixture-0975")
+        self.assertEqual(result["results"][-1]["id"], "fixture-0999")
         finder = (self.root / "catalog/search.md").read_text(encoding="utf-8")
-        self.assertEqual(finder.count("](../techniques/fixture-"), 600)
+        self.assertEqual(finder.count("](../techniques/fixture-"), 1000)
         self.assertIn("synthetic", finder)
         catalog = self.root / "catalog"
         task_pages = sorted(catalog.glob("quickstart*.md"))
-        self.assertEqual(len(task_pages), 6)
+        self.assertEqual(len(task_pages), 10)
         self.assertEqual(sum(page.read_text(encoding="utf-8").count("](../techniques/fixture-")
-                             for page in task_pages), 600)
-        self.assertIn("[6](quickstart-6.md)", (catalog / "quickstart.md").read_text(encoding="utf-8"))
+                             for page in task_pages), 1000)
+        self.assertIn("[10](quickstart-10.md)", (catalog / "quickstart.md").read_text(encoding="utf-8"))
         for item in (self.root / "techniques").glob("*.md"):
-            if item.name != "fixture-000.md":
+            if item.name != "fixture-0000.md":
                 item.unlink()
         self.invoke("build")
         self.invoke("check")
-        self.assertFalse((catalog / "quickstart-6.md").exists())
+        self.assertFalse((catalog / "quickstart-10.md").exists())
 
     def test_long_browser_finder_splits_and_preserves_records(self):
         for i in range(250):
-            aliases = [f"{'漢' * 70} {i:03} {j:02}" for j in range(12)]
-            self.record(f"wide-{i:03}", f"Wide {i:03}", aliases=aliases)
+            aliases = [f"{'漢' * 70} {i:04} {j:02}" for j in range(12)]
+            self.record(f"wide-{i:04}", f"Wide {i:04}", aliases=aliases)
         self.invoke("build")
         finder_pages = list((self.root / "catalog").glob("search*.md"))
         self.assertGreater(len(finder_pages), 1)

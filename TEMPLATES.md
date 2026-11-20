@@ -20,7 +20,7 @@ Start the file with the metadata comment below, then write the matching Markdown
 
 For a combination, add a `"steps"` field to the same metadata object. For example, `"steps": ["relative-navigation", "expected-first-output"]` lists two technique IDs in reading order. Save both technique files before adding the combination. The generated task page links each step automatically.
 
-From a combination record, link to a technique with `[Relative navigation](../techniques/relative-navigation.md)`. Change the filename to the technique’s real ID. Rebuild and check the indexes using the [maintenance commands](README.md#maintain-the-catalog).
+From a combination record, link to a technique with `[Relative navigation](../techniques/relative-navigation.md)`. Change the filename to the technique’s real ID. The indexes refresh when the record reaches the library branch. See [catalog maintenance](README.md#maintain-the-catalog) for local preview commands.
 
 ## Technique record
 

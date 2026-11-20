@@ -1,9 +1,9 @@
 name: Technique Library
 on:
   push:
-    branches: [README-Technique-Library]
+    branches: [audit/technique-library-indexing]
   pull_request:
-    branches: [README-Technique-Library]
+    branches: [audit/technique-library-indexing]
 permissions:
   contents: read
 jobs:
@@ -26,7 +26,58 @@ jobs:
       - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
         with:
           python-version: '3.12'
-      - name: Check catalog and generated pages
-        run: python tools/catalog.py check
+      - name: Build and validate catalog pages
+        run: |
+          python tools/catalog.py build
+          python tools/catalog.py check
       - name: Run search, validation and scale regressions
         run: python -m unittest discover -s tests -v
+  publish-index:
+    name: Publish generated catalog
+    needs: catalog
+    if: github.event_name == 'push' && github.ref == 'refs/heads/audit/technique-library-indexing' && github.event.repository.visibility == 'public'
+    permissions:
+      contents: write
+    concurrency:
+      group: technique-library-index-${{ github.ref }}
+      cancel-in-progress: false
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.sha }}
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.12'
+      - name: Regenerate and publish only catalog pages
+        shell: bash
+        run: |
+          branch_tip() {
+            git ls-remote --exit-code origin "$GITHUB_REF" | cut -f 1
+          }
+
+          tip="$(branch_tip)"
+          if [[ "$tip" != "$GITHUB_SHA" ]]; then
+            echo 'This revision was superseded. The newer push will rebuild the catalog.'
+            exit 0
+          fi
+
+          python tools/catalog.py build
+          python tools/catalog.py check
+          git add -A -- catalog/
+          if git diff --cached --quiet; then
+            echo 'Catalog pages are current.'
+            exit 0
+          fi
+
+          git -c user.name='github-actions[bot]' \
+              -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
+              commit -m 'Regenerate technique library catalog'
+          if ! git push origin "HEAD:$GITHUB_REF"; then
+            tip="$(branch_tip)"
+            if [[ "$tip" == "$GITHUB_SHA" ]]; then
+              exit 1
+            fi
+            echo 'A newer revision arrived. Its workflow will publish the catalog.'
+          fi
