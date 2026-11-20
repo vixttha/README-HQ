@@ -24,7 +24,7 @@ jobs:
           persist-credentials: false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
-          ref: 7ac278c3b7e23775ea4001128e7ce6e999a3e4f7
+          ref: bb2c3b89a5b470d9236ed9b76f7c5784a07a48b5
           path: candidate
           fetch-depth: 0
           persist-credentials: false
@@ -58,7 +58,7 @@ jobs:
           persist-credentials: false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
-          ref: 7ac278c3b7e23775ea4001128e7ce6e999a3e4f7
+          ref: bb2c3b89a5b470d9236ed9b76f7c5784a07a48b5
           path: candidate
           fetch-depth: 0
           persist-credentials: false
@@ -93,7 +93,7 @@ jobs:
           persist-credentials: false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
-          ref: 7ac278c3b7e23775ea4001128e7ce6e999a3e4f7
+          ref: bb2c3b89a5b470d9236ed9b76f7c5784a07a48b5
           path: candidate
           fetch-depth: 0
           persist-credentials: false

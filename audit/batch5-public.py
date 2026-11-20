@@ -24,6 +24,7 @@ POINTS = [
 ]
 FOLLOW_UPS = [
     ("7ac278c3b7e23775ea4001128e7ce6e999a3e4f7", "3c349cfbe3cc5b259656783321361e91ee0d3dec", "47fef24aacbb768215a92b5ae9c65b7e8c9ac342", ["learning_structured_rate_limit","required_smoke_needs_a_matching","shell_only_syntax_does_not_bind"]),
+    ("bb2c3b89a5b470d9236ed9b76f7c5784a07a48b5", "7ac278c3b7e23775ea4001128e7ce6e999a3e4f7", "cbb5aec4967961d3703ea4da08cef5a9abd3f2f4", ["batch5_review_shell_matching","batch5_review_publication_rule_pages","batch5_review_quickstart_checks","active_plan_rejects_invalid","pr_review_totals_distinguish"]),
 ]
 READER = "tests/test_readme_repairs.py"
 GRAPHIFY = "graphify-hq/template/v0.0.8/test_evidence_map.py"
@@ -141,11 +142,17 @@ def main():
         result["follow_ups"].append(row)
         save()
         for selector in selectors:
-            baseline(root, sha, READER, selector)
+            if selector == "pr_review_totals_distinguish":
+                provenance_test(root, sha, selector, before=True)
+            else:
+                baseline(root, sha, READER, selector)
         row["predecessor"] = "failure_reproduced"
         select(root, sha, parent, tree)
         for selector in selectors:
-            test(root, READER, selector)
+            if selector == "pr_review_totals_distinguish":
+                provenance_test(root, sha, selector, before=False)
+            else:
+                test(root, READER, selector)
         row["result"] = "passed"
         save()
     command(root, sys.executable, "tools/check_readme_hq.py", "--receipt", str(out / "reader.json")).check_returncode()
