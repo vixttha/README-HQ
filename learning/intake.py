@@ -98,7 +98,7 @@ def record_intake(specification, directory, *, fetch=fetch_github):
     data = {"schema": 1, "visibility": "public", "target": {"repository": target["repository"],
             "audience": audience, "capability": capability, **target_receipt},
             "registry_sha256": sha256(registry.read_bytes()).hexdigest(),
-            "sources": unique(sources.values()), "selected": sorted(selected),
+            "sources": unique(sources.values()), "selected": sorted({tuple(sources[key]["identity"]) for key in selected}),
             "candidates": unique(candidates), "recommendations": unique(uses)}
     body = (json.dumps(data, indent=2, sort_keys=True) + "\n").encode()
     directory.mkdir(parents=True, exist_ok=True)

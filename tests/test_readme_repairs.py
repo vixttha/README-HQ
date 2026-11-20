@@ -264,6 +264,10 @@ class EvidenceTests(unittest.TestCase):
             destination = tree.root / "receipts"
             first = intake.record_intake(spec, destination, fetch=fetch)
             self.assertEqual(first, intake.record_intake(spec, destination, fetch=fetch))
+            record["id"] = "alias"
+            spec["selected"] = ["alias"]
+            spec["findings"][0]["source"] = "alias"
+            self.assertEqual(first, intake.record_intake(spec, destination, fetch=fetch))
             result = json.loads(first.read_bytes())
             self.assertEqual(result["recommendations"][0]["target"]["commit"], tree.commit)
             spec["selected"] = []
