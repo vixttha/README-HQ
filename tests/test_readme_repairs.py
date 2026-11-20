@@ -177,6 +177,20 @@ class EvidenceTests(unittest.TestCase):
             published = [item for path in files for item in json.loads(path.read_bytes())["features"]]
         self.assertEqual(published, features)
 
+    def test_partition_includes_implementation_paths_and_splits_at_inventory_limit(self):
+        def feature(number, count):
+            paths = [{"path": f"file-{number}-{i}.md", "anchor": "Evidence"} for i in range(count)]
+            return {"id": f"checkpoint-{number}", "documented_in": paths[:1],
+                    "changed_in": paths[:1], "tested_by": paths[:1], **({"implemented_in": paths[1:]} if count > 1 else {})}
+
+        features = [feature(i, 3) for i in range(21)] + [feature(21, 1)] + [feature(i, 3) for i in range(22, 25)]
+        with tempfile.TemporaryDirectory() as folder:
+            parts = stage_partitions(features, Path(folder) / "parts", "a" * 40, "example/project")
+            manifests = [json.loads(path.read_bytes()) for path in parts]
+            self.assertEqual([len(m["source_files"]) for m in manifests], [64, 9])
+            self.assertEqual([f for m in manifests for f in m["features"]], features)
+            self.assertIn("file-0-2.md", manifests[0]["source_files"])
+
     def test_learning_receipt_is_pinned_and_idempotent(self):
         spec = importlib.util.spec_from_file_location("intake", ROOT / "learning/intake.py")
         intake = importlib.util.module_from_spec(spec)

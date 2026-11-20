@@ -20,22 +20,43 @@ def split_checkpoints(features, limit=32):
     return [features[start:start + limit] for start in range(0, len(features), limit)]
 
 
+def evidence_paths(feature):
+    relations = ("documented_in", "changed_in", "tested_by")
+    paths = {ref["path"] for relation in relations for ref in feature[relation]}
+    paths.update(ref["path"] for ref in feature.get("implemented_in", []))
+    return paths
+
+
 def stage_partitions(features, destination, source_commit, repository):
     if not features:
         raise ValueError("at least one checkpoint is needed")
     names = [feature["id"] for feature in features]
     if len(names) != len(set(names)):
         raise ValueError("duplicate checkpoint IDs")
+
+    partitions = []
+    part, files = [], set()
+    for feature in features:
+        paths = evidence_paths(feature)
+        if len(paths) > 64:
+            raise ValueError(f"{feature['id']}: exceeds the Graphify source-file limit")
+        if len(part) == 32 or len(files | paths) > 64:
+            partitions.append((part, files))
+            part, files = [], set()
+        part.append(feature)
+        files.update(paths)
+    partitions.append((part, files))
+    manifests = [
+        {"repository": repository, "source_commit": source_commit,
+         "title": f"README HQ repair checkpoints, part {number}",
+         "source_files": sorted(paths), "features": items}
+        for number, (items, paths) in enumerate(partitions, 1)
+    ]
     destination.mkdir(parents=True, exist_ok=False)
     output = []
-    for number, partition in enumerate(split_checkpoints(features), 1):
+    for number, manifest in enumerate(manifests, 1):
         panel = destination / f"part-{number:03}"
         panel.mkdir()
-        files = {ref["path"] for feature in partition for key in ("documented_in", "changed_in", "tested_by")
-                 for ref in feature[key]}
-        manifest = {"repository": repository, "source_commit": source_commit,
-                    "title": f"README HQ repair checkpoints, part {number}",
-                    "source_files": sorted(files), "features": partition}
         file = panel / "manifest.json"
         file.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
         output.append(file)
