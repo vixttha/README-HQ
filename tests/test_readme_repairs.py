@@ -3,7 +3,7 @@
 import contextlib
 from hashlib import sha256
 import importlib.util
-from io import StringIO
+from io import BytesIO, StringIO
 import json
 import os
 from pathlib import Path
@@ -11,12 +11,13 @@ import subprocess
 import sys
 import tempfile
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 from hq_data import GitTree, parse_json
 from hq_navigation import check_document, readme_path, same_repo_target
+from urllib.error import HTTPError
 from urllib.parse import urlsplit
 from hq_smoke import verify_first_action
 from check_readme_hq import check_evidence, check_registry, check_versions, evidence_identity, target_readme
@@ -303,6 +304,34 @@ A separate [same label](fourth.md).
             action["expected"]["contains"] = "wrong"
             self.assertEqual(smoke(action), "failed")
             self.assertEqual(smoke({"url": "https://example.invalid", "expected": {"http_status": 200}}), "unchecked")
+
+    def test_http_smoke_checks_expected_error_bodies_and_preserves_auth_gates(self):
+        with repository({"README.md": "# Guide"}) as tree:
+            spec = tree.root / "smoke.json"
+            url = "https://example.invalid/guide"
+            for status, body, result in (
+                (404, b"expected marker", "passed"),
+                (404, b"different text", "failed"),
+                (200, b"expected marker", "passed"),
+                (401, b"expected marker", "gated"),
+                (403, b"expected marker", "gated"),
+                (429, b"expected marker", "gated"),
+            ):
+                with self.subTest(status=status, body=body):
+                    spec.write_text(json.dumps({"commit": tree.commit, "url": url, "expected": {
+                        "http_status": status, "contains": "expected marker"}}), encoding="utf-8")
+                    content = BytesIO(body)
+                    response = HTTPError(url, status, "fixture", {}, content)
+                    with patch("hq_smoke.urlopen", **(
+                        {"side_effect": response} if status != 200 else {"return_value": response}
+                    )), patch.object(content, "read", wraps=content.read) as read:
+                        outcome = verify_first_action(tree, spec, allow_network=True)
+                        self.assertEqual(outcome["result"], result)
+                        if result == "gated":
+                            read.assert_not_called()
+                        else:
+                            read.assert_called_once_with(1_000_000)
+                    self.assertTrue(content.closed)
 
     def test_smoke_file_checks_prove_a_change(self):
         with repository({"README.md": "# Example", "existing.txt": "old"}) as tree:

@@ -34,18 +34,21 @@ def verify_first_action(tree, path, *, allow_network=False, subproject="."):
             return {"result": "unchecked", "detail": "network probe not authorized"}
         if type(expected.get("http_status")) is not int:
             raise ValueError("remote smoke requires expected.http_status")
+        if "contains" in expected and (not isinstance(expected["contains"], str) or not expected["contains"]):
+            raise ValueError("expected.contains must be a nonempty string")
         try:
-            with urlopen(Request(target, headers={"User-Agent": "README-HQ"}), timeout=20) as response:
+            try:
+                response = urlopen(Request(target, headers={"User-Agent": "README-HQ"}), timeout=20)
+            except HTTPError as error:
+                response = error
+            with response:
                 status = response.status
+                if status in (401, 403, 429):
+                    return {"result": "gated", "detail": f"HTTP {status}"}
+                matched = True
                 if "contains" in expected:
                     body = response.read(1_000_000).decode("utf-8", "replace")
                     matched = expected["contains"] in body
-                else:
-                    matched = True
-        except HTTPError as error:
-            if error.code in (401, 403, 429):
-                return {"result": "gated", "detail": f"HTTP {error.code}"}
-            status, matched = error.code, "contains" not in expected
         except (OSError, URLError):
             return {"result": "unresolved", "detail": "network destination could not be reached"}
         return {"result": "passed" if matched and status == expected["http_status"] else "failed",
