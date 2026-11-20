@@ -10,7 +10,7 @@ from urllib.request import Request, urlopen
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
-from hq_data import GitTree, REPOSITORY, physical_lines, read_json
+from hq_data import GitTree, REPOSITORY, parse_json, physical_lines, read_json
 
 
 def verify_anchor(tree, path, line, anchor):
@@ -59,7 +59,8 @@ def record_intake(specification, directory, *, fetch=fetch_github):
     public_checkpoint(target_tree, target["repository"], fetch)
     target_receipt = verify_anchor(target_tree, target["path"], target["line"], target["anchor"])
     registry = ROOT / "techniques/registry.json"
-    active = {row["id"] for row in read_json(registry)["techniques"] if row["status"] == "active"}
+    registry_bytes = registry.read_bytes()
+    active = {row["id"] for row in parse_json(registry_bytes, registry)["techniques"] if row["status"] == "active"}
     selected = set(specification["selected"])
     if not selected <= set(sources):
         raise ValueError("chosen learning sources must have independently verified intake evidence")
@@ -97,7 +98,7 @@ def record_intake(specification, directory, *, fetch=fetch_github):
         raise ValueError("target receipts require an audience and capability")
     data = {"schema": 1, "visibility": "public", "target": {"repository": target["repository"],
             "audience": audience, "capability": capability, **target_receipt},
-            "registry_sha256": sha256(registry.read_bytes()).hexdigest(),
+            "registry_sha256": sha256(registry_bytes).hexdigest(),
             "sources": unique(sources.values()), "selected": sorted({tuple(sources[key]["identity"]) for key in selected}),
             "candidates": unique(candidates), "recommendations": unique(uses)}
     body = (json.dumps(data, indent=2, sort_keys=True) + "\n").encode()

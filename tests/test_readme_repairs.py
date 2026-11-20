@@ -322,6 +322,46 @@ class EvidenceTests(unittest.TestCase):
             self.assertNotEqual(first, second)
             self.assertEqual(json.loads(second.read_bytes())["recommendations"], [])
 
+    def test_learning_hashes_the_registry_snapshot_used_by_the_decision(self):
+        loader = importlib.util.spec_from_file_location("intake", ROOT / "learning/intake.py")
+        intake = importlib.util.module_from_spec(loader)
+        loader.loader.exec_module(intake)
+        with repository({"README.md": "# Evidence"}) as tree:
+            tree.git("remote", "add", "origin", "https://github.com/example/project.git")
+            record = {"id": "example", "checkout": str(tree.root), "ref": "HEAD",
+                      "repository": "example/project", "path": "README.md",
+                      "line": 1, "anchor": "# Evidence", "visibility": "public"}
+            request = {"visibility": "public", "sources": [record], "selected": ["example"],
+                       "target": {**record, "audience": "reader", "capability": "audit"},
+                       "findings": [{"source": "example", "technique": "sample", "decision": "adapt",
+                                     "rationale": "Record a source."}]}
+            registry = tree.root / "techniques/registry.json"
+            registry.parent.mkdir()
+            active = b'{"techniques":[{"id":"sample","status":"active"}]}'
+            retired = active.replace(b"active", b"retired")
+            registry.write_bytes(active)
+            read_bytes = Path.read_bytes
+            def read_then_retire(path):
+                content = read_bytes(path)
+                if path == registry:
+                    path.write_bytes(retired)
+                return content
+            def fetch(route):
+                if route == "example/project":
+                    return {"private": False, "visibility": "public"}
+                return {"sha": tree.commit}
+
+            with patch.object(intake, "ROOT", tree.root):
+                with patch.object(Path, "read_bytes", read_then_retire):
+                    path = intake.record_intake(request, tree.root / "evidence", fetch=fetch)
+                result = json.loads(path.read_bytes())
+                self.assertEqual(result["registry_sha256"], sha256(active).hexdigest())
+                self.assertEqual(len(result["recommendations"]), 1)
+                path = intake.record_intake(request, tree.root / "evidence", fetch=fetch)
+                result = json.loads(path.read_bytes())
+                self.assertEqual(result["registry_sha256"], sha256(retired).hexdigest())
+                self.assertEqual(result["recommendations"], [])
+
     def test_public_learning_refusal_writes_nothing(self):
         spec = importlib.util.spec_from_file_location("intake", ROOT / "learning/intake.py")
         intake = importlib.util.module_from_spec(spec)
