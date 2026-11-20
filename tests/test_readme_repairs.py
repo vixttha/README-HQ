@@ -10,6 +10,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
@@ -17,7 +18,7 @@ from hq_data import GitTree, parse_json
 from hq_navigation import check_document, readme_path, same_repo_target
 from urllib.parse import urlsplit
 from hq_smoke import verify_first_action
-from check_readme_hq import check_evidence, check_registry, evidence_identity, target_readme
+from check_readme_hq import check_evidence, check_registry, check_versions, evidence_identity, target_readme
 from verify_plan import split_checkpoints, stage_partitions
 
 
@@ -192,6 +193,35 @@ class EvidenceTests(unittest.TestCase):
             evidence_identity({**first, "visibility": "private"})
         with self.assertRaisesRegex(ValueError, "receipt"):
             check_evidence({**first, "status": "verified"}, None)
+
+    def test_version_rows_and_current_label_are_bound_to_archives(self):
+        tree = GitTree(ROOT)
+        changes = [
+            ("versions/README.md", "versions/v0.0.5/README.md)", "versions/v0.0.4/README.md)", "approved archive"),
+            ("graphify-hq/README.md", "maps/v0.0.5/README.md)", "maps/v0.0.6/README.md)", "landing row"),
+        ]
+        read = tree.read
+        errors = []
+        check_versions(errors, tree)
+        self.assertEqual(errors, [])
+        for changed, old, new, expected in changes:
+            def edited(path, commit=None):
+                body = read(path, commit)
+                return body.replace(old.encode(), new.encode()) if path == changed and commit is None else body
+            with patch.object(tree, "read", side_effect=edited):
+                errors = []
+                check_versions(errors, tree)
+                self.assertTrue(any(expected in error for error in errors), errors)
+
+        def rolled_back(path, commit=None):
+            body = read(path, commit)
+            if path in {"README.md", "versions/README.md"} and commit is None:
+                return body.replace(b"v0.0.6/README.md)", b"v0.0.1/README.md)", 1)
+            return body
+        with patch.object(tree, "read", side_effect=rolled_back):
+            errors = []
+            check_versions(errors, tree)
+            self.assertTrue(any("latest standalone archive" in error for error in errors), errors)
 
     def test_registry_and_inventory_cannot_vouch_for_each_other(self):
         paths = ("techniques/registry.json", "techniques/public-source-inventory.json")

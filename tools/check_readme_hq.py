@@ -194,10 +194,25 @@ def check_versions(errors, tree=None):
         if entries.get(path) != original[path] or (tree.draft and tree.read(path) != tree.read(path, BASELINE)):
             errors.append(f"{path}: frozen standalone snapshot differs from v0.0.6 baseline")
     rows = re.findall(r"^\| (v[0-9.]+) \| [^\n]+$", index, re.M)
+    approved_index = tree.read("versions/README.md", BASELINE).decode("utf-8")
+    approved_rows = dict(re.findall(r"^\| (v[0-9.]+) \| ([^\n]+)$", approved_index, re.M))
     for version, count in Counter(rows).items():
         matching = [line for line in index.splitlines() if line.startswith(f"| {version} |")]
         if count != 1 or not matching[0].endswith(f"| [Map](../graphify-hq/maps/{version}/README.md) |"):
             errors.append(f"{version}: expected one release row linking to its own map")
+        guide_targets = re.findall(r"\]\(([^)]+)\)", matching[0])[:-1]
+        if version in approved_rows:
+            approved_guides = re.findall(r"\]\(([^)]+)\)", approved_rows[version])[:-1]
+            if guide_targets != approved_guides:
+                errors.append(f"{version}: release row guide destinations differ from the approved archive")
+
+    graph_index = tree.read("graphify-hq/README.md").decode("utf-8")
+    graph_rows = re.findall(r"^\| (v[0-9.]+) \| [^\n]+$", graph_index, re.M)
+    for version in set(rows) | set(graph_rows):
+        matching = [line for line in graph_index.splitlines() if line.startswith(f"| {version} |")]
+        if (version not in rows or len(matching) != 1
+                or re.findall(r"\]\(([^)]+)\)", matching[0]) != [f"maps/{version}/README.md"]):
+            errors.append(f"{version}: Graphify landing row must link to its own map")
     current = re.findall(r"\*\*Current version\*\*[^\n]*\]\((?:versions/)?(v[0-9.]+)/README\.md\)", index)
     home = re.findall(r"\*\*Current version\*\*[^\n]*\]\(versions/(v[0-9.]+)/README\.md\)", readme)
     if len(current) != 1 or current != home or not set(current) <= set(rows):
@@ -205,6 +220,10 @@ def check_versions(errors, tree=None):
     dirs = sorted({path.split("/")[1] for path in entries if path.startswith("versions/") and path.count("/") >= 2})
     if not dirs:
         errors.append("missing standalone versions")
+    elif all(re.fullmatch(r"v[0-9]+(?:\.[0-9]+)+", version) for version in dirs) and current != [
+        max(dirs, key=lambda value: tuple(int(part) for part in value[1:].split(".")))
+    ]:
+        errors.append("current version must match the latest standalone archive")
     for version in dirs:
         if not VERSION.fullmatch(version) or not all(f"versions/{version}/{x}.md" in entries for x in ("README", "CHANGELOG")):
             errors.append(f"{version}: incomplete standalone version directory")
