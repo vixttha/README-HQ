@@ -162,6 +162,23 @@ class ReaderTests(unittest.TestCase):
                         else:
                             docs.rmdir()
 
+    def test_receipt_persistence_failure_preserves_audit_diagnostics(self):
+        for good in (True, False):
+            target = "README.md" if good else "missing.md"
+            with self.subTest(good=good), repository({"README.md": f"# Guide\n\n[Link]({target})\n"}) as tree:
+                argv = [sys.executable, str(ROOT / "tools/check_readme_hq.py"), "--repo", str(tree.root),
+                        "--profile", "reference", "--receipt"]
+                result = subprocess.run([*argv, str(tree.root)], capture_output=True, text=True)
+                self.assertEqual(result.returncode, 1)
+                self.assertIn("could not write receipt", result.stderr)
+                self.assertNotIn("Traceback", result.stderr)
+                self.assertEqual("missing tracked local target" in result.stderr, not good)
+                receipt = tree.root / "audit.json"
+                control = subprocess.run([*argv, str(receipt)], capture_output=True, text=True)
+                self.assertEqual(control.returncode, int(not good), control.stderr)
+                record = json.loads(receipt.read_bytes())
+                self.assertEqual(record["result"], "passed" if good else "failed")
+
     def test_pinned_readme_and_monorepo_routes(self):
         with repository({"README.md": "# Root", ".github/README.md": "# Published",
                          "docs/README.md": "# Docs", "packages/example/README.md": "# Subproject"}) as tree:

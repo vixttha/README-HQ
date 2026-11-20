@@ -338,7 +338,11 @@ def main():
         errors.append(str(error))
     if args.receipt:
         from hq_smoke import write_receipt
-        write_receipt(args.receipt, locals().get("tree"), cases, errors, gaps, validator_path=Path(__file__).resolve(), scope=scope)
+        try:
+            write_receipt(args.receipt, locals().get("tree"), cases, errors, gaps,
+                          validator_path=Path(__file__).resolve(), scope=scope)
+        except OSError as error:
+            errors.append(f"could not write receipt {args.receipt}: {error.strerror or error}")
     if errors:
         for error in errors:
             print(error, file=sys.stderr)
