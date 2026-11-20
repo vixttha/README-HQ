@@ -67,6 +67,18 @@ def rows(content):
     return [line for line in content.splitlines() if line.startswith("| " + chr(96) + "v0.0.6.")]
 
 
+def acceptance_sections(content):
+    verified = []
+    sections = re.split(r"(?m)(?=^#{1,3} )", content)
+    for section in sections:
+        heading = section.split("\n", 1)[0].rstrip()
+        if re.fullmatch(r"### v0\.0\.6\.[0-9]+", heading) or heading in {
+            "## Checkpoint workflow", "## Portability and quality acceptance",
+        }:
+            verified.append(section.rstrip())
+    return verified
+
+
 def verify_index(index, partitions):
     expected = []
     for folder, features in partitions:
@@ -88,9 +100,13 @@ def verify_index(index, partitions):
 
 def verify(check_mcp):
     git = GitTree(ROOT)
-    plan_rows = rows((ROOT / PLAN).read_text(encoding="utf-8"))
-    if plan_rows != rows(git.read(PLAN, BASELINE_PLAN).decode()):
+    plan = (ROOT / PLAN).read_text(encoding="utf-8")
+    baseline = git.read(PLAN, BASELINE_PLAN).decode()
+    plan_rows = rows(plan)
+    if plan_rows != rows(baseline):
         raise ValueError("repair rows differ from the approved checkpoint ledger")
+    if acceptance_sections(plan) != acceptance_sections(baseline):
+        raise ValueError("repair acceptance criteria differ from the approved checkpoint ledger")
     canonical, inventories = {}, {}
     prefix = GRAPH.relative_to(ROOT).as_posix() + "/"
     for path in sorted(git.entries(BASELINE_PLAN)):

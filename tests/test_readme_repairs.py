@@ -514,6 +514,26 @@ class EvidenceTests(unittest.TestCase):
                     with self.assertRaisesRegex(ValueError, "duplicate|requires checked"):
                         check_registry([], edited)
 
+    def test_plan_acceptance_checks_reject_missing_or_changed_obligations(self):
+        from verify_plan import PLAN
+        path = ROOT / PLAN
+        original = path.read_text(encoding="utf-8")
+        start = original.index("### v0.0.6.1\n") + len("### v0.0.6.1\n")
+        end = original.index("### v0.0.6.2\n")
+        real_read = Path.read_text
+
+        def verify_with(content):
+            with patch.object(Path, "read_text", lambda path, *a, **kw: (
+                content if path == ROOT / PLAN else real_read(path, *a, **kw)
+            )):
+                verify(False)
+
+        for body in ("\n", "\n- Repair is now optional.\n\n"):
+            with self.assertRaisesRegex(ValueError, "acceptance criteria differ"):
+                verify_with(original[:start] + body + original[end:])
+        with contextlib.redirect_stdout(StringIO()):
+            verify_with(original)
+
     def test_plan_file_inventory_is_bound_to_approved_partition(self):
         from verify_plan import GRAPH, read_json
         original = read_json(GRAPH / "manifest.json")
