@@ -4,6 +4,7 @@ A field guide to reusable README techniques. Find a technique for a reader task,
 
 ## Browse or search
 
+- [Explore the technique map](TECHNIQUE-MAP.md) for the range of individual practices and candidates.
 - [Browse by reader task](catalog/README.md) to see techniques and ordered combinations.
 - [Find a title, alias, ID, or tag](catalog/search.md) using your browser’s Find command. Large lists show page links. [Retired records](catalog/retired.md) have their own finder.
 - Search a checkout with Python 3.12 or newer. Add `--json` for structured output.

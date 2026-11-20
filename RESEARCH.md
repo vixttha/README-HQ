@@ -1,6 +1,6 @@
 # Research guide
 
-Start with the [library index](README.md). Use this process when someone supplies repositories to research or when the library needs more evidence for a particular reader task.
+Start with the [technique map](TECHNIQUE-MAP.md) and search the [existing catalog](catalog/search.md). Use this process when someone supplies repositories to research or when the library needs more evidence for a particular reader task.
 
 1. **Define the reader task.** Record the intended audience and the outcome you want to see. Review the supplied repositories for that task.
 2. **Pin each source.** Resolve the repository and revision. Record the actual README or guide, its file path, and the section or lines. Link to the commit-specific source. Record inaccessible or unavailable sources in the review log.
