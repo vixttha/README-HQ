@@ -134,7 +134,8 @@ class HtmlLinks(HTMLParser):
         if tag == "img":
             if attrs.get("src"):
                 self.links.append(Link(attrs["src"], line, True))
-            if self.controls and (aria_label or (attrs.get("alt") or "").strip()):
+            hidden = "hidden" in attrs or (attrs.get("aria-hidden") or "").strip().casefold() == "true"
+            if self.controls and not hidden and (aria_label or (attrs.get("alt") or "").strip()):
                 self.controls[-1][2] = True
 
     def handle_data(self, data):

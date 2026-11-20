@@ -544,6 +544,17 @@ A separate [same label](fourth.md).
                     self.assertEqual(len(errors), 1)
                     self.assertIn("link has no accessible name", errors[0])
 
+    def test_readme_html_hidden_image_does_not_name_link(self):
+        from hq_navigation import parse_markdown
+
+        for attrs, unnamed in (('aria-hidden="true"', True), ('hidden', True),
+                               ('aria-hidden="false"', False), ('', False)):
+            text = f'<a href="guide.md"><img srcset="diagram.svg 1x" alt="Guide" {attrs}></a>'
+            with self.subTest(attrs=attrs):
+                _, links, _ = parse_markdown(text)
+                self.assertEqual([(link.path, link.unnamed) for link in links],
+                                 [("diagram.svg", False), ("guide.md", unnamed)])
+
     def test_svg_root_requires_the_svg_namespace(self):
         default = '<svg xmlns="http://www.w3.org/2000/svg"/>'
         prefixed = '<s:svg xmlns:s="http://www.w3.org/2000/svg"/>'
@@ -1152,6 +1163,17 @@ class EvidenceTests(unittest.TestCase):
         graphify = config.index(" - name: Install pinned Graphify dependencies")
         plan = config.index("Check checkpoint order and verify all three Graphify maps over MCP")
         self.assertTrue(reader < validator < graphify < plan)
+
+    def test_retained_plan_pins_complete_published_bytes(self):
+        import re
+
+        plan = "plans/v0.0.6-repairs/README.md"
+        config = (ROOT / ".github/workflows/verify-repair-plan.yml").read_text(encoding="utf-8")
+        statement = rf"^ +git show ([0-9a-f]{{40}}):{re.escape(plan)} \| cmp - {re.escape(plan)}$"
+        pinned = re.search(statement, config, re.M)
+        self.assertIsNotNone(pinned)
+        tree = GitTree(ROOT)
+        self.assertEqual(tree.read(plan, pinned.group(1)), tree.read(plan))
 
     def test_plan_file_inventory_is_bound_to_approved_partition(self):
         from verify_plan import GRAPH, read_json
