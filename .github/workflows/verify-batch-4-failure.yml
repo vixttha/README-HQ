@@ -44,7 +44,7 @@ jobs:
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
-          ref: 92ae3fc3db62ebe69404d8a253c7dfef6114b3d4
+          ref: bd393f5e023178a89ff36c4fda803590b5d5fbac
           fetch-depth: 0
           persist-credentials: false
       - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405

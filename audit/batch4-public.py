@@ -29,6 +29,7 @@ POINTS = [
 FOLLOW_UPS = [
     ("Graphify and retained plan integration follow-up", "f696cec1c74897298deb6c75aba4206fe9728688", "885539e9ab0f72e83bdba434cf82aaa9d0280b97", [(123, "existing_graphify_map_keeps"), (122, "retained_plan_installs")]),
     ("Graphify self-map workflow anchor follow-up", "92ae3fc3db62ebe69404d8a253c7dfef6114b3d4", "8e88b42fc61477fc23c67ea203099a3efb3da91b", []),
+    ("CodeRabbit review follow-up", "bd393f5e023178a89ff36c4fda803590b5d5fbac", "be9930deba418067a95e695f87a4916e4920540b", [(113, "html_image_accepts"), (118, "quickstart_recognizes_usage")]),
 ]
 GRAPHIFY_ONLY = {116, 122, 123, 124}
 KIT = Path("graphify-hq/template/v0.0.8")
@@ -49,8 +50,9 @@ def run(checkout, *argv):
 
 
 def focused(checkout, test, selector, *, baseline=False):
+    extra = ("-f",) if baseline else ()
     result = commands(checkout, sys.executable, "-m", "unittest", "discover", "-s", str(test.parent),
-                      "-p", test.name, "-k", selector, "-v")
+                      "-p", test.name, "-k", selector, "-v", *extra)
     if selector not in result.stdout or "Ran 1 test " not in result.stdout:
         raise ValueError(f"The intended single regression did not run for {selector}")
     if baseline:
@@ -143,6 +145,10 @@ def main():
         report["follow_ups"].append(row)
         save()
         try:
+            if label == "CodeRabbit review follow-up":
+                for issue, selector in tests:
+                    copied_test(checkout, sha, test_file(issue), selector, baseline=True)
+                row["baseline"] = "reproduced"
             select(sha, parent, tree)
             for issue, selector in tests:
                 if linux or issue not in GRAPHIFY_ONLY:
