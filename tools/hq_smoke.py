@@ -16,7 +16,15 @@ from urllib.request import Request, urlopen
 from hq_data import read_json
 
 
-def verify_first_action(tree, path, *, allow_network=False):
+def require_https_url(value, field):
+    if not isinstance(value, str):
+        raise ValueError(f"{field} must be an HTTPS URL without credentials")
+    url = urlsplit(value)
+    if url.scheme != "https" or not url.hostname or url.username is not None or url.password is not None:
+        raise ValueError(f"{field} must be an HTTPS URL without credentials")
+
+
+def verify_first_action(tree, path, *, allow_network=False, subproject="."):
     spec = read_json(path)
     expected = spec.get("expected")
     if not isinstance(expected, dict) or not expected:
@@ -27,34 +35,49 @@ def verify_first_action(tree, path, *, allow_network=False):
         raise ValueError("smoke specification does not match the selected commit")
     if "url" in spec:
         target = spec["url"]
-        url = urlsplit(target)
-        if url.scheme != "https" or not url.hostname or url.username or url.password:
-            raise ValueError("an HTTPS reader URL without credentials is required")
+        require_https_url(target, "url")
+        final_url = expected.get("final_url")
+        if "final_url" in expected:
+            require_https_url(final_url, "expected.final_url")
         if not allow_network:
             return {"result": "unchecked", "detail": "network probe not authorized"}
         if type(expected.get("http_status")) is not int:
             raise ValueError("remote smoke requires expected.http_status")
+        if "contains" in expected and (not isinstance(expected["contains"], str) or not expected["contains"]):
+            raise ValueError("expected.contains must be a nonempty string")
         try:
-            with urlopen(Request(target, headers={"User-Agent": "README-HQ"}), timeout=20) as response:
+            try:
+                response = urlopen(Request(target, headers={"User-Agent": "README-HQ"}), timeout=20)
+            except HTTPError as error:
+                response = error
+            with response:
                 status = response.status
+                effective_url = response.geturl()
+                observation = {"http_status": status, "final_url": effective_url,
+                               "final_url_match": None if final_url is None else final_url == effective_url}
+                if status in (401, 403, 429):
+                    return {"result": "gated", "detail": f"HTTP {status}",
+                            "url": target, "expected": expected, "observed": observation}
+                matched = True
                 if "contains" in expected:
                     body = response.read(1_000_000).decode("utf-8", "replace")
                     matched = expected["contains"] in body
-                else:
-                    matched = True
-        except HTTPError as error:
-            if error.code in (401, 403, 429):
-                return {"result": "gated", "detail": f"HTTP {error.code}"}
-            status, matched = error.code, "contains" not in expected
         except (OSError, URLError):
             return {"result": "unresolved", "detail": "network destination could not be reached"}
-        return {"result": "passed" if matched and status == expected["http_status"] else "failed",
-                "url": target, "expected": expected, "observed": {"http_status": status, "content_match": matched}}
+        passed = matched and status == expected["http_status"] and observation["final_url_match"] is not False
+        return {"result": "passed" if passed else "failed", "url": target, "expected": expected,
+                "observed": {**observation, "content_match": matched}}
     argv = spec.get("argv")
     if not isinstance(argv, list) or not argv or not all(isinstance(arg, str) and arg for arg in argv):
         raise ValueError("local smoke needs a nonempty argv array")
     if type(expected.get("exit")) is not int or not (expected.get("contains") or expected.get("file")):
         raise ValueError("local smoke requires an exit code and a recognizable output or file")
+    marker = expected.get("contains")
+    stream = expected.get("stream", "either")
+    if "contains" in expected and (not isinstance(marker, str) or not marker):
+        raise ValueError("expected.contains must be a nonempty string")
+    if stream not in ("either", "stdout", "stderr") or ("stream" in expected and marker is None):
+        raise ValueError("expected.stream requires a marker and must be either, stdout, or stderr")
     name = expected.get("file")
     mode = expected.get("file_mode", "changed")
     digest = expected.get("file_sha256")
@@ -67,15 +90,23 @@ def verify_first_action(tree, path, *, allow_network=False):
             raise ValueError("expected.file_sha256 must be a lowercase SHA-256")
     elif "file_mode" in expected or "file_sha256" in expected:
         raise ValueError("file expectations require expected.file")
+    selected = Path(subproject)
+    if selected.is_absolute() or selected.drive or ".." in selected.parts or "\\" in subproject:
+        raise ValueError("smoke working directory must be relative to the selected repository")
     with TemporaryDirectory(prefix="readme-hq-smoke-") as temp:
         checkout = Path(temp) / "checkout"
         tree.git("worktree", "add", "--detach", str(checkout), tree.commit)
         try:
+            cwd = (checkout / selected).resolve()
+            if not cwd.is_relative_to(checkout.resolve()) or not cwd.is_dir():
+                raise ValueError("smoke working directory is outside the checkout or unavailable")
+            directory = selected.as_posix()
+
             def result_file():
                 if not name:
                     return None
-                path = (checkout / name).resolve()
-                return path if path.is_relative_to(checkout.resolve()) and path.is_file() else None
+                path = (cwd / name).resolve()
+                return path if path.is_relative_to(cwd) and path.is_file() else None
 
             def file_digest(path):
                 if path is None:
@@ -91,11 +122,13 @@ def verify_first_action(tree, path, *, allow_network=False):
             if type(timeout) is not int or not 1 <= timeout <= 300:
                 raise ValueError("smoke timeout must be between 1 and 300 seconds")
             try:
-                result = subprocess.run(argv, cwd=checkout, capture_output=True, timeout=timeout, check=False)
+                result = subprocess.run(argv, cwd=cwd, capture_output=True, timeout=timeout, check=False)
             except (OSError, subprocess.TimeoutExpired) as error:
-                return {"result": "failed", "detail": str(error), "argv": argv, "expected": expected}
-            output = result.stdout + result.stderr
-            matched = expected.get("contains") is None or expected["contains"].encode() in output
+                return {"result": "failed", "detail": str(error), "argv": argv, "cwd": directory, "expected": expected}
+            streams = {"stdout": result.stdout, "stderr": result.stderr}
+            marker_bytes = marker.encode() if marker is not None else None
+            matched_streams = [key for key, data in streams.items() if marker_bytes is not None and marker_bytes in data]
+            matched = marker is None or (bool(matched_streams) if stream == "either" else stream in matched_streams)
             observation = {}
             if name:
                 path = result_file()
@@ -110,9 +143,11 @@ def verify_first_action(tree, path, *, allow_network=False):
                 matched &= file_match
                 observation = {"file_before_sha256": before, "file_after_sha256": after, "file_match": file_match}
             return {"result": "passed" if result.returncode == expected["exit"] and matched else "failed",
-                    "argv": argv, "expected": expected,
+                    "argv": argv, "cwd": directory, "expected": expected,
                     "observed": {"exit": result.returncode, "outcome_match": bool(matched),
-                                 "output_sha256": sha256(output).hexdigest(), **observation}}
+                                 "output_sha256": sha256(result.stdout + result.stderr).hexdigest(),
+                                 "stream_sha256": {key: sha256(data).hexdigest() for key, data in streams.items()},
+                                 "matched_streams": matched_streams, **observation}}
         finally:
             tree.git("worktree", "remove", "--force", str(checkout))
 

@@ -2,10 +2,13 @@
 
 from collections import Counter
 from dataclasses import dataclass
+from hashlib import sha256
 from html.parser import HTMLParser
 from io import BytesIO
+from pathlib import Path
 import posixpath
 import re
+import struct
 import unicodedata
 from urllib.parse import unquote, urlsplit
 
@@ -19,7 +22,15 @@ from hq_data import REGULAR_MODES, SHA, physical_lines
 MARKDOWN = {".md", ".markdown", ".mdown", ".mkdn"}
 README_FORMATS = [".md", ".markdown", ".mdown", ".mkdn", ".rst", ".adoc", ".asciidoc", ".asc", ".txt", ""]
 IMAGE_FORMATS = {".png": "PNG", ".gif": "GIF", ".jpg": "JPEG", ".jpeg": "JPEG", ".webp": "WEBP"}
+LFS_HOSTS = (b"version https://git-lfs.github.com/", b"version https://hawser.github.com/")
+LFS_POINTER = re.compile(rb"version https://(?:git-lfs|hawser)\.github\.com/spec/v1\n"
+                         rb"((?:ext-[0-9]-[a-z0-9][a-z0-9.-]* sha256:[0-9a-f]{64}\n)*)"
+                         rb"oid sha256:([0-9a-f]{64})\nsize (0|[1-9][0-9]*)\n")
+MAX_CACHED_MEDIA_BYTES = 50 * 1024 * 1024
+MAX_MEDIA_FRAMES = 256
+MAX_MEDIA_PIXELS = 100_000_000
 LINE_RANGE = re.compile(r"L([0-9]+)(?:-L([0-9]+))?")
+BARE_WEB = re.compile(r"(?:^|(?<=[\s*_~(]))(?:https?://|www\.)[^\s<>]+")
 PARSER = MarkdownIt("commonmark").enable("table").enable("strikethrough")
 
 
@@ -131,15 +142,42 @@ class HtmlLinks(HTMLParser):
 
 def inline_links(children, line):
     links = []
+    current_line = line
+    in_link = False
     for index, token in enumerate(children):
         occurrence = line + token.meta.get("source_line_offset", 0)
         if token.type == "image":
             links.append(Link(token.attrGet("src"), occurrence, True))
         elif token.type == "link_open":
+            in_link = True
             end = next((i for i in range(index + 1, len(children)) if children[i].type == "link_close"), len(children))
             name = "".join(item.content for item in children[index + 1:end]
                            if item.type in {"text", "code_inline", "image"})
             links.append(Link(token.attrGet("href"), occurrence, unnamed=not name.strip()))
+        elif token.type == "link_close":
+            in_link = False
+        elif token.type in {"hardbreak", "softbreak"}:
+            current_line += 1
+        elif token.type == "text" and not in_link:
+            for match in BARE_WEB.finditer(token.content):
+                candidate = match[0]
+                extra_closers = candidate.count(")") - candidate.count("(")
+                end = len(candidate)
+                while end:
+                    trailing = candidate[end - 1]
+                    if trailing == ")" and extra_closers > 0:
+                        extra_closers -= 1
+                    elif trailing not in "?!.,:*_~":
+                        break
+                    end -= 1
+                address = candidate[:end]
+                try:
+                    hostname = urlsplit("http://" + address if address.startswith("www.") else address).hostname
+                except ValueError:
+                    continue
+                if hostname and "." in hostname and not hostname.endswith("."):
+                    links.append(Link(address, current_line,
+                                      coverage_gap=f"bare GFM URL was not checked: {address}"))
     return links
 
 
@@ -195,10 +233,23 @@ def same_repo_target(tree, url):
     candidates = segments[3:]
     for count in range(len(candidates) - (segments[2] != "tree"), 0, -1):
         ref = "/".join(candidates[:count])
-        if SHA.fullmatch(ref) or ref == "HEAD":
+        if ref == "HEAD":
+            try:
+                default = tree.git("symbolic-ref", "refs/remotes/origin/HEAD").decode().strip()
+            except ValueError:
+                continue
+            names = [default] if default.startswith("refs/remotes/origin/") else []
+        elif SHA.fullmatch(ref):
             names = [ref]
         else:
-            names = [f"refs/heads/{ref}", f"refs/remotes/origin/{ref}", f"refs/tags/{ref}"]
+            remote = f"refs/remotes/origin/{ref}"
+            names = [remote, f"refs/tags/{ref}"]
+            try:
+                tree.resolve(remote)
+            except ValueError:
+                pass
+            else:
+                names.append(f"refs/heads/{ref}")
             if re.fullmatch(r"[0-9a-f]{4,39}", ref):
                 objects = tree.git("rev-parse", f"--disambiguate={ref}").decode().split()
                 if len(objects) == 1:
@@ -254,6 +305,39 @@ def check_fragment(tree, path, commit, fragment, *, plain=False):
         raise ValueError("missing local heading or named anchor")
 
 
+def media_bytes(tree, path, commit):
+    data = tree.read(path, commit)
+    if not data.startswith(LFS_HOSTS):
+        return data
+    pointer = LFS_POINTER.fullmatch(data) if len(data) < 1024 else None
+    if not pointer:
+        raise ValueError("malformed Git LFS media pointer")
+    extensions, oid, raw_size = pointer.groups()
+    size = int(raw_size)
+    if size > (1 << 63) - 1:
+        raise ValueError("malformed Git LFS media pointer size")
+    if extensions:
+        priorities = [line[4] for line in extensions.splitlines()]
+        if priorities != sorted(set(priorities)):
+            raise ValueError("malformed Git LFS media pointer extension order")
+        raise LookupError("Git LFS pointer extensions were not inspected")
+    if size > MAX_CACHED_MEDIA_BYTES:
+        raise LookupError("Git LFS media object exceeds the offline validation limit")
+    digest = oid.decode()
+    common = Path(tree.git("rev-parse", "--path-format=absolute", "--git-common-dir").decode().strip())
+    cached = common / "lfs" / "objects" / digest[:2] / digest[2:4] / digest
+    try:
+        if not cached.is_file():
+            raise LookupError("Git LFS media object unavailable in the local cache")
+        with cached.open("rb") as handle:
+            contents = handle.read(size + 1)
+    except FileNotFoundError as error:
+        raise LookupError("Git LFS media object unavailable in the local cache") from error
+    if len(contents) != size or sha256(contents).hexdigest() != digest:
+        raise ValueError("cached Git LFS media object does not match the pointer")
+    return contents
+
+
 def verify_media(path, data):
     extension = suffix(path)
     if extension == ".svg":
@@ -271,8 +355,19 @@ def verify_media(path, data):
                     raise ValueError("image type differs from its extension")
                 image.verify()
             with Image.open(BytesIO(data)) as image:
-                image.load()
-        except (OSError, SyntaxError, Image.DecompressionBombError) as error:
+                total_pixels = 0
+                for frame in range(MAX_MEDIA_FRAMES + 1):
+                    try:
+                        image.seek(frame)
+                    except EOFError:
+                        break
+                    total_pixels += image.width * image.height
+                    if frame == MAX_MEDIA_FRAMES or total_pixels > MAX_MEDIA_PIXELS:
+                        raise LookupError("media exceeds the frame or decoded pixel limit")
+                    image.load()
+                if image.format == "GIF" and not data.rstrip(b"\0").endswith(b";"):
+                    raise ValueError("invalid or unreadable image: GIF trailer missing")
+        except (OSError, SyntaxError, struct.error, Image.DecompressionBombError) as error:
             raise ValueError("invalid or unreadable image") from error
     else:
         raise LookupError("media format was not inspected")
@@ -310,7 +405,7 @@ def check_document(tree, source, errors, gaps, *, archive_scope=None):
             if link.image:
                 if directory:
                     raise ValueError("image target is a directory")
-                verify_media(path, tree.read(path, commit))
+                verify_media(path, media_bytes(tree, path, commit))
             check_fragment(tree, path, commit, unquote(url.fragment), plain=url.query in {"plain=1", "plain=true"})
             count += 1
         except (ValueError, OSError, KeyError) as error:

@@ -13,6 +13,10 @@ sys.path.insert(0, str(ROOT / "tools"))
 from hq_data import GitTree, REPOSITORY, parse_json, physical_lines, read_json
 
 
+class UnknownTechniqueError(ValueError):
+    """A finding names an ID absent from the registry."""
+
+
 def verify_anchor(tree, path, line, anchor):
     if type(line) is not int or line < 1 or not isinstance(anchor, str) or not anchor.strip():
         raise ValueError("source evidence requires a positive line and nonempty anchor")
@@ -60,12 +64,14 @@ def record_intake(specification, directory, *, fetch=fetch_github):
     target_receipt = verify_anchor(target_tree, target["path"], target["line"], target["anchor"])
     registry = ROOT / "techniques/registry.json"
     registry_bytes = registry.read_bytes()
-    active = {row["id"] for row in parse_json(registry_bytes, registry)["techniques"] if row["status"] == "active"}
+    techniques = {row["id"]: row["status"] for row in parse_json(registry_bytes, registry)["techniques"]}
     selected = set(specification["selected"])
     if not selected <= set(sources):
         raise ValueError("chosen learning sources must have independently verified intake evidence")
     uses = []
     candidates = []
+    excluded = []
+    decisions = {}
     for entry in specification["findings"]:
         source_id = entry["source"]
         if source_id not in sources:
@@ -79,8 +85,15 @@ def record_intake(specification, directory, *, fetch=fetch_github):
                 raise ValueError("copied material requires an owner-approved rights review outside shared intake")
             candidates.append({"definition": {key: draft[key] for key in fields},
                                "evidence": sources[source_id], "state": "review-required"})
-        technique = entry.get("technique")
-        if technique not in active or source_id not in selected:
+        if "technique" not in entry:
+            continue
+        technique = entry["technique"]
+        if not isinstance(technique, str) or technique not in techniques:
+            raise UnknownTechniqueError("learning finding names an unknown technique ID")
+        status = techniques[technique]
+        if status != "active" or source_id not in selected:
+            excluded.append({"technique": technique, "source": sources[source_id]["identity"],
+                             "reason": status if status != "active" else "source not selected"})
             continue
         decision = entry.get("decision")
         if decision not in {"adopt", "adapt", "already present", "declined", "irrelevant", "insufficient evidence"}:
@@ -88,6 +101,9 @@ def record_intake(specification, directory, *, fetch=fetch_github):
         rationale = entry.get("rationale")
         if not isinstance(rationale, str) or not rationale.strip():
             raise ValueError("recommendation needs a target-specific rationale")
+        identity = (technique, *sources[source_id]["identity"])
+        if decisions.setdefault(identity, decision) != decision:
+            raise ValueError(f"conflicting recommendation decisions for {technique} and the same source evidence")
         uses.append({"technique": technique, "decision": decision, "rationale": rationale,
                      "source": sources[source_id], "target": target_receipt})
     def unique(items):
@@ -101,6 +117,8 @@ def record_intake(specification, directory, *, fetch=fetch_github):
             "registry_sha256": sha256(registry_bytes).hexdigest(),
             "sources": unique(sources.values()), "selected": sorted({tuple(sources[key]["identity"]) for key in selected}),
             "candidates": unique(candidates), "recommendations": unique(uses)}
+    if excluded:
+        data["excluded"] = unique(excluded)
     body = (json.dumps(data, indent=2, sort_keys=True) + "\n").encode()
     directory.mkdir(parents=True, exist_ok=True)
     receipt = directory / f"{sha256(body).hexdigest()}.json"
@@ -120,6 +138,8 @@ def main():
     args = parser.parse_args()
     try:
         print(record_intake(read_json(args.spec), args.output))
+    except UnknownTechniqueError as error:
+        parser.error(str(error))
     except (KeyError, OSError, TypeError, ValueError):
         parser.error("learning request or source proof is invalid or unverified")
 

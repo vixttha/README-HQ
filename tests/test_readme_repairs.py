@@ -3,6 +3,7 @@
 import contextlib
 from hashlib import sha256
 import importlib.util
+from io import BytesIO, StringIO
 import json
 import os
 from pathlib import Path
@@ -16,10 +17,11 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 from hq_data import GitTree, parse_json
 from hq_navigation import check_document, readme_path, same_repo_target
+from urllib.error import HTTPError
 from urllib.parse import urlsplit
 from hq_smoke import verify_first_action
 from check_readme_hq import check_evidence, check_registry, check_versions, evidence_identity, target_readme
-from verify_plan import split_checkpoints, stage_partitions
+from verify_plan import acceptance_sections, split_checkpoints, stage_partitions, verify
 
 
 @contextlib.contextmanager
@@ -38,6 +40,28 @@ def repository(files):
 
 
 class ReaderTests(unittest.TestCase):
+    def test_repo_cli_requires_root_and_supports_explicit_subproject(self):
+        body = "# Guide\n\nThis guide explains the reference fixture.\n"
+        with repository({"README.md": body, "packages/demo/README.md": body}) as tree:
+            receipt = tree.root / "audit.json"
+            argv = [sys.executable, str(ROOT / "tools/check_readme_hq.py"), "--profile", "reference",
+                    "--receipt", str(receipt), "--repo"]
+            for path, options, expected in (
+                (tree.root, [], "README.md"),
+                (tree.root / "packages/demo", [], None),
+                (tree.root, ["--subproject", "packages/demo"], "packages/demo/README.md"),
+            ):
+                with self.subTest(path=path, options=options):
+                    result = subprocess.run([*argv, str(path), *options], capture_output=True)
+                    record = json.loads(receipt.read_bytes())
+                    self.assertEqual(result.returncode, int(expected is None), result.stderr)
+                    if expected is None:
+                        self.assertIn(b"--repo must name the Git root", result.stderr)
+                        self.assertIn(b"--subproject", result.stderr)
+                        self.assertIsNone(record["commit"])
+                    else:
+                        self.assertEqual(record["cases"]["entrypoint"], expected)
+
     def test_pinned_readme_and_monorepo_routes(self):
         with repository({"README.md": "# Root", ".github/README.md": "# Published",
                          "docs/README.md": "# Docs", "packages/example/README.md": "# Subproject"}) as tree:
@@ -76,6 +100,21 @@ Literal example `[Ignore](literal.md)`.
             self.assertTrue(any("untracked.md" in issue for issue in errors))
             self.assertFalse(any("literal.md" in issue for issue in errors))
             self.assertEqual(gaps, [])
+
+    def test_bare_gfm_urls_report_gaps_without_including_code_or_punctuation(self):
+        body = ("# Links\n\n"
+                "See https://example.test/a_(part).\n"
+                "Also (www.example.test/start), plus [https://example.test](README.md).\n\n"
+                "`https://example.test/inline`\n\n"
+                "```text\nwww.example.test/fenced\n```\n")
+        with repository({"README.md": body}) as tree:
+            errors, gaps = [], []
+            self.assertEqual(check_document(tree, "README.md", errors, gaps), 1)
+            self.assertEqual(errors, [])
+            self.assertEqual(gaps, [
+                "README.md:3: bare GFM URL was not checked: https://example.test/a_(part)",
+                "README.md:4: bare GFM URL was not checked: www.example.test/start",
+            ])
 
     def test_broken_inline_links_reference_the_exact_occurrence_line(self):
         readme = """# Example
@@ -133,6 +172,73 @@ A separate [same label](fourth.md).
             with self.assertRaisesRegex(LookupError, "unresolved"):
                 same_repo_target(tree, urlsplit("https://github.com/example/project/blob/absent/README.md"))
 
+    def test_public_refs_ignore_local_aliases_and_use_the_remote_default(self):
+        with repository({"README.md": "# Default"}) as original:
+            original.git("remote", "add", "origin", "https://github.com/example/project.git")
+            original.git("update-ref", "refs/remotes/origin/main", original.commit)
+            original.git("update-ref", "refs/remotes/origin/release/next", original.commit)
+            original.git("switch", "-c", "topic")
+            original.git("-c", "user.name=Fixture", "-c", "user.email=test@example.invalid",
+                         "commit", "--allow-empty", "-qm", "Topic revision")
+            topic = GitTree(original.root)
+            self.assertNotEqual(topic.commit, original.commit)
+
+            def resolve(ref):
+                return same_repo_target(topic, urlsplit(f"https://github.com/example/project/blob/{ref}/README.md"))
+
+            for ref in ("origin/main", "topic", "HEAD"):
+                with self.assertRaisesRegex(LookupError, "unresolved"):
+                    resolve(ref)
+            original.git("symbolic-ref", "refs/remotes/origin/HEAD", "refs/remotes/origin/main")
+            self.assertEqual(resolve("HEAD"), ("README.md", original.commit))
+            self.assertEqual(resolve("release/next"), ("README.md", original.commit))
+            original.git("update-ref", "refs/remotes/origin/origin/main", topic.commit)
+            self.assertEqual(resolve("origin/main"), ("README.md", topic.commit))
+
+    def test_animated_media_decodes_later_frames_and_bounds_coverage(self):
+        from PIL import Image
+        from hq_navigation import verify_media
+
+        red = Image.new("RGB", (32, 32), "red")
+        blue = Image.new("RGB", (32, 32), "blue")
+        animated, static = BytesIO(), BytesIO()
+        red.save(animated, format="GIF", save_all=True, append_images=[blue], duration=50)
+        red.save(static, format="PNG")
+        data = animated.getvalue()
+        verify_media("good.gif", data)
+        verify_media("still.png", static.getvalue())
+        damaged = data[:-20] + b";"
+        with Image.open(BytesIO(damaged)) as first:
+            first.load()
+        with self.assertRaisesRegex(ValueError, "invalid or unreadable image"):
+            verify_media("bad.gif", damaged)
+        with self.assertRaisesRegex(ValueError, "GIF trailer missing"):
+            verify_media("truncated.gif", data[:-1])
+        with patch("hq_navigation.MAX_MEDIA_FRAMES", 1):
+            with self.assertRaisesRegex(LookupError, "frame or decoded pixel limit"):
+                verify_media("limited.gif", data)
+
+    def test_animated_media_reports_truncated_frame_descriptor_in_receipt(self):
+        from PIL import Image
+
+        still = BytesIO()
+        Image.new("RGB", (8, 8), "red").save(still, format="GIF")
+        broken = still.getvalue()[:-1] + b",\x00\x00;"
+        readme = "# Images\n\n![Example](broken.gif)\n\n[Guide](guide.md)\n"
+        with repository({"README.md": readme, "broken.gif": broken, "guide.md": "# Guide\n"}) as tree:
+            receipt = tree.root / "audit.json"
+            result = subprocess.run([sys.executable, str(ROOT / "tools/check_readme_hq.py"),
+                                     "--repo", str(tree.root), "--profile", "reference",
+                                     "--receipt", str(receipt)], capture_output=True, text=True)
+            self.assertEqual(result.returncode, 1, result.stderr)
+            self.assertNotIn("Traceback", result.stderr)
+            diagnostic = "README.md:3: invalid or unreadable image: broken.gif"
+            self.assertIn(diagnostic, result.stderr)
+            record = json.loads(receipt.read_bytes())
+            self.assertEqual(record["result"], "failed")
+            self.assertIn(diagnostic, record["errors"])
+            self.assertEqual(record["cases"]["local_links"], 1)
+
     def test_bad_image_and_unnamed_image_link_are_separate(self):
         readme = "# Images\n[![](broken.png)](README.md)\n[Another dead link](absent.md)\n"
         with repository({"README.md": readme, "broken.png": b"not a PNG"}) as tree:
@@ -142,6 +248,44 @@ A separate [same label](fourth.md).
             self.assertTrue(any("accessible name" in issue for issue in errors))
             self.assertTrue(any("unreadable image" in issue for issue in errors))
             self.assertTrue(any("absent.md" in issue for issue in errors))
+
+    def test_lfs_media_distinguishes_unavailable_invalid_and_verified(self):
+        svg = b'<svg xmlns="http://www.w3.org/2000/svg"/>'
+        oid = sha256(svg).hexdigest()
+        pointer = f"version https://git-lfs.github.com/spec/v1\noid sha256:{oid}\nsize {len(svg)}\n"
+        with repository({"README.md": "![Diagram](diagram.svg)\n![Broken](broken.svg)",
+                         "diagram.svg": pointer, "broken.svg": pointer.replace(oid, "bad")}) as tree:
+            def audit():
+                errors, gaps = [], []
+                return check_document(tree, "README.md", errors, gaps), errors, gaps
+
+            count, errors, gaps = audit()
+            self.assertEqual(count, 0)
+            self.assertIn("malformed Git LFS media pointer", errors[0])
+            self.assertIn("unavailable in the local cache", gaps[0])
+            cache = tree.root / ".git/lfs/objects" / oid[:2] / oid[2:4] / oid
+            cache.parent.mkdir(parents=True)
+            cache.write_bytes(b"x" * len(svg))
+            count, errors, gaps = audit()
+            self.assertEqual((count, gaps), (0, []))
+            self.assertTrue(any("does not match the pointer" in error for error in errors))
+            cache.write_bytes(svg)
+            count, errors, gaps = audit()
+            self.assertEqual((count, len(errors), gaps), (1, 1, []))
+
+    def test_lfs_rejects_malformed_extensions_and_reports_valid_ones(self):
+        lines = "version https://git-lfs.github.com/spec/v1\n"
+        fields = "oid sha256:" + "a" * 64 + "\nsize 128\n"
+        extension = "ext-0-foo sha256:" + "b" * 64 + "\n"
+        with repository({"README.md": "![Valid](valid.svg)\n![Invalid](invalid.svg)",
+                         "valid.svg": lines + extension + fields,
+                         "invalid.svg": lines + extension + extension + fields}) as tree:
+            errors, gaps = [], []
+            self.assertEqual(check_document(tree, "README.md", errors, gaps), 0)
+            self.assertEqual(len(errors), 1)
+            self.assertIn("malformed Git LFS media pointer", errors[0])
+            self.assertEqual(len(gaps), 1)
+            self.assertIn("Git LFS pointer extensions were not inspected", gaps[0])
 
     def test_responsive_image_sources_are_checked_alongside_fallback(self):
         body = ('<picture><source media="(prefers-color-scheme: dark)" '
@@ -168,6 +312,48 @@ A separate [same label](fourth.md).
             errors, gaps = [], []
             self.assertEqual(check_document(tree, "README.md", errors, gaps), 3)
             self.assertEqual((errors, gaps), ([], []))
+
+    def test_smoke_runs_in_the_selected_monorepo_package(self):
+        description = "# Guide\n\nThis guide documents the test fixture.\n"
+        with repository({"README.md": description, "packages/demo/README.md": description,
+                         "run.py": "print('root marker')",
+                         "packages/demo/run.py": "print('package marker')"}) as tree:
+            spec = tree.root / "smoke.json"
+            receipt = tree.root / "receipt.json"
+            argv = [sys.executable, str(ROOT / "tools/check_readme_hq.py"), "--repo", str(tree.root),
+                    "--profile", "reference", "--smoke", str(spec), "--receipt", str(receipt)]
+            for subproject, marker, expected in (
+                ("packages/demo", "root marker", "failed"),
+                ("packages/demo", "package marker", "passed"),
+                (".", "root marker", "passed"),
+            ):
+                with self.subTest(subproject=subproject, marker=marker):
+                    spec.write_text(json.dumps({"commit": tree.commit, "argv": [sys.executable, "run.py"],
+                                                "expected": {"exit": 0, "contains": marker}}), encoding="utf-8")
+                    result = subprocess.run([*argv, "--subproject", subproject], capture_output=True)
+                    self.assertEqual(result.returncode, int(expected == "failed"), result.stderr)
+                    action = json.loads(receipt.read_bytes())["cases"]["first_action"]
+                    self.assertEqual((action["result"], action["cwd"]), (expected, subproject))
+
+    def test_smoke_marker_checks_each_stream_independently(self):
+        with repository({"README.md": "# Guide"}) as tree:
+            spec = tree.root / "smoke.json"
+            for marker, stream, observed, result in (
+                ("left", "stdout", ["stdout"], "passed"),
+                ("right", "stderr", ["stderr"], "passed"),
+                ("right", "either", ["stderr"], "passed"),
+                ("right", "stdout", ["stderr"], "failed"),
+                ("leftright", "either", [], "failed"),
+            ):
+                with self.subTest(marker=marker, stream=stream):
+                    spec.write_text(json.dumps({"commit": tree.commit, "argv": [sys.executable, "-c",
+                        "import sys; sys.stdout.write('left'); sys.stderr.write('right')"],
+                        "expected": {"exit": 0, "contains": marker, "stream": stream}}), encoding="utf-8")
+                    outcome = verify_first_action(tree, spec)
+                    self.assertEqual(outcome["result"], result)
+                    self.assertEqual(outcome["observed"]["matched_streams"], observed)
+                    self.assertEqual(outcome["observed"]["stream_sha256"], {
+                        "stdout": sha256(b"left").hexdigest(), "stderr": sha256(b"right").hexdigest()})
 
     def test_existence_only_smoke_never_opens_the_result(self):
         with repository({"README.md": "# Example"}) as tree:
@@ -199,6 +385,61 @@ A separate [same label](fourth.md).
             action["expected"]["contains"] = "wrong"
             self.assertEqual(smoke(action), "failed")
             self.assertEqual(smoke({"url": "https://example.invalid", "expected": {"http_status": 200}}), "unchecked")
+
+    def test_http_smoke_checks_expected_error_bodies_and_preserves_auth_gates(self):
+        with repository({"README.md": "# Guide"}) as tree:
+            spec = tree.root / "smoke.json"
+            url = "https://example.invalid/guide"
+            for status, body, result in (
+                (404, b"expected marker", "passed"),
+                (404, b"different text", "failed"),
+                (200, b"expected marker", "passed"),
+                (401, b"expected marker", "gated"),
+                (403, b"expected marker", "gated"),
+                (429, b"expected marker", "gated"),
+            ):
+                with self.subTest(status=status, body=body):
+                    spec.write_text(json.dumps({"commit": tree.commit, "url": url, "expected": {
+                        "http_status": status, "contains": "expected marker"}}), encoding="utf-8")
+                    content = BytesIO(body)
+                    response = HTTPError(url, status, "fixture", {}, content)
+                    with patch("hq_smoke.urlopen", **(
+                        {"side_effect": response} if status != 200 else {"return_value": response}
+                    )), patch.object(content, "read", wraps=content.read) as read:
+                        outcome = verify_first_action(tree, spec, allow_network=True)
+                        self.assertEqual(outcome["result"], result)
+                        if result == "gated":
+                            read.assert_not_called()
+                        else:
+                            read.assert_called_once_with(1_000_000)
+                    self.assertTrue(content.closed)
+
+    def test_http_smoke_records_and_can_require_the_effective_url(self):
+        with repository({"README.md": "# Guide"}) as tree:
+            spec = tree.root / "smoke.json"
+            url = "https://example.invalid/guide"
+            final = "https://example.invalid/start"
+            for landing, expected, result in (
+                (final, final, "passed"),
+                ("https://example.invalid/unrelated", final, "failed"),
+                (url, url, "passed"),
+                (final, None, "passed"),
+            ):
+                with self.subTest(landing=landing, expected=expected):
+                    requirements = {"http_status": 200, "contains": "ready"}
+                    if expected is not None:
+                        requirements["final_url"] = expected
+                    spec.write_text(json.dumps({"commit": tree.commit, "url": url, "expected": requirements}),
+                                    encoding="utf-8")
+                    response = HTTPError(landing, 200, "fixture", {}, BytesIO(b"ready"))
+                    with patch("hq_smoke.urlopen", return_value=response) as request:
+                        self.assertEqual(verify_first_action(tree, spec)["result"], "unchecked")
+                        request.assert_not_called()
+                        outcome = verify_first_action(tree, spec, allow_network=True)
+                    self.assertEqual(outcome["result"], result)
+                    self.assertEqual(outcome["url"], url)
+                    self.assertEqual(outcome["observed"]["final_url"], landing)
+                    self.assertIs(outcome["observed"]["final_url_match"], None if expected is None else landing == expected)
 
     def test_smoke_file_checks_prove_a_change(self):
         with repository({"README.md": "# Example", "existing.txt": "old"}) as tree:
@@ -262,6 +503,24 @@ A separate [same label](fourth.md).
 
 
 class EvidenceTests(unittest.TestCase):
+    def test_documented_review_receipt_passes_and_raw_or_incomplete_receipts_fail(self):
+        guide = (ROOT / "techniques/README.md").read_text(encoding="utf-8")
+        example = json.loads(guide.split("```json\n", 1)[1].split("```", 1)[0])
+        key = (example["source_repository"], example["source_commit"], example["source_path"])
+        inventory = {key: ("unused-in-this-test", sha256(b"# Guide\n").hexdigest(), 1)}
+        path = "evidence/public/sample.json"
+        item = {"url": f"https://github.com/{key[0]}/blob/{key[1]}/{key[2]}#L1",
+                "status": "verified", "receipt": path}
+        incomplete = {key: value for key, value in example.items() if key != "run_url"}
+        raw = {"schema": 1, "commit": key[1], "result": "passed", "cases": {}, "sources": {}}
+        for record in (example, incomplete, raw):
+            with self.subTest(fields=sorted(record)), repository({path: json.dumps(record)}) as tree:
+                if record is example:
+                    self.assertEqual(check_evidence(item, tree, inventory), key)
+                else:
+                    with self.assertRaisesRegex(ValueError, "does not establish"):
+                        check_evidence(item, tree, inventory)
+
     def test_json_duplicates_and_canonical_evidence(self):
         with self.assertRaisesRegex(ValueError, "repeated JSON key"):
             parse_json(b'{"x":{"schema":1,"schema":2}}', "registry")
@@ -340,6 +599,53 @@ class EvidenceTests(unittest.TestCase):
                     with self.assertRaisesRegex(ValueError, "duplicate|requires checked"):
                         check_registry([], edited)
 
+    def test_plan_acceptance_checks_reject_missing_or_changed_obligations(self):
+        from verify_plan import PLAN
+        path = ROOT / PLAN
+        original = path.read_text(encoding="utf-8")
+        start = original.index("### v0.0.6.1\n") + len("### v0.0.6.1\n")
+        end = original.index("### v0.0.6.2\n")
+        real_read = Path.read_text
+
+        def verify_with(content):
+            with patch.object(Path, "read_text", lambda path, *a, **kw: (
+                content if path == ROOT / PLAN else real_read(path, *a, **kw)
+            )):
+                verify(False)
+
+        for body in ("\n", "\n- Repair is now optional.\n\n"):
+            with self.assertRaisesRegex(ValueError, "acceptance criteria differ"):
+                verify_with(original[:start] + body + original[end:])
+        with contextlib.redirect_stdout(StringIO()):
+            verify_with(original)
+
+    def test_plan_acceptance_preserves_heading_text_inside_fenced_examples(self):
+        documented = "### v0.0.6.1\n\n- Run the example.\n"
+        example = ("   ````markdown\n## This is literal\n```\n"
+                   "### v0.0.6.99\n~~~\n````\n"
+                   "~~~markdown\n## Also literal\n~~~\n")
+        next_checkpoint = "### v0.0.6.2\n\n- Check the result.\n"
+        plan = "# Plan\n" + documented + example + next_checkpoint
+        self.assertEqual(acceptance_sections(plan), [(documented + example).rstrip(), next_checkpoint.rstrip()])
+        altered = plan.replace("This is literal", "Changed example")
+        self.assertNotEqual(acceptance_sections(altered), acceptance_sections(plan))
+
+    def test_plan_file_inventory_is_bound_to_approved_partition(self):
+        from verify_plan import GRAPH, read_json
+        original = read_json(GRAPH / "manifest.json")
+        unchanged = {**original, "source_files": list(reversed(original["source_files"]))}
+        with contextlib.redirect_stdout(StringIO()):
+            for files in (original["source_files"][1:], [*original["source_files"], "README.md"]):
+                with patch("verify_plan.read_json", side_effect=lambda path: (
+                    {**original, "source_files": files} if path == GRAPH / "manifest.json" else read_json(path)
+                )):
+                    with self.assertRaisesRegex(ValueError, "source inventory differs"):
+                        verify(False)
+            with patch("verify_plan.read_json", side_effect=lambda path: (
+                unchanged if path == GRAPH / "manifest.json" else read_json(path)
+            )):
+                verify(False)
+
     def test_partition_capacity_preserves_order(self):
         features = list(range(100))
         parts = split_checkpoints(features)
@@ -400,6 +706,36 @@ class EvidenceTests(unittest.TestCase):
             self.assertNotEqual(first, second)
             self.assertEqual(json.loads(second.read_bytes())["recommendations"], [])
 
+    def test_learning_conflicting_decisions_at_same_source_are_rejected(self):
+        loader = importlib.util.spec_from_file_location("intake", ROOT / "learning/intake.py")
+        intake = importlib.util.module_from_spec(loader)
+        loader.loader.exec_module(intake)
+        with repository({"README.md": "# Evidence\nOther evidence\n"}) as tree:
+            tree.git("remote", "add", "origin", "https://github.com/example/project.git")
+            source = {"id": "first", "checkout": str(tree.root), "ref": "HEAD",
+                      "repository": "example/project", "path": "README.md",
+                      "line": 1, "anchor": "# Evidence", "visibility": "public"}
+            alias = {**source, "id": "alias"}
+            other = {**source, "id": "other", "line": 2, "anchor": "Other evidence"}
+            first = {"source": "first", "technique": "first-success-milestone",
+                     "decision": "adopt", "rationale": "Explain the first result."}
+            second = {**first, "source": "alias", "decision": "declined"}
+            request = {"visibility": "public", "sources": [source, alias, other],
+                       "selected": ["first", "alias", "other"],
+                       "target": {**source, "audience": "reader", "capability": "audit"},
+                       "findings": [first, second]}
+            def fetch(route):
+                return ({"private": False, "visibility": "public"} if route == "example/project"
+                        else {"sha": tree.commit})
+            destination = tree.root / "receipts"
+            with self.assertRaisesRegex(ValueError, "conflicting recommendation decisions"):
+                intake.record_intake(request, destination, fetch=fetch)
+            self.assertFalse(destination.exists())
+            for sid, decision, count in (("alias", "adopt", 1), ("other", "declined", 2)):
+                request["findings"][1] = {**second, "source": sid, "decision": decision}
+                result = intake.record_intake(request, destination, fetch=fetch)
+                self.assertEqual(len(json.loads(result.read_bytes())["recommendations"]), count)
+
     def test_learning_hashes_the_registry_snapshot_used_by_the_decision(self):
         loader = importlib.util.spec_from_file_location("intake", ROOT / "learning/intake.py")
         intake = importlib.util.module_from_spec(loader)
@@ -439,6 +775,50 @@ class EvidenceTests(unittest.TestCase):
                 result = json.loads(path.read_bytes())
                 self.assertEqual(result["registry_sha256"], sha256(retired).hexdigest())
                 self.assertEqual(result["recommendations"], [])
+
+    def test_learning_distinguishes_unknown_retired_and_unselected_ids(self):
+        loader = importlib.util.spec_from_file_location("intake", ROOT / "learning/intake.py")
+        intake = importlib.util.module_from_spec(loader)
+        loader.loader.exec_module(intake)
+        with repository({"README.md": "# Evidence"}) as tree:
+            tree.git("remote", "add", "origin", "https://github.com/example/project.git")
+            source = {"id": "example", "checkout": str(tree.root), "ref": "HEAD",
+                      "repository": "example/project", "path": "README.md",
+                      "line": 1, "anchor": "# Evidence", "visibility": "public"}
+            finding = {"source": "example", "decision": "adapt", "rationale": "Explain the result."}
+            request = {"visibility": "public", "sources": [source], "selected": [],
+                       "target": {**source, "audience": "reader", "capability": "audit"},
+                       "findings": [{**finding, "technique": "typo"}]}
+            registry = tree.root / "techniques/registry.json"
+            registry.parent.mkdir()
+            registry.write_text(json.dumps({"techniques": [
+                {"id": "sample", "status": "active"}, {"id": "old", "status": "retired"},
+            ]}), encoding="utf-8")
+
+            def fetch(route):
+                return ({"private": False, "visibility": "public"} if route == "example/project"
+                        else {"sha": tree.commit})
+
+            destination = tree.root / "evidence"
+            with patch.object(intake, "ROOT", tree.root):
+                with self.assertRaisesRegex(ValueError, "unknown technique ID"):
+                    intake.record_intake(request, destination, fetch=fetch)
+                self.assertFalse(destination.exists())
+                for identifier, selected, reason in (
+                    ("old", [], "retired"),
+                    ("sample", [], "source not selected"),
+                    ("sample", ["example"], None),
+                ):
+                    request["selected"] = selected
+                    request["findings"][0]["technique"] = identifier
+                    receipt = intake.record_intake(request, destination, fetch=fetch)
+                    record = json.loads(receipt.read_bytes())
+                    if reason:
+                        self.assertEqual(record["recommendations"], [])
+                        self.assertEqual(record["excluded"][0]["reason"], reason)
+                    else:
+                        self.assertEqual(record["recommendations"][0]["technique"], identifier)
+                        self.assertNotIn("excluded", record)
 
     def test_public_learning_refusal_writes_nothing(self):
         spec = importlib.util.spec_from_file_location("intake", ROOT / "learning/intake.py")

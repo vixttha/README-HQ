@@ -298,6 +298,7 @@ def build(manifest, folder):
                 continue
             refs = sorted(feature[relation], key=lambda ref: (ref["path"], ref["anchor"], ref.get("line", 0)))
             evidence[feature_id][relation] = len(refs)
+            resolved_destinations = set()
             for ref in refs:
                 path, anchor = ref["path"], ref["anchor"]
                 if path not in cache:
@@ -305,6 +306,9 @@ def build(manifest, folder):
                 lines, _ = cache[path]
                 line = locate(lines, anchor, path, ref.get("line"))
                 ref_id = f"{relation}:{path}:L{line}"
+                if ref_id in resolved_destinations:
+                    raise ValueError(f"{feature_id} {relation}: duplicate resolved destination {path}:L{line}")
+                resolved_destinations.add(ref_id)
                 kind = "code" if relation in ("tested_by", OPTIONAL_RELATION) else "document"
                 add_node(ref_id, f"{path} L{line}", kind, path, line)
                 add_edge(feature_id, ref_id, relation, path, line)
