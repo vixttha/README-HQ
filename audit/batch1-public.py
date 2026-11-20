@@ -47,7 +47,7 @@ def verify_public_sources(checkout):
             content = response.read(1024 * 1024)
         header = f"blob {len(content)}\0".encode()
         actual = (sha1(header + content).hexdigest(), sha256(content).hexdigest(),
-                  len(content.decode("utf-8").split("\n")))
+                  len(content.removesuffix(b"\n").split(b"\n")) if content else 0)
         if actual != (blob, digest, lines):
             raise ValueError(f"independent source bytes differ at {repo}/{commit}/{path}: {actual}")
     print(f"Independently verified {len(rows)} anonymously accessible pinned public documents", flush=True)
@@ -117,6 +117,9 @@ def main():
                 if "--repo" not in run(checkout, sys.executable, "tools/check_readme_hq.py", "--help"):
                     raise ValueError("Adopter CLI is unavailable")
                 run(checkout, sys.executable, "learning/intake.py", "--help")
+            elif number == 76 and os.environ["RUNNER_OS"] != "Linux":
+                row.update(result="not_applicable", detail="Graphify compiler lock is Linux-only")
+                continue
             else:
                 pattern = "test_graphify_repairs.py" if number == 76 else "test_readme_repairs.py"
                 output_text = run(checkout, sys.executable, "-m", "unittest", "discover",
@@ -134,17 +137,17 @@ def main():
                 print(error.stdout or "", end="", flush=True)
             raise
         finally:
+            previous = sha
             capture()
             print("::endgroup::", flush=True)
-        previous = sha
 
     tasks = [
         ("reader CLI", ("tools/check_readme_hq.py", "--receipt", str(output / "reader.json"))),
         ("reader regressions", ("-m", "unittest", "discover", "-s", "tests", "-p", "test_readme*.py", "-v")),
-        ("Graphify regressions", ("-m", "unittest", "discover", "-s", "tests", "-p", "test_graphify*.py", "-v")),
     ]
     if os.environ["RUNNER_OS"] == "Linux":
-        tasks += [("version maps and MCP", ("graphify-hq/version_maps.py", "--check")),
+        tasks += [("Graphify regressions", ("-m", "unittest", "discover", "-s", "tests", "-p", "test_graphify*.py", "-v")),
+                  ("version maps and MCP", ("graphify-hq/version_maps.py", "--check")),
                   ("repair-plan MCP", ("tools/verify_plan.py", "--mcp"))]
     for name, argv in tasks:
         row = {"name": name, "commit": previous, "result": "started"}
