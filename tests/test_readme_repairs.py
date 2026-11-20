@@ -106,7 +106,7 @@ class ReaderTests(unittest.TestCase):
             self.assertIsNone(result["github_actions"]["job"])
 
     def test_partial_clone_blob_fetch_requires_explicit_permission(self):
-        with repository({"README.md": "# Partial clone fixture"}) as source, tempfile.TemporaryDirectory() as folder:
+        with repository({"README.md": "# Partial clone fixture\n\nThis guide explains the partial clone fixture."}) as source, tempfile.TemporaryDirectory() as folder:
             source.git("config", "uploadpack.allowFilter", "true")
             source.git("config", "uploadpack.allowAnySHA1InWant", "true")
             clone = Path(folder) / "clone"
@@ -165,7 +165,7 @@ class ReaderTests(unittest.TestCase):
     def test_receipt_persistence_failure_preserves_audit_diagnostics(self):
         for good in (True, False):
             target = "README.md" if good else "missing.md"
-            with self.subTest(good=good), repository({"README.md": f"# Guide\n\n[Link]({target})\n"}) as tree:
+            with self.subTest(good=good), repository({"README.md": f"# Guide\n\nThis guide explains the receipt persistence fixture.\n\n[Link]({target})\n"}) as tree:
                 argv = [sys.executable, str(ROOT / "tools/check_readme_hq.py"), "--repo", str(tree.root),
                         "--profile", "reference", "--receipt"]
                 result = subprocess.run([*argv, str(tree.root)], capture_output=True, text=True)
@@ -765,7 +765,9 @@ class EvidenceTests(unittest.TestCase):
         self.assertEqual(rows(fence_table(plan)), [])
         self.assertEqual(rows(plan + "\n" + fence_table(plan)), rows(plan))
         index = tree.read("versions/README.md").decode()
-        for content, accepted in ((fence_table(index), False), (index + "\n" + fence_table(index), True)):
+        sample = "\n\n".join(block for block in fence_table(index).split("\n\n") if block.startswith("```markdown"))
+        self.assertTrue(sample)
+        for content, accepted in ((fence_table(index), False), (index + "\n" + sample, True)):
             errors = []
             read = tree.read
 
