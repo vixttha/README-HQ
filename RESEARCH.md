@@ -51,3 +51,19 @@ A focused pass expanded the [technique map](TECHNIQUE-MAP.md) from 120 to 134 pr
 - Closing checks in Microsoft’s API docs, Docker labs, Material Icons, W3C accessibility guidance, and GitHub notebook documentation produced further examples of these mechanisms. The map records concrete examples under the relevant entries.
 
 This pass used source comparison and deduplication. The count describes documented practices in the map and supports a qualitative judgment about diminishing returns within the sampled source families.
+
+### Installation, upgrades, and recovery
+
+The operational pass expanded the [technique map](TECHNIQUE-MAP.md) from 134 to 144 practices. It examined package naming, optional features, connected and offline installation, upgrade preflight and component order, state locations, restoration, concurrent writes, diagnostic sharing, and uninstall.
+
+Five follow-up documents yielded additional examples for existing entries. The matching entries were:
+
+| Follow-up source | Matching technique |
+| --- | --- |
+| [pip download](https://pip.pypa.io/en/stable/cli/pip_download/) | Prepare an offline install. |
+| [npm optional dependencies](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#optionaldependencies) | Explain optional capabilities and dependency behavior. |
+| [SQLite WAL](https://sqlite.org/wal.html#concurrency) | Document concurrent writers. |
+| [Helm upgrade](https://helm.sh/docs/helm/helm_upgrade/) | Preview changes before applying them. |
+| [Borg quickstart](https://borgbackup.readthedocs.io/en/master/quickstart.html) | Check a restore to a separate destination. |
+
+[Zenodo’s version-specific records](https://help.zenodo.org/docs/deposit/manage-versions/) also support the existing citation instructions. These matches document diminishing returns in the operational sample. They give an observed result for these documents and leave broader completeness unmeasured.
