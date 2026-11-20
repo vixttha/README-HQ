@@ -32,7 +32,8 @@ jobs:
         with:
           python-version: '3.12'
       - name: Install pinned reader wheels
-        run: python -m pip install --require-hashes --only-binary=:all: -r candidate/tools/requirements.txt
+        run: |
+          python -m pip install --require-hashes --only-binary=:all: -r candidate/tools/requirements.txt
       - name: Run exact predecessor and repair controls
         run: python audit/batch5-public.py candidate evidence
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
@@ -65,7 +66,8 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
       - name: Install pinned reader wheels
-        run: python -m pip install --require-hashes --only-binary=:all: -r candidate/tools/requirements.txt
+        run: |
+          python -m pip install --require-hashes --only-binary=:all: -r candidate/tools/requirements.txt
       - name: Check wheel, reader regressions, and media fixtures
         shell: bash
         working-directory: candidate
@@ -99,7 +101,8 @@ jobs:
         with:
           python-version: '3.12'
       - name: Install pinned reader wheels
-        run: python -m pip install --require-hashes --only-binary=:all: -r candidate/tools/requirements.txt
+        run: |
+          python -m pip install --require-hashes --only-binary=:all: -r candidate/tools/requirements.txt
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           ref: eec859e2284d6e2229128341b224b5f703d574c3
@@ -111,11 +114,11 @@ jobs:
           PUBLIC_GITHUB_TOKEN: ${{ github.token }}
         run: |
           mkdir -p external-proof
-          sha=38897297fe973dccd3eb7ae5baa0722498323fbe
+          sha=f8a453725586c8225e47afca4c8cbc2c5585bf33
           git init -q org-fixture
-          git -C org-fixture fetch -q --depth=1 https://github.com/doomemacs/doomemacs.git "$sha"
+          git -C org-fixture fetch -q --depth=1 https://github.com/magit/git-modes.git "$sha"
           git -C org-fixture checkout -q --detach "$sha"
-          curl -fsS -H "Authorization: Bearer $PUBLIC_GITHUB_TOKEN" "https://api.github.com/repos/doomemacs/doomemacs/readme?ref=$sha" | jq '{path, sha}' > external-proof/github-org.json
+          curl -fsS -H "Authorization: Bearer $PUBLIC_GITHUB_TOKEN" "https://api.github.com/repos/magit/git-modes/readme?ref=$sha" | jq '{path, sha}' > external-proof/github-org.json
           code=0
           python candidate/tools/check_readme_hq.py --repo org-fixture --ref "$sha" --receipt external-proof/org.json || code=$?
           test "$code" -eq 2
