@@ -6,7 +6,7 @@
   "tags": ["synthetic"],
   "aliases": ["automated index fixture"],
   "evidence": "unverified",
-  "status": "active"
+  "status": "retired"
 }
 -->
 

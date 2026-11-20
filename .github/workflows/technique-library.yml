@@ -38,9 +38,6 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/audit/technique-library-indexing' && github.event.repository.visibility == 'public'
     permissions:
       contents: write
-    concurrency:
-      group: technique-library-index-${{ github.ref }}
-      cancel-in-progress: false
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
