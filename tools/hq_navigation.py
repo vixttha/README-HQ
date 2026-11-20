@@ -26,6 +26,7 @@ LFS_POINTER = re.compile(rb"version https://git-lfs.github.com/spec/v1\r?\n"
                          rb"oid sha256:([0-9a-f]{64})\r?\nsize (0|[1-9][0-9]*)\r?\n?")
 MAX_CACHED_MEDIA_BYTES = 50 * 1024 * 1024
 LINE_RANGE = re.compile(r"L([0-9]+)(?:-L([0-9]+))?")
+BARE_WEB = re.compile(r"(?:^|(?<=[\s*_~(]))(?:https?://|www\.)[^\s<>]+")
 PARSER = MarkdownIt("commonmark").enable("table").enable("strikethrough")
 
 
@@ -137,15 +138,34 @@ class HtmlLinks(HTMLParser):
 
 def inline_links(children, line):
     links = []
+    current_line = line
+    in_link = False
     for index, token in enumerate(children):
         occurrence = line + token.meta.get("source_line_offset", 0)
         if token.type == "image":
             links.append(Link(token.attrGet("src"), occurrence, True))
         elif token.type == "link_open":
+            in_link = True
             end = next((i for i in range(index + 1, len(children)) if children[i].type == "link_close"), len(children))
             name = "".join(item.content for item in children[index + 1:end]
                            if item.type in {"text", "code_inline", "image"})
             links.append(Link(token.attrGet("href"), occurrence, unnamed=not name.strip()))
+        elif token.type == "link_close":
+            in_link = False
+        elif token.type in {"hardbreak", "softbreak"}:
+            current_line += 1
+        elif token.type == "text" and not in_link:
+            for match in BARE_WEB.finditer(token.content):
+                address = match[0].rstrip("?!.,:*_~")
+                while address.endswith(")") and address.count(")") > address.count("("):
+                    address = address[:-1].rstrip("?!.,:*_~")
+                try:
+                    hostname = urlsplit("http://" + address if address.startswith("www.") else address).hostname
+                except ValueError:
+                    continue
+                if hostname and "." in hostname and not hostname.endswith("."):
+                    links.append(Link(address, current_line,
+                                      coverage_gap=f"bare GFM URL was not checked: {address}"))
     return links
 
 

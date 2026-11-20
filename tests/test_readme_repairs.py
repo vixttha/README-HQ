@@ -78,6 +78,21 @@ Literal example `[Ignore](literal.md)`.
             self.assertFalse(any("literal.md" in issue for issue in errors))
             self.assertEqual(gaps, [])
 
+    def test_bare_gfm_urls_report_gaps_without_including_code_or_punctuation(self):
+        body = ("# Links\n\n"
+                "See https://example.test/a_(part).\n"
+                "Also (www.example.test/start), plus [https://example.test](README.md).\n\n"
+                "`https://example.test/inline`\n\n"
+                "```text\nwww.example.test/fenced\n```\n")
+        with repository({"README.md": body}) as tree:
+            errors, gaps = [], []
+            self.assertEqual(check_document(tree, "README.md", errors, gaps), 1)
+            self.assertEqual(errors, [])
+            self.assertEqual(gaps, [
+                "README.md:3: bare GFM URL was not checked: https://example.test/a_(part)",
+                "README.md:4: bare GFM URL was not checked: www.example.test/start",
+            ])
+
     def test_broken_inline_links_reference_the_exact_occurrence_line(self):
         readme = """# Example
 
