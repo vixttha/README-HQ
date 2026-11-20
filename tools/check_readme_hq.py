@@ -292,14 +292,22 @@ def main():
     parser.add_argument("--list", action="store_true", help="print the technique index after HQ validation")
     parser.add_argument("--repo", type=Path, help="audit a consumer Git repository instead of HQ")
     parser.add_argument("--ref", default="HEAD", help="local ref or commit to validate")
-    parser.add_argument("--subproject", default=".", help="repository-relative monorepo directory")
-    parser.add_argument("--profile", choices=("application", "library", "reference"), default="application")
+    parser.add_argument("--subproject", help="repository-relative monorepo directory")
+    parser.add_argument("--profile", choices=("application", "library", "reference"))
     parser.add_argument("--draft", action="store_true", help="inspect tracked working-tree bytes instead of the published tree")
     parser.add_argument("--receipt", type=Path, help="write a machine-readable check receipt")
     parser.add_argument("--smoke", type=Path, help="an explicit local first-action specification to execute")
     parser.add_argument("--allow-git-fetch", action="store_true", help="permit demand fetching missing Git blobs")
     parser.add_argument("--allow-network", action="store_true", help="allow the explicit remote first-action probe")
     args = parser.parse_args()
+    for option, value in (("--subproject", args.subproject), ("--profile", args.profile),
+                          ("--smoke", args.smoke), ("--allow-network", args.allow_network or None)):
+        if args.repo is None and value is not None:
+            parser.error(f"{option} requires an explicit --repo")
+    if args.subproject is None:
+        args.subproject = "."
+    if args.profile is None:
+        args.profile = "application"
     errors, gaps, records = [], [], []
     cases = {}
     scope = None
@@ -329,8 +337,6 @@ def main():
             else:
                 gaps.append("first action execution not checked: no explicit smoke spec")
         else:
-            if args.smoke:
-                raise ValueError("--smoke requires an explicit --repo")
             records = check_registry(errors, tree)
             cases.update(standalone_versions=check_versions(errors, tree), techniques=len(records),
                          local_links=check_navigation(errors, tree, gaps), imported_files=check_history(errors, tree))

@@ -62,6 +62,18 @@ class ReaderTests(unittest.TestCase):
                     else:
                         self.assertEqual(record["cases"]["entrypoint"], expected)
 
+    def test_adopter_selectors_require_an_explicit_repository(self):
+        argv = [sys.executable, str(ROOT / "tools/check_readme_hq.py")]
+        result = subprocess.run(argv, cwd=ROOT, capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("standalone version(s)", result.stdout)
+        for options in (["--subproject", "missing"], ["--subproject", "."], ["--profile", "application"],
+                        ["--profile", "reference"], ["--allow-network"]):
+            with self.subTest(options=options):
+                result = subprocess.run([*argv, *options], cwd=ROOT, capture_output=True, text=True)
+                self.assertEqual(result.returncode, 2, result.stderr)
+                self.assertIn(f"{options[0]} requires an explicit --repo", result.stderr)
+
     def test_adopter_receipt_distinguishes_scope_at_one_commit(self):
         readme = "# Guide\n\n## Quickstart\n\n[Read the guide](README.md)\n"
         with repository({"README.md": readme, "packages/demo/README.md": readme}) as tree:
