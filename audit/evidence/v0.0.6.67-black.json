@@ -1,0 +1,920 @@
+{
+  "candidate": "8d50caec2bc6fcb998994a1fd302294a029325f9",
+  "fixture_commit": "fc857524f085c5847060a2265c39da2c8430ce8d",
+  "workflow_run_id": 44642025338,
+  "attempt": 1,
+  "platforms": {
+    "ubuntu": {
+      "artifact_id": 14587301012,
+      "job_id": 135975204441,
+      "archive_sha256": "c3a4b5184fe7df1c289f8f4d0249088f3f8395095907d7f084ca83ba3883a8cf",
+      "baseline_cases": {
+        "standalone_versions": 2,
+        "techniques": 17,
+        "local_links": 193,
+        "imported_files": 159
+      },
+      "unchecked": 87,
+      "observations": {
+        "candidate": "8d50caec2bc6fcb998994a1fd302294a029325f9",
+        "platform": "linux",
+        "run_id": "44642025338",
+        "attempt": "1",
+        "observed_utc": "2026-11-19T23:58:38.269637+00:00",
+        "installed_pillow": "12.1.1",
+        "learning_controls": {
+          "requested_repository": "example/source-docs",
+          "synthetic_canonical_repository": "example/renamed-docs",
+          "recorded_repository": "example/source-docs",
+          "renamed_and_control_receipts_identical": true,
+          "same_line_different_anchor_receipts_identical": true,
+          "private_control_rejected": true,
+          "live_github_metadata_used": false
+        },
+        "dependency_advisories": {
+          "installed_pillow": "12.1.1",
+          "latest_pillow_at_observation": "13.0.0",
+          "latest_requires_python": ">=3.11",
+          "pins_checked": 62,
+          "advisory_bearing_packages": [
+            {
+              "package": "Pillow",
+              "version": "12.1.1",
+              "advisories": [
+                {
+                  "id": "GHSA-whj4-6x5x-4v2j",
+                  "fixed_in": [
+                    "12.2.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-whj4-6x5x-4v2j"
+                },
+                {
+                  "id": "GHSA-wjx4-4jcj-g98j",
+                  "fixed_in": [
+                    "12.2.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-wjx4-4jcj-g98j"
+                },
+                {
+                  "id": "GHSA-5xmw-vc9v-4wf2",
+                  "fixed_in": [
+                    "12.2.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-5xmw-vc9v-4wf2"
+                },
+                {
+                  "id": "GHSA-r73j-pqj5-w3x7",
+                  "fixed_in": [
+                    "12.2.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-r73j-pqj5-w3x7"
+                },
+                {
+                  "id": "GHSA-pwv6-vv43-88gr",
+                  "fixed_in": [
+                    "12.2.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-pwv6-vv43-88gr"
+                },
+                {
+                  "id": "PYSEC-2026-165",
+                  "fixed_in": [
+                    "12.2.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/PYSEC-2026-165"
+                },
+                {
+                  "id": "PYSEC-2026-2250",
+                  "fixed_in": [
+                    "12.2.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/PYSEC-2026-2250"
+                },
+                {
+                  "id": "PYSEC-2026-2253",
+                  "fixed_in": [
+                    "12.3.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/PYSEC-2026-2253"
+                },
+                {
+                  "id": "PYSEC-2026-2251",
+                  "fixed_in": [
+                    "12.2.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/PYSEC-2026-2251"
+                },
+                {
+                  "id": "PYSEC-2026-2255",
+                  "fixed_in": [
+                    "12.3.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/PYSEC-2026-2255"
+                },
+                {
+                  "id": "PYSEC-2026-2257",
+                  "fixed_in": [
+                    "12.3.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/PYSEC-2026-2257"
+                },
+                {
+                  "id": "PYSEC-2026-2256",
+                  "fixed_in": [
+                    "12.3.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/PYSEC-2026-2256"
+                },
+                {
+                  "id": "PYSEC-2026-2254",
+                  "fixed_in": [
+                    "12.3.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/PYSEC-2026-2254"
+                },
+                {
+                  "id": "PYSEC-2026-2252",
+                  "fixed_in": [
+                    "12.2.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/PYSEC-2026-2252"
+                },
+                {
+                  "id": "PYSEC-2026-2874",
+                  "fixed_in": [
+                    "12.2.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/PYSEC-2026-2874"
+                },
+                {
+                  "id": "PYSEC-2026-3453",
+                  "fixed_in": [
+                    "12.3.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/PYSEC-2026-3453"
+                },
+                {
+                  "id": "PYSEC-2026-3451",
+                  "fixed_in": [
+                    "12.3.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/PYSEC-2026-3451"
+                },
+                {
+                  "id": "PYSEC-2026-3452",
+                  "fixed_in": [
+                    "12.3.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/PYSEC-2026-3452"
+                },
+                {
+                  "id": "GHSA-62p4-gmf7-7g93",
+                  "fixed_in": [
+                    "12.3.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-62p4-gmf7-7g93"
+                },
+                {
+                  "id": "GHSA-5x94-69rx-g8h2",
+                  "fixed_in": [
+                    "12.3.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-5x94-69rx-g8h2"
+                },
+                {
+                  "id": "GHSA-8v84-f9pq-wr9x",
+                  "fixed_in": [
+                    "12.3.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-8v84-f9pq-wr9x"
+                },
+                {
+                  "id": "GHSA-phj9-mv4w-65pm",
+                  "fixed_in": [
+                    "12.3.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-phj9-mv4w-65pm"
+                },
+                {
+                  "id": "GHSA-45hq-cxwh-f6vc",
+                  "fixed_in": [
+                    "12.3.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-45hq-cxwh-f6vc"
+                },
+                {
+                  "id": "GHSA-xj96-63gp-2gmr",
+                  "fixed_in": [
+                    "12.3.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-xj96-63gp-2gmr"
+                },
+                {
+                  "id": "GHSA-6r8x-57c9-28j4",
+                  "fixed_in": [
+                    "12.3.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-6r8x-57c9-28j4"
+                },
+                {
+                  "id": "GHSA-fj7v-r99m-22gq",
+                  "fixed_in": [
+                    "12.3.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-fj7v-r99m-22gq"
+                },
+                {
+                  "id": "GHSA-pg7v-jwj7-p798",
+                  "fixed_in": [
+                    "12.3.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-pg7v-jwj7-p798"
+                },
+                {
+                  "id": "GHSA-jjj6-mw9f-p565",
+                  "fixed_in": [
+                    "12.3.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-jjj6-mw9f-p565"
+                },
+                {
+                  "id": "GHSA-vjc4-5qp5-m44j",
+                  "fixed_in": [
+                    "12.3.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-vjc4-5qp5-m44j"
+                },
+                {
+                  "id": "GHSA-9hw9-ch79-4vh6",
+                  "fixed_in": [
+                    "12.3.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-9hw9-ch79-4vh6"
+                },
+                {
+                  "id": "PYSEC-2026-3454",
+                  "fixed_in": [
+                    "12.3.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/PYSEC-2026-3454"
+                },
+                {
+                  "id": "PYSEC-2026-3495",
+                  "fixed_in": [
+                    "12.3.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/PYSEC-2026-3495"
+                },
+                {
+                  "id": "PYSEC-2026-3496",
+                  "fixed_in": [
+                    "12.3.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/PYSEC-2026-3496"
+                },
+                {
+                  "id": "PYSEC-2026-3494",
+                  "fixed_in": [
+                    "12.3.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/PYSEC-2026-3494"
+                },
+                {
+                  "id": "PYSEC-2026-3493",
+                  "fixed_in": [
+                    "12.3.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/PYSEC-2026-3493"
+                },
+                {
+                  "id": "GHSA-p4wg-p73j-c528",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-p4wg-p73j-c528"
+                },
+                {
+                  "id": "GHSA-65qm-jvmh-6pqg",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-65qm-jvmh-6pqg"
+                },
+                {
+                  "id": "GHSA-58r4-6rv3-gfh8",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-58r4-6rv3-gfh8"
+                },
+                {
+                  "id": "GHSA-pchr-8j38-3x4p",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-pchr-8j38-3x4p"
+                },
+                {
+                  "id": "GHSA-q45j-58j2-45rg",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-q45j-58j2-45rg"
+                },
+                {
+                  "id": "GHSA-462x-pgg6-55fp",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-462x-pgg6-55fp"
+                },
+                {
+                  "id": "GHSA-c6hw-5grf-ff96",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-c6hw-5grf-ff96"
+                },
+                {
+                  "id": "GHSA-vx6w-vv9f-6gvg",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-vx6w-vv9f-6gvg"
+                },
+                {
+                  "id": "GHSA-7mwm-ghpf-9vrm",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-7mwm-ghpf-9vrm"
+                },
+                {
+                  "id": "GHSA-w889-685w-c8fh",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-w889-685w-c8fh"
+                },
+                {
+                  "id": "GHSA-j4m9-6w36-pw47",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-j4m9-6w36-pw47"
+                },
+                {
+                  "id": "GHSA-27h8-gf7j-v5hc",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-27h8-gf7j-v5hc"
+                },
+                {
+                  "id": "GHSA-fc9g-5qg7-mf45",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-fc9g-5qg7-mf45"
+                },
+                {
+                  "id": "GHSA-cp9v-662q-vvx9",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-cp9v-662q-vvx9"
+                },
+                {
+                  "id": "GHSA-22hg-r758-rrw9",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-22hg-r758-rrw9"
+                },
+                {
+                  "id": "GHSA-74r2-7ff9-mjj2",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-74r2-7ff9-mjj2"
+                },
+                {
+                  "id": "GHSA-xgh8-jp6q-p5x8",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-xgh8-jp6q-p5x8"
+                },
+                {
+                  "id": "GHSA-254f-3936-288h",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-254f-3936-288h"
+                },
+                {
+                  "id": "GHSA-jg86-v3jv-hrpm",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-jg86-v3jv-hrpm"
+                },
+                {
+                  "id": "GHSA-f2g6-542v-9j58",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-f2g6-542v-9j58"
+                },
+                {
+                  "id": "GHSA-5xm2-6676-qcp9",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-5xm2-6676-qcp9"
+                },
+                {
+                  "id": "GHSA-gg2r-wvfm-q9rx",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-gg2r-wvfm-q9rx"
+                },
+                {
+                  "id": "GHSA-332p-7hrc-92wf",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-332p-7hrc-92wf"
+                },
+                {
+                  "id": "GHSA-4rr5-89j8-mwwm",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-4rr5-89j8-mwwm"
+                },
+                {
+                  "id": "GHSA-24rc-8hj2-v98c",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-24rc-8hj2-v98c"
+                },
+                {
+                  "id": "GHSA-4rm8-3hmm-39fg",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-4rm8-3hmm-39fg"
+                },
+                {
+                  "id": "GHSA-mrfp-p49p-3hf2",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-mrfp-p49p-3hf2"
+                },
+                {
+                  "id": "GHSA-3j72-p6qg-6xp7",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-3j72-p6qg-6xp7"
+                },
+                {
+                  "id": "GHSA-v9pv-5gc8-w2m6",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-v9pv-5gc8-w2m6"
+                },
+                {
+                  "id": "GHSA-g4qv-2jxx-769h",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-g4qv-2jxx-769h"
+                },
+                {
+                  "id": "GHSA-g842-9rc4-69pw",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-g842-9rc4-69pw"
+                },
+                {
+                  "id": "GHSA-9v9v-9qvf-h2hj",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-9v9v-9qvf-h2hj"
+                },
+                {
+                  "id": "GHSA-g7cr-3p24-7wf7",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-g7cr-3p24-7wf7"
+                },
+                {
+                  "id": "GHSA-p8hx-v2p6-rp84",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-p8hx-v2p6-rp84"
+                },
+                {
+                  "id": "GHSA-78g4-xqwv-q3g8",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-78g4-xqwv-q3g8"
+                },
+                {
+                  "id": "GHSA-654x-cwwv-5j9c",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-654x-cwwv-5j9c"
+                },
+                {
+                  "id": "GHSA-5x8w-8jj5-q52h",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-5x8w-8jj5-q52h"
+                },
+                {
+                  "id": "PYSEC-2026-4327",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/PYSEC-2026-4327"
+                },
+                {
+                  "id": "PYSEC-2026-4328",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/PYSEC-2026-4328"
+                },
+                {
+                  "id": "PYSEC-2026-4326",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/PYSEC-2026-4326"
+                },
+                {
+                  "id": "PYSEC-2026-4339",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/PYSEC-2026-4339"
+                },
+                {
+                  "id": "PYSEC-2026-4340",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/PYSEC-2026-4340"
+                },
+                {
+                  "id": "PYSEC-2026-4343",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/PYSEC-2026-4343"
+                },
+                {
+                  "id": "PYSEC-2026-4334",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/PYSEC-2026-4334"
+                },
+                {
+                  "id": "PYSEC-2026-4337",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/PYSEC-2026-4337"
+                },
+                {
+                  "id": "PYSEC-2026-4341",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/PYSEC-2026-4341"
+                },
+                {
+                  "id": "PYSEC-2026-4330",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/PYSEC-2026-4330"
+                },
+                {
+                  "id": "PYSEC-2026-4338",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/PYSEC-2026-4338"
+                },
+                {
+                  "id": "PYSEC-2026-4335",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/PYSEC-2026-4335"
+                },
+                {
+                  "id": "PYSEC-2026-4336",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/PYSEC-2026-4336"
+                },
+                {
+                  "id": "PYSEC-2026-4331",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/PYSEC-2026-4331"
+                },
+                {
+                  "id": "PYSEC-2026-4332",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/PYSEC-2026-4332"
+                },
+                {
+                  "id": "PYSEC-2026-4329",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/PYSEC-2026-4329"
+                },
+                {
+                  "id": "PYSEC-2026-4333",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/PYSEC-2026-4333"
+                },
+                {
+                  "id": "PYSEC-2026-4342",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/PYSEC-2026-4342"
+                },
+                {
+                  "id": "PYSEC-2026-4363",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/PYSEC-2026-4363"
+                },
+                {
+                  "id": "GHSA-xcvg-w56q-r89m",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-xcvg-w56q-r89m"
+                },
+                {
+                  "id": "GHSA-wqgw-9xfh-qf2g",
+                  "fixed_in": [
+                    "13.0.0"
+                  ],
+                  "link": "https://osv.dev/vulnerability/GHSA-wqgw-9xfh-qf2g"
+                }
+              ]
+            }
+          ]
+        },
+        "public_technique_sources": {
+          "repositories_with_anonymous_source_downloads": [
+            "vixttha/aldervale-pact-of-ten",
+            "vixttha/blender-agent-refinement-toolkit",
+            "vixttha/brand-identity-template",
+            "vixttha/lydite-test-vault-template"
+          ],
+          "documents": [
+            {
+              "repository": "vixttha/aldervale-pact-of-ten",
+              "commit": "007617884c75b9f422fc0feda031042da62962eb",
+              "path": "Graphify HQ/README.md",
+              "git_blob": "6da4048131b7ec80b97659dc421aa1cb8706c0b4",
+              "sha256": "d88ea1940cae1408423e1c3eac0907c17191bb3680d908420c3e1b98d3ff83a9",
+              "recorded_lines": 14
+            },
+            {
+              "repository": "vixttha/aldervale-pact-of-ten",
+              "commit": "007617884c75b9f422fc0feda031042da62962eb",
+              "path": "Graphify HQ/v0.0.6/receipt.json",
+              "git_blob": "4bd86e357086f8573d1f529749d3a673d1a1ecf9",
+              "sha256": "c3fd0fd1d0fa28af847fd15a9abeb429cb990b2dd4cace84911e27ac4c5b3427",
+              "recorded_lines": 27
+            },
+            {
+              "repository": "vixttha/aldervale-pact-of-ten",
+              "commit": "007617884c75b9f422fc0feda031042da62962eb",
+              "path": "README.md",
+              "git_blob": "2f3d7cd3ee07e50d73e1e3f1968ca6d70cf73f07",
+              "sha256": "a6135046a2218a5aeee192271f33cf4c88a1dd91f5ff5eff70e56925f9e31a65",
+              "recorded_lines": 36
+            },
+            {
+              "repository": "vixttha/aldervale-pact-of-ten",
+              "commit": "007617884c75b9f422fc0feda031042da62962eb",
+              "path": "readme-hq/versions/README.md",
+              "git_blob": "50c42337001a718e3d96fe8f80f59fcafbea8c05",
+              "sha256": "6f99dbbcf7f9e8a48bffd92085dcff2b7125bc793c57506c13ecfb1cb8fa6901",
+              "recorded_lines": 14
+            },
+            {
+              "repository": "vixttha/aldervale-pact-of-ten",
+              "commit": "007617884c75b9f422fc0feda031042da62962eb",
+              "path": "tools/check_readme_hq.py",
+              "git_blob": "a7b83fc2981085e8b8620e45870b1e79d04990b5",
+              "sha256": "8bb2bb779365f1a0ad5e57e4c382f573a995a3639665c281e764e3512d32bf55",
+              "recorded_lines": 1299
+            },
+            {
+              "repository": "vixttha/aldervale-pact-of-ten",
+              "commit": "007617884c75b9f422fc0feda031042da62962eb",
+              "path": "tools/readme_hq_baselines.json",
+              "git_blob": "76ce00cd579c8b384da790c56c008c8fc39bb9bf",
+              "sha256": "6d2acf172cc0dae713e1b8ee6f0a164761ad928db2d1ecb047cbbe7033d7497b",
+              "recorded_lines": 136
+            },
+            {
+              "repository": "vixttha/aldervale-pact-of-ten",
+              "commit": "007617884c75b9f422fc0feda031042da62962eb",
+              "path": "versions/README.md",
+              "git_blob": "793f87469586952f642ba054656fd07ba86c16e5",
+              "sha256": "2ca34c7446fbd7a33ff180e98f77646c77d33cee23497f8844946d9caacd1997",
+              "recorded_lines": 10
+            },
+            {
+              "repository": "vixttha/aldervale-pact-of-ten",
+              "commit": "007617884c75b9f422fc0feda031042da62962eb",
+              "path": "workspace/README.md",
+              "git_blob": "c0d96f84f5ce0aca281512ce3f5dee538fee5c93",
+              "sha256": "a91c20420ceeb4f671655e19ebf0531c643df32c35a787373a0226ce24e5aa09",
+              "recorded_lines": 14
+            },
+            {
+              "repository": "vixttha/aldervale-pact-of-ten",
+              "commit": "a6c2060b8175f505cc6327ccb5658cc00a458b24",
+              "path": "AGENTS.md",
+              "git_blob": "d8df66f4c99a10028049f28bbd85106ee6f06ea5",
+              "sha256": "e2e6a873a8f800c6772087d604e11a0b2ecdae6b117dfc26228b9570e73fdded",
+              "recorded_lines": 35
+            },
+            {
+              "repository": "vixttha/aldervale-pact-of-ten",
+              "commit": "a6c2060b8175f505cc6327ccb5658cc00a458b24",
+              "path": "README.md",
+              "git_blob": "5a985415260e0859a6e52a368c19043ae6160d30",
+              "sha256": "a58002c39857d0ab1615d3d332ad9da1414820728984044ef8838dced6952c2f",
+              "recorded_lines": 79
+            },
+            {
+              "repository": "vixttha/blender-agent-refinement-toolkit",
+              "commit": "01995820c9e51e2f35462c5031a33cefd7b7613d",
+              "path": ".github/workflows/readme-hq.yml",
+              "git_blob": "ae99b418fc21afc5efd351d240996732e978f9ac",
+              "sha256": "f38c7b462db40cd11333ae082aa12fea77a52274b224e87437cef2802357f787",
+              "recorded_lines": 65
+            },
+            {
+              "repository": "vixttha/blender-agent-refinement-toolkit",
+              "commit": "01995820c9e51e2f35462c5031a33cefd7b7613d",
+              "path": "tools/check_readme_render.cjs",
+              "git_blob": "fb163ffecaf9ceb3c3043cbf6a4e4a0b705b58df",
+              "sha256": "4398bfa2611097589c3018329dfc3660b1ce3be75cf6ce755b6a08eb4f9498bb",
+              "recorded_lines": 68
+            },
+            {
+              "repository": "vixttha/blender-agent-refinement-toolkit",
+              "commit": "01995820c9e51e2f35462c5031a33cefd7b7613d",
+              "path": "tools/check_readme_walkthrough.py",
+              "git_blob": "98bd06d5563a2fda7b2c7f5de2e90884e951a159",
+              "sha256": "13f19244b2eab18de83f33227d8cf88ec3ca7239b5c45cfef916685aa8ab68c8",
+              "recorded_lines": 139
+            },
+            {
+              "repository": "vixttha/blender-agent-refinement-toolkit",
+              "commit": "01995820c9e51e2f35462c5031a33cefd7b7613d",
+              "path": "workspace/v0.0.3/README.md",
+              "git_blob": "96dc96b0376738edfb1c743bb91466918c6b13dc",
+              "sha256": "12a7acff26da90bece258298db944a3b58a37c891b2a93e496175f410dd84828",
+              "recorded_lines": 15
+            },
+            {
+              "repository": "vixttha/blender-agent-refinement-toolkit",
+              "commit": "01995820c9e51e2f35462c5031a33cefd7b7613d",
+              "path": "workspace/v0.0.3/REVIEW.md",
+              "git_blob": "0b8819749b72fe33cb4707009b08f12b4a3e4646",
+              "sha256": "b7bc32eafffe91731b98ef79d31611dc068620393a30f179a62594f2ea4274aa",
+              "recorded_lines": 30
+            },
+            {
+              "repository": "vixttha/blender-agent-refinement-toolkit",
+              "commit": "3e7f9e02e61739825b56bcafecebbd0221cc9657",
+              "path": "README.md",
+              "git_blob": "e88435f1f01905f16f3fdf40afc2d79d1cebdcef",
+              "sha256": "c682575523534ab62b86960310f50206efe432474a263f0d6577e7a0e7231073",
+              "recorded_lines": 175
+            },
+            {
+              "repository": "vixttha/brand-identity-template",
+              "commit": "87d0f9aedbe69ca4b16815d6b3329efcf5889da9",
+              "path": ".github/scripts/smoke_adoption.py",
+              "git_blob": "88dd17907340f0ea5ed9fc979a66f8bbb6c0350d",
+              "sha256": "7ad0474c1e5641dcc77d10e92ce044c5aa0fda9a4c3b2d3102163728d9da900a",
+              "recorded_lines": 86
+            },
+            {
+              "repository": "vixttha/brand-identity-template",
+              "commit": "87d0f9aedbe69ca4b16815d6b3329efcf5889da9",
+              "path": ".github/workflows/brand-identity.yml",
+              "git_blob": "80e88ba00eab401d8e6d10c4642b677f2bfcf540",
+              "sha256": "fcb24482373b98bcd0bae46ec3e6f013f47d358a6f95464a81e5c257416a7dde",
+              "recorded_lines": 51
+            },
+            {
+              "repository": "vixttha/brand-identity-template",
+              "commit": "87d0f9aedbe69ca4b16815d6b3329efcf5889da9",
+              "path": "README.md",
+              "git_blob": "a29db28fe7e0ba1745966593a5abd8e8e6ee193b",
+              "sha256": "4c67ef54d5e883813cff191fe68cd94f28dd18641e82694c4cd19990751024c8",
+              "recorded_lines": 15
+            },
+            {
+              "repository": "vixttha/lydite-test-vault-template",
+              "commit": "fe7b00aa17862d7a01dfd15481594be837bc6d9f",
+              "path": "README.md",
+              "git_blob": "539fcbd4dd6b1838cc7131ff2fcbc18b68353f0f",
+              "sha256": "fd69665cd129639a1d9f852a5640a870d3f41869091acf979a86e7c4ee6df140",
+              "recorded_lines": 24
+            },
+            {
+              "repository": "vixttha/lydite-test-vault-template",
+              "commit": "fe7b00aa17862d7a01dfd15481594be837bc6d9f",
+              "path": "docs/testing.md",
+              "git_blob": "867841c093d1a16e335561e8dc8d2e58734fa2ea",
+              "sha256": "c54fcf885d3529b9edb1f7a5e1381b349ee088fde589ef5978e89bb1d2bba12f",
+              "recorded_lines": 22
+            }
+          ]
+        }
+      }
+    },
+    "windows": {
+      "artifact_id": 14585994833,
+      "job_id": 135975203963,
+      "archive_sha256": "f0e3fffb689791d81b42cc5a42b7eb47bb77ea8d87b0bbc6320288b569d41d88",
+      "baseline_cases": {
+        "standalone_versions": 2,
+        "techniques": 17,
+        "local_links": 193,
+        "imported_files": 159
+      },
+      "unchecked": 87,
+      "observations": {
+        "candidate": "8d50caec2bc6fcb998994a1fd302294a029325f9",
+        "platform": "win32",
+        "run_id": "44642025338",
+        "attempt": "1",
+        "observed_utc": "2026-11-19T23:59:30.395176+00:00",
+        "installed_pillow": "12.1.1",
+        "learning_controls": {
+          "requested_repository": "example/source-docs",
+          "synthetic_canonical_repository": "example/renamed-docs",
+          "recorded_repository": "example/source-docs",
+          "renamed_and_control_receipts_identical": true,
+          "same_line_different_anchor_receipts_identical": true,
+          "private_control_rejected": true,
+          "live_github_metadata_used": false
+        }
+      }
+    }
+  },
+  "issue_records": {
+    "pillow_advisories": 135,
+    "canonical_repository_identity": 136,
+    "matched_anchor_traceability": 137
+  },
+  "initial_run": {
+    "workflow_run_id": 44641862533,
+    "ubuntu_job_id": 135974636823,
+    "known_failure": "Anonymous GitHub repository metadata request was rate-limited",
+    "replay_scope": "Download pinned public source blobs anonymously and compare Git blob IDs and SHA-256 digests"
+  }
+}
