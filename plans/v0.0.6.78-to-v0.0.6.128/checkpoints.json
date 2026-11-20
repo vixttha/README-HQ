@@ -1777,76 +1777,76 @@
         "status": "public_runner_verified",
         "verification": {
           "pull_request": "https://github.com/vixttha/README-HQ/pull/144",
-          "head": "393487e218a4f0cb9475a87189601ef9241636eb",
+          "head": "dc8ef21763240168227d67445f02fc4a05ea071c",
           "base": "941f6b49aac6ab78076f088ad6b58a00e9f03477",
-          "post_fix_run": "https://github.com/vixttha/README-HQ/actions/runs/44661216297/attempts/1",
-          "push_run": "https://github.com/vixttha/README-HQ/actions/runs/44661182610/attempts/1",
-          "review_run": "https://github.com/vixttha/README-HQ/actions/runs/44661195828/attempts/1",
-          "proposed_merge": "3557f272107f658ffa84a6225a96acb9188a37c3",
-          "observer": "58e14abc64b8f996aeccf3abde3836b50eb17e2c",
+          "post_fix_run": "https://github.com/vixttha/README-HQ/actions/runs/44662359197/attempts/1",
+          "push_run": "https://github.com/vixttha/README-HQ/actions/runs/44662322632/attempts/1",
+          "review_run": "https://github.com/vixttha/README-HQ/actions/runs/44662329172/attempts/1",
+          "proposed_merge": "14c3fe1013ee40e4422f0f9b7c1259c6c9ea5448",
+          "observer": "95283368da8e7ff7e9c6c540d03fbffc52e43535",
           "artifacts": [
             {
-              "id": 14595098151,
-              "name": "graphify-receipts-393487e218a4f0cb9475a87189601ef9241636eb-attempt-1",
-              "run_id": 44661182610,
-              "attempt": 1,
-              "sha256": "6d2d84da0560d01f814763eeba291c7907cc48cfbd5117783efb383b5147feb9"
-            },
-            {
-              "id": 14595023731,
-              "name": "readme-hq-windows-latest-393487e218a4f0cb9475a87189601ef9241636eb-attempt-1",
-              "run_id": 44661182610,
-              "attempt": 1,
-              "sha256": "6ad8d828d0371621c517caf4646da2c4110bd0d3cd47acd817f9d4c40c647042"
-            },
-            {
-              "id": 14594998849,
-              "name": "readme-hq-ubuntu-latest-393487e218a4f0cb9475a87189601ef9241636eb-attempt-2",
-              "run_id": 44661182610,
+              "id": 14596153023,
+              "name": "readme-hq-ubuntu-latest-dc8ef21763240168227d67445f02fc4a05ea071c-attempt-2",
+              "run_id": 44662322632,
               "attempt": 2,
-              "sha256": "9e8545da54c3d90dce8a30779009e56728a402e896fb619b33c859b0282a3d35"
+              "sha256": "c8efcaaafa4cc94c01802bcb8830d50aeb60871134c31729a2933a026c777d22"
             },
             {
-              "id": 14594699481,
-              "name": "readme-hq-ubuntu-latest-393487e218a4f0cb9475a87189601ef9241636eb-attempt-1",
-              "run_id": 44661182610,
+              "id": 14595808559,
+              "name": "readme-hq-windows-latest-dc8ef21763240168227d67445f02fc4a05ea071c-attempt-1",
+              "run_id": 44662322632,
               "attempt": 1,
-              "sha256": "2170c6677828a41573831fb0b606e172359148d2a3807520fa636cce2c7112c0"
+              "sha256": "d88fd1816d65737b22a14864067c11c874de445dbc34754584e0de6263d7074d"
             },
             {
-              "id": 14595976677,
-              "name": "graphify-receipts-3557f272107f658ffa84a6225a96acb9188a37c3-attempt-1",
-              "run_id": 44661195828,
+              "id": 14595513046,
+              "name": "graphify-receipts-dc8ef21763240168227d67445f02fc4a05ea071c-attempt-1",
+              "run_id": 44662322632,
               "attempt": 1,
-              "sha256": "f22816cb42f6c38992e1a31c92329db98fd931db4886f3fe8c6a3bacb95a4917"
+              "sha256": "5466e02867d698fe1397ed319eede0aa23fc46e0ce2f6edb984af8607d9ac337"
             },
             {
-              "id": 14595697343,
-              "name": "readme-hq-windows-latest-3557f272107f658ffa84a6225a96acb9188a37c3-attempt-1",
-              "run_id": 44661195828,
+              "id": 14594984768,
+              "name": "readme-hq-ubuntu-latest-dc8ef21763240168227d67445f02fc4a05ea071c-attempt-1",
+              "run_id": 44662322632,
               "attempt": 1,
-              "sha256": "cf0f7c498759fa95f2d2b8b570756e38e5643b3e3b382241156b963e39a782a7"
+              "sha256": "2f7710d5b857880ffe531fef6591924e2ba9f6714ec54b946c67dcaf32542911"
             },
             {
-              "id": 14595387712,
-              "name": "readme-hq-ubuntu-latest-3557f272107f658ffa84a6225a96acb9188a37c3-attempt-1",
-              "run_id": 44661195828,
+              "id": 14595708901,
+              "name": "readme-hq-windows-latest-14c3fe1013ee40e4422f0f9b7c1259c6c9ea5448-attempt-1",
+              "run_id": 44662329172,
               "attempt": 1,
-              "sha256": "e13bbe4ec300145d53cf313023e06dfa1bdbf12477a5d50d7af46b28b38521c6"
+              "sha256": "91d864008a7fe761968196fc3fc8fd216b509adbb5c27a86d67c2c52e03a60ce"
             },
             {
-              "id": 14596345206,
+              "id": 14595568798,
+              "name": "readme-hq-ubuntu-latest-14c3fe1013ee40e4422f0f9b7c1259c6c9ea5448-attempt-1",
+              "run_id": 44662329172,
+              "attempt": 1,
+              "sha256": "3525a1b54eb5af5a22a49381538dad083f93f87a7ba644c017430e774ebbfe67"
+            },
+            {
+              "id": 14595219069,
+              "name": "graphify-receipts-14c3fe1013ee40e4422f0f9b7c1259c6c9ea5448-attempt-1",
+              "run_id": 44662329172,
+              "attempt": 1,
+              "sha256": "6fe80204799ab85b240d100d19a59b6fda27b3c7a76e01e9dc3250dd37a40533"
+            },
+            {
+              "id": 14596965091,
               "name": "batch-3-windows-latest-1",
-              "run_id": 44661216297,
+              "run_id": 44662359197,
               "attempt": 1,
-              "sha256": "731036ee24aa70708dfee2980e4f8118299cfeeffd993daaea1520874f32f796"
+              "sha256": "a256d157bc889aa4cc4a273d83002d00680ace7d0c0fdabec1e69a298fe77a71"
             },
             {
-              "id": 14596171205,
+              "id": 14595658688,
               "name": "batch-3-ubuntu-latest-1",
-              "run_id": 44661216297,
+              "run_id": 44662359197,
               "attempt": 1,
-              "sha256": "6a36feace509ebcf3b2976184b2c1b4df0ae4cb42e30831c6d9ff4655457ef25"
+              "sha256": "04346f0d9803bf8258642565915df9a0e6fe1a0cd04827bdcc7820278e749c34"
             }
           ],
           "repair_commits": [
@@ -1891,10 +1891,19 @@
                 108,
                 110
               ]
+            },
+            {
+              "commit": "dc8ef21763240168227d67445f02fc4a05ea071c",
+              "tree": "d887e7a52c7790e4a02c4ea792b792e5a7a0f213",
+              "parent": "393487e218a4f0cb9475a87189601ef9241636eb",
+              "label": "secondary-rate-limit follow-up",
+              "issues": [
+                109
+              ]
             }
           ],
           "coderabbit_review": "https://github.com/vixttha/README-HQ/pull/144#pullrequestreview-5986613884",
-          "coderabbit_final_check": "https://github.com/vixttha/README-HQ/runs/136039785360",
+          "coderabbit_final_check": "https://github.com/vixttha/README-HQ/runs/136043447764",
           "issue_evidence": [
             {
               "issue": 98,
@@ -1981,8 +1990,13 @@
             {
               "issue": 110,
               "url": "https://github.com/vixttha/README-HQ/issues/110#issuecomment-7028550207"
+            },
+            {
+              "issue": 109,
+              "url": "https://github.com/vixttha/README-HQ/issues/109#issuecomment-7028690503"
             }
-          ]
+          ],
+          "coderabbit_follow_up_review": "https://github.com/vixttha/README-HQ/pull/144#pullrequestreview-5986678859"
         }
       },
       {
