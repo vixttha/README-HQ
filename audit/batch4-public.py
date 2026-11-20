@@ -26,7 +26,10 @@ POINTS = [
     (126, "7768439b8822f59955284aa29d171ea6641a0cd5", "1eee8a085161f11774364490a4ed8586ead03613", "required_smoke_distinguishes"),
     (127, "b43c8c0299d5065e08b045a0ce627342e2c75e1f", "afdf729bd7d3975599a674618ce91b9cacc956ef", "smoke_failure_codes_and_private_output"),
 ]
-FOLLOW_UPS = [("Graphify and retained plan integration follow-up", "f696cec1c74897298deb6c75aba4206fe9728688", "885539e9ab0f72e83bdba434cf82aaa9d0280b97", [(123, "existing_graphify_map_keeps"), (122, "retained_plan_installs")])]
+FOLLOW_UPS = [
+    ("Graphify and retained plan integration follow-up", "f696cec1c74897298deb6c75aba4206fe9728688", "885539e9ab0f72e83bdba434cf82aaa9d0280b97", [(123, "existing_graphify_map_keeps"), (122, "retained_plan_installs")]),
+    ("Graphify self-map workflow anchor follow-up", "92ae3fc3db62ebe69404d8a253c7dfef6114b3d4", "8e88b42fc61477fc23c67ea203099a3efb3da91b", []),
+]
 GRAPHIFY_ONLY = {116, 122, 123, 124}
 KIT = Path("graphify-hq/template/v0.0.8")
 READER = Path("tests/test_readme_repairs.py")
