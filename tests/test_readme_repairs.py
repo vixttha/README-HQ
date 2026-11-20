@@ -256,6 +256,21 @@ class EvidenceTests(unittest.TestCase):
             check_versions(errors, tree)
             self.assertTrue(any("latest standalone archive" in error for error in errors), errors)
 
+    def test_wrong_registry_shapes_fail_without_a_traceback_and_write_a_receipt(self):
+        validator = ROOT / "tools/check_readme_hq.py"
+        with tempfile.TemporaryDirectory() as folder:
+            worktree = Path(folder) / "checkout"
+            subprocess.run(["git", "-C", str(ROOT), "clone", "-q", str(ROOT), str(worktree)], check=True)
+            registry = worktree / "techniques/registry.json"
+            receipt = Path(folder) / "result.json"
+            argv = [sys.executable, str(worktree / validator.relative_to(ROOT)), "--draft", "--receipt", str(receipt)]
+            for invalid in ([], None, {"schema": 1, "techniques": [None]}):
+                registry.write_text(json.dumps(invalid), encoding="utf-8")
+                result = subprocess.run(argv, cwd=worktree, capture_output=True, text=True)
+                self.assertEqual(result.returncode, 1, result.stderr)
+                self.assertNotIn("Traceback", result.stderr)
+                self.assertEqual(json.loads(receipt.read_bytes())["result"], "failed")
+
     def test_registry_and_inventory_cannot_vouch_for_each_other(self):
         paths = ("techniques/registry.json", "techniques/public-source-inventory.json")
         files = {name: (ROOT / name).read_bytes() for name in paths}

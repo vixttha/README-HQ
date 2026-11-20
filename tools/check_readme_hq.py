@@ -68,7 +68,8 @@ def check_evidence(item, tree, known_sources=None):
     fields = ("source_repository", "source_commit", "source_path", "source_span",
               "environment", "run_url", "source_sha256", "expected", "observed")
     if (
-        any(not isinstance(receipt.get(key), str) or not receipt[key].strip() for key in fields)
+        not isinstance(receipt, dict)
+        or any(not isinstance(receipt.get(key), str) or not receipt[key].strip() for key in fields)
         or receipt.get("result") != "pass" or receipt.get("visibility") != "public"
         or (receipt["source_repository"].lower(), receipt["source_commit"], receipt["source_path"]) != identity
         or not span or receipt["source_span"] != span
@@ -85,6 +86,8 @@ def check_registry(errors, tree=None):
     tree = tree or GitTree(ROOT)
     path = "techniques/registry.json"
     data = parse_json(tree.read(path), path)
+    if not isinstance(data, dict):
+        raise ValueError("technique registry must be a JSON object")
     records = data.get("techniques")
     if type(data.get("schema")) is not int or data["schema"] != 1 or not isinstance(records, list) or not records:
         errors.append("technique registry must use integer schema 1 and a non-empty record array")
@@ -146,7 +149,7 @@ def check_registry(errors, tree=None):
                 seen.add(content_key)
             except (KeyError, TypeError, ValueError) as error:
                 errors.append(f"{slug}: {error}")
-    return records
+    return [record for record in records if isinstance(record, dict)]
 
 
 def check_history(errors, tree=None):
