@@ -5,7 +5,7 @@ from collections import Counter
 import hashlib
 import json
 import os
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 import re
 import sys
 import unicodedata
@@ -296,6 +296,7 @@ def main():
     args = parser.parse_args()
     errors, gaps, records = [], [], []
     cases = {}
+    scope = None
     try:
         if args.draft and args.ref != "HEAD":
             raise ValueError("--draft applies to the current checkout only")
@@ -305,6 +306,10 @@ def main():
             if tree.root != top_level:
                 tree = None
                 raise ValueError("--repo must name the Git root; select a nested README with --subproject")
+            scope = {"repository": tree.repository,
+                     "repository_identity": "inferred-from-origin" if tree.repository else "unavailable",
+                     "profile": args.profile, "subproject": PurePosixPath(args.subproject).as_posix(),
+                     "commit": tree.commit}
             entry, count = target_readme(tree, args.subproject, errors, gaps, args.profile)
             cases.update(entrypoint=entry, local_links=count)
             if args.smoke:
@@ -327,7 +332,7 @@ def main():
         errors.append(str(error))
     if args.receipt:
         from hq_smoke import write_receipt
-        write_receipt(args.receipt, locals().get("tree"), cases, errors, gaps, validator_path=Path(__file__).resolve())
+        write_receipt(args.receipt, locals().get("tree"), cases, errors, gaps, validator_path=Path(__file__).resolve(), scope=scope)
     if errors:
         for error in errors:
             print(error, file=sys.stderr)

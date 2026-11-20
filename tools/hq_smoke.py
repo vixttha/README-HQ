@@ -166,7 +166,7 @@ def verify_first_action(tree, path, *, allow_network=False, subproject="."):
                              "matched_streams": matched_streams, **observation}}
 
 
-def write_receipt(destination, tree, cases, errors, gaps, *, validator_path=None):
+def write_receipt(destination, tree, cases, errors, gaps, *, validator_path=None, scope=None):
     sources, unavailable_sources = {}, []
     if tree:
         name = cases.get("entrypoint") or "README.md"
@@ -187,6 +187,8 @@ def write_receipt(destination, tree, cases, errors, gaps, *, validator_path=None
         "sources": sources, "cases": cases, "errors": errors, "unchecked": gaps,
         "result": "failed" if errors else "passed",
     }
+    if scope is not None:
+        data["scope"] = scope
     if unavailable_sources:
         data["unavailable_sources"] = unavailable_sources
     if validator_path is not None:

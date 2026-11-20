@@ -62,6 +62,27 @@ class ReaderTests(unittest.TestCase):
                     else:
                         self.assertEqual(record["cases"]["entrypoint"], expected)
 
+    def test_adopter_receipt_distinguishes_scope_at_one_commit(self):
+        readme = "# Guide\n\n## Quickstart\n\n[Read the guide](README.md)\n"
+        with repository({"README.md": readme, "packages/demo/README.md": readme}) as tree:
+            receipt = tree.root / "audit.json"
+            argv = [sys.executable, str(ROOT / "tools/check_readme_hq.py"), "--repo", str(tree.root),
+                    "--receipt", str(receipt)]
+            for origin, profile, subproject in (
+                ("example/first", "reference", "."),
+                ("example/first", "application", "."),
+                ("example/second", "application", "packages/demo"),
+            ):
+                with self.subTest(origin=origin, profile=profile, subproject=subproject):
+                    tree.git("config", "remote.origin.url", f"https://github.com/{origin}.git")
+                    result = subprocess.run([*argv, "--profile", profile, "--subproject", subproject],
+                                            capture_output=True, text=True)
+                    self.assertEqual(result.returncode, 0, result.stderr)
+                    record = json.loads(receipt.read_bytes())
+                    self.assertEqual(record["scope"], {"repository": origin,
+                        "repository_identity": "inferred-from-origin", "profile": profile,
+                        "subproject": subproject, "commit": tree.commit})
+
     def test_pinned_readme_and_monorepo_routes(self):
         with repository({"README.md": "# Root", ".github/README.md": "# Published",
                          "docs/README.md": "# Docs", "packages/example/README.md": "# Subproject"}) as tree:
