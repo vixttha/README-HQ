@@ -1,13 +1,15 @@
 """Verify public-source findings and save project-specific recommendation receipts."""
 
 import argparse
+from datetime import datetime, timezone
+from email.utils import parsedate_to_datetime
 from functools import lru_cache
 from hashlib import sha256
 import json
 from pathlib import Path
 import sys
 from tempfile import NamedTemporaryFile
-from urllib.error import HTTPError
+from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -26,23 +28,40 @@ def verify_anchor(tree, path, line, anchor):
     lines = physical_lines(body.decode("utf-8"))
     if line > len(lines) or anchor not in lines[line - 1]:
         raise ValueError("source anchor does not match the selected Git tree")
-    return {"commit": tree.commit, "path": path, "line": line, "sha256": sha256(body).hexdigest()}
+    return {"commit": tree.commit, "path": path, "line": line, "anchor": anchor, "sha256": sha256(body).hexdigest()}
 
 
 def fetch_github(route):
-    with urlopen(Request(f"https://api.github.com/repos/{route}", headers={"User-Agent": "README-HQ"}), timeout=15) as response:
-        return json.load(response)
+    request = Request(f"https://api.github.com/repos/{route}", headers={"User-Agent": "README-HQ"})
+    try:
+        with urlopen(request, timeout=15) as response:
+            return json.load(response)
+    except TimeoutError as error:
+        raise URLError("GitHub response timed out") from error
 
 
 def public_checkpoint(tree, repo, fetch=fetch_github):
     if not REPOSITORY.fullmatch(repo) or not tree.repository or tree.repository.casefold() != repo.casefold():
         raise ValueError("GitHub repository identity is not independently established")
-    repo = repo.casefold()
-    metadata = fetch(repo)
-    if metadata.get("private") is not False or metadata.get("visibility") != "public":
-        raise ValueError("source or target is not confirmed public")
-    if fetch(f"{repo}/commits/{tree.commit}").get("sha") != tree.commit:
+    requested = repo.casefold()
+
+    def identity(metadata):
+        if metadata.get("private") is not False or metadata.get("visibility") != "public":
+            raise ValueError("source or target is not confirmed public")
+        name, stable_id = metadata.get("full_name"), metadata.get("id")
+        if not isinstance(name, str) or not REPOSITORY.fullmatch(name) or type(stable_id) is not int or stable_id < 1:
+            raise ValueError("GitHub repository metadata lacks a verified canonical name or stable ID")
+        return name, stable_id
+
+    name, stable_id = identity(fetch(requested))
+    canonical = name.casefold()
+    if canonical != requested:
+        confirmed_name, confirmed_id = identity(fetch(canonical))
+        if confirmed_name.casefold() != canonical or confirmed_id != stable_id:
+            raise ValueError("GitHub repository identity does not match the canonical name and stable ID")
+    if fetch(f"{canonical}/commits/{tree.commit}").get("sha") != tree.commit:
         raise ValueError("GitHub did not verify this source revision")
+    return {"requested_repository": requested, "canonical_repository": name, "repository_id": stable_id}
 
 
 def validate_request(specification):
@@ -87,16 +106,17 @@ def record_intake(specification, directory, *, fetch=fetch_github):
         if source["id"] in sources:
             raise ValueError("learning source IDs must be unique")
         tree = GitTree(source["checkout"], source["ref"])
-        public_checkpoint(tree, source["repository"], lookup)
+        provenance = public_checkpoint(tree, source["repository"], lookup)
         receipt = verify_anchor(tree, source["path"], source["line"], source["anchor"])
-        identity = (source["repository"].casefold(), tree.commit, source["path"], source["line"])
-        sources[source["id"]] = {"identity": list(identity), **receipt}
+        identity = (provenance["canonical_repository"].casefold(), tree.commit,
+                    receipt["path"], receipt["line"], receipt["anchor"])
+        sources[source["id"]] = {"identity": list(identity), **provenance, **receipt}
     target = specification["target"]
     if target.get("visibility") != "public":
         raise ValueError("only verified public targets enter shared intake")
     target_tree = GitTree(target["checkout"], target["ref"])
-    public_checkpoint(target_tree, target["repository"], lookup)
-    target_receipt = verify_anchor(target_tree, target["path"], target["line"], target["anchor"])
+    target_provenance = public_checkpoint(target_tree, target["repository"], lookup)
+    target_receipt = {**target_provenance, **verify_anchor(target_tree, target["path"], target["line"], target["anchor"])}
     registry = ROOT / "techniques/registry.json"
     registry_bytes = registry.read_bytes()
     techniques = {row["id"]: row["status"] for row in parse_json(registry_bytes, registry)["techniques"]}
@@ -180,21 +200,52 @@ def is_github_rate_limit(error):
     return isinstance(message, str) and "secondary rate limit" in message.casefold()
 
 
+def intake_error(error):
+    if isinstance(error, HTTPError):
+        rate_limited = is_github_rate_limit(error)
+        if not rate_limited and error.code not in {500, 502, 503, 504}:
+            return {"code": "invalid-or-unverified-evidence", "retryable": False}, (
+                "learning request or source proof is invalid or unverified")
+        code = "github-rate-limited" if rate_limited else "github-temporarily-unavailable"
+        result = {"code": code, "retryable": True, "http_status": error.code}
+        retry = error.headers.get("Retry-After", "") if error.headers else ""
+        if len(retry) <= 9 and retry.isascii() and retry.isdecimal():
+            result["retry_after_seconds"] = int(retry)
+        elif retry:
+            try:
+                when = parsedate_to_datetime(retry)
+                if when.tzinfo is not None:
+                    result["retry_at"] = when.astimezone(timezone.utc).isoformat()
+            except (TypeError, ValueError, OverflowError):
+                pass
+        elif error.headers:
+            reset = error.headers.get("X-RateLimit-Reset", "")
+            if len(reset) <= 10 and reset.isascii() and reset.isdecimal():
+                result["retry_at"] = datetime.fromtimestamp(int(reset), timezone.utc).isoformat()
+        message = "GitHub API rate limit reached" if rate_limited else "GitHub API is temporarily unavailable"
+        return result, f"{message} (HTTP {error.code}); retry later"
+    if isinstance(error, URLError):
+        return {"code": "github-transport-unavailable", "retryable": True}, "GitHub API connection failed; retry later"
+    if isinstance(error, UnknownTechniqueError):
+        return {"code": "unknown-technique", "retryable": False}, str(error)
+    return {"code": "invalid-or-unverified-evidence", "retryable": False}, (
+        "learning request or source proof is invalid or unverified")
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("spec", type=Path, help="public sources, selected references, and target evidence")
     parser.add_argument("output", type=Path, help="directory for reviewed public receipt records")
+    parser.add_argument("--json-errors", action="store_true", help="emit structured diagnostics on standard error")
     args = parser.parse_args()
     try:
         print(record_intake(read_json(args.spec), args.output))
-    except UnknownTechniqueError as error:
-        parser.error(str(error))
-    except HTTPError as error:
-        if is_github_rate_limit(error):
-            parser.error(f"GitHub API rate limit reached (HTTP {error.code}); retry later")
-        parser.error("learning request or source proof is invalid or unverified")
-    except (KeyError, OSError, TypeError, ValueError):
-        parser.error("learning request or source proof is invalid or unverified")
+    except (KeyError, OSError, TypeError, ValueError) as error:
+        diagnostic, message = intake_error(error)
+        if args.json_errors:
+            print(json.dumps({**diagnostic, "message": message}), file=sys.stderr)
+            raise SystemExit(2)
+        parser.error(message)
 
 
 if __name__ == "__main__":

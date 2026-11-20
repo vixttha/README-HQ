@@ -4,6 +4,7 @@ from dataclasses import dataclass
 import json
 import os
 import re
+from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
 REPOSITORY = re.compile(r"[A-Za-z0-9][A-Za-z0-9-]{0,38}/[A-Za-z0-9_.-]{1,100}")
@@ -52,6 +53,31 @@ def fingerprint(pr):
             pr["state"], pr["draft"], pr["merged"], pr.get("merge_commit_sha"))
 
 
+def reviewer_qualification(user, author, fetch):
+    if not isinstance(author, dict) or type(author.get("id")) is not int:
+        return None
+    if user["id"] == author["id"] or user.get("type") == "Bot":
+        return False
+    name = user.get("login")
+    if not isinstance(name, str) or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9-]{0,38}", name):
+        return None
+    try:
+        data = fetch(f"collaborators/{name}/permission")
+    except HTTPError as error:
+        with error:
+            if error.code in {401, 403, 404, 429} or 500 <= error.code <= 599:
+                return None
+            raise
+    except OSError:
+        return None
+    if not isinstance(data, dict) or (data.get("user") or {}).get("id") != user["id"]:
+        return None
+    role = data.get("permission")
+    if role in {"admin", "maintain", "write"}:
+        return True
+    return False if role in {"triage", "read", "none"} else None
+
+
 def verify_pull_request(repository, source, expected, fetch=None):
     """Return exact-SHA membership and reviews, or fail on an incomplete observation."""
     num = expected["number"]
@@ -85,12 +111,11 @@ def verify_pull_request(repository, source, expected, fetch=None):
     for review in pages(fetch, route + "/reviews"):
         if review["state"] in {"APPROVED", "CHANGES_REQUESTED", "DISMISSED"} and review["user"]:
             decisions[review["user"]["id"]] = review
+    approvals = [review["user"] for review in decisions.values()
+                 if review["state"] == "APPROVED" and review["commit_id"] == source]
+    qualification = [reviewer_qualification(user, pr.get("user"), fetch) for user in approvals]
     if fingerprint(fetch(route)) != observed:
         raise ValueError(f"GitHub PR #{num} changed during provenance verification; retry")
-    approvals = sum(
-        review["state"] == "APPROVED" and review["commit_id"] == source
-        for review in decisions.values()
-    )
     state = "merged" if pr["merged"] else ("draft" if pr["state"] == "open" and pr["draft"] else pr["state"])
     return {
         "pull_request": f"https://github.com/{repository}/pull/{num}",
@@ -101,5 +126,9 @@ def verify_pull_request(repository, source, expected, fetch=None):
         "base_commit": base["sha"],
         "pr_state": state,
         "merge_commit": pr["merge_commit_sha"] if pr["merged"] else None,
-        "exact_commit_approvals": approvals,
+        "exact_commit_approvals": len(approvals),
+        "observed_exact_commit_approvals": len(approvals),
+        "qualifying_exact_commit_approvals": qualification.count(True) if None not in qualification else None,
+        "verified_eligible_exact_commit_approvals": qualification.count(True),
+        "unresolved_reviewer_eligibility": qualification.count(None),
     }

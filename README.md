@@ -17,7 +17,7 @@ README HQ helps people understand a GitHub project and take their first useful s
 
 For the current repair trial, ask your agent to use `vixttha/README-HQ` at `repair/v0.0.6-batch-1` and name the target repository. The agent records the exact trial commit and reads the target repository’s own instructions. Use `readme-hq` for the published version archive.
 
-To check a README HQ checkout, use Python 3.10 or newer.
+To check a README HQ checkout, use Python 3.11 or newer.
 
 ```sh
 git clone --branch repair/v0.0.6-batch-1 https://github.com/vixttha/README-HQ.git
@@ -30,7 +30,7 @@ To audit a consumer, run `python3 tools/check_readme_hq.py --repo /path/to/proje
 
 Follow the [first-action receipt example](README-GUIDE.md#run-the-first-action-example), or pass `--smoke smoke.json` to check a documented first action at the selected commit. A local spec uses `commit`, `argv`, and `expected.exit` with an output marker (`expected.contains`) or a file outcome (`expected.file`). Commands and expected files use the selected subproject in a temporary shallow Git checkout with independent metadata. The command runs with the caller’s privileges. A marker can select `expected.stream` as `stdout` or `stderr`. The default, `either`, matches within a single stream.
 
-A remote spec uses `commit`, an HTTPS `url`, and `expected.http_status`. With `--allow-network`, the receipt includes the effective URL and can require an exact `expected.final_url`. Use `expected.contains` for a marker in the first 1,000,000 bytes of the response body. HTTP 401, 403, and 429 are reported as gated.
+A remote spec uses `commit`, an HTTPS `url`, and `expected.http_status`. With `--allow-network`, the receipt records the effective URL’s origin and SHA-256 digest. You can require an exact match with `expected.final_url`. Use `expected.contains` for a marker in the first 1,000,000 bytes of the response body. HTTP 401, 403, and 429 are reported as gated.
 
 On Windows, install the same requirements with `py -3 -m pip install --require-hashes -r tools/requirements.txt` and use `py -3 tools/check_readme_hq.py`. A passing check prints counts for the version index, technique catalog, local navigation, and archived source files.
 
