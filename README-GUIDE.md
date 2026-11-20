@@ -47,3 +47,14 @@ A local smoke check with an expected file requires new or changed bytes by defau
 A required smoke result must match a rendered Quickstart action in the pinned README. The receipt records the README path and line for a match. Other successful probes are supplemental.
 
 HTTP smoke receipts include a digest of the validated specification and an origin and digest for each recorded URL. Paths, query strings, fragments, and content markers stay in the spec.
+
+## Inspect the publication gate
+
+```bash
+python tools/check_publication_rules.py vixttha/README-HQ main \
+  --require-check 'README HQ on ubuntu-latest' \
+  --require-check 'README HQ on windows-latest' \
+  --require-check 'Recoverable Graphify evidence and plan'
+```
+
+The read-only report records the observed PR and status check rules. The solo maintainer records the publication decision separately with the exact candidate SHA.

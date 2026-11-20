@@ -111,6 +111,20 @@ class ReaderTests(unittest.TestCase):
                 self.assertEqual(target_readme(tree, ".", errors, [], "application")[0], "README.md")
                 self.assertEqual(any("no discoverable first action" in error for error in errors), expected)
 
+    def test_publication_gate_checks_pr_and_status_rules_without_inventing_owner_approval(self):
+        from check_publication_rules import evaluate_rules
+
+        reader, graphify = "README HQ on ubuntu-latest", "Recoverable Graphify evidence and plan"
+        rules = [{"type": "pull_request", "parameters": {"required_approving_review_count": 0}},
+                 {"type": "required_status_checks", "parameters": {
+                     "required_status_checks": [{"context": reader}, {"context": graphify}]}}]
+        accepted = evaluate_rules({"protected": True}, rules, [reader, graphify])
+        self.assertEqual(accepted["mechanical_gate"], "observed")
+        self.assertEqual(accepted["owner_exact_sha_publication_decision"], "separate")
+        lost = evaluate_rules({"protected": True}, rules[:1], [reader, graphify])
+        self.assertEqual(lost["missing_required_checks"], sorted([reader, graphify]))
+        self.assertEqual(evaluate_rules({"protected": False}, [], [reader])["mechanical_gate"], "incomplete")
+
     def test_adopter_detects_an_org_homepage_as_incomplete(self):
         from check_readme_hq import main
 
