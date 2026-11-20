@@ -17,11 +17,14 @@
     "task-based entry points"
   ],
   "evidence": "observed",
-  "status": "active"
+  "status": "active",
+  "use_when": "Different readers arrive with different first tasks and need clear starting routes."
 }
 -->
 
 # Route by reader task
+
+**Use when.** Different readers arrive with different first tasks and need clear starting routes.
 
 **Problem.** A project can have readers who want to use it, develop it, or troubleshoot it. A single generic starting route may send them to the wrong setup.
 

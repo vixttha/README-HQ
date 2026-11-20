@@ -6,10 +6,33 @@
 
 ## Techniques
 
+- [Artifact verification instructions](../techniques/artifact-verification-instructions.md) · unverified · Explain how to compare a downloaded artifact with its recorded digest.
+- [Benchmark method and scope](../techniques/benchmark-method-and-scope.md) · unverified · Describe the workload, environment, revision, and units beside a performance result.
+- [Check keyboard navigation on the rendered README](../techniques/check-keyboard-navigation-on-the-rendered-readme.md) · unverified · Use the keyboard on the published view to reach the primary links and any collapsible controls.
+- [Clean consumer adoption test](../techniques/clean-consumer-adoption-test.md) · unverified · Verify documented copy-in or install steps in a fresh consumer project.
+- [Combined-commit proof](../techniques/combined-commit-proof.md) · unverified · Tie a merge-readiness claim to tests on the exact combined content.
+- [Disclose telemetry defaults and controls](../techniques/disclose-telemetry-defaults-and-controls.md) · unverified · Name the data a tool collects, the default participation state, and how to view or change the setting.
 - [Distinguish intended checks from results](../techniques/declared-versus-observed-evidence.md) · verified · Show which checks were planned and which actually ran, with a scoped outcome for each.
 - [Execute the documented walkthrough](../techniques/exact-revision-walkthrough.md) · verified · Replay the reader’s published steps at the named revision and verify the result.
+- [Expected output contract](../techniques/expected-output-contract.md) · unverified · Separate stable result fields from variable example values when exact comparison matters.
 - [Label the scope of compatibility evidence](../techniques/claim-scope-labels.md) · observed · State the version, platform, capability, and checks that support a compatibility claim.
+- [Lightweight link verification](../techniques/lightweight-link-verification.md) · unverified · Check that critical relative targets and anchors resolve at the claimed revision.
+- [Link the machine-readable interface contract](../techniques/link-the-machine-readable-interface-contract.md) · unverified · Point to the specification or schema for the interface addressed by the README and identify its version.
+- [Map each claim to the check that can reproduce it](../techniques/map-each-claim-to-the-check-that-can-reproduce-it.md) · unverified · Pair the claim or reported result with its command, expected outcome, and the data it produces.
+- [Offer a smoke test and a full reproduction separately](../techniques/offer-a-smoke-test-and-a-full-reproduction-separately.md) · unverified · Use a small run to establish that setup works and a separate run to reproduce the full result.
 - [Permanent proof links](../techniques/permanent-proof-links.md) · verified · Keep verification traceable with a commit-pinned receipt and recorded run, attempt, artifact ID, and digest.
+- [Prerequisite or installation check](../techniques/prerequisite-or-installation-check.md) · unverified · Show a fast way to check that the local environment is ready before the demo.
+- [Publication-path verification](../techniques/publication-path-verification.md) · unverified · Test links and assets from the path where the README will actually ship.
+- [Published release link](../techniques/published-release-link.md) · unverified · Give a direct path to the release named in the README and its release notes.
+- [Rendered review at two widths](../techniques/rendered-review-at-two-widths.md) · unverified · Check the landing page on wide and narrow layouts for overflow or unreadable content.
+- [Show a benchmark case that changes the takeaway](../techniques/show-a-benchmark-case-that-changes-the-takeaway.md) · unverified · Beside a favorable result, include a reproducible workload or flag change that reduces the advantage or changes performance.
+- [Show a restore check against a separate destination](../techniques/show-a-restore-check-against-a-separate-destination.md) · unverified · Pair a backup path with a small restore exercise into a separate destination and show what to inspect in the restored copy.
+- [Show how to verify the artifact’s producer](../techniques/show-how-to-verify-the-artifact-s-producer.md) · unverified · Where a release provides a signed attestation, show how to verify it against the expected repository or workflow.
+- [Show the permissions automation needs](../techniques/show-the-permissions-automation-needs.md) · unverified · Name the caller permissions the example needs and what each one allows.
+- [Snapshot source identity](../techniques/snapshot-source-identity.md) · unverified · Record the origin and digest of frozen README or asset bytes when exact archival identity matters.
+- [Status badges](../techniques/status-badges.md) · unverified · Surface meaningful build, release, or license signals and link each badge to its source.
+- [Turn examples into regression tests](../techniques/turn-examples-into-regression-tests.md) · unverified · Generate test cases from examples in the maintained documentation source so changing an example also changes what gets tested.
+- [Verify which README appears on the repository homepage](../techniques/verify-which-readme-appears-on-the-repository-homepage.md) · unverified · When multiple eligible README files exist, check which one the host surfaces and publish the expected content there.
 
 ## Combinations
 

@@ -6,10 +6,37 @@
 
 ## Techniques
 
+- [Attribution and data provenance](../techniques/attribution-and-data-provenance.md) · unverified · Link the source and terms for material external assets or datasets.
+- [Changelog and version navigation](../techniques/changelog-and-version-navigation.md) · unverified · Show where release history lives and which version the reader is viewing.
+- [Citation instructions](../techniques/citation-instructions.md) · unverified · Point researchers to the maintained citation metadata where appropriate.
+- [Contribution route](../techniques/contribution-route.md) · unverified · Point to contribution rules, issue templates, and where work is reviewed.
+- [Developer entry point](../techniques/developer-entry-point.md) · unverified · Link the source layout, setup, and shortest routine development check.
 - [Distinguish intended checks from results](../techniques/declared-versus-observed-evidence.md) · verified · Show which checks were planned and which actually ran, with a scoped outcome for each.
+- [Draft, archive, and publication stages](../techniques/draft-archive-and-publication-stages.md) · unverified · Keep proposed text, frozen snapshots, and the published default-branch README distinguishable.
+- [Explain what uninstall removes and retains](../techniques/explain-what-uninstall-removes-and-retains.md) · unverified · State which commands or files uninstall removes and what happens to data, configuration, caches, or installed components.
+- [Explain where project decisions are made](../techniques/explain-where-project-decisions-are-made.md) · unverified · Link a project’s governance and identify who makes major decisions.
+- [Expose discovery metadata through the README](../techniques/expose-discovery-metadata-through-the-readme.md) · unverified · Use host-supported metadata for fields such as dataset language, license, tags, and file layout.
+- [Generate repetitive README sections from their source](../techniques/generate-repetitive-readme-sections-from-their-source.md) · unverified · Generate sections such as configuration inputs or outputs from their authoritative definitions.
+- [Give a deprecation notice a replacement and timeline](../techniques/give-a-deprecation-notice-a-replacement-and-timeline.md) · unverified · Name the affected interface, link the replacement or migration route, and distinguish the deprecation date from any planned retirement date.
+- [Human guide for a structured inventory](../techniques/human-guide-for-a-structured-inventory.md) · unverified · Pair a machine-readable manifest with an explanation of its reader-facing purpose.
+- [Identify the source of truth when repositories are mirrored](../techniques/identify-the-source-of-truth-when-repositories-are-mirrored.md) · unverified · Name the canonical repository and explain which revision identifiers to cite from a mirror.
+- [Include a data dictionary for shared datasets](../techniques/include-a-data-dictionary-for-shared-datasets.md) · unverified · Explain file relationships, field names, units, and missing-value codes so another person can interpret the data.
+- [Independent version lines](../techniques/independent-version-lines.md) · unverified · Name the product, README, or collection beside each version when their release lines differ.
+- [License and reuse link](../techniques/license-and-reuse-link.md) · unverified · Point to the actual terms and distinguish project assets with different terms.
 - [Link authoritative agent instructions](../techniques/agent-instruction-pointer.md) · observed · Point an agent to the repository’s applicable instructions from the README.
+- [Link the machine-readable interface contract](../techniques/link-the-machine-readable-interface-contract.md) · unverified · Point to the specification or schema for the interface addressed by the README and identify its version.
 - [Permanent proof links](../techniques/permanent-proof-links.md) · verified · Keep verification traceable with a commit-pinned receipt and recorded run, attempt, artifact ID, and digest.
+- [Recognize contribution types beyond code](../techniques/recognize-contribution-types-beyond-code.md) · unverified · Label what people contributed, such as documentation, design, translation, or testing, in the README or linked credits.
+- [Reuse a README as the package listing](../techniques/reuse-a-readme-as-the-package-listing.md) · unverified · Wire the maintained README into package metadata so package users see the same introduction in their registry.
 - [Route by reader task](../techniques/role-based-entry-points.md) · observed · Give distinct reader goals clear routes from the same homepage.
+- [Route readers to editable designs and manufacturing exports](../techniques/route-readers-to-editable-designs-and-manufacturing-exports.md) · unverified · Give separate links to the preferred files for modifying the design, files prepared for fabrication, and human-readable drawings where provided.
+- [Security reporting route](../techniques/security-reporting-route.md) · unverified · Link the project’s supported private disclosure process when applicable.
+- [Separate diagnostic capture from sharing](../techniques/separate-diagnostic-capture-from-sharing.md) · unverified · Tell readers how to capture relevant evidence, where the resulting bundle lands, and how to inspect or anonymize it before sending it through the support route.
+- [Show how another workflow consumes an output](../techniques/show-how-another-workflow-consumes-an-output.md) · unverified · Document output names and show a caller reading one of those outputs.
+- [State what event consumers can assume about delivery](../techniques/state-what-event-consumers-can-assume-about-delivery.md) · unverified · Say whether event delivery can repeat or arrive out of order and where to find the identifier needed to recognize a repeat.
+- [Support and issue route](../techniques/support-and-issue-route.md) · unverified · Tell readers where to report a bug or ask for help and what evidence to include.
+- [Turn an archived README into a handoff](../techniques/turn-an-archived-readme-into-a-handoff.md) · unverified · Put the maintained successor and new project name, if any, at the top of the archive.
+- [Versioned section map](../techniques/versioned-section-map.md) · unverified · Provide a path to find corresponding sections across archived READMEs.
 
 ## Combinations
 

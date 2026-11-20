@@ -16,11 +16,14 @@
     "pinned proof links"
   ],
   "evidence": "verified",
-  "status": "active"
+  "status": "active",
+  "use_when": "A public claim needs evidence that can be traced back to the exact run and revision."
 }
 -->
 
 # Permanent proof links
+
+**Use when.** A public claim needs evidence that can be traced back to the exact run and revision.
 
 **Problem.** Run and artifact links can expire. A future reviewer may be unable to identify what revision was tested or what evidence the run produced.
 

@@ -15,11 +15,14 @@
     "scoped compatibility claims"
   ],
   "evidence": "observed",
-  "status": "active"
+  "status": "active",
+  "use_when": "A compatibility claim depends on a particular platform, version, or path through the workflow."
 }
 -->
 
 # Label the scope of compatibility evidence
+
+**Use when.** A compatibility claim depends on a particular platform, version, or path through the workflow.
 
 **Problem.** Readers can mistake a check of one command or preview commit for support on every platform or in a released build.
 

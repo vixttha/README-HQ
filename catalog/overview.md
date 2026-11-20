@@ -6,9 +6,21 @@
 
 ## Techniques
 
+- [Alternatives and tradeoffs](../techniques/alternatives-and-tradeoffs.md) · unverified · Explain when a related tool or approach fits a reader better.
+- [Audience and use cases](../techniques/audience-and-use-cases.md) · unverified · Name the people and jobs the project serves.
+- [Capabilities at a glance](../techniques/capabilities-at-a-glance.md) · unverified · Show the few important things readers can do today.
+- [Disclose telemetry defaults and controls](../techniques/disclose-telemetry-defaults-and-controls.md) · unverified · Name the data a tool collects, the default participation state, and how to view or change the setting.
+- [Distinguish source from the shipped product](../techniques/distinguish-source-from-the-shipped-product.md) · unverified · Explain what readers are browsing, which product or distribution it produces, and where each set of terms applies.
+- [Explain how to choose an update channel](../techniques/explain-how-to-choose-an-update-channel.md) · unverified · When multiple release streams are offered, state the differences in stability, update cadence, and what the reader should install.
 - [Label the scope of compatibility evidence](../techniques/claim-scope-labels.md) · observed · State the version, platform, capability, and checks that support a compatibility claim.
+- [List what each format can read, write, and preserve](../techniques/list-what-each-format-can-read-write-and-preserve.md) · unverified · Separate input and output support.
+- [Project status and maturity](../techniques/project-status-and-maturity.md) · unverified · Distinguish a preview, stable release, or archived project.
+- [Roadmap pointer](../techniques/roadmap-pointer.md) · unverified · Link planned work to a maintained roadmap and distinguish it from available features.
 - [Route by reader task](../techniques/role-based-entry-points.md) · observed · Give distinct reader goals clear routes from the same homepage.
+- [Scope boundaries](../techniques/scope-boundaries.md) · unverified · Call out material limitations or environments outside the supported scope.
 - [State the project’s purpose](../techniques/project-purpose-statement.md) · observed · Tell a new reader what the project does and what they can accomplish with it.
+- [Status badges](../techniques/status-badges.md) · unverified · Surface meaningful build, release, or license signals and link each badge to its source.
+- [Value proposition](../techniques/value-proposition.md) · unverified · Explain the practical payoff or problem the project removes.
 
 ## Combinations
 

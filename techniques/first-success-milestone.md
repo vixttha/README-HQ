@@ -16,11 +16,14 @@
     "expected first output"
   ],
   "evidence": "observed",
-  "status": "active"
+  "status": "active",
+  "use_when": "A quickstart produces output the reader must recognize before continuing."
 }
 -->
 
 # Show a recognizable first result
+
+**Use when.** A quickstart produces output the reader must recognize before continuing.
 
 **Problem.** A setup or demo can finish without giving the reader a clear way to tell whether the project worked.
 

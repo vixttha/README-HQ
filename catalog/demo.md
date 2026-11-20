@@ -6,7 +6,19 @@
 
 ## Techniques
 
+- [Animated micro-demo](../techniques/animated-micro-demo.md) · unverified · Show a short interaction sequence that needs no narration.
+- [Annotated screenshot](../techniques/annotated-screenshot.md) · unverified · Identify the controls or evidence a reader needs to notice.
+- [Architecture or flow diagram](../techniques/architecture-or-flow-diagram.md) · unverified · Show component relationships or the order of steps.
+- [Asset caption and provenance](../techniques/asset-caption-and-provenance.md) · unverified · Name what a visual shows and identify its source or build where relevant.
+- [Captioned video walkthrough](../techniques/captioned-video-walkthrough.md) · unverified · Demonstrate a longer workflow with captions or a transcript.
+- [Link both a notebook preview and a runnable notebook](../techniques/link-both-a-notebook-preview-and-a-runnable-notebook.md) · unverified · Label the link for inspecting saved results and the link for launching the notebook at the corresponding revision.
+- [Live demo or playground](../techniques/live-demo-or-playground.md) · unverified · Link directly to a usable experience and state access requirements.
+- [Minimal working example](../techniques/minimal-working-example.md) · unverified · Show the smallest realistic input and operation that demonstrate the capability.
+- [Screenshot or result preview](../techniques/screenshot-or-result-preview.md) · unverified · Show the key product screen or output readers should recognize.
 - [Show a recognizable first result](../techniques/first-success-milestone.md) · observed · Tell the reader what success looks like immediately after the first real task.
+- [Show how asset variants map to published files](../techniques/show-how-asset-variants-map-to-published-files.md) · unverified · Give the file naming pattern, label the dimensions or styles that change the filename, and show where to check whether a combination exists.
+- [Text equivalent for a chart or diagram](../techniques/text-equivalent-for-a-chart-or-diagram.md) · unverified · Put essential values, conclusions, or relationships in surrounding text.
+- [Theme-aware images](../techniques/theme-aware-images.md) · unverified · Check readability against light and dark backgrounds and provide variants when needed.
 - [Write image alternatives for their purpose](../techniques/purpose-specific-image-alternatives.md) · observed · Give informative, decorative, functional, and complex visuals the text treatment their roles require.
 
 ## Combinations

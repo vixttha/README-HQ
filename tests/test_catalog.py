@@ -89,6 +89,23 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(self.search("--limit", "1", "--offset", "2")["results"], [])
         self.invoke("search", "--offset", "-1", expected=2)
 
+    def test_static_json_index_and_use_case_search(self):
+        cue = "The workspace needs a separate restore destination."
+        path = self.record("restore", "Verify a restore", use_when=cue)
+        self.assertIn("must match", self.invoke("build", expected=1).stderr)
+        with path.open("a", encoding="utf-8") as output:
+            output.write(f"\n**Use when.** {cue}\n")
+        self.invoke("build")
+        self.invoke("check")
+        index = self.root / "catalog" / "index.json"
+        entries = json.loads(index.read_text(encoding="utf-8"))
+        self.assertEqual(entries["schema_version"], 1)
+        self.assertEqual(entries["paths_relative_to"], "repository-root")
+        self.assertEqual(entries["records"], self.search("separate restore destination")["results"])
+        self.assertEqual(entries["records"][0]["path"], "techniques/restore.md")
+        index.write_text("{}\n", encoding="utf-8")
+        self.assertIn("index.json", self.invoke("check", expected=1).stderr)
+
     def test_catalog_grows_from_10_to_1000_records(self):
         for i in range(10):
             self.record(f"fixture-{i:04}", f"Fixture {i:04}", tags=["synthetic"])
@@ -104,6 +121,8 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(len(result["results"]), 25)
         self.assertEqual(result["results"][0]["id"], "fixture-0975")
         self.assertEqual(result["results"][-1]["id"], "fixture-0999")
+        entries = json.loads((self.root / "catalog/index.json").read_text(encoding="utf-8"))["records"]
+        self.assertEqual(len(entries), 1000)
         finder = (self.root / "catalog/search.md").read_text(encoding="utf-8")
         self.assertEqual(finder.count("](../techniques/fixture-"), 1000)
         self.assertIn("synthetic", finder)

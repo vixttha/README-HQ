@@ -2,15 +2,27 @@
 {
   "title": "Distinguish intended checks from results",
   "summary": "Show which checks were planned and which actually ran, with a scoped outcome for each.",
-  "tasks": ["verification", "first-result", "handoff"],
-  "tags": ["coverage", "release-evidence"],
-  "aliases": ["planned versus executed checks"],
+  "tasks": [
+    "verification",
+    "first-result",
+    "handoff"
+  ],
+  "tags": [
+    "coverage",
+    "release-evidence"
+  ],
+  "aliases": [
+    "planned versus executed checks"
+  ],
   "evidence": "verified",
-  "status": "active"
+  "status": "active",
+  "use_when": "A plan or checklist could be mistaken for the result of an executed check."
 }
 -->
 
 # Distinguish intended checks from results
+
+**Use when.** A plan or checklist could be mistaken for the result of an executed check.
 
 **Problem.** A workflow declaration or passing job can be mistaken for proof that every advertised check actually ran.
 

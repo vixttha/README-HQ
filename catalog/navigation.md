@@ -6,9 +6,28 @@
 
 ## Techniques
 
+- [Clear heading hierarchy](../techniques/clear-heading-hierarchy.md) · unverified · Organize sections in a predictable structure for visual scanning and assistive navigation.
+- [Concise comparison table](../techniques/concise-comparison-table.md) · unverified · Present repeated choices in a table when readers need to compare the same attributes.
+- [Consistent terms](../techniques/consistent-terms.md) · unverified · Use the same names for actions and objects as the code, UI, and linked instructions.
+- [Descriptive link labels](../techniques/descriptive-link-labels.md) · unverified · Use text that tells the reader where the link goes or what it does.
+- [Expose discovery metadata through the README](../techniques/expose-discovery-metadata-through-the-readme.md) · unverified · Use host-supported metadata for fields such as dataset language, license, tags, and file layout.
+- [Give color-coded information a text label](../techniques/give-color-coded-information-a-text-label.md) · unverified · Label states, branches, or series in words when color conveys their meaning.
+- [Give each public package its own README entry point](../techniques/give-each-public-package-its-own-readme-entry-point.md) · unverified · Put a short orientation in the package directory so someone entering through a deep link can find its purpose, setup, and supporting docs.
+- [Language routing](../techniques/language-routing.md) · unverified · Link translated docs and make the expected language clear.
 - [Link authoritative agent instructions](../techniques/agent-instruction-pointer.md) · observed · Point an agent to the repository’s applicable instructions from the README.
+- [Progressive disclosure](../techniques/progressive-disclosure.md) · unverified · Collapse optional details or move them to a clearly labeled supporting document.
 - [Relative navigation](../techniques/relative-navigation.md) · observed · Link same-checkout guides and assets with paths relative to the Markdown file.
 - [Route by reader task](../techniques/role-based-entry-points.md) · observed · Give distinct reader goals clear routes from the same homepage.
+- [Section deep links](../techniques/section-deep-links.md) · unverified · Send the reader to the relevant part of a guide and recheck anchors when headings change.
+- [Security reporting route](../techniques/security-reporting-route.md) · unverified · Link the project’s supported private disclosure process when applicable.
+- [Send readers to docs for their installed version](../techniques/send-readers-to-docs-for-their-installed-version.md) · unverified · Label stable and development docs links so readers can match them to the version they are using.
+- [Separate guide types](../techniques/separate-guide-types.md) · unverified · Route readers to a tutorial, how-to, reference, or explanation according to their task.
+- [Table of contents or jump links](../techniques/table-of-contents-or-jump-links.md) · unverified · Expose major sections when the page is long enough to need them.
+- [Task-local help link](../techniques/task-local-help-link.md) · unverified · Put the relevant support path beside a high-friction step.
+- [Text equivalent for a chart or diagram](../techniques/text-equivalent-for-a-chart-or-diagram.md) · unverified · Put essential values, conclusions, or relationships in surrounding text.
+- [Track the source revision of translations](../techniques/track-the-source-revision-of-translations.md) · unverified · Link a translated README to its original and record which revision or release it follows.
+- [Turn an archived README into a handoff](../techniques/turn-an-archived-readme-into-a-handoff.md) · unverified · Put the maintained successor and new project name, if any, at the top of the archive.
+- [Use labeled callouts at the point of action](../techniques/use-labeled-callouts-at-the-point-of-action.md) · unverified · Use short labeled notices for important context or consequences beside the relevant step.
 - [Write image alternatives for their purpose](../techniques/purpose-specific-image-alternatives.md) · observed · Give informative, decorative, functional, and complex visuals the text treatment their roles require.
 
 ## Combinations

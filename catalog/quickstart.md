@@ -6,9 +6,49 @@
 
 ## Techniques
 
+- [Clean consumer adoption test](../techniques/clean-consumer-adoption-test.md) · unverified · Verify documented copy-in or install steps in a fresh consumer project.
+- [Cleanup or reset instructions](../techniques/cleanup-or-reset-instructions.md) · unverified · Show how a reader can leave a temporary demo or restore a clean starting point.
+- [Copy-in or template adoption path](../techniques/copy-in-or-template-adoption-path.md) · unverified · Identify what to copy, where it goes, and how to check the resulting project.
+- [Describe what the installer changes](../techniques/describe-what-the-installer-changes.md) · unverified · Tell readers where binaries or files are installed, which persistent user settings change, and what supported option controls those changes.
+- [Developer entry point](../techniques/developer-entry-point.md) · unverified · Link the source layout, setup, and shortest routine development check.
 - [Execute the documented walkthrough](../techniques/exact-revision-walkthrough.md) · verified · Replay the reader’s published steps at the named revision and verify the result.
+- [Explain what uninstall removes and retains](../techniques/explain-what-uninstall-removes-and-retains.md) · unverified · State which commands or files uninstall removes and what happens to data, configuration, caches, or installed components.
+- [Give each public package its own README entry point](../techniques/give-each-public-package-its-own-readme-entry-point.md) · unverified · Put a short orientation in the package directory so someone entering through a deep link can find its purpose, setup, and supporting docs.
+- [Give readers an upgrade preflight](../techniques/give-readers-an-upgrade-preflight.md) · unverified · Link a compatibility check readers can run before an upgrade changes their existing installation.
+- [Give service examples a sandbox route](../techniques/give-service-examples-a-sandbox-route.md) · unverified · Name the sandbox or mock used by the example and state what effects it simulates.
+- [Guest or offline first run](../techniques/guest-or-offline-first-run.md) · unverified · Offer a first-use path with minimal account or network dependencies when supported.
+- [Identify required assets distributed separately](../techniques/identify-required-assets-distributed-separately.md) · unverified · State which graphics, sound, models, or other runtime assets the checkout needs.
+- [Installation methods](../techniques/installation-methods.md) · unverified · Distinguish packages, installers, source builds, and other supported options.
+- [Label ownership of installation channels](../techniques/label-ownership-of-installation-channels.md) · unverified · Identify who maintains and supports each package or installer so readers know where to report installation problems.
+- [Link a parts list for the hardware revision](../techniques/link-a-parts-list-for-the-hardware-revision.md) · unverified · Give builders a bill of materials that matches the design they are assembling.
+- [Link both a notebook preview and a runnable notebook](../techniques/link-both-a-notebook-preview-and-a-runnable-notebook.md) · unverified · Label the link for inspecting saved results and the link for launching the notebook at the corresponding revision.
+- [Link directly to a project-configured workspace](../techniques/link-directly-to-a-project-configured-workspace.md) · unverified · Point readers to a preconfigured development workspace tied to the repository and intended branch.
+- [List the local service URLs by purpose](../techniques/list-the-local-service-urls-by-purpose.md) · unverified · When setup starts several services, tell readers which address opens the app, dashboard, API, or other local tool.
+- [Match firmware to the physical hardware revision](../techniques/match-firmware-to-the-physical-hardware-revision.md) · unverified · Help readers identify the device revision and map it to the correct build or download target.
+- [Minimal working example](../techniques/minimal-working-example.md) · unverified · Show the smallest realistic input and operation that demonstrate the capability.
+- [Offer an importable API request collection](../techniques/offer-an-importable-api-request-collection.md) · unverified · Link a reusable request collection so readers can run the same requests in their API client.
+- [Offer an isolated trial command](../techniques/offer-an-isolated-trial-command.md) · unverified · Give the reader a short way to try a tool without installing it into their project.
+- [One prominent first action](../techniques/one-prominent-first-action.md) · unverified · Lead with a recognizable task such as play, try, install, or adopt.
+- [Pair the install name with the name used in code](../techniques/pair-the-install-name-with-the-name-used-in-code.md) · unverified · When distribution, import, or executable names differ, show the exact names together so readers can connect the installation step to the first use.
+- [Prerequisite or installation check](../techniques/prerequisite-or-installation-check.md) · unverified · Show a fast way to check that the local environment is ready before the demo.
+- [Prerequisites next to the task](../techniques/prerequisites-next-to-the-task.md) · unverified · Name tools, versions, access, and prior setup before any commands depend on them.
+- [Preview changes before applying them](../techniques/preview-changes-before-applying-them.md) · unverified · When a workflow changes state and offers a preview, give the preview and apply steps distinct labels.
+- [Provide a starter control map](../techniques/provide-a-starter-control-map.md) · unverified · List the actions a player needs in the first minute and map them to each supported input type.
 - [Relative navigation](../techniques/relative-navigation.md) · observed · Link same-checkout guides and assets with paths relative to the Markdown file.
+- [Safe configuration example](../techniques/safe-configuration-example.md) · unverified · Use labeled placeholders and explain where values belong.
+- [Sample fixture or starter input](../techniques/sample-fixture-or-starter-input.md) · unverified · Provide a small known input that readers can use immediately.
+- [Send readers to docs for their installed version](../techniques/send-readers-to-docs-for-their-installed-version.md) · unverified · Label stable and development docs links so readers can match them to the version they are using.
+- [Separate platform commands](../techniques/separate-platform-commands.md) · unverified · Label POSIX and PowerShell paths where their commands differ.
+- [Set a time and cost expectation before setup](../techniques/set-a-time-and-cost-expectation-before-setup.md) · unverified · State how long the example usually takes and whether it can create billable resources, with a link to current terms when pricing depends on an account or provider.
 - [Show a recognizable first result](../techniques/first-success-milestone.md) · observed · Tell the reader what success looks like immediately after the first real task.
+- [Show configuration precedence](../techniques/show-configuration-precedence.md) · unverified · Explain which setting wins when flags, environment variables, configuration files, and defaults disagree.
+- [Show how to enable optional capabilities](../techniques/show-how-to-enable-optional-capabilities.md) · unverified · Identify what the base install enables and which feature flag or package extra enables each optional capability.
+- [Show how to prepare an offline install](../techniques/show-how-to-prepare-an-offline-install.md) · unverified · Separate gathering dependencies on a connected machine from installing the staged set on the offline target.
+- [Show how to retrieve every page of results](../techniques/show-how-to-retrieve-every-page-of-results.md) · unverified · Give an example that spans multiple pages, follows the continuation link or cursor, and states when to stop.
+- [Show the order for upgrading multiple components](../techniques/show-the-order-for-upgrading-multiple-components.md) · unverified · When components evolve independently, show the upgrade sequence and which version combinations can coexist during the transition.
+- [Show the permissions automation needs](../techniques/show-the-permissions-automation-needs.md) · unverified · Name the caller permissions the example needs and what each one allows.
+- [Starting directory and checkout](../techniques/starting-directory-and-checkout.md) · unverified · State where commands begin and which revision or project root they expect.
+- [Upgrade or migration route](../techniques/upgrade-or-migration-route.md) · unverified · Name the starting version, intended destination, and relevant migration guide.
 - [Write a copyable Quickstart](../techniques/copyable-quickstart.md) · observed · Give readers ordered commands they can paste into the supported shell.
 
 ## Combinations

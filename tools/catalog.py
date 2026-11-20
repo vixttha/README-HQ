@@ -63,12 +63,16 @@ def read_record(path, kind):
         raise ValueError("expected a catalog metadata comment followed by Markdown")
     data = json.loads(header, object_pairs_hook=unique_keys)
     fields = FIELDS | ({"steps"} if kind == "combination" else set())
-    if not isinstance(data, dict) or data.keys() != fields:
+    if not isinstance(data, dict) or data.keys() - {"use_when"} != fields:
         raise ValueError(f"expected metadata keys {', '.join(sorted(fields))}")
-    for key, limit in (("title", 100), ("summary", 200)):
+    for key, limit in (("title", 100), ("summary", 200), ("use_when", 200)):
+        if key not in data:
+            continue
         value = data[key]
         if not isinstance(value, str) or not value.isprintable() or value != value.strip() or not 1 <= len(value) <= limit:
             raise ValueError(f"{key} must be one line of 1–{limit} characters")
+    if "use_when" in data and f"**Use when.** {data['use_when']}" not in text.splitlines():
+        raise ValueError("use_when must match the visible Markdown Use when line")
     for key in ("tasks", "tags", "aliases", "steps"):
         if key not in data:
             continue
@@ -139,7 +143,7 @@ def search(records, query, task, kind, tag, evidence, status):
             continue
         names = [normalize(name) for name in (record.id, data["title"], *data["aliases"])]
         primary = " ".join(names + [normalize(tag) for tag in data["tags"]]).split()
-        words = primary + normalize(data["summary"]).split()
+        words = primary + normalize(data["summary"] + " " + data.get("use_when", "")).split()
         if not all(any(word.startswith(term) for word in words) for term in terms):
             continue
         score = 0
@@ -149,6 +153,27 @@ def search(records, query, task, kind, tag, evidence, status):
             score = 1
         matches.append((score, record))
     return [record for _, record in sorted(matches, key=lambda match: -match[0])]
+
+
+def record_summary(record):
+    return {"id": record.id, "path": record.path, "kind": record.kind, **record.metadata}
+
+
+def check_baseline(root, records):
+    manifest = root / "versions" / "v0.0.1.json"
+    if not manifest.exists():
+        return
+    data = json.loads(manifest.read_text(encoding="utf-8"), object_pairs_hook=unique_keys)
+    if not isinstance(data, dict):
+        raise ValueError("v0.0.1 manifest must be a JSON object")
+    ids = data.get("technique_ids")
+    known = {record.id for record in records if record.kind == "technique" and "use_when" in record.metadata}
+    if (data.get("version") != "v0.0.1"
+            or data.get("baseline_commit") != "059f5fb4d1c0c738736f9050a016dc8e46b46178"
+            or not isinstance(ids, list) or len(ids) != 144
+            or any(not isinstance(identity, str) or identity not in known for identity in ids)
+            or len(set(ids)) != len(ids)):
+        raise ValueError("v0.0.1 must reference its pinned baseline and 144 distinct technique IDs")
 
 
 def markdown(text):
@@ -211,7 +236,7 @@ def task_body(records, by_id):
 def pages(records):
     active = [record for record in records if record.metadata["status"] == "active"]
     retired = [record for record in records if record.metadata["status"] == "retired"]
-    index = ["# Catalog\n\n", "[Find by title, alias, ID, or tag](search.md) · [Retired records](retired.md) · [Library home](../README.md)\n\n"]
+    index = ["# Catalog\n\n", "[Find by title, alias, ID, or tag](search.md) · [JSON index](index.json) · [Retired records](retired.md) · [Library home](../README.md)\n\n"]
     index.append(f"{len(active)} active records · {len(retired)} retired\n\n")
     result = {}
     by_id = {record.id: record for record in records}
@@ -225,12 +250,21 @@ def pages(records):
     result["README.md"] = GENERATED + "".join(index)
     result.update(finder("search", "Find active records", active, "No active records."))
     result.update(finder("retired", "Retired records", retired, "No retired records."))
+    result["index.json"] = json.dumps({
+        "schema_version": 1,
+        "paths_relative_to": "repository-root",
+        "tasks": TASKS,
+        "records": [record_summary(record) for record in records],
+    }, ensure_ascii=False, indent=2) + "\n"
     return result
 
 
 def sync_pages(root, expected, check):
     folder = root / "catalog"
     existing = {path.name: path for path in folder.glob("*.md")}
+    data_index = folder / "index.json"
+    if data_index.exists() or data_index.is_symlink():
+        existing[data_index.name] = data_index
     extra = existing.keys() - expected.keys()
     if folder.is_symlink() or any(path.is_symlink() for path in existing.values()):
         raise ValueError("catalog pages must be regular files in catalog/")
@@ -255,7 +289,7 @@ def main():
     commands = parser.add_subparsers(dest="command", required=True)
     commands.add_parser("build", help="regenerate browser indexes")
     commands.add_parser("check", help="validate records and detect stale indexes")
-    find = commands.add_parser("search", help="search titles, IDs, aliases, tags and summaries")
+    find = commands.add_parser("search", help="search titles, IDs, aliases, tags, summaries and use cases")
     find.add_argument("query", nargs="?", default="")
     find.add_argument("--task", choices=TASKS)
     find.add_argument("--kind", choices=DIRECTORIES.values())
@@ -273,6 +307,7 @@ def main():
     try:
         records = load_records(ROOT)
         if args.command != "search":
+            check_baseline(ROOT, records)
             sync_pages(ROOT, pages(records), check=args.command == "check")
             print(f"{args.command}: {len(records)} records, {len(TASKS)} task indexes")
             return 0
@@ -280,8 +315,7 @@ def main():
         page = matches[args.offset:args.offset + args.limit]
         if args.json:
             print(json.dumps({"total": len(matches), "offset": args.offset, "limit": args.limit,
-                              "results": [{"id": record.id, "path": record.path, "kind": record.kind,
-                                           **record.metadata} for record in page]}))
+                              "results": [record_summary(record) for record in page]}))
         else:
             print(f"{len(matches)} matches · showing {len(page)} from offset {args.offset}")
             for record in page:

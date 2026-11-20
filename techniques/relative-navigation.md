@@ -16,11 +16,14 @@
     "relative documentation links"
   ],
   "evidence": "observed",
-  "status": "active"
+  "status": "active",
+  "use_when": "A guide, example, or asset ships with the same checkout as its README."
 }
 -->
 
 # Relative navigation
+
+**Use when.** A guide, example, or asset ships with the same checkout as its README.
 
 **Problem.** A link to a moving branch can send readers to instructions that differ from the checkout they are using.
 

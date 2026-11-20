@@ -15,11 +15,14 @@
     "accessible README images"
   ],
   "evidence": "observed",
-  "status": "active"
+  "status": "active",
+  "use_when": "An image communicates information, provides a link, or decorates the README."
 }
 -->
 
 # Write image alternatives for their purpose
+
+**Use when.** An image communicates information, provides a link, or decorates the README.
 
 **Problem.** A screenshot, linked image, or diagram may be the only source of an instruction or explanation.
 

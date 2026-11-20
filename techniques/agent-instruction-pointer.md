@@ -15,11 +15,14 @@
     "agent instruction link"
   ],
   "evidence": "observed",
-  "status": "active"
+  "status": "active",
+  "use_when": "An agent needs repository-specific editing or validation guidance before acting."
 }
 -->
 
 # Link authoritative agent instructions
+
+**Use when.** An agent needs repository-specific editing or validation guidance before acting.
 
 **Problem.** An agent can find general product instructions before it finds the repository’s rules for editing, validating, or handing off work.
 

@@ -6,15 +6,148 @@
 
 Use your browser's Find command (Ctrl+F or Command+F). Offline search covers every page.
 
+- [Alternatives and tradeoffs](../techniques/alternatives-and-tradeoffs.md) · `alternatives-and-tradeoffs` · technique · alternative tools, project-scope
+- [Animated micro-demo](../techniques/animated-micro-demo.md) · `animated-micro-demo` · technique · short motion demo, demos
+- [Annotated screenshot](../techniques/annotated-screenshot.md) · `annotated-screenshot` · technique · screenshot annotations, demos
+- [Architecture or flow diagram](../techniques/architecture-or-flow-diagram.md) · `architecture-or-flow-diagram` · technique · system diagram, demos
+- [Artifact verification instructions](../techniques/artifact-verification-instructions.md) · `artifact-verification-instructions` · technique · download checksum verification, verification, release-evidence
+- [Asset caption and provenance](../techniques/asset-caption-and-provenance.md) · `asset-caption-and-provenance` · technique · image credit, demos
+- [Attribution and data provenance](../techniques/attribution-and-data-provenance.md) · `attribution-and-data-provenance` · technique · external data attribution, reuse
+- [Audience and use cases](../techniques/audience-and-use-cases.md) · `audience-and-use-cases` · technique · audience statement, project-scope
+- [Benchmark method and scope](../techniques/benchmark-method-and-scope.md) · `benchmark-method-and-scope` · technique · reproducible benchmark setup, verification, reproduction
+- [Capabilities at a glance](../techniques/capabilities-at-a-glance.md) · `capabilities-at-a-glance` · technique · feature overview, project-scope
+- [Captioned video walkthrough](../techniques/captioned-video-walkthrough.md) · `captioned-video-walkthrough` · technique · video with captions, demos
+- [Changelog and version navigation](../techniques/changelog-and-version-navigation.md) · `changelog-and-version-navigation` · technique · release history navigation, lifecycle
+- [Check keyboard navigation on the rendered README](../techniques/check-keyboard-navigation-on-the-rendered-readme.md) · `check-keyboard-navigation-on-the-rendered-readme` · technique · readme keyboard accessibility, verification, publication
+- [Citation instructions](../techniques/citation-instructions.md) · `citation-instructions` · technique · software citation metadata, reuse
+- [Clean consumer adoption test](../techniques/clean-consumer-adoption-test.md) · `clean-consumer-adoption-test` · technique · fresh adopter smoke test, verification, reproduction
+- [Cleanup or reset instructions](../techniques/cleanup-or-reset-instructions.md) · `cleanup-or-reset-instructions` · technique · reset demo state, maintenance
+- [Clear heading hierarchy](../techniques/clear-heading-hierarchy.md) · `clear-heading-hierarchy` · technique · semantic heading levels, navigation
+- [Combined-commit proof](../techniques/combined-commit-proof.md) · `combined-commit-proof` · technique · integrated commit validation, verification, release-evidence
+- [Concise comparison table](../techniques/concise-comparison-table.md) · `concise-comparison-table` · technique · option comparison matrix, navigation
+- [Consistent terms](../techniques/consistent-terms.md) · `consistent-terms` · technique · terminology consistency, navigation
+- [Contribution route](../techniques/contribution-route.md) · `contribution-route` · technique · contributor guide link, governance
+- [Copy-in or template adoption path](../techniques/copy-in-or-template-adoption-path.md) · `copy-in-or-template-adoption-path` · technique · copy template into project, onboarding
+- [Describe what the installer changes](../techniques/describe-what-the-installer-changes.md) · `describe-what-the-installer-changes` · technique · installer side effects, onboarding, installation
+- [Descriptive link labels](../techniques/descriptive-link-labels.md) · `descriptive-link-labels` · technique · descriptive anchor text, navigation
+- [Developer entry point](../techniques/developer-entry-point.md) · `developer-entry-point` · technique · developer setup route, governance
+- [Diagnostic decision guide](../techniques/diagnostic-decision-guide.md) · `diagnostic-decision-guide` · technique · symptom based troubleshooting, troubleshooting
+- [Disclose telemetry defaults and controls](../techniques/disclose-telemetry-defaults-and-controls.md) · `disclose-telemetry-defaults-and-controls` · technique · telemetry opt out, project-scope
 - [Distinguish intended checks from results](../techniques/declared-versus-observed-evidence.md) · `declared-versus-observed-evidence` · technique · planned versus executed checks, coverage, release-evidence
+- [Distinguish source from the shipped product](../techniques/distinguish-source-from-the-shipped-product.md) · `distinguish-source-from-the-shipped-product` · technique · source distribution distinction, project-scope
+- [Document automatic retry boundaries](../techniques/document-automatic-retry-boundaries.md) · `document-automatic-retry-boundaries` · technique · retry policy, troubleshooting
+- [Document the scripting interface](../techniques/document-the-scripting-interface.md) · `document-the-scripting-interface` · technique · command line automation, automation
+- [Document what happens with concurrent writers](../techniques/document-what-happens-with-concurrent-writers.md) · `document-what-happens-with-concurrent-writers` · technique · simultaneous writes, troubleshooting
+- [Draft, archive, and publication stages](../techniques/draft-archive-and-publication-stages.md) · `draft-archive-and-publication-stages` · technique · documentation publication states, publication
 - [Execute the documented walkthrough](../techniques/exact-revision-walkthrough.md) · `exact-revision-walkthrough` · technique · copy-and-run test, walkthrough replay, ci, commands, onboarding
+- [Expected output contract](../techniques/expected-output-contract.md) · `expected-output-contract` · technique · expected command output, success-checks
+- [Explain defaults that change what readers see](../techniques/explain-defaults-that-change-what-readers-see.md) · `explain-defaults-that-change-what-readers-see` · technique · hidden by default, configuration
+- [Explain how to choose an update channel](../techniques/explain-how-to-choose-an-update-channel.md) · `explain-how-to-choose-an-update-channel` · technique · release channels, project-scope
+- [Explain what happens when a step is repeated](../techniques/explain-what-happens-when-a-step-is-repeated.md) · `explain-what-happens-when-a-step-is-repeated` · technique · rerun behavior and idempotency, troubleshooting
+- [Explain what uninstall removes and retains](../techniques/explain-what-uninstall-removes-and-retains.md) · `explain-what-uninstall-removes-and-retains` · technique · uninstall data retention, maintenance
+- [Explain where project decisions are made](../techniques/explain-where-project-decisions-are-made.md) · `explain-where-project-decisions-are-made` · technique · project governance route, governance
+- [Expose discovery metadata through the README](../techniques/expose-discovery-metadata-through-the-readme.md) · `expose-discovery-metadata-through-the-readme` · technique · yaml discovery metadata, publication
+- [First successful result link](../techniques/first-successful-result-link.md) · `first-successful-result-link` · technique · first output file link, success-checks
+- [Generate repetitive README sections from their source](../techniques/generate-repetitive-readme-sections-from-their-source.md) · `generate-repetitive-readme-sections-from-their-source` · technique · readme generation from source, publication
+- [Give a deprecation notice a replacement and timeline](../techniques/give-a-deprecation-notice-a-replacement-and-timeline.md) · `give-a-deprecation-notice-a-replacement-and-timeline` · technique · retirement schedule, lifecycle
+- [Give a readiness check before the first request](../techniques/give-a-readiness-check-before-the-first-request.md) · `give-a-readiness-check-before-the-first-request` · technique · service health check, success-checks
+- [Give color-coded information a text label](../techniques/give-color-coded-information-a-text-label.md) · `give-color-coded-information-a-text-label` · technique · color independent status, navigation, accessibility
+- [Give each public package its own README entry point](../techniques/give-each-public-package-its-own-readme-entry-point.md) · `give-each-public-package-its-own-readme-entry-point` · technique · monorepo package readmes, navigation
+- [Give readers an upgrade preflight](../techniques/give-readers-an-upgrade-preflight.md) · `give-readers-an-upgrade-preflight` · technique · upgrade dry check, maintenance
+- [Give service examples a sandbox route](../techniques/give-service-examples-a-sandbox-route.md) · `give-service-examples-a-sandbox-route` · technique · api sandbox, onboarding, configuration
+- [Guest or offline first run](../techniques/guest-or-offline-first-run.md) · `guest-or-offline-first-run` · technique · first run without account, onboarding, environment
 - [Guide readers through a pinned walkthrough with evidence](../combinations/pinned-walkthrough-with-evidence.md) · `pinned-walkthrough-with-evidence` · combination · two-version walkthrough, first-use evidence path, onboarding, proof-links, release-evidence
+- [Human guide for a structured inventory](../techniques/human-guide-for-a-structured-inventory.md) · `human-guide-for-a-structured-inventory` · technique · structured inventory guide, interfaces
+- [Identify required assets distributed separately](../techniques/identify-required-assets-distributed-separately.md) · `identify-required-assets-distributed-separately` · technique · external install dependencies, onboarding, installation
+- [Identify the source of truth when repositories are mirrored](../techniques/identify-the-source-of-truth-when-repositories-are-mirrored.md) · `identify-the-source-of-truth-when-repositories-are-mirrored` · technique · canonical repo for mirrors, lifecycle
+- [Include a data dictionary for shared datasets](../techniques/include-a-data-dictionary-for-shared-datasets.md) · `include-a-data-dictionary-for-shared-datasets` · technique · dataset codebook, reuse
+- [Independent version lines](../techniques/independent-version-lines.md) · `independent-version-lines` · technique · separate version numbering, publication
+- [Installation methods](../techniques/installation-methods.md) · `installation-methods` · technique · package installation choices, onboarding, installation
+- [Known limitations and workarounds](../techniques/known-limitations-and-workarounds.md) · `known-limitations-and-workarounds` · technique · caveats and workarounds, troubleshooting
+- [Label ownership of installation channels](../techniques/label-ownership-of-installation-channels.md) · `label-ownership-of-installation-channels` · technique · official install sources, onboarding, installation
 - [Label the scope of compatibility evidence](../techniques/claim-scope-labels.md) · `claim-scope-labels` · technique · release and development evidence, scoped compatibility claims, compatibility, release-evidence
+- [Language routing](../techniques/language-routing.md) · `language-routing` · technique · readme language selector, navigation, localization
+- [License and reuse link](../techniques/license-and-reuse-link.md) · `license-and-reuse-link` · technique · project license link, reuse
+- [Lightweight link verification](../techniques/lightweight-link-verification.md) · `lightweight-link-verification` · technique · readme link checker, verification
+- [Link a parts list for the hardware revision](../techniques/link-a-parts-list-for-the-hardware-revision.md) · `link-a-parts-list-for-the-hardware-revision` · technique · hardware bill of materials, onboarding, prerequisites
 - [Link authoritative agent instructions](../techniques/agent-instruction-pointer.md) · `agent-instruction-pointer` · technique · agent entry point, agent instruction link, agents, onboarding
+- [Link both a notebook preview and a runnable notebook](../techniques/link-both-a-notebook-preview-and-a-runnable-notebook.md) · `link-both-a-notebook-preview-and-a-runnable-notebook` · technique · interactive notebook link, demos
+- [Link directly to a project-configured workspace](../techniques/link-directly-to-a-project-configured-workspace.md) · `link-directly-to-a-project-configured-workspace` · technique · preconfigured development workspace, onboarding, environment
+- [Link the machine-readable interface contract](../techniques/link-the-machine-readable-interface-contract.md) · `link-the-machine-readable-interface-contract` · technique · openapi or schema link, interfaces
+- [List the local service URLs by purpose](../techniques/list-the-local-service-urls-by-purpose.md) · `list-the-local-service-urls-by-purpose` · technique · local ports and endpoints, onboarding, configuration
+- [List what each format can read, write, and preserve](../techniques/list-what-each-format-can-read-write-and-preserve.md) · `list-what-each-format-can-read-write-and-preserve` · technique · format fidelity matrix, project-scope
+- [Live demo or playground](../techniques/live-demo-or-playground.md) · `live-demo-or-playground` · technique · try in browser, demos
+- [Map application files by purpose](../techniques/map-application-files-by-purpose.md) · `map-application-files-by-purpose` · technique · config and cache locations, stored-state
+- [Map each claim to the check that can reproduce it](../techniques/map-each-claim-to-the-check-that-can-reproduce-it.md) · `map-each-claim-to-the-check-that-can-reproduce-it` · technique · claim to reproduction evidence, verification
+- [Match firmware to the physical hardware revision](../techniques/match-firmware-to-the-physical-hardware-revision.md) · `match-firmware-to-the-physical-hardware-revision` · technique · board firmware match, onboarding, prerequisites
+- [Minimal working example](../techniques/minimal-working-example.md) · `minimal-working-example` · technique · minimum reproducible example, demos
+- [Next action after success](../techniques/next-action-after-success.md) · `next-action-after-success` · technique · after quickstart next steps, onboarding
+- [Offer a smoke test and a full reproduction separately](../techniques/offer-a-smoke-test-and-a-full-reproduction-separately.md) · `offer-a-smoke-test-and-a-full-reproduction-separately` · technique · small demo and full reproduction, verification, reproduction
+- [Offer an importable API request collection](../techniques/offer-an-importable-api-request-collection.md) · `offer-an-importable-api-request-collection` · technique · api request collection, onboarding, configuration
+- [Offer an isolated trial command](../techniques/offer-an-isolated-trial-command.md) · `offer-an-isolated-trial-command` · technique · temporary test environment, onboarding, environment
+- [One prominent first action](../techniques/one-prominent-first-action.md) · `one-prominent-first-action` · technique · primary starting action, onboarding
+- [Pair the install name with the name used in code](../techniques/pair-the-install-name-with-the-name-used-in-code.md) · `pair-the-install-name-with-the-name-used-in-code` · technique · package and import names, onboarding, installation
 - [Permanent proof links](../techniques/permanent-proof-links.md) · `permanent-proof-links` · technique · durable verification receipt, pinned proof links, ci, git, release-evidence
+- [Prerequisite or installation check](../techniques/prerequisite-or-installation-check.md) · `prerequisite-or-installation-check` · technique · preflight setup check, onboarding, environment
+- [Prerequisites next to the task](../techniques/prerequisites-next-to-the-task.md) · `prerequisites-next-to-the-task` · technique · task prerequisites, onboarding, prerequisites
+- [Preview changes before applying them](../techniques/preview-changes-before-applying-them.md) · `preview-changes-before-applying-them` · technique · dry run before apply, maintenance
+- [Progressive disclosure](../techniques/progressive-disclosure.md) · `progressive-disclosure` · technique · collapse optional details, navigation, accessibility
+- [Project status and maturity](../techniques/project-status-and-maturity.md) · `project-status-and-maturity` · technique · release maturity, project-scope
+- [Provide a starter control map](../techniques/provide-a-starter-control-map.md) · `provide-a-starter-control-map` · technique · keyboard and controller controls, onboarding, prerequisites
+- [Publication-path verification](../techniques/publication-path-verification.md) · `publication-path-verification` · technique · published page verification, verification, publication
+- [Published release link](../techniques/published-release-link.md) · `published-release-link` · technique · versioned release link, verification, release-evidence
+- [Put a practice task before its worked solution](../techniques/put-a-practice-task-before-its-worked-solution.md) · `put-a-practice-task-before-its-worked-solution` · technique · exercise before answer, learning
+- [Recognize contribution types beyond code](../techniques/recognize-contribution-types-beyond-code.md) · `recognize-contribution-types-beyond-code` · technique · noncode contributions, governance
+- [Recovery beside the failed step](../techniques/recovery-beside-the-failed-step.md) · `recovery-beside-the-failed-step` · technique · inline troubleshooting, troubleshooting
 - [Relative navigation](../techniques/relative-navigation.md) · `relative-navigation` · technique · same-checkout links, relative documentation links, links, git, onboarding
+- [Rendered review at two widths](../techniques/rendered-review-at-two-widths.md) · `rendered-review-at-two-widths` · technique · mobile and desktop readme review, verification, publication
+- [Reuse a README as the package listing](../techniques/reuse-a-readme-as-the-package-listing.md) · `reuse-a-readme-as-the-package-listing` · technique · package registry readme, publication
+- [Roadmap pointer](../techniques/roadmap-pointer.md) · `roadmap-pointer` · technique · planned work link, project-scope
 - [Route by reader task](../techniques/role-based-entry-points.md) · `role-based-entry-points` · technique · audience routing, task-based entry points, audience, links, onboarding
+- [Route readers to editable designs and manufacturing exports](../techniques/route-readers-to-editable-designs-and-manufacturing-exports.md) · `route-readers-to-editable-designs-and-manufacturing-exports` · technique · editable design sources, reuse
+- [Safe configuration example](../techniques/safe-configuration-example.md) · `safe-configuration-example` · technique · configuration starter template, onboarding, configuration
+- [Sample fixture or starter input](../techniques/sample-fixture-or-starter-input.md) · `sample-fixture-or-starter-input` · technique · starter fixture file, onboarding
+- [Save or persistence checkpoint](../techniques/save-or-persistence-checkpoint.md) · `save-or-persistence-checkpoint` · technique · save and reload checkpoint, stored-state
+- [Scope boundaries](../techniques/scope-boundaries.md) · `scope-boundaries` · technique · supported scope, project-scope
+- [Screenshot or result preview](../techniques/screenshot-or-result-preview.md) · `screenshot-or-result-preview` · technique · product screenshot, demos
+- [Section deep links](../techniques/section-deep-links.md) · `section-deep-links` · technique · link to a heading, navigation
+- [Security reporting route](../techniques/security-reporting-route.md) · `security-reporting-route` · technique · private security disclosure, reuse
+- [Send readers to docs for their installed version](../techniques/send-readers-to-docs-for-their-installed-version.md) · `send-readers-to-docs-for-their-installed-version` · technique · installed version docs, navigation
+- [Separate diagnostic capture from sharing](../techniques/separate-diagnostic-capture-from-sharing.md) · `separate-diagnostic-capture-from-sharing` · technique · review support diagnostics, troubleshooting
+- [Separate guide types](../techniques/separate-guide-types.md) · `separate-guide-types` · technique · separate tutorials and reference, navigation
+- [Separate platform commands](../techniques/separate-platform-commands.md) · `separate-platform-commands` · technique · os specific setup, onboarding, installation
+- [Set a time and cost expectation before setup](../techniques/set-a-time-and-cost-expectation-before-setup.md) · `set-a-time-and-cost-expectation-before-setup` · technique · setup effort estimate, onboarding
+- [Show a benchmark case that changes the takeaway](../techniques/show-a-benchmark-case-that-changes-the-takeaway.md) · `show-a-benchmark-case-that-changes-the-takeaway` · technique · benchmark counterexample, verification, reproduction
 - [Show a recognizable first result](../techniques/first-success-milestone.md) · `first-success-milestone` · technique · first-use milestone, expected first output, expected-output, onboarding
+- [Show a restore check against a separate destination](../techniques/show-a-restore-check-against-a-separate-destination.md) · `show-a-restore-check-against-a-separate-destination` · technique · backup restore test, stored-state
+- [Show configuration precedence](../techniques/show-configuration-precedence.md) · `show-configuration-precedence` · technique · settings override order, onboarding, configuration
+- [Show how another workflow consumes an output](../techniques/show-how-another-workflow-consumes-an-output.md) · `show-how-another-workflow-consumes-an-output` · technique · downstream workflow example, interfaces
+- [Show how asset variants map to published files](../techniques/show-how-asset-variants-map-to-published-files.md) · `show-how-asset-variants-map-to-published-files` · technique · asset export mapping, demos
+- [Show how to activate an installed extension](../techniques/show-how-to-activate-an-installed-extension.md) · `show-how-to-activate-an-installed-extension` · technique · enable installed plugin, troubleshooting
+- [Show how to enable optional capabilities](../techniques/show-how-to-enable-optional-capabilities.md) · `show-how-to-enable-optional-capabilities` · technique · feature flags and extras, onboarding, installation
+- [Show how to prepare an offline install](../techniques/show-how-to-prepare-an-offline-install.md) · `show-how-to-prepare-an-offline-install` · technique · offline dependency bundle, onboarding, environment
+- [Show how to retrieve every page of results](../techniques/show-how-to-retrieve-every-page-of-results.md) · `show-how-to-retrieve-every-page-of-results` · technique · api pagination, automation
+- [Show how to verify the artifact’s producer](../techniques/show-how-to-verify-the-artifact-s-producer.md) · `show-how-to-verify-the-artifact-s-producer` · technique · signed build provenance, verification, release-evidence
+- [Show the order for upgrading multiple components](../techniques/show-the-order-for-upgrading-multiple-components.md) · `show-the-order-for-upgrading-multiple-components` · technique · component upgrade order, maintenance
+- [Show the permissions automation needs](../techniques/show-the-permissions-automation-needs.md) · `show-the-permissions-automation-needs` · technique · required automation permissions, onboarding, prerequisites
+- [Snapshot source identity](../techniques/snapshot-source-identity.md) · `snapshot-source-identity` · technique · archive digest and origin, verification
+- [Starting directory and checkout](../techniques/starting-directory-and-checkout.md) · `starting-directory-and-checkout` · technique · working directory setup, onboarding
 - [State the project’s purpose](../techniques/project-purpose-statement.md) · `project-purpose-statement` · technique · one-sentence project description, project introduction, positioning, orientation
+- [State what event consumers can assume about delivery](../techniques/state-what-event-consumers-can-assume-about-delivery.md) · `state-what-event-consumers-can-assume-about-delivery` · technique · event delivery guarantees, interfaces
+- [State which saved data a release can open](../techniques/state-which-saved-data-a-release-can-open.md) · `state-which-saved-data-a-release-can-open` · technique · saved file compatibility, stored-state
+- [Status badges](../techniques/status-badges.md) · `status-badges` · technique · build badges, project-scope
+- [Support and issue route](../techniques/support-and-issue-route.md) · `support-and-issue-route` · technique · where to get help, governance
+- [Table of contents or jump links](../techniques/table-of-contents-or-jump-links.md) · `table-of-contents-or-jump-links` · technique · readme contents links, navigation
+- [Task-local help link](../techniques/task-local-help-link.md) · `task-local-help-link` · technique · help link beside task, navigation
+- [Text equivalent for a chart or diagram](../techniques/text-equivalent-for-a-chart-or-diagram.md) · `text-equivalent-for-a-chart-or-diagram` · technique · accessible diagram summary, demos, accessibility
+- [Theme-aware images](../techniques/theme-aware-images.md) · `theme-aware-images` · technique · dark mode image, demos, accessibility
+- [Track the source revision of translations](../techniques/track-the-source-revision-of-translations.md) · `track-the-source-revision-of-translations` · technique · translation source revision, navigation, localization
+- [Turn an archived README into a handoff](../techniques/turn-an-archived-readme-into-a-handoff.md) · `turn-an-archived-readme-into-a-handoff` · technique · archived repository redirect, lifecycle
+- [Turn examples into regression tests](../techniques/turn-examples-into-regression-tests.md) · `turn-examples-into-regression-tests` · technique · tested documentation examples, verification
+- [Upgrade or migration route](../techniques/upgrade-or-migration-route.md) · `upgrade-or-migration-route` · technique · upgrade path, maintenance
+- [Use labeled callouts at the point of action](../techniques/use-labeled-callouts-at-the-point-of-action.md) · `use-labeled-callouts-at-the-point-of-action` · technique · warning beside action, navigation, accessibility
+- [Value proposition](../techniques/value-proposition.md) · `value-proposition` · technique · project benefit, project-scope
+- [Verify which README appears on the repository homepage](../techniques/verify-which-readme-appears-on-the-repository-homepage.md) · `verify-which-readme-appears-on-the-repository-homepage` · technique · github readme selection, verification, publication
+- [Versioned section map](../techniques/versioned-section-map.md) · `versioned-section-map` · technique · readme section map by version, publication
 - [Write a copyable Quickstart](../techniques/copyable-quickstart.md) · `copyable-quickstart` · technique · copy-paste quickstart, runnable command block, commands, onboarding
 - [Write image alternatives for their purpose](../techniques/purpose-specific-image-alternatives.md) · `purpose-specific-image-alternatives` · technique · purpose-based alt text, accessible README images, accessibility, images

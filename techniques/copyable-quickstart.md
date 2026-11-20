@@ -14,11 +14,14 @@
     "runnable command block"
   ],
   "evidence": "observed",
-  "status": "active"
+  "status": "active",
+  "use_when": "A reader can install, build, or run the project from a terminal."
 }
 -->
 
 # Write a copyable Quickstart
+
+**Use when.** A reader can install, build, or run the project from a terminal.
 
 **Problem.** Readers can mistake shell prompts, expected output, and descriptive placeholders for commands.
 

@@ -12,6 +12,7 @@ Start the file with the metadata comment below, then write the matching Markdown
   "tasks": ["navigation", "quickstart"],
   "tags": ["links", "onboarding"],
   "aliases": ["same-checkout links"],
+  "use_when": "A guide, example, or asset ships with the same checkout as its README.",
   "evidence": "observed",
   "status": "active"
 }
@@ -19,6 +20,8 @@ Start the file with the metadata comment below, then write the matching Markdown
 ```
 
 For a combination, add a `"steps"` field to the same metadata object. For example, `"steps": ["relative-navigation", "expected-first-output"]` lists two technique IDs in reading order. Save both technique files before adding the combination. The generated task page links each step automatically.
+
+Use aliases that a reader would actually search for. For techniques, write a short `use_when` that describes an observable project condition. Match it exactly to the visible **Use when** line so both search and the Markdown record use the same wording. Label original examples as illustrative and make the result to check concrete enough to run on a target project.
 
 From a combination record, link to a technique with `[Relative navigation](../techniques/relative-navigation.md)`. Change the filename to the technique’s real ID. The indexes refresh when the record reaches the library branch. See [catalog maintenance](README.md#maintain-the-catalog) for local preview commands.
 
@@ -28,8 +31,9 @@ From a combination record, link to a technique with `[Relative navigation](../te
 
 **ID** `stable-slug`  
 **Reader task** [What the reader wants to accomplish]  
-**Use when** [Project types, prerequisites, or signals that make this useful]  
 **Evidence summary** [Observed, verified, or unverified, with its scope]
+
+**Use when.** [Project types, prerequisites, or signals that make this useful.]
 
 **Problem.** [What slows down or misleads the reader?]
 

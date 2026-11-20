@@ -6,9 +6,30 @@
 
 ## Techniques
 
+- [Diagnostic decision guide](../techniques/diagnostic-decision-guide.md) · unverified · Route different symptoms to the relevant fix instead of listing generic troubleshooting.
 - [Distinguish intended checks from results](../techniques/declared-versus-observed-evidence.md) · verified · Show which checks were planned and which actually ran, with a scoped outcome for each.
+- [Document automatic retry boundaries](../techniques/document-automatic-retry-boundaries.md) · unverified · Tell automated readers which responses allow another attempt, which server signal controls the delay, and when retries should stop.
+- [Document the scripting interface](../techniques/document-the-scripting-interface.md) · unverified · Show where scripts can find structured output and which outcomes return which exit codes.
+- [Document what happens with concurrent writers](../techniques/document-what-happens-with-concurrent-writers.md) · unverified · Say which shared state is protected, when writers wait or fail, and whether the behavior depends on the storage backend or deployment mode.
 - [Execute the documented walkthrough](../techniques/exact-revision-walkthrough.md) · verified · Replay the reader’s published steps at the named revision and verify the result.
+- [Expected output contract](../techniques/expected-output-contract.md) · unverified · Separate stable result fields from variable example values when exact comparison matters.
+- [Explain defaults that change what readers see](../techniques/explain-defaults-that-change-what-readers-see.md) · unverified · Name the input the tool omits or transforms by default, what a reader may miss, and how to change the behavior.
+- [Explain what happens when a step is repeated](../techniques/explain-what-happens-when-a-step-is-repeated.md) · unverified · State whether repeating a command converges on the same result, resumes work, or creates another copy.
+- [First successful result link](../techniques/first-successful-result-link.md) · unverified · Point to the file, page, or artifact the task created so it is easy to inspect.
+- [Give a readiness check before the first request](../techniques/give-a-readiness-check-before-the-first-request.md) · unverified · After the startup command, show what indicates the dependency can accept traffic and how the reader can check it.
+- [Known limitations and workarounds](../techniques/known-limitations-and-workarounds.md) · unverified · State a known constraint and the currently supported path around it.
+- [Map application files by purpose](../techniques/map-application-files-by-purpose.md) · unverified · List the locations for user data, configuration, runtime state, and cache on supported platforms.
+- [Next action after success](../techniques/next-action-after-success.md) · unverified · Offer a natural second task once the first one works.
+- [Put a practice task before its worked solution](../techniques/put-a-practice-task-before-its-worked-solution.md) · unverified · When the README is also a learning guide, give readers a short task and a way to check their attempt.
+- [Recovery beside the failed step](../techniques/recovery-beside-the-failed-step.md) · unverified · Put a common failure and its recovery close to the command or action that produces it.
+- [Save or persistence checkpoint](../techniques/save-or-persistence-checkpoint.md) · unverified · Tell readers what should survive a restart and how to confirm it.
+- [Separate diagnostic capture from sharing](../techniques/separate-diagnostic-capture-from-sharing.md) · unverified · Tell readers how to capture relevant evidence, where the resulting bundle lands, and how to inspect or anonymize it before sending it through the support route.
 - [Show a recognizable first result](../techniques/first-success-milestone.md) · observed · Tell the reader what success looks like immediately after the first real task.
+- [Show a restore check against a separate destination](../techniques/show-a-restore-check-against-a-separate-destination.md) · unverified · Pair a backup path with a small restore exercise into a separate destination and show what to inspect in the restored copy.
+- [Show how to activate an installed extension](../techniques/show-how-to-activate-an-installed-extension.md) · unverified · Name the first command, view, or event that activates the extension and the behavior a reader should see.
+- [Show how to retrieve every page of results](../techniques/show-how-to-retrieve-every-page-of-results.md) · unverified · Give an example that spans multiple pages, follows the continuation link or cursor, and states when to stop.
+- [State which saved data a release can open](../techniques/state-which-saved-data-a-release-can-open.md) · unverified · Name which older saves, archives, or project files the new version can read, and describe rollback separately where supported.
+- [Task-local help link](../techniques/task-local-help-link.md) · unverified · Put the relevant support path beside a high-friction step.
 
 ## Combinations
 

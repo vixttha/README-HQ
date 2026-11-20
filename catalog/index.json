@@ -1,0 +1,2882 @@
+{
+  "schema_version": 1,
+  "paths_relative_to": "repository-root",
+  "tasks": {
+    "overview": "Understand what the project does",
+    "demo": "See what it does in practice",
+    "quickstart": "Install, run, play, or copy it",
+    "first-result": "Recognize a successful first result",
+    "navigation": "Find guides, support, or contribution paths",
+    "verification": "Verify a claim about a release or revision",
+    "handoff": "Hand the project to a maintainer or agent"
+  },
+  "records": [
+    {
+      "id": "alternatives-and-tradeoffs",
+      "path": "techniques/alternatives-and-tradeoffs.md",
+      "kind": "technique",
+      "title": "Alternatives and tradeoffs",
+      "summary": "Explain when a related tool or approach fits a reader better.",
+      "tasks": [
+        "overview"
+      ],
+      "tags": [
+        "project-scope"
+      ],
+      "aliases": [
+        "alternative tools"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "Two realistic options solve similar tasks with different costs or constraints."
+    },
+    {
+      "id": "animated-micro-demo",
+      "path": "techniques/animated-micro-demo.md",
+      "kind": "technique",
+      "title": "Animated micro-demo",
+      "summary": "Show a short interaction sequence that needs no narration.",
+      "tasks": [
+        "demo"
+      ],
+      "tags": [
+        "demos"
+      ],
+      "aliases": [
+        "short motion demo"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "The order of a short sequence is important to understanding it."
+    },
+    {
+      "id": "annotated-screenshot",
+      "path": "techniques/annotated-screenshot.md",
+      "kind": "technique",
+      "title": "Annotated screenshot",
+      "summary": "Identify the controls or evidence a reader needs to notice.",
+      "tasks": [
+        "demo"
+      ],
+      "tags": [
+        "demos"
+      ],
+      "aliases": [
+        "screenshot annotations"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "A useful screenshot has important controls or results that could be missed."
+    },
+    {
+      "id": "architecture-or-flow-diagram",
+      "path": "techniques/architecture-or-flow-diagram.md",
+      "kind": "technique",
+      "title": "Architecture or flow diagram",
+      "summary": "Show component relationships or the order of steps.",
+      "tasks": [
+        "demo"
+      ],
+      "tags": [
+        "demos"
+      ],
+      "aliases": [
+        "system diagram"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "A system or workflow is hard to follow from prose alone."
+    },
+    {
+      "id": "artifact-verification-instructions",
+      "path": "techniques/artifact-verification-instructions.md",
+      "kind": "technique",
+      "title": "Artifact verification instructions",
+      "summary": "Explain how to compare a downloaded artifact with its recorded digest.",
+      "tasks": [
+        "verification"
+      ],
+      "tags": [
+        "verification",
+        "release-evidence"
+      ],
+      "aliases": [
+        "download checksum verification"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "A downloadable artifact has a documented digest or signature."
+    },
+    {
+      "id": "asset-caption-and-provenance",
+      "path": "techniques/asset-caption-and-provenance.md",
+      "kind": "technique",
+      "title": "Asset caption and provenance",
+      "summary": "Name what a visual shows and identify its source or build where relevant.",
+      "tasks": [
+        "demo"
+      ],
+      "tags": [
+        "demos"
+      ],
+      "aliases": [
+        "image credit"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "A visual uses external work or needs version or authorship context."
+    },
+    {
+      "id": "attribution-and-data-provenance",
+      "path": "techniques/attribution-and-data-provenance.md",
+      "kind": "technique",
+      "title": "Attribution and data provenance",
+      "summary": "Link the source and terms for material external assets or datasets.",
+      "tasks": [
+        "handoff"
+      ],
+      "tags": [
+        "reuse"
+      ],
+      "aliases": [
+        "external data attribution"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "Documentation or examples rely on someone else’s data or assets."
+    },
+    {
+      "id": "audience-and-use-cases",
+      "path": "techniques/audience-and-use-cases.md",
+      "kind": "technique",
+      "title": "Audience and use cases",
+      "summary": "Name the people and jobs the project serves.",
+      "tasks": [
+        "overview"
+      ],
+      "tags": [
+        "project-scope"
+      ],
+      "aliases": [
+        "audience statement"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "The project serves different roles or supports several jobs."
+    },
+    {
+      "id": "benchmark-method-and-scope",
+      "path": "techniques/benchmark-method-and-scope.md",
+      "kind": "technique",
+      "title": "Benchmark method and scope",
+      "summary": "Describe the workload, environment, revision, and units beside a performance result.",
+      "tasks": [
+        "verification"
+      ],
+      "tags": [
+        "verification",
+        "reproduction"
+      ],
+      "aliases": [
+        "reproducible benchmark setup"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "A performance number would be misleading without its workload or conditions."
+    },
+    {
+      "id": "capabilities-at-a-glance",
+      "path": "techniques/capabilities-at-a-glance.md",
+      "kind": "technique",
+      "title": "Capabilities at a glance",
+      "summary": "Show the few important things readers can do today.",
+      "tasks": [
+        "overview"
+      ],
+      "tags": [
+        "project-scope"
+      ],
+      "aliases": [
+        "feature overview"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "A reader needs to compare major capabilities before installing."
+    },
+    {
+      "id": "captioned-video-walkthrough",
+      "path": "techniques/captioned-video-walkthrough.md",
+      "kind": "technique",
+      "title": "Captioned video walkthrough",
+      "summary": "Demonstrate a longer workflow with captions or a transcript.",
+      "tasks": [
+        "demo"
+      ],
+      "tags": [
+        "demos"
+      ],
+      "aliases": [
+        "video with captions"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "A recording contains spoken directions or audible success cues."
+    },
+    {
+      "id": "changelog-and-version-navigation",
+      "path": "techniques/changelog-and-version-navigation.md",
+      "kind": "technique",
+      "title": "Changelog and version navigation",
+      "summary": "Show where release history lives and which version the reader is viewing.",
+      "tasks": [
+        "handoff"
+      ],
+      "tags": [
+        "lifecycle"
+      ],
+      "aliases": [
+        "release history navigation"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "Readers need to link product changes to a specific version."
+    },
+    {
+      "id": "check-keyboard-navigation-on-the-rendered-readme",
+      "path": "techniques/check-keyboard-navigation-on-the-rendered-readme.md",
+      "kind": "technique",
+      "title": "Check keyboard navigation on the rendered README",
+      "summary": "Use the keyboard on the published view to reach the primary links and any collapsible controls.",
+      "tasks": [
+        "verification"
+      ],
+      "tags": [
+        "verification",
+        "publication"
+      ],
+      "aliases": [
+        "readme keyboard accessibility"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "The rendered README has links or controls that readers navigate by keyboard."
+    },
+    {
+      "id": "citation-instructions",
+      "path": "techniques/citation-instructions.md",
+      "kind": "technique",
+      "title": "Citation instructions",
+      "summary": "Point researchers to the maintained citation metadata where appropriate.",
+      "tasks": [
+        "handoff"
+      ],
+      "tags": [
+        "reuse"
+      ],
+      "aliases": [
+        "software citation metadata"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "Researchers need a maintained source for attributing a release."
+    },
+    {
+      "id": "clean-consumer-adoption-test",
+      "path": "techniques/clean-consumer-adoption-test.md",
+      "kind": "technique",
+      "title": "Clean consumer adoption test",
+      "summary": "Verify documented copy-in or install steps in a fresh consumer project.",
+      "tasks": [
+        "verification",
+        "quickstart"
+      ],
+      "tags": [
+        "verification",
+        "reproduction"
+      ],
+      "aliases": [
+        "fresh adopter smoke test"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "Producer-local files or caches may hide problems in consumer adoption."
+    },
+    {
+      "id": "cleanup-or-reset-instructions",
+      "path": "techniques/cleanup-or-reset-instructions.md",
+      "kind": "technique",
+      "title": "Cleanup or reset instructions",
+      "summary": "Show how a reader can leave a temporary demo or restore a clean starting point.",
+      "tasks": [
+        "quickstart"
+      ],
+      "tags": [
+        "maintenance"
+      ],
+      "aliases": [
+        "reset demo state"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "A trial or setup leaves state readers may need to reset."
+    },
+    {
+      "id": "clear-heading-hierarchy",
+      "path": "techniques/clear-heading-hierarchy.md",
+      "kind": "technique",
+      "title": "Clear heading hierarchy",
+      "summary": "Organize sections in a predictable structure for visual scanning and assistive navigation.",
+      "tasks": [
+        "navigation"
+      ],
+      "tags": [
+        "navigation"
+      ],
+      "aliases": [
+        "semantic heading levels"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "The README has several sections or deeply nested material."
+    },
+    {
+      "id": "combined-commit-proof",
+      "path": "techniques/combined-commit-proof.md",
+      "kind": "technique",
+      "title": "Combined-commit proof",
+      "summary": "Tie a merge-readiness claim to tests on the exact combined content.",
+      "tasks": [
+        "verification"
+      ],
+      "tags": [
+        "verification",
+        "release-evidence"
+      ],
+      "aliases": [
+        "integrated commit validation"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "Changes were tested individually and also need integration evidence."
+    },
+    {
+      "id": "concise-comparison-table",
+      "path": "techniques/concise-comparison-table.md",
+      "kind": "technique",
+      "title": "Concise comparison table",
+      "summary": "Present repeated choices in a table when readers need to compare the same attributes.",
+      "tasks": [
+        "navigation"
+      ],
+      "tags": [
+        "navigation"
+      ],
+      "aliases": [
+        "option comparison matrix"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "Readers need to compare options on repeated criteria."
+    },
+    {
+      "id": "consistent-terms",
+      "path": "techniques/consistent-terms.md",
+      "kind": "technique",
+      "title": "Consistent terms",
+      "summary": "Use the same names for actions and objects as the code, UI, and linked instructions.",
+      "tasks": [
+        "navigation"
+      ],
+      "tags": [
+        "navigation"
+      ],
+      "aliases": [
+        "terminology consistency"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "Several terms are used for the same concept across docs and UI."
+    },
+    {
+      "id": "contribution-route",
+      "path": "techniques/contribution-route.md",
+      "kind": "technique",
+      "title": "Contribution route",
+      "summary": "Point to contribution rules, issue templates, and where work is reviewed.",
+      "tasks": [
+        "handoff"
+      ],
+      "tags": [
+        "governance"
+      ],
+      "aliases": [
+        "contributor guide link"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "A new contributor needs the submission process and a first task."
+    },
+    {
+      "id": "copy-in-or-template-adoption-path",
+      "path": "techniques/copy-in-or-template-adoption-path.md",
+      "kind": "technique",
+      "title": "Copy-in or template adoption path",
+      "summary": "Identify what to copy, where it goes, and how to check the resulting project.",
+      "tasks": [
+        "quickstart"
+      ],
+      "tags": [
+        "onboarding"
+      ],
+      "aliases": [
+        "copy template into project"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "Adopters need to copy a small set of files into an existing checkout."
+    },
+    {
+      "id": "describe-what-the-installer-changes",
+      "path": "techniques/describe-what-the-installer-changes.md",
+      "kind": "technique",
+      "title": "Describe what the installer changes",
+      "summary": "Tell readers where binaries or files are installed, which persistent user settings change, and what supported option controls those changes.",
+      "tasks": [
+        "quickstart"
+      ],
+      "tags": [
+        "onboarding",
+        "installation"
+      ],
+      "aliases": [
+        "installer side effects"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "Installation modifies files, configuration, or running services."
+    },
+    {
+      "id": "descriptive-link-labels",
+      "path": "techniques/descriptive-link-labels.md",
+      "kind": "technique",
+      "title": "Descriptive link labels",
+      "summary": "Use text that tells the reader where the link goes or what it does.",
+      "tasks": [
+        "navigation"
+      ],
+      "tags": [
+        "navigation"
+      ],
+      "aliases": [
+        "descriptive anchor text"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "A generic link label would make the destination unclear out of context."
+    },
+    {
+      "id": "developer-entry-point",
+      "path": "techniques/developer-entry-point.md",
+      "kind": "technique",
+      "title": "Developer entry point",
+      "summary": "Link the source layout, setup, and shortest routine development check.",
+      "tasks": [
+        "handoff",
+        "quickstart"
+      ],
+      "tags": [
+        "governance"
+      ],
+      "aliases": [
+        "developer setup route"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "Development setup differs from ordinary installation or use."
+    },
+    {
+      "id": "diagnostic-decision-guide",
+      "path": "techniques/diagnostic-decision-guide.md",
+      "kind": "technique",
+      "title": "Diagnostic decision guide",
+      "summary": "Route different symptoms to the relevant fix instead of listing generic troubleshooting.",
+      "tasks": [
+        "first-result"
+      ],
+      "tags": [
+        "troubleshooting"
+      ],
+      "aliases": [
+        "symptom based troubleshooting"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "Similar errors require different checks or remedies."
+    },
+    {
+      "id": "disclose-telemetry-defaults-and-controls",
+      "path": "techniques/disclose-telemetry-defaults-and-controls.md",
+      "kind": "technique",
+      "title": "Disclose telemetry defaults and controls",
+      "summary": "Name the data a tool collects, the default participation state, and how to view or change the setting.",
+      "tasks": [
+        "overview",
+        "verification"
+      ],
+      "tags": [
+        "project-scope"
+      ],
+      "aliases": [
+        "telemetry opt out"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "Installation or normal use can collect or transmit usage data."
+    },
+    {
+      "id": "declared-versus-observed-evidence",
+      "path": "techniques/declared-versus-observed-evidence.md",
+      "kind": "technique",
+      "title": "Distinguish intended checks from results",
+      "summary": "Show which checks were planned and which actually ran, with a scoped outcome for each.",
+      "tasks": [
+        "verification",
+        "first-result",
+        "handoff"
+      ],
+      "tags": [
+        "coverage",
+        "release-evidence"
+      ],
+      "aliases": [
+        "planned versus executed checks"
+      ],
+      "evidence": "verified",
+      "status": "active",
+      "use_when": "A plan or checklist could be mistaken for the result of an executed check."
+    },
+    {
+      "id": "distinguish-source-from-the-shipped-product",
+      "path": "techniques/distinguish-source-from-the-shipped-product.md",
+      "kind": "technique",
+      "title": "Distinguish source from the shipped product",
+      "summary": "Explain what readers are browsing, which product or distribution it produces, and where each set of terms applies.",
+      "tasks": [
+        "overview"
+      ],
+      "tags": [
+        "project-scope"
+      ],
+      "aliases": [
+        "source distribution distinction"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "The source tree and the distributed product have different names, terms, or components."
+    },
+    {
+      "id": "document-automatic-retry-boundaries",
+      "path": "techniques/document-automatic-retry-boundaries.md",
+      "kind": "technique",
+      "title": "Document automatic retry boundaries",
+      "summary": "Tell automated readers which responses allow another attempt, which server signal controls the delay, and when retries should stop.",
+      "tasks": [
+        "first-result"
+      ],
+      "tags": [
+        "troubleshooting"
+      ],
+      "aliases": [
+        "retry policy"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "Transient failures are retried automatically and behavior depends on operation type."
+    },
+    {
+      "id": "document-the-scripting-interface",
+      "path": "techniques/document-the-scripting-interface.md",
+      "kind": "technique",
+      "title": "Document the scripting interface",
+      "summary": "Show where scripts can find structured output and which outcomes return which exit codes.",
+      "tasks": [
+        "first-result"
+      ],
+      "tags": [
+        "automation"
+      ],
+      "aliases": [
+        "command line automation"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "People or tools need to automate the task without parsing prose output."
+    },
+    {
+      "id": "document-what-happens-with-concurrent-writers",
+      "path": "techniques/document-what-happens-with-concurrent-writers.md",
+      "kind": "technique",
+      "title": "Document what happens with concurrent writers",
+      "summary": "Say which shared state is protected, when writers wait or fail, and whether the behavior depends on the storage backend or deployment mode.",
+      "tasks": [
+        "first-result"
+      ],
+      "tags": [
+        "troubleshooting"
+      ],
+      "aliases": [
+        "simultaneous writes"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "Several processes can change the same state or use the same workspace."
+    },
+    {
+      "id": "draft-archive-and-publication-stages",
+      "path": "techniques/draft-archive-and-publication-stages.md",
+      "kind": "technique",
+      "title": "Draft, archive, and publication stages",
+      "summary": "Keep proposed text, frozen snapshots, and the published default-branch README distinguishable.",
+      "tasks": [
+        "handoff"
+      ],
+      "tags": [
+        "publication"
+      ],
+      "aliases": [
+        "documentation publication states"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "Proposed, frozen, and published README versions coexist."
+    },
+    {
+      "id": "exact-revision-walkthrough",
+      "path": "techniques/exact-revision-walkthrough.md",
+      "kind": "technique",
+      "title": "Execute the documented walkthrough",
+      "summary": "Replay the reader’s published steps at the named revision and verify the result.",
+      "tasks": [
+        "verification",
+        "quickstart",
+        "first-result"
+      ],
+      "tags": [
+        "ci",
+        "commands",
+        "onboarding"
+      ],
+      "aliases": [
+        "copy-and-run test",
+        "walkthrough replay"
+      ],
+      "evidence": "verified",
+      "status": "active",
+      "use_when": "A reader needs to know whether the written steps worked at the revision in view."
+    },
+    {
+      "id": "expected-output-contract",
+      "path": "techniques/expected-output-contract.md",
+      "kind": "technique",
+      "title": "Expected output contract",
+      "summary": "Separate stable result fields from variable example values when exact comparison matters.",
+      "tasks": [
+        "first-result",
+        "verification"
+      ],
+      "tags": [
+        "success-checks"
+      ],
+      "aliases": [
+        "expected command output"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "A command or API produces output readers or scripts need to recognize."
+    },
+    {
+      "id": "explain-defaults-that-change-what-readers-see",
+      "path": "techniques/explain-defaults-that-change-what-readers-see.md",
+      "kind": "technique",
+      "title": "Explain defaults that change what readers see",
+      "summary": "Name the input the tool omits or transforms by default, what a reader may miss, and how to change the behavior.",
+      "tasks": [
+        "first-result"
+      ],
+      "tags": [
+        "configuration"
+      ],
+      "aliases": [
+        "hidden by default"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "Defaults filter, hide, or transform the output a reader expects to see."
+    },
+    {
+      "id": "explain-how-to-choose-an-update-channel",
+      "path": "techniques/explain-how-to-choose-an-update-channel.md",
+      "kind": "technique",
+      "title": "Explain how to choose an update channel",
+      "summary": "When multiple release streams are offered, state the differences in stability, update cadence, and what the reader should install.",
+      "tasks": [
+        "overview"
+      ],
+      "tags": [
+        "project-scope"
+      ],
+      "aliases": [
+        "release channels"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "The project publishes parallel release channels with different update expectations."
+    },
+    {
+      "id": "explain-what-happens-when-a-step-is-repeated",
+      "path": "techniques/explain-what-happens-when-a-step-is-repeated.md",
+      "kind": "technique",
+      "title": "Explain what happens when a step is repeated",
+      "summary": "State whether repeating a command converges on the same result, resumes work, or creates another copy.",
+      "tasks": [
+        "first-result"
+      ],
+      "tags": [
+        "troubleshooting"
+      ],
+      "aliases": [
+        "rerun behavior and idempotency"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "A script or setup step may be run again on the same input."
+    },
+    {
+      "id": "explain-what-uninstall-removes-and-retains",
+      "path": "techniques/explain-what-uninstall-removes-and-retains.md",
+      "kind": "technique",
+      "title": "Explain what uninstall removes and retains",
+      "summary": "State which commands or files uninstall removes and what happens to data, configuration, caches, or installed components.",
+      "tasks": [
+        "quickstart",
+        "handoff"
+      ],
+      "tags": [
+        "maintenance"
+      ],
+      "aliases": [
+        "uninstall data retention"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "Uninstall removes a program and has separate effects on user data or settings."
+    },
+    {
+      "id": "explain-where-project-decisions-are-made",
+      "path": "techniques/explain-where-project-decisions-are-made.md",
+      "kind": "technique",
+      "title": "Explain where project decisions are made",
+      "summary": "Link a project’s governance and identify who makes major decisions.",
+      "tasks": [
+        "handoff"
+      ],
+      "tags": [
+        "governance"
+      ],
+      "aliases": [
+        "project governance route"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "Community proposals and final decisions happen in different places."
+    },
+    {
+      "id": "expose-discovery-metadata-through-the-readme",
+      "path": "techniques/expose-discovery-metadata-through-the-readme.md",
+      "kind": "technique",
+      "title": "Expose discovery metadata through the README",
+      "summary": "Use host-supported metadata for fields such as dataset language, license, tags, and file layout.",
+      "tasks": [
+        "handoff",
+        "navigation"
+      ],
+      "tags": [
+        "publication"
+      ],
+      "aliases": [
+        "yaml discovery metadata"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "A host indexes documented machine-readable metadata in a README."
+    },
+    {
+      "id": "first-successful-result-link",
+      "path": "techniques/first-successful-result-link.md",
+      "kind": "technique",
+      "title": "First successful result link",
+      "summary": "Point to the file, page, or artifact the task created so it is easy to inspect.",
+      "tasks": [
+        "first-result"
+      ],
+      "tags": [
+        "success-checks"
+      ],
+      "aliases": [
+        "first output file link"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "The setup creates a file or page the reader can inspect directly."
+    },
+    {
+      "id": "generate-repetitive-readme-sections-from-their-source",
+      "path": "techniques/generate-repetitive-readme-sections-from-their-source.md",
+      "kind": "technique",
+      "title": "Generate repetitive README sections from their source",
+      "summary": "Generate sections such as configuration inputs or outputs from their authoritative definitions.",
+      "tasks": [
+        "handoff"
+      ],
+      "tags": [
+        "publication"
+      ],
+      "aliases": [
+        "readme generation from source"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "A README table, list, or example repeats facts maintained elsewhere."
+    },
+    {
+      "id": "give-a-deprecation-notice-a-replacement-and-timeline",
+      "path": "techniques/give-a-deprecation-notice-a-replacement-and-timeline.md",
+      "kind": "technique",
+      "title": "Give a deprecation notice a replacement and timeline",
+      "summary": "Name the affected interface, link the replacement or migration route, and distinguish the deprecation date from any planned retirement date.",
+      "tasks": [
+        "handoff"
+      ],
+      "tags": [
+        "lifecycle"
+      ],
+      "aliases": [
+        "retirement schedule"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "A public command, API, or package is being retired in favor of another."
+    },
+    {
+      "id": "give-a-readiness-check-before-the-first-request",
+      "path": "techniques/give-a-readiness-check-before-the-first-request.md",
+      "kind": "technique",
+      "title": "Give a readiness check before the first request",
+      "summary": "After the startup command, show what indicates the dependency can accept traffic and how the reader can check it.",
+      "tasks": [
+        "first-result"
+      ],
+      "tags": [
+        "success-checks"
+      ],
+      "aliases": [
+        "service health check"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "Process startup can finish before the service can accept work."
+    },
+    {
+      "id": "give-color-coded-information-a-text-label",
+      "path": "techniques/give-color-coded-information-a-text-label.md",
+      "kind": "technique",
+      "title": "Give color-coded information a text label",
+      "summary": "Label states, branches, or series in words when color conveys their meaning.",
+      "tasks": [
+        "navigation"
+      ],
+      "tags": [
+        "navigation",
+        "accessibility"
+      ],
+      "aliases": [
+        "color independent status"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "A screenshot, table, or chart uses color to convey meaning."
+    },
+    {
+      "id": "give-each-public-package-its-own-readme-entry-point",
+      "path": "techniques/give-each-public-package-its-own-readme-entry-point.md",
+      "kind": "technique",
+      "title": "Give each public package its own README entry point",
+      "summary": "Put a short orientation in the package directory so someone entering through a deep link can find its purpose, setup, and supporting docs.",
+      "tasks": [
+        "navigation",
+        "quickstart"
+      ],
+      "tags": [
+        "navigation"
+      ],
+      "aliases": [
+        "monorepo package readmes"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "A repository contains multiple independently used packages."
+    },
+    {
+      "id": "give-readers-an-upgrade-preflight",
+      "path": "techniques/give-readers-an-upgrade-preflight.md",
+      "kind": "technique",
+      "title": "Give readers an upgrade preflight",
+      "summary": "Link a compatibility check readers can run before an upgrade changes their existing installation.",
+      "tasks": [
+        "quickstart"
+      ],
+      "tags": [
+        "maintenance"
+      ],
+      "aliases": [
+        "upgrade dry check"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "Compatibility can be checked before an upgrade changes state."
+    },
+    {
+      "id": "give-service-examples-a-sandbox-route",
+      "path": "techniques/give-service-examples-a-sandbox-route.md",
+      "kind": "technique",
+      "title": "Give service examples a sandbox route",
+      "summary": "Name the sandbox or mock used by the example and state what effects it simulates.",
+      "tasks": [
+        "quickstart"
+      ],
+      "tags": [
+        "onboarding",
+        "configuration"
+      ],
+      "aliases": [
+        "api sandbox"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "The first service request should run without changing production state."
+    },
+    {
+      "id": "guest-or-offline-first-run",
+      "path": "techniques/guest-or-offline-first-run.md",
+      "kind": "technique",
+      "title": "Guest or offline first run",
+      "summary": "Offer a first-use path with minimal account or network dependencies when supported.",
+      "tasks": [
+        "quickstart"
+      ],
+      "tags": [
+        "onboarding",
+        "environment"
+      ],
+      "aliases": [
+        "first run without account"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "The first successful task can be done without connectivity or registration."
+    },
+    {
+      "id": "pinned-walkthrough-with-evidence",
+      "path": "combinations/pinned-walkthrough-with-evidence.md",
+      "kind": "combination",
+      "title": "Guide readers through a pinned walkthrough with evidence",
+      "summary": "Pair a task link and recognizable output with a pinned walkthrough and evidence of the checks that ran.",
+      "tasks": [
+        "quickstart",
+        "first-result",
+        "verification",
+        "handoff"
+      ],
+      "tags": [
+        "onboarding",
+        "proof-links",
+        "release-evidence"
+      ],
+      "aliases": [
+        "two-version walkthrough",
+        "first-use evidence path"
+      ],
+      "evidence": "verified",
+      "status": "active",
+      "steps": [
+        "role-based-entry-points",
+        "first-success-milestone",
+        "exact-revision-walkthrough",
+        "claim-scope-labels",
+        "declared-versus-observed-evidence"
+      ]
+    },
+    {
+      "id": "human-guide-for-a-structured-inventory",
+      "path": "techniques/human-guide-for-a-structured-inventory.md",
+      "kind": "technique",
+      "title": "Human guide for a structured inventory",
+      "summary": "Pair a machine-readable manifest with an explanation of its reader-facing purpose.",
+      "tasks": [
+        "handoff"
+      ],
+      "tags": [
+        "interfaces"
+      ],
+      "aliases": [
+        "structured inventory guide"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "A structured inventory is easy for software to parse and lacks a human entry point."
+    },
+    {
+      "id": "identify-required-assets-distributed-separately",
+      "path": "techniques/identify-required-assets-distributed-separately.md",
+      "kind": "technique",
+      "title": "Identify required assets distributed separately",
+      "summary": "State which graphics, sound, models, or other runtime assets the checkout needs.",
+      "tasks": [
+        "quickstart"
+      ],
+      "tags": [
+        "onboarding",
+        "installation"
+      ],
+      "aliases": [
+        "external install dependencies"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "A clean checkout omits assets required for the first run."
+    },
+    {
+      "id": "identify-the-source-of-truth-when-repositories-are-mirrored",
+      "path": "techniques/identify-the-source-of-truth-when-repositories-are-mirrored.md",
+      "kind": "technique",
+      "title": "Identify the source of truth when repositories are mirrored",
+      "summary": "Name the canonical repository and explain which revision identifiers to cite from a mirror.",
+      "tasks": [
+        "handoff"
+      ],
+      "tags": [
+        "lifecycle"
+      ],
+      "aliases": [
+        "canonical repo for mirrors"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "A mirror exposes code and directs decisions or contributions elsewhere."
+    },
+    {
+      "id": "include-a-data-dictionary-for-shared-datasets",
+      "path": "techniques/include-a-data-dictionary-for-shared-datasets.md",
+      "kind": "technique",
+      "title": "Include a data dictionary for shared datasets",
+      "summary": "Explain file relationships, field names, units, and missing-value codes so another person can interpret the data.",
+      "tasks": [
+        "handoff"
+      ],
+      "tags": [
+        "reuse"
+      ],
+      "aliases": [
+        "dataset codebook"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "A dataset includes fields or values that are hard to interpret from names alone."
+    },
+    {
+      "id": "independent-version-lines",
+      "path": "techniques/independent-version-lines.md",
+      "kind": "technique",
+      "title": "Independent version lines",
+      "summary": "Name the product, README, or collection beside each version when their release lines differ.",
+      "tasks": [
+        "handoff"
+      ],
+      "tags": [
+        "publication"
+      ],
+      "aliases": [
+        "separate version numbering"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "A product, template, dataset, or docs set ships on its own release cadence."
+    },
+    {
+      "id": "installation-methods",
+      "path": "techniques/installation-methods.md",
+      "kind": "technique",
+      "title": "Installation methods",
+      "summary": "Distinguish packages, installers, source builds, and other supported options.",
+      "tasks": [
+        "quickstart"
+      ],
+      "tags": [
+        "onboarding",
+        "installation"
+      ],
+      "aliases": [
+        "package installation choices"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "Readers can install through multiple supported channels."
+    },
+    {
+      "id": "known-limitations-and-workarounds",
+      "path": "techniques/known-limitations-and-workarounds.md",
+      "kind": "technique",
+      "title": "Known limitations and workarounds",
+      "summary": "State a known constraint and the currently supported path around it.",
+      "tasks": [
+        "first-result"
+      ],
+      "tags": [
+        "troubleshooting"
+      ],
+      "aliases": [
+        "caveats and workarounds"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "A known constraint blocks a reasonable workflow and a supported workaround exists."
+    },
+    {
+      "id": "label-ownership-of-installation-channels",
+      "path": "techniques/label-ownership-of-installation-channels.md",
+      "kind": "technique",
+      "title": "Label ownership of installation channels",
+      "summary": "Identify who maintains and supports each package or installer so readers know where to report installation problems.",
+      "tasks": [
+        "quickstart"
+      ],
+      "tags": [
+        "onboarding",
+        "installation"
+      ],
+      "aliases": [
+        "official install sources"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "Official and community installation channels coexist."
+    },
+    {
+      "id": "claim-scope-labels",
+      "path": "techniques/claim-scope-labels.md",
+      "kind": "technique",
+      "title": "Label the scope of compatibility evidence",
+      "summary": "State the version, platform, capability, and checks that support a compatibility claim.",
+      "tasks": [
+        "verification",
+        "overview"
+      ],
+      "tags": [
+        "compatibility",
+        "release-evidence"
+      ],
+      "aliases": [
+        "release and development evidence",
+        "scoped compatibility claims"
+      ],
+      "evidence": "observed",
+      "status": "active",
+      "use_when": "A compatibility claim depends on a particular platform, version, or path through the workflow."
+    },
+    {
+      "id": "language-routing",
+      "path": "techniques/language-routing.md",
+      "kind": "technique",
+      "title": "Language routing",
+      "summary": "Link translated docs and make the expected language clear.",
+      "tasks": [
+        "navigation"
+      ],
+      "tags": [
+        "navigation",
+        "localization"
+      ],
+      "aliases": [
+        "readme language selector"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "A README is maintained in multiple languages."
+    },
+    {
+      "id": "license-and-reuse-link",
+      "path": "techniques/license-and-reuse-link.md",
+      "kind": "technique",
+      "title": "License and reuse link",
+      "summary": "Point to the actual terms and distinguish project assets with different terms.",
+      "tasks": [
+        "handoff"
+      ],
+      "tags": [
+        "reuse"
+      ],
+      "aliases": [
+        "project license link"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "Code, documentation, data, or design assets may have distinct terms."
+    },
+    {
+      "id": "lightweight-link-verification",
+      "path": "techniques/lightweight-link-verification.md",
+      "kind": "technique",
+      "title": "Lightweight link verification",
+      "summary": "Check that critical relative targets and anchors resolve at the claimed revision.",
+      "tasks": [
+        "verification"
+      ],
+      "tags": [
+        "verification"
+      ],
+      "aliases": [
+        "readme link checker"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "Relative links, fragments, or evidence URLs can drift as files move."
+    },
+    {
+      "id": "link-a-parts-list-for-the-hardware-revision",
+      "path": "techniques/link-a-parts-list-for-the-hardware-revision.md",
+      "kind": "technique",
+      "title": "Link a parts list for the hardware revision",
+      "summary": "Give builders a bill of materials that matches the design they are assembling.",
+      "tasks": [
+        "quickstart"
+      ],
+      "tags": [
+        "onboarding",
+        "prerequisites"
+      ],
+      "aliases": [
+        "hardware bill of materials"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "Hardware builds differ by revision, assembly variant, or optional part."
+    },
+    {
+      "id": "agent-instruction-pointer",
+      "path": "techniques/agent-instruction-pointer.md",
+      "kind": "technique",
+      "title": "Link authoritative agent instructions",
+      "summary": "Point an agent to the repository’s applicable instructions from the README.",
+      "tasks": [
+        "handoff",
+        "navigation"
+      ],
+      "tags": [
+        "agents",
+        "onboarding"
+      ],
+      "aliases": [
+        "agent entry point",
+        "agent instruction link"
+      ],
+      "evidence": "observed",
+      "status": "active",
+      "use_when": "An agent needs repository-specific editing or validation guidance before acting."
+    },
+    {
+      "id": "link-both-a-notebook-preview-and-a-runnable-notebook",
+      "path": "techniques/link-both-a-notebook-preview-and-a-runnable-notebook.md",
+      "kind": "technique",
+      "title": "Link both a notebook preview and a runnable notebook",
+      "summary": "Label the link for inspecting saved results and the link for launching the notebook at the corresponding revision.",
+      "tasks": [
+        "demo",
+        "quickstart"
+      ],
+      "tags": [
+        "demos"
+      ],
+      "aliases": [
+        "interactive notebook link"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "A notebook has value both as readable output and as an executable walkthrough."
+    },
+    {
+      "id": "link-directly-to-a-project-configured-workspace",
+      "path": "techniques/link-directly-to-a-project-configured-workspace.md",
+      "kind": "technique",
+      "title": "Link directly to a project-configured workspace",
+      "summary": "Point readers to a preconfigured development workspace tied to the repository and intended branch.",
+      "tasks": [
+        "quickstart"
+      ],
+      "tags": [
+        "onboarding",
+        "environment"
+      ],
+      "aliases": [
+        "preconfigured development workspace"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "The project can supply a known workspace configuration for first-time users."
+    },
+    {
+      "id": "link-the-machine-readable-interface-contract",
+      "path": "techniques/link-the-machine-readable-interface-contract.md",
+      "kind": "technique",
+      "title": "Link the machine-readable interface contract",
+      "summary": "Point to the specification or schema for the interface addressed by the README and identify its version.",
+      "tasks": [
+        "handoff",
+        "verification"
+      ],
+      "tags": [
+        "interfaces"
+      ],
+      "aliases": [
+        "openapi or schema link"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "A schema or contract is the authoritative definition for a versioned interface."
+    },
+    {
+      "id": "list-the-local-service-urls-by-purpose",
+      "path": "techniques/list-the-local-service-urls-by-purpose.md",
+      "kind": "technique",
+      "title": "List the local service URLs by purpose",
+      "summary": "When setup starts several services, tell readers which address opens the app, dashboard, API, or other local tool.",
+      "tasks": [
+        "quickstart"
+      ],
+      "tags": [
+        "onboarding",
+        "configuration"
+      ],
+      "aliases": [
+        "local ports and endpoints"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "Several local services or ports become available during setup."
+    },
+    {
+      "id": "list-what-each-format-can-read-write-and-preserve",
+      "path": "techniques/list-what-each-format-can-read-write-and-preserve.md",
+      "kind": "technique",
+      "title": "List what each format can read, write, and preserve",
+      "summary": "Separate input and output support.",
+      "tasks": [
+        "overview"
+      ],
+      "tags": [
+        "project-scope"
+      ],
+      "aliases": [
+        "format fidelity matrix"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "Import, export, or round-trip behavior varies by file format."
+    },
+    {
+      "id": "live-demo-or-playground",
+      "path": "techniques/live-demo-or-playground.md",
+      "kind": "technique",
+      "title": "Live demo or playground",
+      "summary": "Link directly to a usable experience and state access requirements.",
+      "tasks": [
+        "demo"
+      ],
+      "tags": [
+        "demos"
+      ],
+      "aliases": [
+        "try in browser"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "A low-friction hosted example can show a useful first result."
+    },
+    {
+      "id": "map-application-files-by-purpose",
+      "path": "techniques/map-application-files-by-purpose.md",
+      "kind": "technique",
+      "title": "Map application files by purpose",
+      "summary": "List the locations for user data, configuration, runtime state, and cache on supported platforms.",
+      "tasks": [
+        "first-result"
+      ],
+      "tags": [
+        "stored-state"
+      ],
+      "aliases": [
+        "config and cache locations"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "Files have different persistence, cleanup, or migration needs."
+    },
+    {
+      "id": "map-each-claim-to-the-check-that-can-reproduce-it",
+      "path": "techniques/map-each-claim-to-the-check-that-can-reproduce-it.md",
+      "kind": "technique",
+      "title": "Map each claim to the check that can reproduce it",
+      "summary": "Pair the claim or reported result with its command, expected outcome, and the data it produces.",
+      "tasks": [
+        "verification"
+      ],
+      "tags": [
+        "verification"
+      ],
+      "aliases": [
+        "claim to reproduction evidence"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "A release, paper, or benchmark makes several separately checkable claims."
+    },
+    {
+      "id": "match-firmware-to-the-physical-hardware-revision",
+      "path": "techniques/match-firmware-to-the-physical-hardware-revision.md",
+      "kind": "technique",
+      "title": "Match firmware to the physical hardware revision",
+      "summary": "Help readers identify the device revision and map it to the correct build or download target.",
+      "tasks": [
+        "quickstart"
+      ],
+      "tags": [
+        "onboarding",
+        "prerequisites"
+      ],
+      "aliases": [
+        "board firmware match"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "Firmware files look interchangeable and hardware compatibility differs."
+    },
+    {
+      "id": "minimal-working-example",
+      "path": "techniques/minimal-working-example.md",
+      "kind": "technique",
+      "title": "Minimal working example",
+      "summary": "Show the smallest realistic input and operation that demonstrate the capability.",
+      "tasks": [
+        "demo",
+        "quickstart"
+      ],
+      "tags": [
+        "demos"
+      ],
+      "aliases": [
+        "minimum reproducible example"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "A small standalone example can prove the core behavior."
+    },
+    {
+      "id": "next-action-after-success",
+      "path": "techniques/next-action-after-success.md",
+      "kind": "technique",
+      "title": "Next action after success",
+      "summary": "Offer a natural second task once the first one works.",
+      "tasks": [
+        "first-result"
+      ],
+      "tags": [
+        "onboarding"
+      ],
+      "aliases": [
+        "after quickstart next steps"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "The quickstart ends before a common next task."
+    },
+    {
+      "id": "offer-a-smoke-test-and-a-full-reproduction-separately",
+      "path": "techniques/offer-a-smoke-test-and-a-full-reproduction-separately.md",
+      "kind": "technique",
+      "title": "Offer a smoke test and a full reproduction separately",
+      "summary": "Use a small run to establish that setup works and a separate run to reproduce the full result.",
+      "tasks": [
+        "verification"
+      ],
+      "tags": [
+        "verification",
+        "reproduction"
+      ],
+      "aliases": [
+        "small demo and full reproduction"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "The complete reproduction is too costly for a first setup check."
+    },
+    {
+      "id": "offer-an-importable-api-request-collection",
+      "path": "techniques/offer-an-importable-api-request-collection.md",
+      "kind": "technique",
+      "title": "Offer an importable API request collection",
+      "summary": "Link a reusable request collection so readers can run the same requests in their API client.",
+      "tasks": [
+        "quickstart"
+      ],
+      "tags": [
+        "onboarding",
+        "configuration"
+      ],
+      "aliases": [
+        "api request collection"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "An API example has multiple requests or variables that a client can import."
+    },
+    {
+      "id": "offer-an-isolated-trial-command",
+      "path": "techniques/offer-an-isolated-trial-command.md",
+      "kind": "technique",
+      "title": "Offer an isolated trial command",
+      "summary": "Give the reader a short way to try a tool without installing it into their project.",
+      "tasks": [
+        "quickstart"
+      ],
+      "tags": [
+        "onboarding",
+        "environment"
+      ],
+      "aliases": [
+        "temporary test environment"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "A trial can be disposable while installation changes persistent state."
+    },
+    {
+      "id": "one-prominent-first-action",
+      "path": "techniques/one-prominent-first-action.md",
+      "kind": "technique",
+      "title": "One prominent first action",
+      "summary": "Lead with a recognizable task such as play, try, install, or adopt.",
+      "tasks": [
+        "quickstart"
+      ],
+      "tags": [
+        "onboarding"
+      ],
+      "aliases": [
+        "primary starting action"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "Several links compete for a new reader’s attention."
+    },
+    {
+      "id": "pair-the-install-name-with-the-name-used-in-code",
+      "path": "techniques/pair-the-install-name-with-the-name-used-in-code.md",
+      "kind": "technique",
+      "title": "Pair the install name with the name used in code",
+      "summary": "When distribution, import, or executable names differ, show the exact names together so readers can connect the installation step to the first use.",
+      "tasks": [
+        "quickstart"
+      ],
+      "tags": [
+        "onboarding",
+        "installation"
+      ],
+      "aliases": [
+        "package and import names"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "The package manager name differs from the executable or import identifier."
+    },
+    {
+      "id": "permanent-proof-links",
+      "path": "techniques/permanent-proof-links.md",
+      "kind": "technique",
+      "title": "Permanent proof links",
+      "summary": "Keep verification traceable with a commit-pinned receipt and recorded run, attempt, artifact ID, and digest.",
+      "tasks": [
+        "verification",
+        "handoff"
+      ],
+      "tags": [
+        "ci",
+        "git",
+        "release-evidence"
+      ],
+      "aliases": [
+        "durable verification receipt",
+        "pinned proof links"
+      ],
+      "evidence": "verified",
+      "status": "active",
+      "use_when": "A public claim needs evidence that can be traced back to the exact run and revision."
+    },
+    {
+      "id": "prerequisite-or-installation-check",
+      "path": "techniques/prerequisite-or-installation-check.md",
+      "kind": "technique",
+      "title": "Prerequisite or installation check",
+      "summary": "Show a fast way to check that the local environment is ready before the demo.",
+      "tasks": [
+        "quickstart",
+        "verification"
+      ],
+      "tags": [
+        "onboarding",
+        "environment"
+      ],
+      "aliases": [
+        "preflight setup check"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "A short check can distinguish a ready installation from a missing prerequisite."
+    },
+    {
+      "id": "prerequisites-next-to-the-task",
+      "path": "techniques/prerequisites-next-to-the-task.md",
+      "kind": "technique",
+      "title": "Prerequisites next to the task",
+      "summary": "Name tools, versions, access, and prior setup before any commands depend on them.",
+      "tasks": [
+        "quickstart"
+      ],
+      "tags": [
+        "onboarding",
+        "prerequisites"
+      ],
+      "aliases": [
+        "task prerequisites"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "A command assumes an installed tool, a credential, or a running service."
+    },
+    {
+      "id": "preview-changes-before-applying-them",
+      "path": "techniques/preview-changes-before-applying-them.md",
+      "kind": "technique",
+      "title": "Preview changes before applying them",
+      "summary": "When a workflow changes state and offers a preview, give the preview and apply steps distinct labels.",
+      "tasks": [
+        "quickstart"
+      ],
+      "tags": [
+        "maintenance"
+      ],
+      "aliases": [
+        "dry run before apply"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "An operation can describe its planned changes before it applies them."
+    },
+    {
+      "id": "progressive-disclosure",
+      "path": "techniques/progressive-disclosure.md",
+      "kind": "technique",
+      "title": "Progressive disclosure",
+      "summary": "Collapse optional details or move them to a clearly labeled supporting document.",
+      "tasks": [
+        "navigation"
+      ],
+      "tags": [
+        "navigation",
+        "accessibility"
+      ],
+      "aliases": [
+        "collapse optional details"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "Optional detail interrupts the core reading path."
+    },
+    {
+      "id": "project-status-and-maturity",
+      "path": "techniques/project-status-and-maturity.md",
+      "kind": "technique",
+      "title": "Project status and maturity",
+      "summary": "Distinguish a preview, stable release, or archived project.",
+      "tasks": [
+        "overview"
+      ],
+      "tags": [
+        "project-scope"
+      ],
+      "aliases": [
+        "release maturity"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "Preview, experimental, stable, or archived status changes adoption decisions."
+    },
+    {
+      "id": "provide-a-starter-control-map",
+      "path": "techniques/provide-a-starter-control-map.md",
+      "kind": "technique",
+      "title": "Provide a starter control map",
+      "summary": "List the actions a player needs in the first minute and map them to each supported input type.",
+      "tasks": [
+        "quickstart"
+      ],
+      "tags": [
+        "onboarding",
+        "prerequisites"
+      ],
+      "aliases": [
+        "keyboard and controller controls"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "A game or interactive demo needs input mappings before the first action."
+    },
+    {
+      "id": "publication-path-verification",
+      "path": "techniques/publication-path-verification.md",
+      "kind": "technique",
+      "title": "Publication-path verification",
+      "summary": "Test links and assets from the path where the README will actually ship.",
+      "tasks": [
+        "verification"
+      ],
+      "tags": [
+        "verification",
+        "publication"
+      ],
+      "aliases": [
+        "published page verification"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "Content is served from a publication surface distinct from its source file."
+    },
+    {
+      "id": "published-release-link",
+      "path": "techniques/published-release-link.md",
+      "kind": "technique",
+      "title": "Published release link",
+      "summary": "Give a direct path to the release named in the README and its release notes.",
+      "tasks": [
+        "verification"
+      ],
+      "tags": [
+        "verification",
+        "release-evidence"
+      ],
+      "aliases": [
+        "versioned release link"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "A reader needs the official published assets for a specific version."
+    },
+    {
+      "id": "put-a-practice-task-before-its-worked-solution",
+      "path": "techniques/put-a-practice-task-before-its-worked-solution.md",
+      "kind": "technique",
+      "title": "Put a practice task before its worked solution",
+      "summary": "When the README is also a learning guide, give readers a short task and a way to check their attempt.",
+      "tasks": [
+        "first-result"
+      ],
+      "tags": [
+        "learning"
+      ],
+      "aliases": [
+        "exercise before answer"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "A tutorial reader should practice a skill before seeing an answer."
+    },
+    {
+      "id": "recognize-contribution-types-beyond-code",
+      "path": "techniques/recognize-contribution-types-beyond-code.md",
+      "kind": "technique",
+      "title": "Recognize contribution types beyond code",
+      "summary": "Label what people contributed, such as documentation, design, translation, or testing, in the README or linked credits.",
+      "tasks": [
+        "handoff"
+      ],
+      "tags": [
+        "governance"
+      ],
+      "aliases": [
+        "noncode contributions"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "Help beyond code is welcome and needs recognizable entry points."
+    },
+    {
+      "id": "recovery-beside-the-failed-step",
+      "path": "techniques/recovery-beside-the-failed-step.md",
+      "kind": "technique",
+      "title": "Recovery beside the failed step",
+      "summary": "Put a common failure and its recovery close to the command or action that produces it.",
+      "tasks": [
+        "first-result"
+      ],
+      "tags": [
+        "troubleshooting"
+      ],
+      "aliases": [
+        "inline troubleshooting"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "A common failure occurs at a specific command or prerequisite."
+    },
+    {
+      "id": "relative-navigation",
+      "path": "techniques/relative-navigation.md",
+      "kind": "technique",
+      "title": "Relative navigation",
+      "summary": "Link same-checkout guides and assets with paths relative to the Markdown file.",
+      "tasks": [
+        "navigation",
+        "quickstart"
+      ],
+      "tags": [
+        "links",
+        "git",
+        "onboarding"
+      ],
+      "aliases": [
+        "same-checkout links",
+        "relative documentation links"
+      ],
+      "evidence": "observed",
+      "status": "active",
+      "use_when": "A guide, example, or asset ships with the same checkout as its README."
+    },
+    {
+      "id": "rendered-review-at-two-widths",
+      "path": "techniques/rendered-review-at-two-widths.md",
+      "kind": "technique",
+      "title": "Rendered review at two widths",
+      "summary": "Check the landing page on wide and narrow layouts for overflow or unreadable content.",
+      "tasks": [
+        "verification"
+      ],
+      "tags": [
+        "verification",
+        "publication"
+      ],
+      "aliases": [
+        "mobile and desktop readme review"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "Wide tables, screenshots, or code blocks may be hard to use on narrow screens."
+    },
+    {
+      "id": "reuse-a-readme-as-the-package-listing",
+      "path": "techniques/reuse-a-readme-as-the-package-listing.md",
+      "kind": "technique",
+      "title": "Reuse a README as the package listing",
+      "summary": "Wire the maintained README into package metadata so package users see the same introduction in their registry.",
+      "tasks": [
+        "handoff"
+      ],
+      "tags": [
+        "publication"
+      ],
+      "aliases": [
+        "package registry readme"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "The same README is consumed by a package or registry landing page."
+    },
+    {
+      "id": "roadmap-pointer",
+      "path": "techniques/roadmap-pointer.md",
+      "kind": "technique",
+      "title": "Roadmap pointer",
+      "summary": "Link planned work to a maintained roadmap and distinguish it from available features.",
+      "tasks": [
+        "overview"
+      ],
+      "tags": [
+        "project-scope"
+      ],
+      "aliases": [
+        "planned work link"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "Readers need to distinguish current scope from future plans."
+    },
+    {
+      "id": "role-based-entry-points",
+      "path": "techniques/role-based-entry-points.md",
+      "kind": "technique",
+      "title": "Route by reader task",
+      "summary": "Give distinct reader goals clear routes from the same homepage.",
+      "tasks": [
+        "overview",
+        "navigation",
+        "handoff"
+      ],
+      "tags": [
+        "audience",
+        "links",
+        "onboarding"
+      ],
+      "aliases": [
+        "audience routing",
+        "task-based entry points"
+      ],
+      "evidence": "observed",
+      "status": "active",
+      "use_when": "Different readers arrive with different first tasks and need clear starting routes."
+    },
+    {
+      "id": "route-readers-to-editable-designs-and-manufacturing-exports",
+      "path": "techniques/route-readers-to-editable-designs-and-manufacturing-exports.md",
+      "kind": "technique",
+      "title": "Route readers to editable designs and manufacturing exports",
+      "summary": "Give separate links to the preferred files for modifying the design, files prepared for fabrication, and human-readable drawings where provided.",
+      "tasks": [
+        "handoff"
+      ],
+      "tags": [
+        "reuse"
+      ],
+      "aliases": [
+        "editable design sources"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "Designers and builders need different versions of the same design."
+    },
+    {
+      "id": "safe-configuration-example",
+      "path": "techniques/safe-configuration-example.md",
+      "kind": "technique",
+      "title": "Safe configuration example",
+      "summary": "Use labeled placeholders and explain where values belong.",
+      "tasks": [
+        "quickstart"
+      ],
+      "tags": [
+        "onboarding",
+        "configuration"
+      ],
+      "aliases": [
+        "configuration starter template"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "Readers need a working configuration without including credentials or production defaults."
+    },
+    {
+      "id": "sample-fixture-or-starter-input",
+      "path": "techniques/sample-fixture-or-starter-input.md",
+      "kind": "technique",
+      "title": "Sample fixture or starter input",
+      "summary": "Provide a small known input that readers can use immediately.",
+      "tasks": [
+        "quickstart"
+      ],
+      "tags": [
+        "onboarding"
+      ],
+      "aliases": [
+        "starter fixture file"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "Readers need input they can use immediately to reproduce an example."
+    },
+    {
+      "id": "save-or-persistence-checkpoint",
+      "path": "techniques/save-or-persistence-checkpoint.md",
+      "kind": "technique",
+      "title": "Save or persistence checkpoint",
+      "summary": "Tell readers what should survive a restart and how to confirm it.",
+      "tasks": [
+        "first-result"
+      ],
+      "tags": [
+        "stored-state"
+      ],
+      "aliases": [
+        "save and reload checkpoint"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "The first task writes state that the reader expects to retain."
+    },
+    {
+      "id": "scope-boundaries",
+      "path": "techniques/scope-boundaries.md",
+      "kind": "technique",
+      "title": "Scope boundaries",
+      "summary": "Call out material limitations or environments outside the supported scope.",
+      "tasks": [
+        "overview"
+      ],
+      "tags": [
+        "project-scope"
+      ],
+      "aliases": [
+        "supported scope"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "Readers could reasonably expect unsupported platforms or tasks to work."
+    },
+    {
+      "id": "screenshot-or-result-preview",
+      "path": "techniques/screenshot-or-result-preview.md",
+      "kind": "technique",
+      "title": "Screenshot or result preview",
+      "summary": "Show the key product screen or output readers should recognize.",
+      "tasks": [
+        "demo"
+      ],
+      "tags": [
+        "demos"
+      ],
+      "aliases": [
+        "product screenshot"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "The expected output or UI is easier to recognize visually."
+    },
+    {
+      "id": "section-deep-links",
+      "path": "techniques/section-deep-links.md",
+      "kind": "technique",
+      "title": "Section deep links",
+      "summary": "Send the reader to the relevant part of a guide and recheck anchors when headings change.",
+      "tasks": [
+        "navigation"
+      ],
+      "tags": [
+        "navigation"
+      ],
+      "aliases": [
+        "link to a heading"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "A specific subsection answers the reader’s question."
+    },
+    {
+      "id": "security-reporting-route",
+      "path": "techniques/security-reporting-route.md",
+      "kind": "technique",
+      "title": "Security reporting route",
+      "summary": "Link the project’s supported private disclosure process when applicable.",
+      "tasks": [
+        "handoff",
+        "navigation"
+      ],
+      "tags": [
+        "reuse"
+      ],
+      "aliases": [
+        "private security disclosure"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "The project has a private channel for security reports."
+    },
+    {
+      "id": "send-readers-to-docs-for-their-installed-version",
+      "path": "techniques/send-readers-to-docs-for-their-installed-version.md",
+      "kind": "technique",
+      "title": "Send readers to docs for their installed version",
+      "summary": "Label stable and development docs links so readers can match them to the version they are using.",
+      "tasks": [
+        "navigation",
+        "quickstart"
+      ],
+      "tags": [
+        "navigation"
+      ],
+      "aliases": [
+        "installed version docs"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "Instructions differ across supported installed releases."
+    },
+    {
+      "id": "separate-diagnostic-capture-from-sharing",
+      "path": "techniques/separate-diagnostic-capture-from-sharing.md",
+      "kind": "technique",
+      "title": "Separate diagnostic capture from sharing",
+      "summary": "Tell readers how to capture relevant evidence, where the resulting bundle lands, and how to inspect or anonymize it before sending it through the support route.",
+      "tasks": [
+        "first-result",
+        "handoff"
+      ],
+      "tags": [
+        "troubleshooting"
+      ],
+      "aliases": [
+        "review support diagnostics"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "Support may ask for logs or a bundle containing local details."
+    },
+    {
+      "id": "separate-guide-types",
+      "path": "techniques/separate-guide-types.md",
+      "kind": "technique",
+      "title": "Separate guide types",
+      "summary": "Route readers to a tutorial, how-to, reference, or explanation according to their task.",
+      "tasks": [
+        "navigation"
+      ],
+      "tags": [
+        "navigation"
+      ],
+      "aliases": [
+        "separate tutorials and reference"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "The project has material for learning, completing tasks, lookup, and background."
+    },
+    {
+      "id": "separate-platform-commands",
+      "path": "techniques/separate-platform-commands.md",
+      "kind": "technique",
+      "title": "Separate platform commands",
+      "summary": "Label POSIX and PowerShell paths where their commands differ.",
+      "tasks": [
+        "quickstart"
+      ],
+      "tags": [
+        "onboarding",
+        "installation"
+      ],
+      "aliases": [
+        "os specific setup"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "Commands or syntax differ across supported operating systems or shells."
+    },
+    {
+      "id": "set-a-time-and-cost-expectation-before-setup",
+      "path": "techniques/set-a-time-and-cost-expectation-before-setup.md",
+      "kind": "technique",
+      "title": "Set a time and cost expectation before setup",
+      "summary": "State how long the example usually takes and whether it can create billable resources, with a link to current terms when pricing depends on an account or provider.",
+      "tasks": [
+        "quickstart"
+      ],
+      "tags": [
+        "onboarding"
+      ],
+      "aliases": [
+        "setup effort estimate"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "Installation time, disk, compute, or spend could affect whether a reader starts."
+    },
+    {
+      "id": "show-a-benchmark-case-that-changes-the-takeaway",
+      "path": "techniques/show-a-benchmark-case-that-changes-the-takeaway.md",
+      "kind": "technique",
+      "title": "Show a benchmark case that changes the takeaway",
+      "summary": "Beside a favorable result, include a reproducible workload or flag change that reduces the advantage or changes performance.",
+      "tasks": [
+        "verification"
+      ],
+      "tags": [
+        "verification",
+        "reproduction"
+      ],
+      "aliases": [
+        "benchmark counterexample"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "A benchmark advantage depends heavily on data or workload shape."
+    },
+    {
+      "id": "first-success-milestone",
+      "path": "techniques/first-success-milestone.md",
+      "kind": "technique",
+      "title": "Show a recognizable first result",
+      "summary": "Tell the reader what success looks like immediately after the first real task.",
+      "tasks": [
+        "first-result",
+        "quickstart",
+        "demo"
+      ],
+      "tags": [
+        "expected-output",
+        "onboarding"
+      ],
+      "aliases": [
+        "first-use milestone",
+        "expected first output"
+      ],
+      "evidence": "observed",
+      "status": "active",
+      "use_when": "A quickstart produces output the reader must recognize before continuing."
+    },
+    {
+      "id": "show-a-restore-check-against-a-separate-destination",
+      "path": "techniques/show-a-restore-check-against-a-separate-destination.md",
+      "kind": "technique",
+      "title": "Show a restore check against a separate destination",
+      "summary": "Pair a backup path with a small restore exercise into a separate destination and show what to inspect in the restored copy.",
+      "tasks": [
+        "first-result",
+        "verification"
+      ],
+      "tags": [
+        "stored-state"
+      ],
+      "aliases": [
+        "backup restore test"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "The project stores important state and has a documented backup path."
+    },
+    {
+      "id": "show-configuration-precedence",
+      "path": "techniques/show-configuration-precedence.md",
+      "kind": "technique",
+      "title": "Show configuration precedence",
+      "summary": "Explain which setting wins when flags, environment variables, configuration files, and defaults disagree.",
+      "tasks": [
+        "quickstart"
+      ],
+      "tags": [
+        "onboarding",
+        "configuration"
+      ],
+      "aliases": [
+        "settings override order"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "The same setting can be supplied in multiple places."
+    },
+    {
+      "id": "show-how-another-workflow-consumes-an-output",
+      "path": "techniques/show-how-another-workflow-consumes-an-output.md",
+      "kind": "technique",
+      "title": "Show how another workflow consumes an output",
+      "summary": "Document output names and show a caller reading one of those outputs.",
+      "tasks": [
+        "handoff"
+      ],
+      "tags": [
+        "interfaces"
+      ],
+      "aliases": [
+        "downstream workflow example"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "A consumer uses a producer’s file, output value, or artifact."
+    },
+    {
+      "id": "show-how-asset-variants-map-to-published-files",
+      "path": "techniques/show-how-asset-variants-map-to-published-files.md",
+      "kind": "technique",
+      "title": "Show how asset variants map to published files",
+      "summary": "Give the file naming pattern, label the dimensions or styles that change the filename, and show where to check whether a combination exists.",
+      "tasks": [
+        "demo"
+      ],
+      "tags": [
+        "demos"
+      ],
+      "aliases": [
+        "asset export mapping"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "Several published exports come from the same editable asset."
+    },
+    {
+      "id": "show-how-to-activate-an-installed-extension",
+      "path": "techniques/show-how-to-activate-an-installed-extension.md",
+      "kind": "technique",
+      "title": "Show how to activate an installed extension",
+      "summary": "Name the first command, view, or event that activates the extension and the behavior a reader should see.",
+      "tasks": [
+        "first-result"
+      ],
+      "tags": [
+        "troubleshooting"
+      ],
+      "aliases": [
+        "enable installed plugin"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "An extension needs activation after installation."
+    },
+    {
+      "id": "show-how-to-enable-optional-capabilities",
+      "path": "techniques/show-how-to-enable-optional-capabilities.md",
+      "kind": "technique",
+      "title": "Show how to enable optional capabilities",
+      "summary": "Identify what the base install enables and which feature flag or package extra enables each optional capability.",
+      "tasks": [
+        "quickstart"
+      ],
+      "tags": [
+        "onboarding",
+        "installation"
+      ],
+      "aliases": [
+        "feature flags and extras"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "An example requires features or dependencies excluded from the base installation."
+    },
+    {
+      "id": "show-how-to-prepare-an-offline-install",
+      "path": "techniques/show-how-to-prepare-an-offline-install.md",
+      "kind": "technique",
+      "title": "Show how to prepare an offline install",
+      "summary": "Separate gathering dependencies on a connected machine from installing the staged set on the offline target.",
+      "tasks": [
+        "quickstart"
+      ],
+      "tags": [
+        "onboarding",
+        "environment"
+      ],
+      "aliases": [
+        "offline dependency bundle"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "Installation targets cannot access the package registry during setup."
+    },
+    {
+      "id": "show-how-to-retrieve-every-page-of-results",
+      "path": "techniques/show-how-to-retrieve-every-page-of-results.md",
+      "kind": "technique",
+      "title": "Show how to retrieve every page of results",
+      "summary": "Give an example that spans multiple pages, follows the continuation link or cursor, and states when to stop.",
+      "tasks": [
+        "first-result",
+        "quickstart"
+      ],
+      "tags": [
+        "automation"
+      ],
+      "aliases": [
+        "api pagination"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "A service limits result count or returns continuation tokens."
+    },
+    {
+      "id": "show-how-to-verify-the-artifact-s-producer",
+      "path": "techniques/show-how-to-verify-the-artifact-s-producer.md",
+      "kind": "technique",
+      "title": "Show how to verify the artifact’s producer",
+      "summary": "Where a release provides a signed attestation, show how to verify it against the expected repository or workflow.",
+      "tasks": [
+        "verification"
+      ],
+      "tags": [
+        "verification",
+        "release-evidence"
+      ],
+      "aliases": [
+        "signed build provenance"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "Readers need to check who built an artifact and where it was built."
+    },
+    {
+      "id": "show-the-order-for-upgrading-multiple-components",
+      "path": "techniques/show-the-order-for-upgrading-multiple-components.md",
+      "kind": "technique",
+      "title": "Show the order for upgrading multiple components",
+      "summary": "When components evolve independently, show the upgrade sequence and which version combinations can coexist during the transition.",
+      "tasks": [
+        "quickstart"
+      ],
+      "tags": [
+        "maintenance"
+      ],
+      "aliases": [
+        "component upgrade order"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "An upgrade crosses independently versioned services, nodes, or clients."
+    },
+    {
+      "id": "show-the-permissions-automation-needs",
+      "path": "techniques/show-the-permissions-automation-needs.md",
+      "kind": "technique",
+      "title": "Show the permissions automation needs",
+      "summary": "Name the caller permissions the example needs and what each one allows.",
+      "tasks": [
+        "quickstart",
+        "verification"
+      ],
+      "tags": [
+        "onboarding",
+        "prerequisites"
+      ],
+      "aliases": [
+        "required automation permissions"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "A workflow fails with defaults or requires deliberate access to perform a step."
+    },
+    {
+      "id": "snapshot-source-identity",
+      "path": "techniques/snapshot-source-identity.md",
+      "kind": "technique",
+      "title": "Snapshot source identity",
+      "summary": "Record the origin and digest of frozen README or asset bytes when exact archival identity matters.",
+      "tasks": [
+        "verification"
+      ],
+      "tags": [
+        "verification"
+      ],
+      "aliases": [
+        "archive digest and origin"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "A historical README or visual must be traceable to exact source bytes."
+    },
+    {
+      "id": "starting-directory-and-checkout",
+      "path": "techniques/starting-directory-and-checkout.md",
+      "kind": "technique",
+      "title": "Starting directory and checkout",
+      "summary": "State where commands begin and which revision or project root they expect.",
+      "tasks": [
+        "quickstart"
+      ],
+      "tags": [
+        "onboarding"
+      ],
+      "aliases": [
+        "working directory setup"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "A step depends on the checkout, subdirectory, or package root."
+    },
+    {
+      "id": "project-purpose-statement",
+      "path": "techniques/project-purpose-statement.md",
+      "kind": "technique",
+      "title": "State the project’s purpose",
+      "summary": "Tell a new reader what the project does and what they can accomplish with it.",
+      "tasks": [
+        "overview"
+      ],
+      "tags": [
+        "positioning",
+        "orientation"
+      ],
+      "aliases": [
+        "one-sentence project description",
+        "project introduction"
+      ],
+      "evidence": "observed",
+      "status": "active",
+      "use_when": "A first-time reader needs to decide whether the project solves their problem."
+    },
+    {
+      "id": "state-what-event-consumers-can-assume-about-delivery",
+      "path": "techniques/state-what-event-consumers-can-assume-about-delivery.md",
+      "kind": "technique",
+      "title": "State what event consumers can assume about delivery",
+      "summary": "Say whether event delivery can repeat or arrive out of order and where to find the identifier needed to recognize a repeat.",
+      "tasks": [
+        "handoff"
+      ],
+      "tags": [
+        "interfaces"
+      ],
+      "aliases": [
+        "event delivery guarantees"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "A subscriber needs to handle duplicates, ordering changes, or retries."
+    },
+    {
+      "id": "state-which-saved-data-a-release-can-open",
+      "path": "techniques/state-which-saved-data-a-release-can-open.md",
+      "kind": "technique",
+      "title": "State which saved data a release can open",
+      "summary": "Name which older saves, archives, or project files the new version can read, and describe rollback separately where supported.",
+      "tasks": [
+        "first-result"
+      ],
+      "tags": [
+        "stored-state"
+      ],
+      "aliases": [
+        "saved file compatibility"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "File compatibility differs across releases or file format versions."
+    },
+    {
+      "id": "status-badges",
+      "path": "techniques/status-badges.md",
+      "kind": "technique",
+      "title": "Status badges",
+      "summary": "Surface meaningful build, release, or license signals and link each badge to its source.",
+      "tasks": [
+        "overview",
+        "verification"
+      ],
+      "tags": [
+        "project-scope"
+      ],
+      "aliases": [
+        "build badges"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "A visible workflow, package, or release signal can substantiate a specific current status."
+    },
+    {
+      "id": "support-and-issue-route",
+      "path": "techniques/support-and-issue-route.md",
+      "kind": "technique",
+      "title": "Support and issue route",
+      "summary": "Tell readers where to report a bug or ask for help and what evidence to include.",
+      "tasks": [
+        "handoff"
+      ],
+      "tags": [
+        "governance"
+      ],
+      "aliases": [
+        "where to get help"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "User questions, bugs, and other requests have different destinations."
+    },
+    {
+      "id": "table-of-contents-or-jump-links",
+      "path": "techniques/table-of-contents-or-jump-links.md",
+      "kind": "technique",
+      "title": "Table of contents or jump links",
+      "summary": "Expose major sections when the page is long enough to need them.",
+      "tasks": [
+        "navigation"
+      ],
+      "tags": [
+        "navigation"
+      ],
+      "aliases": [
+        "readme contents links"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "A long README has several independent tasks readers need to revisit."
+    },
+    {
+      "id": "task-local-help-link",
+      "path": "techniques/task-local-help-link.md",
+      "kind": "technique",
+      "title": "Task-local help link",
+      "summary": "Put the relevant support path beside a high-friction step.",
+      "tasks": [
+        "navigation",
+        "first-result"
+      ],
+      "tags": [
+        "navigation"
+      ],
+      "aliases": [
+        "help link beside task"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "Someone at a specific step needs a narrow reference or recovery path."
+    },
+    {
+      "id": "text-equivalent-for-a-chart-or-diagram",
+      "path": "techniques/text-equivalent-for-a-chart-or-diagram.md",
+      "kind": "technique",
+      "title": "Text equivalent for a chart or diagram",
+      "summary": "Put essential values, conclusions, or relationships in surrounding text.",
+      "tasks": [
+        "demo",
+        "navigation"
+      ],
+      "tags": [
+        "demos",
+        "accessibility"
+      ],
+      "aliases": [
+        "accessible diagram summary"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "A chart or diagram carries values, relationships, or trends used in the text."
+    },
+    {
+      "id": "theme-aware-images",
+      "path": "techniques/theme-aware-images.md",
+      "kind": "technique",
+      "title": "Theme-aware images",
+      "summary": "Check readability against light and dark backgrounds and provide variants when needed.",
+      "tasks": [
+        "demo"
+      ],
+      "tags": [
+        "demos",
+        "accessibility"
+      ],
+      "aliases": [
+        "dark mode image"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "The same image loses contrast in one of the supported color themes."
+    },
+    {
+      "id": "track-the-source-revision-of-translations",
+      "path": "techniques/track-the-source-revision-of-translations.md",
+      "kind": "technique",
+      "title": "Track the source revision of translations",
+      "summary": "Link a translated README to its original and record which revision or release it follows.",
+      "tasks": [
+        "navigation"
+      ],
+      "tags": [
+        "navigation",
+        "localization"
+      ],
+      "aliases": [
+        "translation source revision"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "Translations can be published or updated separately from the source language."
+    },
+    {
+      "id": "turn-an-archived-readme-into-a-handoff",
+      "path": "techniques/turn-an-archived-readme-into-a-handoff.md",
+      "kind": "technique",
+      "title": "Turn an archived README into a handoff",
+      "summary": "Put the maintained successor and new project name, if any, at the top of the archive.",
+      "tasks": [
+        "handoff",
+        "navigation"
+      ],
+      "tags": [
+        "lifecycle"
+      ],
+      "aliases": [
+        "archived repository redirect"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "An archived repo remains visible and readers need an onward route."
+    },
+    {
+      "id": "turn-examples-into-regression-tests",
+      "path": "techniques/turn-examples-into-regression-tests.md",
+      "kind": "technique",
+      "title": "Turn examples into regression tests",
+      "summary": "Generate test cases from examples in the maintained documentation source so changing an example also changes what gets tested.",
+      "tasks": [
+        "verification"
+      ],
+      "tags": [
+        "verification"
+      ],
+      "aliases": [
+        "tested documentation examples"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "An example can break when code, flags, or fixtures change."
+    },
+    {
+      "id": "upgrade-or-migration-route",
+      "path": "techniques/upgrade-or-migration-route.md",
+      "kind": "technique",
+      "title": "Upgrade or migration route",
+      "summary": "Name the starting version, intended destination, and relevant migration guide.",
+      "tasks": [
+        "quickstart"
+      ],
+      "tags": [
+        "maintenance"
+      ],
+      "aliases": [
+        "upgrade path"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "Existing installations or saved files need a defined path to a later release."
+    },
+    {
+      "id": "use-labeled-callouts-at-the-point-of-action",
+      "path": "techniques/use-labeled-callouts-at-the-point-of-action.md",
+      "kind": "technique",
+      "title": "Use labeled callouts at the point of action",
+      "summary": "Use short labeled notices for important context or consequences beside the relevant step.",
+      "tasks": [
+        "navigation"
+      ],
+      "tags": [
+        "navigation",
+        "accessibility"
+      ],
+      "aliases": [
+        "warning beside action"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "A warning or note only matters for one specific action."
+    },
+    {
+      "id": "value-proposition",
+      "path": "techniques/value-proposition.md",
+      "kind": "technique",
+      "title": "Value proposition",
+      "summary": "Explain the practical payoff or problem the project removes.",
+      "tasks": [
+        "overview"
+      ],
+      "tags": [
+        "project-scope"
+      ],
+      "aliases": [
+        "project benefit"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "The first paragraph names features and leaves their practical benefit implicit."
+    },
+    {
+      "id": "verify-which-readme-appears-on-the-repository-homepage",
+      "path": "techniques/verify-which-readme-appears-on-the-repository-homepage.md",
+      "kind": "technique",
+      "title": "Verify which README appears on the repository homepage",
+      "summary": "When multiple eligible README files exist, check which one the host surfaces and publish the expected content there.",
+      "tasks": [
+        "verification"
+      ],
+      "tags": [
+        "verification",
+        "publication"
+      ],
+      "aliases": [
+        "github readme selection"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "More than one tracked README or ref could become the GitHub homepage."
+    },
+    {
+      "id": "versioned-section-map",
+      "path": "techniques/versioned-section-map.md",
+      "kind": "technique",
+      "title": "Versioned section map",
+      "summary": "Provide a path to find corresponding sections across archived READMEs.",
+      "tasks": [
+        "handoff"
+      ],
+      "tags": [
+        "publication"
+      ],
+      "aliases": [
+        "readme section map by version"
+      ],
+      "evidence": "unverified",
+      "status": "active",
+      "use_when": "Several maintained README editions organize the same tasks differently."
+    },
+    {
+      "id": "copyable-quickstart",
+      "path": "techniques/copyable-quickstart.md",
+      "kind": "technique",
+      "title": "Write a copyable Quickstart",
+      "summary": "Give readers ordered commands they can paste into the supported shell.",
+      "tasks": [
+        "quickstart"
+      ],
+      "tags": [
+        "commands",
+        "onboarding"
+      ],
+      "aliases": [
+        "copy-paste quickstart",
+        "runnable command block"
+      ],
+      "evidence": "observed",
+      "status": "active",
+      "use_when": "A reader can install, build, or run the project from a terminal."
+    },
+    {
+      "id": "purpose-specific-image-alternatives",
+      "path": "techniques/purpose-specific-image-alternatives.md",
+      "kind": "technique",
+      "title": "Write image alternatives for their purpose",
+      "summary": "Give informative, decorative, functional, and complex visuals the text treatment their roles require.",
+      "tasks": [
+        "demo",
+        "navigation"
+      ],
+      "tags": [
+        "accessibility",
+        "images"
+      ],
+      "aliases": [
+        "purpose-based alt text",
+        "accessible README images"
+      ],
+      "evidence": "observed",
+      "status": "active",
+      "use_when": "An image communicates information, provides a link, or decorates the README."
+    }
+  ]
+}

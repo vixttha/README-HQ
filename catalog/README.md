@@ -2,14 +2,14 @@
 
 # Catalog
 
-[Find by title, alias, ID, or tag](search.md) · [Retired records](retired.md) · [Library home](../README.md)
+[Find by title, alias, ID, or tag](search.md) · [JSON index](index.json) · [Retired records](retired.md) · [Library home](../README.md)
 
-12 active records · 0 retired
+145 active records · 0 retired
 
-- [Understand what the project does](overview.md) · `overview` · 3
-- [See what it does in practice](demo.md) · `demo` · 2
-- [Install, run, play, or copy it](quickstart.md) · `quickstart` · 5
-- [Recognize a successful first result](first-result.md) · `first-result` · 4
-- [Find guides, support, or contribution paths](navigation.md) · `navigation` · 4
-- [Verify a claim about a release or revision](verification.md) · `verification` · 5
-- [Hand the project to a maintainer or agent](handoff.md) · `handoff` · 5
+- [Understand what the project does](overview.md) · `overview` · 15
+- [See what it does in practice](demo.md) · `demo` · 14
+- [Install, run, play, or copy it](quickstart.md) · `quickstart` · 45
+- [Recognize a successful first result](first-result.md) · `first-result` · 25
+- [Find guides, support, or contribution paths](navigation.md) · `navigation` · 23
+- [Verify a claim about a release or revision](verification.md) · `verification` · 28
+- [Hand the project to a maintainer or agent](handoff.md) · `handoff` · 32

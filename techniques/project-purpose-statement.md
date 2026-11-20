@@ -14,11 +14,14 @@
     "project introduction"
   ],
   "evidence": "observed",
-  "status": "active"
+  "status": "active",
+  "use_when": "A first-time reader needs to decide whether the project solves their problem."
 }
 -->
 
 # State the project’s purpose
+
+**Use when.** A first-time reader needs to decide whether the project solves their problem.
 
 **Problem.** Readers should be able to identify the project before they scan its tooling, status labels, or setup.
 

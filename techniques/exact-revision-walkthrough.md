@@ -17,11 +17,14 @@
     "walkthrough replay"
   ],
   "evidence": "verified",
-  "status": "active"
+  "status": "active",
+  "use_when": "A reader needs to know whether the written steps worked at the revision in view."
 }
 -->
 
 # Execute the documented walkthrough
+
+**Use when.** A reader needs to know whether the written steps worked at the revision in view.
 
 **Problem.** A passing build or smoke test can exercise a different route from the one the README gives a reader.
 
