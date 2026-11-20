@@ -25,6 +25,7 @@ POINTS = [
 FOLLOW_UPS = [
     ("7ac278c3b7e23775ea4001128e7ce6e999a3e4f7", "3c349cfbe3cc5b259656783321361e91ee0d3dec", "47fef24aacbb768215a92b5ae9c65b7e8c9ac342", ["learning_structured_rate_limit","required_smoke_needs_a_matching","shell_only_syntax_does_not_bind"]),
     ("bb2c3b89a5b470d9236ed9b76f7c5784a07a48b5", "7ac278c3b7e23775ea4001128e7ce6e999a3e4f7", "cbb5aec4967961d3703ea4da08cef5a9abd3f2f4", ["batch5_review_shell_matching","batch5_review_publication_rule_pages","batch5_review_quickstart_checks","active_plan_rejects_invalid","pr_review_totals_distinguish"]),
+    ("aa07e7ab89e4bb2d3d28c9d0a5302394b9b1839b", "bb2c3b89a5b470d9236ed9b76f7c5784a07a48b5", "4ad9a1d50246f6dcc1d4066d693f0a50fbda4350", ["batch5_review_github_response_timeout"]),
 ]
 READER = "tests/test_readme_repairs.py"
 GRAPHIFY = "graphify-hq/template/v0.0.8/test_evidence_map.py"
