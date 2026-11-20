@@ -1073,6 +1073,23 @@ class EvidenceTests(unittest.TestCase):
         self.assertEqual([len(part) for part in parts], [32, 32, 32, 4])
         self.assertEqual([item for part in parts for item in part], features)
 
+    def test_partition_late_write_failure_leaves_destination_available_for_retry(self):
+        features = [{"id": f"item-{i}", "documented_in": [], "changed_in": [], "tested_by": []}
+                    for i in range(33)]
+        with tempfile.TemporaryDirectory() as folder:
+            destination = Path(folder) / "output"
+            write_text = Path.write_text
+            def fail_second(path, *args, **kwargs):
+                if path.parent.name == "part-002":
+                    raise OSError("fixture later write failed")
+                return write_text(path, *args, **kwargs)
+            with patch.object(Path, "write_text", fail_second):
+                with self.assertRaisesRegex(OSError, "later write failed"):
+                    stage_partitions(features, destination, "a" * 40, "example/project")
+            self.assertFalse(destination.exists())
+            result = stage_partitions(features, destination, "a" * 40, "example/project")
+            self.assertEqual([len(json.loads(path.read_bytes())["features"]) for path in result], [32, 1])
+
     def test_partition_writer_handles_more_than_three_partitions(self):
         ref = [{"path": "README.md", "anchor": "# Evidence"}]
         features = [{"id": f"checkpoint-{i}", "documented_in": ref, "changed_in": ref, "tested_by": ref}

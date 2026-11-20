@@ -1,10 +1,12 @@
 """Check repair-plan coverage, exact references, index links, and Graphify readback."""
 import argparse
 import json
+import os
 from pathlib import Path
 import re
 import subprocess
 import sys
+from tempfile import TemporaryDirectory
 
 from hq_data import GitTree, parse_json, read_json
 from hq_navigation import rendered_table_rows
@@ -53,14 +55,22 @@ def stage_partitions(features, destination, source_commit, repository):
          "source_files": sorted(paths), "features": items}
         for number, (items, paths) in enumerate(partitions, 1)
     ]
-    destination.mkdir(parents=True, exist_ok=False)
-    output = []
-    for number, manifest in enumerate(manifests, 1):
-        panel = destination / f"part-{number:03}"
-        panel.mkdir()
-        file = panel / "manifest.json"
-        file.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
-        output.append(file)
+    if os.path.lexists(destination):
+        raise FileExistsError(destination)
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    with TemporaryDirectory(prefix=".plan-", dir=destination.parent) as temporary:
+        staging = Path(temporary) / "partitions"
+        staging.mkdir()
+        output = []
+        for number, manifest in enumerate(manifests, 1):
+            relative = Path(f"part-{number:03}") / "manifest.json"
+            file = staging / relative
+            file.parent.mkdir()
+            file.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+            output.append(destination / relative)
+        if os.path.lexists(destination):
+            raise FileExistsError(destination)
+        staging.rename(destination)
     return output
 
 
