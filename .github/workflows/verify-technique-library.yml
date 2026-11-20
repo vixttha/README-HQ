@@ -1,0 +1,66 @@
+name: README Technique Library verification
+on:
+  push:
+    branches: [audit/technique-library-verify]
+    paths:
+      - '.github/workflows/verify-technique-library.yml'
+      - 'audit/verify_technique_library.py'
+      - 'audit/technique-library-requirements.txt'
+permissions:
+  contents: read
+env:
+  BASELINE: ed7968a9685c315bb7d4ebb2d70d57c1e02c5f39
+  CANDIDATE: 59cc5c63a39de34ebdf4f6f829a42a244c1211a8
+  PYTHONHASHSEED: '0'
+  PYTHONUTF8: '1'
+jobs:
+  verify:
+    if: github.event.repository.visibility == 'public'
+    name: Verify the library on ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ env.BASELINE }}
+          path: baseline
+          persist-credentials: false
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ env.CANDIDATE }}
+          path: candidate
+          persist-credentials: false
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        if: runner.os == 'Linux'
+        with:
+          ref: 8d50caec2bc6fcb998994a1fd302294a029325f9
+          path: locks
+          persist-credentials: false
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.12'
+      - name: Install pinned Markdown parser
+        run: python -m pip install --require-hashes -r audit/technique-library-requirements.txt
+      - name: Install pinned Graphify
+        if: runner.os == 'Linux'
+        run: python -m pip install --require-hashes --only-binary=:all: --no-deps -r locks/graphify-hq/template/v0.0.8/requirements.txt
+      - name: Verify navigation and record trials
+        if: runner.os == 'Windows'
+        shell: bash
+        run: python audit/verify_technique_library.py baseline candidate "$BASELINE" "$CANDIDATE" evidence
+      - name: Verify navigation and query Graphify MCP
+        if: runner.os == 'Linux'
+        run: python audit/verify_technique_library.py baseline candidate "$BASELINE" "$CANDIDATE" evidence --graphify
+      - name: Upload exact-commit evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: technique-library-${{ runner.os }}-attempt-${{ github.run_attempt }}
+          path: evidence/
+          if-no-files-found: error
