@@ -1,6 +1,9 @@
 """Regression cases for exact Graphify targets and version evidence."""
 
 import asyncio
+from hashlib import sha256
+import os
+import subprocess
 import importlib.util
 import json
 from pathlib import Path
@@ -12,7 +15,7 @@ from unittest.mock import patch
 ROOT = Path(__file__).resolve().parents[1]
 KIT = ROOT / "graphify-hq/template/v0.0.8"
 sys.path.insert(0, str(KIT))
-from evidence_map import flex_text, locate, publish_pair, read_manifest, valid_branch, verify_mcp
+from evidence_map import flex_text, locate, publish_pair, read_published_pair, read_manifest, valid_branch, verify_mcp
 from github_provenance import Page, pages
 
 spec = importlib.util.spec_from_file_location("version_maps", ROOT / "graphify-hq/version_maps.py")
@@ -68,6 +71,46 @@ class GraphifyRepairs(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "non-regular"):
                 publish_pair(output, {"graph.json": b"new", "receipt.json": b"receipt"})
             self.assertEqual((output / "graph.json").read_bytes(), b"old")
+
+    def test_graphify_reader_and_writer_recover_an_interrupted_publication(self):
+        def pair(data):
+            return {"graph.json": data, "receipt.json": json.dumps({"graph_sha256": sha256(data).hexdigest()}).encode()}
+
+        with tempfile.TemporaryDirectory() as folder:
+            output = Path(folder) / "output"
+            old = pair(b"old graph")
+            new = pair(b"new graph")
+            publish_pair(output, old)
+            real_replace = os.replace
+
+            def read_between_names(source, destination):
+                real_replace(source, destination)
+                if Path(destination).name == "previous":
+                    self.assertEqual(read_published_pair(output), old)
+                    with self.assertRaisesRegex(ValueError, "already active"):
+                        publish_pair(output, old)
+
+            with patch("evidence_map.os.replace", side_effect=read_between_names):
+                publish_pair(output, new)
+            self.assertEqual(read_published_pair(output), new)
+
+            code = """
+import os, sys
+from pathlib import Path
+import evidence_map
+replace = os.replace
+def stop(source, destination):
+    replace(source, destination)
+    if Path(destination).name == 'previous':
+        os._exit(77)
+evidence_map.os.replace = stop
+evidence_map.publish_pair(Path(sys.argv[1]), {'graph.json': b'broken', 'receipt.json': b'broken'})
+"""
+            result = subprocess.run([sys.executable, "-c", code, str(output)], cwd=KIT, check=False)
+            self.assertEqual(result.returncode, 77)
+            self.assertEqual(read_published_pair(output), new)
+            publish_pair(output, old)
+            self.assertEqual(read_published_pair(output), old)
 
     def test_receipt_graph_digest_is_verified(self):
         with tempfile.TemporaryDirectory() as folder:

@@ -18,6 +18,8 @@ from hq_navigation import MARKDOWN, check_document, parse_markdown, readme_path,
 ROOT = Path(__file__).resolve().parents[1]
 BASELINE = "f50e3749dab90ddfe35894284d1660097a1fb1a8"
 INVENTORY_SHA256 = "d628a1c29fea09fff6063bdb85368a6b2d6969025161b1928d82838a2980cfbb"
+# Digest of the public inventory independently checked against the original Git blobs.
+PUBLIC_INVENTORY_SHA256 = "c0567553cd707ce8b67fb29a242d85d3ad4fa72264544c3365b220e7a746ebd7"
 SLUG = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*")
 VERSION = re.compile(r"v[0-9]+(?:\.[0-9]+){2,}")
 SOURCE_SPAN = re.compile(r"L[1-9]\d*(?:-L[1-9]\d*)?")
@@ -66,7 +68,8 @@ def check_evidence(item, tree, known_sources=None):
     fields = ("source_repository", "source_commit", "source_path", "source_span",
               "environment", "run_url", "source_sha256", "expected", "observed")
     if (
-        any(not isinstance(receipt.get(key), str) or not receipt[key].strip() for key in fields)
+        not isinstance(receipt, dict)
+        or any(not isinstance(receipt.get(key), str) or not receipt[key].strip() for key in fields)
         or receipt.get("result") != "pass" or receipt.get("visibility") != "public"
         or (receipt["source_repository"].lower(), receipt["source_commit"], receipt["source_path"]) != identity
         or not span or receipt["source_span"] != span
@@ -83,14 +86,31 @@ def check_registry(errors, tree=None):
     tree = tree or GitTree(ROOT)
     path = "techniques/registry.json"
     data = parse_json(tree.read(path), path)
+    if not isinstance(data, dict):
+        raise ValueError("technique registry must be a JSON object")
     records = data.get("techniques")
     if type(data.get("schema")) is not int or data["schema"] != 1 or not isinstance(records, list) or not records:
         errors.append("technique registry must use integer schema 1 and a non-empty record array")
         return []
-    inventory = parse_json(tree.read("techniques/public-source-inventory.json"), "public source inventory")
-    if any(not isinstance(item, list) or len(item) != 6 for item in inventory):
-        raise ValueError("public source inventory requires checked blob digests and line counts")
-    checked_sources = {tuple(item[:3]): item[3:] for item in inventory}
+    inventory_path = "techniques/public-source-inventory.json"
+    inventory_bytes = tree.read(inventory_path)
+    inventory = parse_json(inventory_bytes, inventory_path)
+    if not isinstance(inventory, list):
+        raise ValueError("public source inventory must be a list")
+    checked_sources = {}
+    for item in inventory:
+        if (not isinstance(item, list) or len(item) != 6
+                or not all(isinstance(value, str) and value for value in item[:5])
+                or not REPOSITORY.fullmatch(item[0]) or not SHA.fullmatch(item[1])
+                or not SHA.fullmatch(item[3]) or not re.fullmatch(r"[0-9a-f]{64}", item[4])
+                or type(item[5]) is not int or item[5] < 1):
+            raise ValueError("public source inventory requires checked blob digests and line counts")
+        identity = tuple(item[:3])
+        if identity in checked_sources:
+            raise ValueError("duplicate public source inventory identity")
+        checked_sources[identity] = item[3:]
+    if hashlib.sha256(inventory_bytes).hexdigest() != PUBLIC_INVENTORY_SHA256:
+        raise ValueError("public source inventory differs from the independently reviewed snapshot")
     keys = ("title", "problem", "practice", "outcome")
     names, mechanisms, ids = {}, {}, set()
     for record in records:
@@ -129,7 +149,7 @@ def check_registry(errors, tree=None):
                 seen.add(content_key)
             except (KeyError, TypeError, ValueError) as error:
                 errors.append(f"{slug}: {error}")
-    return records
+    return [record for record in records if isinstance(record, dict)]
 
 
 def check_history(errors, tree=None):
@@ -177,10 +197,25 @@ def check_versions(errors, tree=None):
         if entries.get(path) != original[path] or (tree.draft and tree.read(path) != tree.read(path, BASELINE)):
             errors.append(f"{path}: frozen standalone snapshot differs from v0.0.6 baseline")
     rows = re.findall(r"^\| (v[0-9.]+) \| [^\n]+$", index, re.M)
+    approved_index = tree.read("versions/README.md", BASELINE).decode("utf-8")
+    approved_rows = dict(re.findall(r"^\| (v[0-9.]+) \| ([^\n]+)$", approved_index, re.M))
     for version, count in Counter(rows).items():
         matching = [line for line in index.splitlines() if line.startswith(f"| {version} |")]
         if count != 1 or not matching[0].endswith(f"| [Map](../graphify-hq/maps/{version}/README.md) |"):
             errors.append(f"{version}: expected one release row linking to its own map")
+        guide_targets = re.findall(r"\]\(([^)]+)\)", matching[0])[:-1]
+        if version in approved_rows:
+            approved_guides = re.findall(r"\]\(([^)]+)\)", approved_rows[version])[:-1]
+            if guide_targets != approved_guides:
+                errors.append(f"{version}: release row guide destinations differ from the approved archive")
+
+    graph_index = tree.read("graphify-hq/README.md").decode("utf-8")
+    graph_rows = re.findall(r"^\| (v[0-9.]+) \| [^\n]+$", graph_index, re.M)
+    for version in set(rows) | set(graph_rows):
+        matching = [line for line in graph_index.splitlines() if line.startswith(f"| {version} |")]
+        if (version not in rows or len(matching) != 1
+                or re.findall(r"\]\(([^)]+)\)", matching[0]) != [f"maps/{version}/README.md"]):
+            errors.append(f"{version}: Graphify landing row must link to its own map")
     current = re.findall(r"\*\*Current version\*\*[^\n]*\]\((?:versions/)?(v[0-9.]+)/README\.md\)", index)
     home = re.findall(r"\*\*Current version\*\*[^\n]*\]\(versions/(v[0-9.]+)/README\.md\)", readme)
     if len(current) != 1 or current != home or not set(current) <= set(rows):
@@ -188,6 +223,10 @@ def check_versions(errors, tree=None):
     dirs = sorted({path.split("/")[1] for path in entries if path.startswith("versions/") and path.count("/") >= 2})
     if not dirs:
         errors.append("missing standalone versions")
+    elif all(re.fullmatch(r"v[0-9]+(?:\.[0-9]+)+", version) for version in dirs) and current != [
+        max(dirs, key=lambda value: tuple(int(part) for part in value[1:].split(".")))
+    ]:
+        errors.append("current version must match the latest standalone archive")
     for version in dirs:
         if not VERSION.fullmatch(version) or not all(f"versions/{version}/{x}.md" in entries for x in ("README", "CHANGELOG")):
             errors.append(f"{version}: incomplete standalone version directory")
@@ -284,7 +323,7 @@ def main():
         errors.append(str(error))
     if args.receipt:
         from hq_smoke import write_receipt
-        write_receipt(args.receipt, locals().get("tree"), cases, errors, gaps)
+        write_receipt(args.receipt, locals().get("tree"), cases, errors, gaps, validator_path=Path(__file__).resolve())
     if errors:
         for error in errors:
             print(error, file=sys.stderr)

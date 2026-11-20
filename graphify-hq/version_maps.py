@@ -6,6 +6,7 @@ from html import escape
 import json
 import re
 import subprocess
+import shutil
 import sys
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -22,7 +23,7 @@ COVERAGE = "graphify-hq/version-inventory.json"
 
 sys.path.insert(0, str(ROOT / "tools"))
 sys.path.insert(0, str(KIT))
-from evidence_map import publish_directory
+from evidence_map import publication_path, publish_directory
 from hq_data import SHA, parse_json, physical_lines
 from hq_navigation import MARKDOWN, PARSER, suffix
 
@@ -180,6 +181,9 @@ def build_maps(commit, catalog, target, *, check):
         if check:
             command.append("--check")
         subprocess.run(command, cwd=ROOT, check=True)
+        if not check:
+            # The version builder owns this private staging tree exclusively.
+            shutil.rmtree(publication_path(folder))
         receipt = parse_json((folder / "receipt.json").read_bytes(), folder / "receipt.json")
         outline_bytes = render_outline(version, catalog["repository"], receipt, outline).encode()
         outline_path = folder / "README.md"

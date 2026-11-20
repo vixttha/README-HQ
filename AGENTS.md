@@ -1,6 +1,6 @@
 # README HQ agent entry point
 
-Use the `readme-hq` branch as the durable workspace when asked to use README HQ. Resolve its commit and the target repository's ref independently. Read the target's applicable instructions, version metadata, and repository rules at the selected ref.
+For the current repair trial, resolve `repair/v0.0.6-batch-1` in `vixttha/README-HQ` to an exact commit before using the adopter CLI and learning intake. Use `readme-hq` to look up published versions and history. Resolve the target repository's ref independently. Read the target's applicable instructions, version metadata, and repository rules at the selected ref.
 
 | Request | Work |
 | --- | --- |
