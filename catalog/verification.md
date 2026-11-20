@@ -6,7 +6,7 @@
 
 ## Techniques
 
-- [Index catalog fixture](../techniques/index-catalog-fixture.md) · unverified · Disposable record to verify automatic GitHub catalog updates.
+No active records on this page.
 
 ## Combinations
 

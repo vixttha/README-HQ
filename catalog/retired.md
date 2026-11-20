@@ -6,4 +6,4 @@
 
 Use your browser's Find command (Ctrl+F or Command+F). Offline search covers every page.
 
-No retired records.
+- [Index catalog fixture](../techniques/index-catalog-fixture.md) · `index-catalog-fixture` · technique · automated index fixture, synthetic
