@@ -32,8 +32,12 @@ def verify_anchor(tree, path, line, anchor):
 
 
 def fetch_github(route):
-    with urlopen(Request(f"https://api.github.com/repos/{route}", headers={"User-Agent": "README-HQ"}), timeout=15) as response:
-        return json.load(response)
+    request = Request(f"https://api.github.com/repos/{route}", headers={"User-Agent": "README-HQ"})
+    try:
+        with urlopen(request, timeout=15) as response:
+            return json.load(response)
+    except TimeoutError as error:
+        raise URLError("GitHub response timed out") from error
 
 
 def public_checkpoint(tree, repo, fetch=fetch_github):

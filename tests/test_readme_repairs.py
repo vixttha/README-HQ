@@ -130,6 +130,21 @@ class ReaderTests(unittest.TestCase):
                 self.assertEqual(any("no accessible name" in error for error in errors), not named)
                 self.assertFalse(gaps)
 
+    def test_batch5_review_github_response_timeout_is_retryable_but_local_timeout_is_not(self):
+        from urllib.error import URLError
+
+        loader = importlib.util.spec_from_file_location("intake", ROOT / "learning/intake.py")
+        intake = importlib.util.module_from_spec(loader)
+        loader.loader.exec_module(intake)
+        with (patch.object(intake, "urlopen", return_value=BytesIO()),
+              patch.object(intake.json, "load", side_effect=TimeoutError("remote response stalled")),
+              self.assertRaises(URLError) as failed):
+            intake.fetch_github("example/project")
+        remote, _ = intake.intake_error(failed.exception)
+        self.assertEqual(remote, {"code": "github-transport-unavailable", "retryable": True})
+        local, _ = intake.intake_error(TimeoutError("local read stalled"))
+        self.assertEqual(local, {"code": "invalid-or-unverified-evidence", "retryable": False})
+
     def test_batch5_review_shell_matching_keeps_windows_paths_and_quoted_operators(self):
         from check_readme_hq import documented_actions
         from hq_navigation import parse_markdown
@@ -138,6 +153,7 @@ class ReaderTests(unittest.TestCase):
         for shell, command, argv, matched in (
             ("powershell", r'python ".\My Folder\demo.py"', [sys.executable, r".\My Folder\demo.py"], True),
             ("cmd", r"python .\demo.py", [sys.executable, r".\demo.py"], True),
+            ("sh", "python -c 'print(\"$5\")'", [sys.executable, "-c", 'print("$5")'], True),
             ("sh", "python demo.py '>'", [sys.executable, "demo.py", ">"], True),
             ("sh", "python demo.py > result.txt", [sys.executable, "demo.py", ">", "result.txt"], False),
         ):
