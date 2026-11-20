@@ -27,6 +27,7 @@ POINTS = [
 ]
 FOLLOW_UPS = [
     ("edge-case follow-up", "cd3cc3c07e528b3222c9b1da4579191e6920d7a3", "aabd0bb8ef2589c4d379e963961fa961c0669dc9", ["lfs_","bare_gfm"]),
+    ("CodeRabbit follow-up", "0009e51957713dde538ffc8d1ee0f7aae9bbf2ad", "f68ed2df51f37a4c5ec4b69396d51a3ed8afd6d2", ["plan_acceptance"]),
 ]
 
 
