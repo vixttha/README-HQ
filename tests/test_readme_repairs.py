@@ -294,6 +294,9 @@ class ReaderTests(unittest.TestCase):
             (markdown, {**ledger, "checkpoints": [item(78), {**item(79), "issue": 78}]}),
             ("\n".join(table[:2] + rows[::-1] + [""] + sections), ledger),
             (markdown.replace("- **After the repair** Pass it.", "```\n- **After the repair** Pass it.\n```"), ledger),
+            (markdown.replace("Pass it.", "<!-- Hidden acceptance. -->"), ledger),
+            (markdown.replace("[#78](https://github.com/vixttha/README-HQ/issues/78)\n",
+                              "<!-- [#78](https://github.com/vixttha/README-HQ/issues/78) -->\n"), ledger),
         )
         for changed, data in controls:
             with self.assertRaises(ValueError):

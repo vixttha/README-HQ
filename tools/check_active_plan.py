@@ -12,6 +12,7 @@ from hq_data import read_json
 VERSION = re.compile(r"v0\.0\.6\.(\d+)")
 HEADING = re.compile(r"^### (v0\.0\.6\.\d+)\s*$")
 ROW = re.compile(r"^\| `(v0\.0\.6\.\d+)` \| \[#(\d+)\]\(https://github\.com/vixttha/README-HQ/issues/\2\) \|")
+OBLIGATION = re.compile(r"^- \*\*(Replay|After the repair|Public runners)\*\* ")
 REQUIRED_PROOF = {"original_failure_replay", "passing_control", "relevant_regressions", "public_job_and_attempt_evidence"}
 
 
@@ -53,7 +54,8 @@ def check_plan(markdown, ledger, previous=None):
     sections, observed = [], []
     lines = markdown.splitlines()
     parser = MarkdownIt("commonmark").enable("table")
-    for token in parser.parse(markdown):
+    tokens = parser.parse(markdown)
+    for index, token in enumerate(tokens):
         if token.map is None:
             continue
         line = lines[token.map[0]]
@@ -64,18 +66,26 @@ def check_plan(markdown, ledger, previous=None):
                 sections.append((None, []))
         elif token.type == "tr_open" and (row := ROW.match(line)):
             observed.append((row[1], int(row[2])))
-        elif token.type == "list_item_open" and sections and sections[-1][0]:
-            sections[-1][1].append(line)
+        elif token.type == "list_item_open" and token.level == 1 and sections and sections[-1][0]:
+            obligation = OBLIGATION.match(line)
+            inline = tokens[index + 2]
+            if obligation is None or inline.type != "inline":
+                continue
+            label = obligation[1]
+            children = inline.children or []
+            visible = "".join(part.content for part in children if part.type in {"text", "code_inline", "image"})
+            if visible.removeprefix(label).strip():
+                links = {part.attrGet("href") for part in children if part.type == "link_open"}
+                sections[-1][1].append((label, links))
     checkpoints = [(name, body) for name, body in sections if name]
     if observed != rows or [name for name, _ in checkpoints] != [version for version, _ in rows]:
         raise ValueError("Markdown table or checkpoint sections disagree with the ordered ledger")
     for (version, issue), (_, body) in zip(rows, checkpoints):
         for label in ("Replay", "After the repair", "Public runners"):
-            if sum(line.startswith(f"- **{label}** ") and bool(line.removeprefix(f"- **{label}** ").strip())
-                   for line in body) != 1:
+            if sum(actual == label for actual, _ in body) != 1:
                 raise ValueError(f"{version} lacks one visible {label} obligation")
-        if not any(f"https://github.com/vixttha/README-HQ/issues/{issue})" in line
-                   for line in body if line.startswith("- **Public runners** ")):
+        if not any(f"https://github.com/vixttha/README-HQ/issues/{issue}" in links
+                   for label, links in body if label == "Public runners"):
             raise ValueError(f"{version} has no matching issue link in its runner obligation")
     return len(rows)
 
