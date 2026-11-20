@@ -165,7 +165,7 @@ Pillow 13.0.0 passed hashed wheel installation and reader tests on Ubuntu and Wi
 
 The publication policy fixture passed. The live readback at `a7a989ff` reports that `main` is unprotected and has none of the three proposed required check contexts. The live settings change and the owner’s exact-SHA publication decision remain pending under [#132](https://github.com/vixttha/README-HQ/issues/132#issuecomment-7031938898).
 
-The final replay covers GitHub timeouts, Quickstart shell quoting and continuations, redacted URL receipts, and visible ledger obligations. The [last review follow-up](https://github.com/vixttha/README-HQ/pull/151#pullrequestreview-5988486095) requires a visible label on the matching issue link and scans each physical shell line once. [Exact-head CodeRabbit check](https://github.com/vixttha/README-HQ/runs/136130019963).
+The final replay covers GitHub timeouts, Quickstart shell quoting and continuations, redacted URL receipts, and visible ledger obligations. The [last review follow-up](https://github.com/vixttha/README-HQ/pull/151#pullrequestreview-5988486095) requires a visible label on the matching issue link and scans each physical shell line once. [CodeRabbit passed on `d12d5c6b`](https://github.com/vixttha/README-HQ/runs/136130019963) with no new actionable findings. All 15 review threads are resolved.
 
 <details>
 <summary>Verified artifact ZIPs and SHA-256 digests</summary>
