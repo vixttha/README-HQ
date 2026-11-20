@@ -29,6 +29,7 @@ POINTS = [
 ]
 BASE = "8d50caec2bc6fcb998994a1fd302294a029325f9"
 BRANCH = "repair/v0.0.6-batch-1"
+FOLLOW_UP = "774bf783850162f731f3e38aff0f52b99a5202fc"
 KIT = Path("graphify-hq/template/v0.0.8")
 
 
@@ -112,7 +113,7 @@ def main():
                     if BRANCH not in (checkout / path).read_text(encoding="utf-8"):
                         raise ValueError(f"Missing expected trial ref in {path}")
                 advertised = run(checkout, "git", "ls-remote", "origin", "refs/heads/" + BRANCH)
-                if advertised.split()[0] != POINTS[-1][1]:
+                if advertised.split()[0] != FOLLOW_UP:
                     raise ValueError("Hosted onboarding ref does not identify the reviewed Batch 1 head")
                 if "--repo" not in run(checkout, sys.executable, "tools/check_readme_hq.py", "--help"):
                     raise ValueError("Adopter CLI is unavailable")
@@ -140,6 +141,28 @@ def main():
             previous = sha
             capture()
             print("::endgroup::", flush=True)
+
+    row = {"commit": FOLLOW_UP, "parent": previous, "result": "started"}
+    receipt["review_follow_up"] = row
+    try:
+        run(checkout, "git", "checkout", "--detach", FOLLOW_UP)
+        if run(checkout, "git", "rev-parse", "HEAD", "HEAD^").split() != [FOLLOW_UP, previous]:
+            raise ValueError("CodeRabbit follow-up SHA or parent differs")
+        selectors = ("fetched_repository", "responsive_image_url", "existence_only")
+        for case in selectors:
+            result = run(checkout, sys.executable, "-m", "unittest", "discover", "-s", "tests",
+                         "-p", "test_readme_repairs.py", "-k", case, "-v")
+            if "Ran 0 tests" in result:
+                raise ValueError(f"Missing CodeRabbit follow-up case: {case}")
+        row.update(result="passed", cases=list(selectors))
+    except Exception as error:
+        row.update(result="failed", detail=str(error))
+        if isinstance(error, subprocess.CalledProcessError):
+            print(error.stdout or "", end="", flush=True)
+        raise
+    finally:
+        capture()
+    previous = FOLLOW_UP
 
     tasks = [
         ("reader CLI", ("tools/check_readme_hq.py", "--receipt", str(output / "reader.json"))),
