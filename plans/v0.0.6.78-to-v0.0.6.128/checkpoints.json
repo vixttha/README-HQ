@@ -1374,7 +1374,365 @@
     "recommended_first_batch": [
       "v0.0.6.68",
       "v0.0.6.69",
-      "v0.0.6.70"
+      "v0.0.6.70",
+      "v0.0.6.71",
+      "v0.0.6.72",
+      "v0.0.6.73",
+      "v0.0.6.74",
+      "v0.0.6.75",
+      "v0.0.6.76",
+      "v0.0.6.77",
+      "v0.0.6.78",
+      "v0.0.6.79",
+      "v0.0.6.80",
+      "v0.0.6.81",
+      "v0.0.6.82"
+    ]
+  },
+  "repair_batches": {
+    "path": "BATCHES.md",
+    "maximum_checkpoints": 15,
+    "status": "awaiting_approval",
+    "first": "v0.0.6.68",
+    "last": "v0.0.6.140",
+    "batches": [
+      {
+        "id": 1,
+        "first": "v0.0.6.68",
+        "last": "v0.0.6.82",
+        "checkpoint_count": 15,
+        "after": "v0.0.6.67",
+        "checkpoints": [
+          {
+            "version": "v0.0.6.68",
+            "issue": 69
+          },
+          {
+            "version": "v0.0.6.69",
+            "issue": 70
+          },
+          {
+            "version": "v0.0.6.70",
+            "issue": 71
+          },
+          {
+            "version": "v0.0.6.71",
+            "issue": 72
+          },
+          {
+            "version": "v0.0.6.72",
+            "issue": 73
+          },
+          {
+            "version": "v0.0.6.73",
+            "issue": 74
+          },
+          {
+            "version": "v0.0.6.74",
+            "issue": 75
+          },
+          {
+            "version": "v0.0.6.75",
+            "issue": 76
+          },
+          {
+            "version": "v0.0.6.76",
+            "issue": 77
+          },
+          {
+            "version": "v0.0.6.77",
+            "issue": 5
+          },
+          {
+            "version": "v0.0.6.78",
+            "issue": 78
+          },
+          {
+            "version": "v0.0.6.79",
+            "issue": 79
+          },
+          {
+            "version": "v0.0.6.80",
+            "issue": 80
+          },
+          {
+            "version": "v0.0.6.81",
+            "issue": 81
+          },
+          {
+            "version": "v0.0.6.82",
+            "issue": 82
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "first": "v0.0.6.83",
+        "last": "v0.0.6.97",
+        "checkpoint_count": 15,
+        "after": "v0.0.6.82",
+        "checkpoints": [
+          {
+            "version": "v0.0.6.83",
+            "issue": 83
+          },
+          {
+            "version": "v0.0.6.84",
+            "issue": 84
+          },
+          {
+            "version": "v0.0.6.85",
+            "issue": 85
+          },
+          {
+            "version": "v0.0.6.86",
+            "issue": 86
+          },
+          {
+            "version": "v0.0.6.87",
+            "issue": 87
+          },
+          {
+            "version": "v0.0.6.88",
+            "issue": 88
+          },
+          {
+            "version": "v0.0.6.89",
+            "issue": 89
+          },
+          {
+            "version": "v0.0.6.90",
+            "issue": 90
+          },
+          {
+            "version": "v0.0.6.91",
+            "issue": 91
+          },
+          {
+            "version": "v0.0.6.92",
+            "issue": 92
+          },
+          {
+            "version": "v0.0.6.93",
+            "issue": 93
+          },
+          {
+            "version": "v0.0.6.94",
+            "issue": 94
+          },
+          {
+            "version": "v0.0.6.95",
+            "issue": 95
+          },
+          {
+            "version": "v0.0.6.96",
+            "issue": 96
+          },
+          {
+            "version": "v0.0.6.97",
+            "issue": 97
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "first": "v0.0.6.98",
+        "last": "v0.0.6.112",
+        "checkpoint_count": 15,
+        "after": "v0.0.6.97",
+        "checkpoints": [
+          {
+            "version": "v0.0.6.98",
+            "issue": 98
+          },
+          {
+            "version": "v0.0.6.99",
+            "issue": 99
+          },
+          {
+            "version": "v0.0.6.100",
+            "issue": 100
+          },
+          {
+            "version": "v0.0.6.101",
+            "issue": 101
+          },
+          {
+            "version": "v0.0.6.102",
+            "issue": 102
+          },
+          {
+            "version": "v0.0.6.103",
+            "issue": 103
+          },
+          {
+            "version": "v0.0.6.104",
+            "issue": 104
+          },
+          {
+            "version": "v0.0.6.105",
+            "issue": 105
+          },
+          {
+            "version": "v0.0.6.106",
+            "issue": 106
+          },
+          {
+            "version": "v0.0.6.107",
+            "issue": 107
+          },
+          {
+            "version": "v0.0.6.108",
+            "issue": 108
+          },
+          {
+            "version": "v0.0.6.109",
+            "issue": 109
+          },
+          {
+            "version": "v0.0.6.110",
+            "issue": 110
+          },
+          {
+            "version": "v0.0.6.111",
+            "issue": 111
+          },
+          {
+            "version": "v0.0.6.112",
+            "issue": 112
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "first": "v0.0.6.113",
+        "last": "v0.0.6.127",
+        "checkpoint_count": 15,
+        "after": "v0.0.6.112",
+        "checkpoints": [
+          {
+            "version": "v0.0.6.113",
+            "issue": 113
+          },
+          {
+            "version": "v0.0.6.114",
+            "issue": 114
+          },
+          {
+            "version": "v0.0.6.115",
+            "issue": 115
+          },
+          {
+            "version": "v0.0.6.116",
+            "issue": 116
+          },
+          {
+            "version": "v0.0.6.117",
+            "issue": 117
+          },
+          {
+            "version": "v0.0.6.118",
+            "issue": 118
+          },
+          {
+            "version": "v0.0.6.119",
+            "issue": 119
+          },
+          {
+            "version": "v0.0.6.120",
+            "issue": 120
+          },
+          {
+            "version": "v0.0.6.121",
+            "issue": 121
+          },
+          {
+            "version": "v0.0.6.122",
+            "issue": 122
+          },
+          {
+            "version": "v0.0.6.123",
+            "issue": 123
+          },
+          {
+            "version": "v0.0.6.124",
+            "issue": 124
+          },
+          {
+            "version": "v0.0.6.125",
+            "issue": 125
+          },
+          {
+            "version": "v0.0.6.126",
+            "issue": 126
+          },
+          {
+            "version": "v0.0.6.127",
+            "issue": 127
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "first": "v0.0.6.128",
+        "last": "v0.0.6.140",
+        "checkpoint_count": 13,
+        "after": "v0.0.6.127",
+        "checkpoints": [
+          {
+            "version": "v0.0.6.128",
+            "issue": 128
+          },
+          {
+            "version": "v0.0.6.129",
+            "issue": 129
+          },
+          {
+            "version": "v0.0.6.130",
+            "issue": 130
+          },
+          {
+            "version": "v0.0.6.131",
+            "issue": 131
+          },
+          {
+            "version": "v0.0.6.132",
+            "issue": 132
+          },
+          {
+            "version": "v0.0.6.133",
+            "issue": 133
+          },
+          {
+            "version": "v0.0.6.134",
+            "issue": 134
+          },
+          {
+            "version": "v0.0.6.135",
+            "issue": 135
+          },
+          {
+            "version": "v0.0.6.136",
+            "issue": 136
+          },
+          {
+            "version": "v0.0.6.137",
+            "issue": 137
+          },
+          {
+            "version": "v0.0.6.138",
+            "issue": 138
+          },
+          {
+            "version": "v0.0.6.139",
+            "issue": 139
+          },
+          {
+            "version": "v0.0.6.140",
+            "issue": 140
+          }
+        ]
+      }
     ]
   }
 }

@@ -70,6 +70,10 @@ This continuation covers 63 open GitHub issues in checkpoints .78–.140. Checkp
 | `v0.0.6.139` | [#139](https://github.com/vixttha/README-HQ/issues/139) | Bind draft receipts to the checked media bytes | Medium | `v0.0.6.138` |
 | `v0.0.6.140` | [#140](https://github.com/vixttha/README-HQ/issues/140) | Honor accessible names in mixed Markdown and HTML image links | Medium | `v0.0.6.139` |
 
+## Repair batches
+
+The [batch schedule](BATCHES.md) groups the existing checkpoints .68–.140 into batches of up to 15. Batch 1 covers .68–.82, spanning the earlier ten-checkpoint plan and this plan's first five checkpoints. Review the exact batch head and checkpoint evidence before moving on.
+
 ## Keeping the plan current
 
 GitHub Issues is the source for new findings. On each refresh, reconcile newly opened or reopened issues and material changes to planned issues against this ledger. For a distinct, evidenced defect, append the next unused checkpoint, preserve existing assignments, and record the issue, exact affected revision, evidence, related checkpoints, baseline replay, post-fix acceptance and applicable public runner coverage. Issue numbers and checkpoint numbers happened to match for #78–#128. Future issue and checkpoint numbers may differ. Link duplicates and additional evidence to the existing checkpoint. If an issue closes, reconcile the reason and evidence before changing its planning disposition.
