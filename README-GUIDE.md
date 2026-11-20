@@ -58,3 +58,5 @@ python tools/check_publication_rules.py vixttha/README-HQ main \
 ```
 
 The read-only report records the observed PR and status check rules. The solo maintainer records the publication decision separately with the exact candidate SHA.
+
+The reader requires Python 3.11 or newer with Pillow 13.0.0 pinned in `tools/requirements.txt`. Pillow 13 removes Python 3.10 and includes security fixes. Graphify MCP uses its own pinned Python 3.12 environment. [Pillow 13.0.0 release notes](https://pillow.readthedocs.io/en/stable/releasenotes/13.0.0.html) · [PyPI release and wheel hashes](https://pypi.org/pypi/Pillow/13.0.0/json).
