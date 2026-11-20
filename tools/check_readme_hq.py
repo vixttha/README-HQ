@@ -257,17 +257,19 @@ def check_navigation(errors, tree=None, gaps=None):
 
 
 def has_first_action(blocks):
-    action = re.compile(r"^(?:quick[ -]?start|getting started|install(?:ation)?|setup|use|run|try|play|build)\b", re.I)
+    action = re.compile(r"^(?:quick[ -]?start|getting started|install(?:ation)?|setup|usage|use|run|try|play|build)\b", re.I)
     label = re.compile(r"^(?:install(?:ation)?|setup|quick[ -]?start|getting started|run|try|play|build|launch|open)\b", re.I)
     shell = {"", "sh", "shell", "bash", "zsh", "powershell", "pwsh", "cmd", "console", "terminal", "shell-session"}
     action_level = None
     for i, token in enumerate(blocks):
         if token.type == "heading_open":
             level = int(token.tag[1:])
-            if action.search(blocks[i + 1].content):
-                action_level = level
-            elif action_level is not None and level <= action_level:
+            if action_level is not None and level <= action_level:
                 action_level = None
+            heading = "".join(part.content for part in blocks[i + 1].children or []
+                              if part.type in {"text", "code_inline", "image"})
+            if action_level is None and action.search(heading):
+                action_level = level
         elif action_level is not None and token.type == "fence":
             language = token.info.strip().split()
             if (not language or language[0].lower() in shell) and any(

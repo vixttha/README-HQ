@@ -74,6 +74,22 @@ class ReaderTests(unittest.TestCase):
                 self.assertEqual(result.returncode, 2, result.stderr)
                 self.assertIn(f"{options[0]} requires an explicit --repo", result.stderr)
 
+    def test_quickstart_recognizes_usage_rendering_and_nested_sections(self):
+        from check_readme_hq import has_first_action
+        from hq_navigation import parse_markdown
+
+        command = "\n\n```sh\npython run.py\n```\n"
+        fixtures = (
+            ("## Usage", True),
+            ("## **Quickstart**", True),
+            ("## Quickstart\n\n### Install\n\n### Configure", True),
+            ("## Quickstart\n\n### Install\n\n## Development", False),
+            ("## Development", False),
+        )
+        for heading, expected in fixtures:
+            with self.subTest(heading=heading):
+                self.assertEqual(has_first_action(parse_markdown(heading + command)[2]), expected)
+
     def test_first_action_follows_a_real_quickstart_section(self):
         from check_readme_hq import target_readme
 
@@ -493,6 +509,23 @@ A separate [same label](fourth.md).
                 errors, gaps = [], []
                 self.assertEqual(check_document(tree, "README.md", errors, gaps), 1)
                 self.assertTrue(any("requires an alt attribute" in error for error in errors) if not attributes else not errors)
+                self.assertEqual(gaps, [])
+
+    def test_html_image_accepts_nonblank_aria_label(self):
+        image = '<svg xmlns="http://www.w3.org/2000/svg"/>'
+        cases = (
+            ('<img src="diagram.svg" aria-label="A schematic">', 1, False),
+            ('<img src="diagram.svg" aria-label=" ">', 1, True),
+            ('<a href="./guide.md"><img src="diagram.svg" aria-label="Open the guide"></a>', 2, False),
+        )
+        for readme, checked, missing in cases:
+            with self.subTest(readme=readme), repository({"README.md": readme, "diagram.svg": image,
+                                                        "guide.md": "# Guide"}) as tree:
+                errors, gaps = [], []
+                self.assertEqual(check_document(tree, "README.md", errors, gaps), checked)
+                self.assertEqual(len(errors), int(missing), errors)
+                if missing:
+                    self.assertIn("requires an alt attribute", errors[0])
                 self.assertEqual(gaps, [])
 
     def test_svg_root_requires_the_svg_namespace(self):

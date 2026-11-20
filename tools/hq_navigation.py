@@ -113,14 +113,16 @@ class HtmlLinks(HTMLParser):
     def handle_starttag(self, tag, options):
         attrs = dict(options)
         line = self.line + self.getpos()[0] - 1
+        aria_label = (attrs.get("aria-label") or "").strip()
         if tag == "a":
             if attrs.get("name"):
                 self.anchors.add(attrs["name"])
             if attrs.get("href"):
-                self.controls.append([attrs["href"], line, bool((attrs.get("aria-label") or "").strip())])
-        if tag == "img" and "alt" not in attrs:
+                self.controls.append([attrs["href"], line, bool(aria_label)])
+        if tag == "img" and "alt" not in attrs and not aria_label:
             source = attrs.get("src") or attrs.get("srcset") or "<img>"
-            self.links.append(Link(source, line, diagnostic="HTML image requires an alt attribute"))
+            self.links.append(Link(source, line,
+                                   diagnostic="HTML image requires an alt attribute or nonempty aria-label"))
         if tag in {"source", "img"} and "srcset" in attrs:
             srcset = attrs["srcset"] or ""
             try:
@@ -131,7 +133,7 @@ class HtmlLinks(HTMLParser):
                 self.links.extend(Link(url, line, True) for url in sources)
         if tag == "img" and attrs.get("src"):
             self.links.append(Link(attrs["src"], line, True))
-            if self.controls and (attrs.get("alt") or "").strip():
+            if self.controls and (aria_label or (attrs.get("alt") or "").strip()):
                 self.controls[-1][2] = True
 
     def handle_data(self, data):
