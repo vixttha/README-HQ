@@ -28,6 +28,7 @@ POINTS = [
 FOLLOW_UPS = [
     ("edge-case follow-up", "cd3cc3c07e528b3222c9b1da4579191e6920d7a3", "aabd0bb8ef2589c4d379e963961fa961c0669dc9", ["lfs_","bare_gfm"]),
     ("CodeRabbit follow-up", "0009e51957713dde538ffc8d1ee0f7aae9bbf2ad", "f68ed2df51f37a4c5ec4b69396d51a3ed8afd6d2", ["plan_acceptance"]),
+    ("GIF decoder follow-up", "941f6b49aac6ab78076f088ad6b58a00e9f03477", "dcd2a9a77f5141f259efc39e13b17b8ccc67aa65", ["animated_media"]),
 ]
 
 
@@ -44,6 +45,27 @@ def focused(directory, pattern, selector):
                  "-s", "tests", "-p", pattern, "-k", selector, "-v")
     if "Ran 0 tests" in output:
         raise ValueError(f"No focused regression ran for {selector}")
+
+
+def verify_previous_decoder_failure(checkout, repair):
+    regression = subprocess.check_output(
+        ["git", "show", f"{repair}:tests/test_readme_repairs.py"], cwd=checkout
+    )
+    baseline_test = checkout / "tests" / "_batch2_decoder_baseline.py"
+    with baseline_test.open("xb") as handle:
+        handle.write(regression)
+    try:
+        completed = subprocess.run(
+            [sys.executable, "-m", "unittest", "discover", "-s", "tests", "-p", baseline_test.name,
+             "-k", "animated_media_reports_truncated_frame_descriptor", "-v"],
+            cwd=checkout, check=False, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+            encoding="utf-8", errors="replace",
+        )
+        print(completed.stdout, end="", flush=True)
+        if completed.returncode != 1 or "struct.error:" not in completed.stdout:
+            raise ValueError("The predecessor did not reproduce the uncaught GIF decoder error")
+    finally:
+        baseline_test.unlink()
 
 
 def main():
@@ -72,6 +94,9 @@ def main():
         save()
         print(f"::group::{name} {sha}", flush=True)
         try:
+            if name == "GIF decoder follow-up":
+                verify_previous_decoder_failure(checkout, sha)
+                row["baseline"] = "uncaught GIF decoder error reproduced on the parent"
             check_revision(sha, parent, tree)
             if number == 83 and not linux:
                 row.update(result="not_applicable", detail="Graphify dependency lock is Linux-only")
