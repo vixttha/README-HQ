@@ -20,7 +20,7 @@ from hq_data import REGULAR_MODES, SHA, physical_lines
 
 
 MARKDOWN = {".md", ".markdown", ".mdown", ".mkdn"}
-README_FORMATS = [".md", ".markdown", ".mdown", ".mkdn", ".rst", ".adoc", ".asciidoc", ".asc", ".txt", ""]
+README_FORMATS = [".md", ".markdown", ".mdown", ".mkdn", ".rst", ".adoc", ".asciidoc", ".asc", ".org", ".txt", ""]
 IMAGE_FORMATS = {".png": "PNG", ".gif": "GIF", ".jpg": "JPEG", ".jpeg": "JPEG", ".webp": "WEBP"}
 LFS_HOSTS = (b"version https://git-lfs.github.com/", b"version https://hawser.github.com/")
 LFS_POINTER = re.compile(rb"version https://(?:git-lfs|hawser)\.github\.com/spec/v1\n"

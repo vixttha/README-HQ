@@ -111,6 +111,25 @@ class ReaderTests(unittest.TestCase):
                 self.assertEqual(target_readme(tree, ".", errors, [], "application")[0], "README.md")
                 self.assertEqual(any("no discoverable first action" in error for error in errors), expected)
 
+    def test_adopter_detects_an_org_homepage_as_incomplete(self):
+        from check_readme_hq import main
+
+        for files, name, code in (
+            ({"README.org": "* Fixtures"}, "README.org", 2),
+            ({"README.md": "# Demo\n\nThis is a meaningful description."}, "README.md", 0),
+            ({"LICENSE": "fixture"}, None, 1),
+        ):
+            with self.subTest(name=name), repository(files) as tree:
+                receipt = tree.root / "receipt.json"
+                cmd = ["check", "--repo", str(tree.root), "--profile", "reference", "--receipt", str(receipt)]
+                with (patch.object(sys, "argv", cmd), contextlib.redirect_stdout(StringIO()),
+                      contextlib.redirect_stderr(StringIO())):
+                    self.assertEqual(main(), code)
+                body = json.loads(receipt.read_bytes())
+                self.assertEqual(body["cases"]["entrypoint"], name)
+                if name == "README.org":
+                    self.assertEqual(body["cases"]["navigation"], {"result": "unchecked", "format": ".org"})
+
     def test_rich_text_navigation_reports_explicit_incomplete_status(self):
         cases = {"rst": "Guide\n=====\n\nSee `start <guide.rst#start>`_ and `lost <gone.rst#missing>`_.\n\n"
                          "Quickstart\n----------\n\n::\n\n    python run.py\n",
