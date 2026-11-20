@@ -1,0 +1,70 @@
+name: README HQ Batch 4 intentional failure controls
+on:
+  push:
+    branches: [audit/v0.0.6-batch-4-evidence]
+permissions:
+  contents: read
+env:
+  PYTHONHASHSEED: '0'
+  PYTHONDONTWRITEBYTECODE: '1'
+  PIP_DISABLE_PIP_VERSION_CHECK: '1'
+  GRAPHIFY_QUERY_LOG_DISABLE: '1'
+jobs:
+  windows-validator:
+    name: Intentional validator failure on Windows
+    if: github.event.repository.private == false && github.event.repository.visibility == 'public'
+    runs-on: windows-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: 845599f6a5c3ff9e0ec6ccab05f0e36ca9a5be1c
+          persist-credentials: false
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.12'
+      - name: Install the reader
+        run: python -m pip install --require-hashes -r tools/requirements.txt
+      - name: Validate an absent subproject
+        run: python tools/check_readme_hq.py --repo . --subproject deliberate-absent --receipt readme-hq-result.json
+      - name: Passing regression control must be skipped
+        run: python -c "print('pass')"
+      - name: Preserve the failure receipt
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: batch-4-windows-expected-failure-${{ github.run_attempt }}
+          path: readme-hq-result.json
+          if-no-files-found: error
+  graphify-retention:
+    name: Intentional Graphify plan mismatch on Ubuntu
+    if: github.event.repository.private == false && github.event.repository.visibility == 'public'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: 0caafcb1830823758ec4c46a4b1be30be7c2fd15
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.12'
+      - name: Install pinned dependencies
+        shell: bash
+        run: |
+          python -m pip install --require-hashes -r tools/requirements.txt
+          python -m pip install --require-hashes --only-binary=:all: --no-deps -r graphify-hq/template/v0.0.8/requirements.txt
+          python -m pip check
+      - name: Verify with an intentional repair plan mismatch
+        shell: bash
+        run: |
+          sed -i 's/Default homepage discovery/Intentional plan mismatch/' plans/v0.0.6-repairs/README.md
+          GITHUB_SHA="$(git rev-parse HEAD)" python tools/verify_graphify_ci.py "$RUNNER_TEMP/graphify-evidence"
+      - name: Preserve Graphify receipts and attempt diagnostic
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: batch-4-graphify-expected-failure-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/graphify-evidence/
+          if-no-files-found: error
