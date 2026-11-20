@@ -1467,22 +1467,22 @@
         "status": "public_runner_verified",
         "verification": {
           "pull_request": "https://github.com/vixttha/README-HQ/pull/141",
-          "head": "cf7871eb2af31c6f3da9af3acf92715b388f2868",
+          "head": "774bf783850162f731f3e38aff0f52b99a5202fc",
           "base": "8d50caec2bc6fcb998994a1fd302294a029325f9",
-          "post_fix_run": "https://github.com/vixttha/README-HQ/actions/runs/44646802615/attempts/1",
-          "push_run": "https://github.com/vixttha/README-HQ/actions/runs/44646364029/attempts/1",
-          "review_run": "https://github.com/vixttha/README-HQ/actions/runs/44646414531/attempts/1",
-          "proposed_merge": "245f4e29873707e0bd58248e38ed26aee7a43fcd",
+          "post_fix_run": "https://github.com/vixttha/README-HQ/actions/runs/44647908856/attempts/1",
+          "push_run": "https://github.com/vixttha/README-HQ/actions/runs/44647859983/attempts/1",
+          "review_run": "https://github.com/vixttha/README-HQ/actions/runs/44647866459/attempts/1",
+          "proposed_merge": "5c898c02d2b5af6ebb3005c8e619d9775c0a8709",
           "artifacts": [
             {
-              "id": 14589181376,
+              "id": 14589521903,
               "name": "batch-1-ubuntu-latest-1",
-              "sha256": "c630d91135eb520420cd137ffcd5670bc3e75fb7e4d5bc68248567f5b2d872c6"
+              "sha256": "3020ee231a8e8d1823a938bc24b38aed6fffeaec16f75d90e326ef0ec989ebb6"
             },
             {
-              "id": 14588253371,
+              "id": 14588713800,
               "name": "batch-1-windows-latest-1",
-              "sha256": "4cc804effe7fdf2dcd9b6828d072145b02c3460ca30414fdf0af2325cc298eb4"
+              "sha256": "1885b21696cf6a4ddafff16700eb860857f01647910144e79cfbdbf1f1dc926e"
             }
           ],
           "repair_commits": [
@@ -1501,7 +1501,16 @@
             "f64c6ba4e718b501a4f3e75725bdec1e79a649d4",
             "31f49b5e723e791dea81003bc1581d23829b07c8",
             "cf7871eb2af31c6f3da9af3acf92715b388f2868"
-          ]
+          ],
+          "coderabbit_review": "https://github.com/vixttha/README-HQ/pull/141#pullrequestreview-5985750221",
+          "review_follow_up": {
+            "commit": "774bf783850162f731f3e38aff0f52b99a5202fc",
+            "issues": [
+              71,
+              73,
+              74
+            ]
+          }
         }
       },
       {
