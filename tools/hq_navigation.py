@@ -25,6 +25,8 @@ LFS_VERSION = b"version https://git-lfs.github.com/spec/v1"
 LFS_POINTER = re.compile(rb"version https://git-lfs.github.com/spec/v1\r?\n"
                          rb"oid sha256:([0-9a-f]{64})\r?\nsize (0|[1-9][0-9]*)\r?\n?")
 MAX_CACHED_MEDIA_BYTES = 50 * 1024 * 1024
+MAX_MEDIA_FRAMES = 256
+MAX_MEDIA_PIXELS = 100_000_000
 LINE_RANGE = re.compile(r"L([0-9]+)(?:-L([0-9]+))?")
 BARE_WEB = re.compile(r"(?:^|(?<=[\s*_~(]))(?:https?://|www\.)[^\s<>]+")
 PARSER = MarkdownIt("commonmark").enable("table").enable("strikethrough")
@@ -338,7 +340,18 @@ def verify_media(path, data):
                     raise ValueError("image type differs from its extension")
                 image.verify()
             with Image.open(BytesIO(data)) as image:
-                image.load()
+                total_pixels = 0
+                for frame in range(MAX_MEDIA_FRAMES + 1):
+                    try:
+                        image.seek(frame)
+                    except EOFError:
+                        break
+                    total_pixels += image.width * image.height
+                    if frame == MAX_MEDIA_FRAMES or total_pixels > MAX_MEDIA_PIXELS:
+                        raise LookupError("media exceeds the frame or decoded pixel limit")
+                    image.load()
+                if image.format == "GIF" and not data.rstrip(b"\0").endswith(b";"):
+                    raise ValueError("invalid or unreadable image: GIF trailer missing")
         except (OSError, SyntaxError, Image.DecompressionBombError) as error:
             raise ValueError("invalid or unreadable image") from error
     else:

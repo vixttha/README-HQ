@@ -195,6 +195,29 @@ A separate [same label](fourth.md).
             original.git("update-ref", "refs/remotes/origin/origin/main", topic.commit)
             self.assertEqual(resolve("origin/main"), ("README.md", topic.commit))
 
+    def test_animated_media_decodes_later_frames_and_bounds_coverage(self):
+        from PIL import Image
+        from hq_navigation import verify_media
+
+        red = Image.new("RGB", (32, 32), "red")
+        blue = Image.new("RGB", (32, 32), "blue")
+        animated, static = BytesIO(), BytesIO()
+        red.save(animated, format="GIF", save_all=True, append_images=[blue], duration=50)
+        red.save(static, format="PNG")
+        data = animated.getvalue()
+        verify_media("good.gif", data)
+        verify_media("still.png", static.getvalue())
+        damaged = data[:-20] + b";"
+        with Image.open(BytesIO(damaged)) as first:
+            first.load()
+        with self.assertRaisesRegex(ValueError, "invalid or unreadable image"):
+            verify_media("bad.gif", damaged)
+        with self.assertRaisesRegex(ValueError, "GIF trailer missing"):
+            verify_media("truncated.gif", data[:-1])
+        with patch("hq_navigation.MAX_MEDIA_FRAMES", 1):
+            with self.assertRaisesRegex(LookupError, "frame or decoded pixel limit"):
+                verify_media("limited.gif", data)
+
     def test_bad_image_and_unnamed_image_link_are_separate(self):
         readme = "# Images\n[![](broken.png)](README.md)\n[Another dead link](absent.md)\n"
         with repository({"README.md": readme, "broken.png": b"not a PNG"}) as tree:
