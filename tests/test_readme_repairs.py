@@ -131,6 +131,37 @@ class ReaderTests(unittest.TestCase):
                 self.assertEqual(record["git_objects"], {"fetch_policy": mode, "fetched_blobs": fetched})
             self.assertEqual(source.read("README.md"), tree.read("README.md"))
 
+    def test_draft_rejects_symlink_ancestors_inside_and_outside_checkout(self):
+        documents = {"README.md": "[Guide](docs/guide.md#draft)",
+                     "docs/guide.md": "# Original", "other/guide.md": "# Draft"}
+        with repository(documents) as tree, tempfile.TemporaryDirectory() as outside:
+            docs = tree.root / "docs"
+            (docs / "guide.md").write_text("# Draft", encoding="utf-8")
+            draft = GitTree(tree.root, draft=True)
+            self.assertEqual(check_document(draft, "README.md", [], []), 1)
+            docs.rename(tree.root / "original-docs")
+            external = Path(outside)
+            (external / "guide.md").write_text("# Draft", encoding="utf-8")
+            for target in (tree.root / "other", external):
+                with self.subTest(target=target):
+                    try:
+                        docs.symlink_to(target, target_is_directory=True)
+                    except OSError:
+                        if os.name != "nt":
+                            raise
+                        subprocess.run(["cmd", "/c", "mklink", "/J", str(docs), str(target)],
+                                       check=True, capture_output=True)
+                    try:
+                        errors = []
+                        self.assertEqual(check_document(draft, "README.md", errors, []), 0)
+                        self.assertEqual(len(errors), 1)
+                        self.assertIn("symlink or reparse point", errors[0])
+                    finally:
+                        if docs.is_symlink():
+                            docs.unlink()
+                        else:
+                            docs.rmdir()
+
     def test_pinned_readme_and_monorepo_routes(self):
         with repository({"README.md": "# Root", ".github/README.md": "# Published",
                          "docs/README.md": "# Docs", "packages/example/README.md": "# Subproject"}) as tree:

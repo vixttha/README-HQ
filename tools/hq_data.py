@@ -4,6 +4,7 @@ import json
 import os
 from pathlib import Path
 import re
+import stat
 import subprocess
 from urllib.parse import urlsplit
 
@@ -110,9 +111,16 @@ class GitTree:
         if mode not in REGULAR_MODES:
             raise ValueError(f"{path}: expected a regular tracked file, got mode {mode}")
         if self.draft and commit is None:
-            local = self.root / path
-            if local.is_symlink() or not local.resolve().is_relative_to(self.root):
-                raise ValueError(f"{path}: draft path leaves the repository or is a symlink")
+            local = self.root
+            for part in Path(path).parts:
+                local = local / part
+                if not local.is_relative_to(self.root):
+                    raise ValueError(f"{path}: draft path leaves the repository")
+                info = local.lstat()
+                if stat.S_ISLNK(info.st_mode) or (
+                    getattr(info, "st_file_attributes", 0) & stat.FILE_ATTRIBUTE_REPARSE_POINT
+                ):
+                    raise ValueError(f"{path}: tracked draft path has a symlink or reparse point")
             return local.read_bytes()
         try:
             return self.git("cat-file", "blob", digest)
