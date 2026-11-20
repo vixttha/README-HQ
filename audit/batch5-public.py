@@ -1,4 +1,5 @@
 """Run the Batch 5 regressions against immutable predecessor and repair trees."""
+import ast
 import json
 from importlib.metadata import version
 import os
@@ -61,6 +62,23 @@ def baseline(root, sha, path, selector):
     finally:
         target.unlink()
 
+def provenance_test(root, sha, selector, *, before):
+    # The GitHub evidence control is standard library only. Keep the unrelated
+    # Graphify platform dependencies in the real MCP job.
+    source = git(root, "show", f"{sha}:{GRAPHIFY}").decode("utf-8")
+    tree = ast.parse(source)
+    cases = next(node for node in tree.body if isinstance(node, ast.ClassDef) and node.name == "ProvenanceTests")
+    fixture = Path(GRAPHIFY).with_name("_batch5_provenance_test.py")
+    target = root / fixture
+    with target.open("x", encoding="utf-8") as handle:
+        handle.write("import unittest\nfrom github_provenance import verify_pull_request\n\n")
+        handle.write(ast.get_source_segment(source, cases))
+        handle.write("\n")
+    try:
+        test(root, fixture, selector, baseline=before)
+    finally:
+        target.unlink()
+
 def dependency(root, old=False):
     requirements = (root / "tools/requirements.txt").read_text(encoding="utf-8")
     docs = (root / "README.md").read_text(encoding="utf-8")
@@ -98,12 +116,16 @@ def main():
                 row["predecessor"] = "old_dependency_and_runtime_confirmed"
                 select(root, sha, parent, tree)
                 dependency(root)
-            else:
-                path = GRAPHIFY if issue == 134 else READER
-                baseline(root, sha, path, selector)
+            elif issue == 134:
+                provenance_test(root, sha, selector, before=True)
                 row["predecessor"] = "failure_reproduced"
                 select(root, sha, parent, tree)
-                test(root, path, selector)
+                provenance_test(root, sha, selector, before=False)
+            else:
+                baseline(root, sha, READER, selector)
+                row["predecessor"] = "failure_reproduced"
+                select(root, sha, parent, tree)
+                test(root, READER, selector)
             row["result"] = "passed"
         except Exception as failure:
             row.update(result="failed", detail=str(failure))
