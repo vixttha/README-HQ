@@ -111,6 +111,29 @@ class ReaderTests(unittest.TestCase):
                 self.assertEqual(target_readme(tree, ".", errors, [], "application")[0], "README.md")
                 self.assertEqual(any("no discoverable first action" in error for error in errors), expected)
 
+    def test_quickstart_validates_the_local_guide_route_without_following_ordinary_links(self):
+        from check_readme_hq import main
+
+        base = "# Fixture\n\nA meaningful description of the fixture.\n\n"
+        action = "## Quickstart\n\n[Install the demo](guide.md)\n"
+        guide = "# Guide\n\n[Install the dependency](install.md)\n"
+        for readme, extra, code, route in (
+            (base + action, {}, 1, "failed"),
+            (base + action, {"install.md": "# Install"}, 0, "passed"),
+            (base + "[Guide](guide.md)\n\n## Quickstart\n\n```sh\necho ready\n```",
+             {}, 0, "passed"),
+        ):
+            with self.subTest(code=code), repository({"README.md": readme, "guide.md": guide, **extra}) as tree:
+                receipt = tree.root / "receipt.json"
+                argv = ["check", "--repo", str(tree.root), "--receipt", str(receipt)]
+                with (patch.object(sys, "argv", argv), contextlib.redirect_stdout(StringIO()),
+                      contextlib.redirect_stderr(StringIO())):
+                    self.assertEqual(main(), code)
+                data = json.loads(receipt.read_bytes())
+                self.assertEqual(data["cases"]["first_action_route"]["result"], route)
+                if code == 1:
+                    self.assertIn("guide.md:3: missing tracked local target: install.md", data["errors"])
+
     def test_active_plan_rejects_invalid_checkpoint_obligations(self):
         from check_active_plan import check_plan, REQUIRED_PROOF
 

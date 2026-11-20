@@ -250,6 +250,7 @@ def bounded_output(data):
 def coverage_incomplete(cases):
     smoke = cases.get("first_action", {})
     return (cases.get("navigation", {}).get("result") == "unchecked"
+            or cases.get("first_action_route", {}).get("result") == "unchecked"
             or (smoke.get("required") is True
                 and (smoke.get("result") != "passed" or smoke.get("documentation", {}).get("status") != "matched")))
 

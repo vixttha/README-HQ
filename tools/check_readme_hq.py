@@ -12,7 +12,7 @@ import unicodedata
 from urllib.parse import unquote, urlsplit
 
 from hq_data import GitTree, REPOSITORY, SHA, parse_json
-from hq_navigation import MARKDOWN, check_document, parse_markdown, readme_path, suffix, rendered_table_rows
+from hq_navigation import MARKDOWN, check_document, parse_markdown, readme_path, suffix, rendered_table_rows, target_for
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -261,7 +261,10 @@ def documented_actions(blocks):
     label = re.compile(r"^(?:install(?:ation)?|setup|quick[ -]?start|getting started|run|try|play|build|launch|open)\b", re.I)
     shell = {"", "sh", "shell", "bash", "zsh", "powershell", "pwsh", "cmd", "console", "terminal", "shell-session"}
     action_level = None
+    start_line = 0
     for i, token in enumerate(blocks):
+        if token.map is not None:
+            start_line = token.map[0]
         if token.type == "heading_open":
             level = int(token.tag[1:])
             if action_level is not None and level <= action_level:
@@ -287,14 +290,51 @@ def documented_actions(blocks):
                 href = item.attrGet("href") or ""
                 if href and not href.startswith("#") and label.match(name.strip()):
                     offset = item.meta.get("source_line_offset", 0)
-                    yield {"kind": "url", "value": href, "line": token.map[0] + offset + 1}
+                    yield {"kind": "url", "value": href, "line": start_line + offset + 1}
 
 
 def has_first_action(blocks):
     return next(documented_actions(blocks), None) is not None
 
 
-def target_readme(tree, subproject, errors, gaps, profile):
+def check_first_action_route(tree, source, actions, errors, gaps, route):
+    """Check local guide links selected by Quickstart, one guide hop deep."""
+    guides = set()
+    route["guides"] = []
+    route["result"] = "passed"
+    for action in actions:
+        if action["kind"] != "url":
+            continue
+        url = urlsplit(action["value"])
+        if url.scheme or url.netloc or not url.path:
+            continue
+        try:
+            path, commit = target_for(tree, source, url)
+        except ValueError:
+            continue  # The homepage link check reports the invalid path.
+        entries = tree.entries(commit)
+        guide = path if path in entries else readme_path(entries, path, homepage=not path)
+        if not guide or guide == source or guide in guides:
+            continue
+        guides.add(guide)
+        if len(guides) > 8:
+            gaps.append(f"{source}: Quickstart links exceed the eight-guide route check limit")
+            route["result"] = "unchecked"
+            break
+        route["guides"].append(guide)
+        if suffix(guide) not in MARKDOWN:
+            gaps.append(f"{guide}: Quickstart route content is outside Markdown coverage")
+            route["result"] = "unchecked"
+            continue
+        before = len(errors)
+        check_document(tree, guide, errors, gaps)
+        if len(errors) != before:
+            route["result"] = "failed"
+    if any(error.split(":", 1)[0] in guides for error in errors):
+        route["result"] = "failed"
+
+
+def target_readme(tree, subproject, errors, gaps, profile, *, route=None):
     prefix = Path(subproject).as_posix().removeprefix("./")
     if Path(subproject).is_absolute() or ".." in Path(subproject).parts or "\\" in subproject:
         raise ValueError("subproject must be relative to the selected repository")
@@ -319,7 +359,10 @@ def target_readme(tree, subproject, errors, gaps, profile):
     if profile != "reference" and not has_first_action(blocks):
         errors.append(f"{source}: no discoverable first action for {profile}")
     gaps.append(f"{source}: editorial quality and material claims require human or agent review")
-    return source, check_document(tree, source, errors, gaps)
+    count = check_document(tree, source, errors, gaps)
+    if route is not None and profile != "reference":
+        check_first_action_route(tree, source, documented_actions(blocks), errors, gaps, route)
+    return source, count
 
 
 def main():
@@ -366,8 +409,11 @@ def main():
                      "repository_identity": "inferred-from-origin" if tree.repository else "unavailable",
                      "profile": args.profile, "subproject": PurePosixPath(args.subproject).as_posix(),
                      "commit": tree.commit}
-            entry, count = target_readme(tree, args.subproject, errors, gaps, args.profile)
+            route = {}
+            entry, count = target_readme(tree, args.subproject, errors, gaps, args.profile, route=route)
             cases.update(entrypoint=entry, local_links=count)
+            if route:
+                cases["first_action_route"] = route
             if entry and suffix(entry) not in MARKDOWN:
                 cases["navigation"] = {"result": "unchecked", "format": suffix(entry) or "extensionless"}
                 gaps.append(f"{entry}: rendered navigation, anchors, and first-use instructions remain unchecked")
