@@ -27,4 +27,4 @@ Review how the README renders at standard desktop and narrow widths. Check relat
 4. Use a distinct publication change to promote the accepted README to the homepage when authorized. Recheck relative paths in that destination. Record the resulting commit, public status, and CI evidence if run.
 5. Link to the frozen copy when answering a request for a specific version. Report a working draft, an accepted archive, and a published homepage with their observed statuses.
 
-Use [the audit workflow](audits/README.md) to examine an existing repository before drafting. The [technique library](techniques/README.md) holds reusable practices to choose from.
+Use [the audit workflow](audits/README.md) to examine an existing repository before drafting. To choose techniques for a reader task, browse the [README Technique Library](https://github.com/vixttha/README-HQ/tree/README-Technique-Library/catalog). An agent can explain the options and help you choose or adapt them. Record the selected IDs, library commit, and verification results with your project.

@@ -10,7 +10,7 @@ README HQ helps people understand a GitHub project and take their first useful s
 | Explore changes and evidence by version | [Graphify HQ](graphify-hq/README.md) |
 | Improve a README in your own repository | [README guide](README-GUIDE.md) |
 | Request a detailed repository review | [Repository audit](audits/README.md) |
-| Browse techniques learned from reviews | [Technique library](techniques/README.md) |
+| Browse techniques learned from reviews | [README Technique Library](https://github.com/vixttha/README-HQ/tree/README-Technique-Library) |
 | Invoke README HQ from an agent | [Agent entry point](AGENTS.md) |
 
 ## Use README HQ
@@ -25,6 +25,6 @@ cd README-HQ
 python3 tools/check_readme_hq.py
 ```
 
-On Windows, use `py -3 tools/check_readme_hq.py`. A passing check prints counts for the version index, technique catalog, local navigation, and archived source files.
+On Windows, use `py -3 tools/check_readme_hq.py`. A passing check prints counts for the version index, archived technique records, local navigation, and archived source files.
 
 The branch keeps versions and audit findings available between sessions. An authorized human or agent starts each audit, records each new finding, and reviews any resulting project changes.
