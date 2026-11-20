@@ -555,6 +555,23 @@ A separate [same label](fourth.md).
                 self.assertEqual([(link.path, link.unnamed) for link in links],
                                  [("diagram.svg", False), ("guide.md", unnamed)])
 
+    def test_readme_html_hidden_ancestors_do_not_name_links(self):
+        from hq_navigation import parse_markdown
+
+        image = '<img srcset="diagram.svg 1x" alt="Guide">'
+        invisible = f'<span aria-hidden="true"><span aria-hidden="false">{image}</span>Hidden</span>'
+        cases = (
+            (f'<a href="guide.md">{invisible}</a>', [True]),
+            (f'<a href="guide.md">{invisible}<br hidden>Visit the guide</a>', [False]),
+            (f'<div hidden><a href="guide.md">{image}</a></div><a href="guide.md">{image}</a>', [False, False]),
+        )
+        for markup, expected in cases:
+            for document in (markup, f"See {markup} for details."):
+                with self.subTest(document=document):
+                    _, links, _ = parse_markdown(document)
+                    self.assertEqual([link.unnamed for link in links if not link.image], expected)
+                    self.assertEqual(sum(link.image for link in links), len(expected))
+
     def test_svg_root_requires_the_svg_namespace(self):
         default = '<svg xmlns="http://www.w3.org/2000/svg"/>'
         prefixed = '<s:svg xmlns:s="http://www.w3.org/2000/svg"/>'

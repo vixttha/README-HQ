@@ -31,6 +31,8 @@ MAX_MEDIA_FRAMES = 256
 MAX_MEDIA_PIXELS = 100_000_000
 LINE_RANGE = re.compile(r"L([0-9]+)(?:-L([0-9]+))?")
 BARE_WEB = re.compile(r"(?:^|(?<=[\s*_~(]))(?:https?://|www\.)[^\s<>]+")
+HTML_VOID_ELEMENTS = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link",
+                      "meta", "param", "source", "track", "wbr"}
 PARSER = MarkdownIt("commonmark").enable("table").enable("strikethrough")
 
 
@@ -109,16 +111,21 @@ class HtmlLinks(HTMLParser):
         self.links = []
         self.anchors = set()
         self.controls = []
+        self.hidden_elements = []
 
     def handle_starttag(self, tag, options):
         attrs = dict(options)
         line = self.line + self.getpos()[0] - 1
         aria_label = (attrs.get("aria-label") or "").strip()
+        hidden = (bool(self.hidden_elements) or "hidden" in attrs
+                  or (attrs.get("aria-hidden") or "").strip().casefold() == "true")
+        if hidden and tag not in HTML_VOID_ELEMENTS:
+            self.hidden_elements.append(tag)
         if tag == "a":
             if attrs.get("name"):
                 self.anchors.add(attrs["name"])
             if attrs.get("href"):
-                self.controls.append([attrs["href"], line, bool(aria_label)])
+                self.controls.append([attrs["href"], line, hidden or bool(aria_label)])
         if tag == "img" and "alt" not in attrs and not aria_label:
             source = attrs.get("src") or attrs.get("srcset") or "<img>"
             self.links.append(Link(source, line,
@@ -134,15 +141,18 @@ class HtmlLinks(HTMLParser):
         if tag == "img":
             if attrs.get("src"):
                 self.links.append(Link(attrs["src"], line, True))
-            hidden = "hidden" in attrs or (attrs.get("aria-hidden") or "").strip().casefold() == "true"
             if self.controls and not hidden and (aria_label or (attrs.get("alt") or "").strip()):
                 self.controls[-1][2] = True
 
     def handle_data(self, data):
-        if self.controls and data.strip():
+        if self.controls and not self.hidden_elements and data.strip():
             self.controls[-1][2] = True
 
     def handle_endtag(self, tag):
+        for index in range(len(self.hidden_elements) - 1, -1, -1):
+            if self.hidden_elements[index] == tag:
+                del self.hidden_elements[index:]
+                break
         if tag == "a" and self.controls:
             path, line, named = self.controls.pop()
             self.links.append(Link(path, line, unnamed=not named))
