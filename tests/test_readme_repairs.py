@@ -766,6 +766,28 @@ A separate [same label](fourth.md).
                     self.assertEqual(data["cases"]["first_action"]["result"], result)
                     self.assertEqual(data["result"], {0: "passed", 1: "failed", 2: "incomplete"}[exit_code])
 
+    def test_smoke_failure_codes_and_private_output_distinguish_same_exit(self):
+        with repository({"README.md": "# Guide"}) as tree:
+            spec = tree.root / "smoke.json"
+            messages = ("network unavailable", "unsupported format")
+            digests = []
+            for message in messages:
+                action = {"commit": tree.commit,
+                          "argv": [sys.executable, "-c",
+                                   f"import sys; sys.stderr.write({message!r} + 'z' * 600); sys.exit(7)"],
+                          "expected": {"exit": 0, "contains": "ready", "file": "result.txt"}}
+                spec.write_text(json.dumps(action), encoding="utf-8")
+                result = verify_first_action(tree, spec)
+                self.assertEqual(result["failure_codes"], ["exit-mismatch", "output-marker-mismatch",
+                                                           "expected-file-missing"])
+                self.assertNotIn("private_output", result)
+                digests.append(result["observed"]["stream_sha256"]["stderr"])
+                private = verify_first_action(tree, spec, include_output=True)["private_output"]["stderr"]
+                self.assertTrue(private["text"].startswith(message))
+                self.assertEqual(len(private["text"]), 512)
+                self.assertTrue(private["truncated"])
+            self.assertNotEqual(*digests)
+
     def test_smoke_spec_modes_are_validated_before_execution(self):
         with repository({"README.md": "# Example"}) as tree:
             spec = tree.root / "smoke.json"

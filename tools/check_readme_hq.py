@@ -328,7 +328,11 @@ def main():
     parser.add_argument("--allow-git-fetch", action="store_true", help="permit demand fetching missing Git blobs")
     parser.add_argument("--allow-network", action="store_true", help="allow the explicit remote first-action probe")
     parser.add_argument("--require-smoke", action="store_true", help="return incomplete unless the requested smoke check passes")
+    parser.add_argument("--include-smoke-output", action="store_true",
+                        help="retain bounded command output in a private failure receipt")
     args = parser.parse_args()
+    if args.include_smoke_output and (not args.smoke or not args.receipt):
+        parser.error("--include-smoke-output requires --smoke and --receipt")
     if args.require_smoke and not args.smoke:
         parser.error("--require-smoke requires an explicit --smoke")
     for option, value in (("--subproject", args.subproject), ("--profile", args.profile),
@@ -362,12 +366,15 @@ def main():
                 gaps.append(f"{entry}: rendered navigation, anchors, and first-use instructions remain unchecked")
             if args.smoke:
                 from hq_smoke import verify_first_action
-                outcome = verify_first_action(tree, args.smoke, allow_network=args.allow_network, subproject=args.subproject)
+                outcome = verify_first_action(tree, args.smoke, allow_network=args.allow_network,
+                                              subproject=args.subproject, include_output=args.include_smoke_output)
                 if args.require_smoke:
                     outcome["required"] = True
                 cases["first_action"] = outcome
                 if outcome["result"] == "failed":
-                    errors.append("first action failed its expected result")
+                    codes = outcome.get("failure_codes", [])
+                    detail = ": " + ", ".join(codes) if codes else ""
+                    errors.append(f"first action failed its expected result{detail}")
                 elif outcome["result"] != "passed":
                     gaps.append(f"first action {outcome['result']}: {outcome['detail']}")
             else:
