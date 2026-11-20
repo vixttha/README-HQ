@@ -25,7 +25,7 @@ jobs:
           persist-credentials: false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
-          ref: b43c8c0299d5065e08b045a0ce627342e2c75e1f
+          ref: f696cec1c74897298deb6c75aba4206fe9728688
           path: candidate
           fetch-depth: 0
           persist-credentials: false
@@ -57,7 +57,7 @@ jobs:
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
-          ref: 233c8296b8b91f348ce9e999ce617b8ffe8226a3
+          ref: f696cec1c74897298deb6c75aba4206fe9728688
           fetch-depth: 0
           persist-credentials: false
       - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
@@ -74,43 +74,5 @@ jobs:
       - name: Check checkpoint order and verify all three Graphify maps over MCP
         shell: bash
         run: |
-          graph=graphify-hq/plans/v0.0.6-repairs
           python audit/check_plan_capacity.py
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          import subprocess
-
-          def require(condition, message):
-              if not condition:
-                  raise ValueError(message)
-
-          path = "plans/v0.0.6-repairs/README.md"
-          base = Path("graphify-hq/plans/v0.0.6-repairs")
-          partitions = [base / "manifest.json", *sorted(base.glob("*/manifest.json"))]
-          manifests = [json.loads(partition.read_text(encoding="utf-8")) for partition in partitions]
-          commits = {x["source_commit"] for x in manifests}
-          require(len(commits) == 1, "Graph partitions use different source commits")
-          source = subprocess.check_output(["git", "show", f"{commits.pop()}:{path}"])
-          actual = Path(path).read_bytes()
-          require(actual == source, "Repair plan differs from the pinned graph source")
-          rows = [x for x in actual.decode("utf-8").splitlines() if x.startswith("| `v0.0.6.")]
-          features = sorted(
-              (feature for manifest in manifests for feature in manifest["features"]),
-              key=lambda x: int(x["id"].rsplit("-", 1)[1]),
-          )
-          require(len(partitions) == 3 and len(rows) == len(features) == 67, "Incomplete plan coverage")
-          for number, (row, feature) in enumerate(zip(rows, features), 1):
-              require(row.startswith(f"| `v0.0.6.{number}` | [#{number}]("), f"Wrong checkpoint {number}")
-              require(row.split(" | ")[1] == f"[#{number}](https://github.com/vixttha/README-HQ/issues/{number})", f"Wrong issue {number}")
-              before = "Audited `v0.0.6` |" if number == 1 else f"`v0.0.6.{number - 1}` |"
-              require(row.endswith(before), f"Wrong predecessor for {number}")
-              require(feature["id"] == f"v0-0-6-{number}", f"Wrong or duplicate feature {number}")
-              anchors = [row] + ([rows[number - 2]] if number > 1 else [])
-              require(feature["documented_in"] == [{"path": path, "anchor": x} for x in anchors], f"Evidence mismatch for {number}")
-          print("Verified all 67 unique, ordered issue checkpoints across all three Graphify maps.")
-          PY
-          shopt -s nullglob
-          for manifest in "$graph/manifest.json" "$graph"/*/manifest.json; do
-            python graphify-hq/template/v0.0.8/evidence_map.py "$manifest" "${manifest%/*}" --check
-          done
+          python tools/verify_plan.py --mcp
