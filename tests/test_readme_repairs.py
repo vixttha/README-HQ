@@ -241,6 +241,20 @@ A separate [same label](fourth.md).
             with self.assertRaisesRegex(LookupError, "unresolved"):
                 same_repo_target(tree, urlsplit("https://github.com/example/project/blob/absent/README.md"))
 
+    def test_plain_query_parameters_allow_order_independent_line_links(self):
+        with repository({"guide.md": "# Heading\nsecond line\n", "README.md": "# Links"}) as tree:
+            tree.git("remote", "add", "origin", "https://github.com/example/project.git")
+            route = f"https://github.com/example/project/blob/{tree.commit}/guide.md"
+            queries = ("plain=1", "plain=1&ref_type=heads", "ref_type=heads&plain=1", "plain=true")
+            readme = "\n".join(f"[Line]({route}?{query}#L2)" for query in queries)
+            readme += f"\n[Out of bounds]({route}?ignored=1&plain=1#L99)\n"
+            (tree.root / "README.md").write_text(readme, encoding="utf-8")
+            errors, gaps = [], []
+            self.assertEqual(check_document(GitTree(tree.root, draft=True), "README.md", errors, gaps), 4)
+            self.assertEqual(gaps, [])
+            self.assertEqual(len(errors), 1)
+            self.assertIn("outside the file", errors[0])
+
     def test_public_refs_ignore_local_aliases_and_use_the_remote_default(self):
         with repository({"README.md": "# Default"}) as original:
             original.git("remote", "add", "origin", "https://github.com/example/project.git")

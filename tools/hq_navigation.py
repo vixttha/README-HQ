@@ -10,7 +10,7 @@ import posixpath
 import re
 import struct
 import unicodedata
-from urllib.parse import unquote, urlsplit
+from urllib.parse import parse_qs, unquote, urlsplit
 
 from markdown_it import MarkdownIt
 from markdown_it.rules_inline import autolink, html_inline, image, link
@@ -406,7 +406,7 @@ def check_document(tree, source, errors, gaps, *, archive_scope=None):
                 if directory:
                     raise ValueError("image target is a directory")
                 verify_media(path, media_bytes(tree, path, commit))
-            check_fragment(tree, path, commit, unquote(url.fragment), plain=url.query in {"plain=1", "plain=true"})
+            check_fragment(tree, path, commit, unquote(url.fragment), plain=parse_qs(url.query).get("plain") in (["1"], ["true"]))
             count += 1
         except (ValueError, OSError, KeyError) as error:
             errors.append(f"{source}:{link.line}: {error}: {link.path}")
