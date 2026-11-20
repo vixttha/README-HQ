@@ -67,3 +67,24 @@ Five follow-up documents yielded additional examples for existing entries. The m
 | [Borg quickstart](https://borgbackup.readthedocs.io/en/master/quickstart.html) | Check a restore to a separate destination. |
 
 [Zenodo’s version-specific records](https://help.zenodo.org/docs/deposit/manage-versions/) also support the existing citation instructions. These matches document diminishing returns in the operational sample. They give an observed result for these documents and leave broader completeness unmeasured.
+
+### Datasets, models, and research reproduction
+
+This pass expanded the [technique map](TECHNIQUE-MAP.md) from 144 to 159 entries. That total includes 149 research entries and 10 linked catalog records. The new techniques cover data interpretation and lineage, authorized access, model selection, evaluation, and verification of reported results.
+
+The follow-up sweep compared eight documents to the draft map. They supplied examples or refinements for practices already represented.
+
+| Follow-up source | Matching technique |
+| --- | --- |
+| [W3C DCAT 3](https://www.w3.org/TR/vocab-dcat-3/) | State dataset coverage and identify versions. |
+| [scikit-learn GroupKFold](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GroupKFold.html) | Explain splits and the grouping of related observations. |
+| [DVC pipeline definition](https://doc.dvc.org/user-guide/pipelines/defining-pipelines) | Trace source inputs and scripts to derived outputs. |
+| [PhysioNet MIMIC-IV release access](https://physionet.org/content/mimiciv/2.0/) | Explain the authorized route to restricted inputs. |
+| [MLPerf Endpoints divisions and scenarios](https://docs.mlcommons.org/endpoints-submission-docs/understand/divisions-and-scenarios/) | Label results by comparable evaluation rules. |
+| [Google model evaluation guidance](https://developers.google.com/machine-learning/crash-course/fairness/evaluating-for-bias) | Break down results by meaningful groups. |
+| [PyTorch numerical accuracy](https://docs.pytorch.org/docs/stable/notes/numerical_accuracy.html) | State the conditions under which rerun outputs can vary. |
+| [World Bank reproducibility FAQ](https://worldbank.github.io/wb-reproducible-research-repository/reproducibility_FAQs.html) | Map reported claims to reproduction evidence and identify which runs used restricted inputs. |
+
+The [USGS data-quality guidance](https://www.usgs.gov/data-management/documenting-data-quality-considerations) exposed one more task, explaining uncertainty in the published observations themselves. A final cross-check matched [NIST measurement reporting](https://www.nist.gov/pml/nist-technical-note-1297/nist-tn-1297-7-reporting-uncertainty) to that new technique, [Hugging Face model cards](https://huggingface.co/docs/hub/model-cards) to variant identification, [USGS process documentation](https://www.usgs.gov/data-management/process) to data lineage, and [OpenML benchmarking suites](https://docs.openml.org/benchmark/) to split documentation and benchmark comparability.
+
+The final four cross-checks yielded zero further techniques. These sources addressed specific gaps in this sample. Estimating broader coverage would require a defined corpus and a separate holdout review.
