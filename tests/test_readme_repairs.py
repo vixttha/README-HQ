@@ -95,6 +95,25 @@ class ReaderTests(unittest.TestCase):
                 self.assertEqual(target_readme(tree, ".", errors, [], "application")[0], "README.md")
                 self.assertEqual(any("no discoverable first action" in error for error in errors), expected)
 
+    def test_rich_text_navigation_reports_explicit_incomplete_status(self):
+        cases = {"rst": "Guide\n=====\n\nSee `start <guide.rst#start>`_ and `lost <gone.rst#missing>`_.\n\n"
+                         "Quickstart\n----------\n\n::\n\n    python run.py\n",
+                 "adoc": "= Guide\n\nlink:guide.adoc#start[Start] and link:gone.adoc#missing[Lost].\n\n"
+                          "== Quickstart\n\n[source,shell]\n----\npython run.py\n----\n"}
+        for extension, body in cases.items():
+            source = "README." + extension
+            with self.subTest(extension=extension), repository({source: body, "guide." + extension: body}) as tree:
+                file = tree.root / "receipt.json"
+                result = subprocess.run([sys.executable, str(ROOT / "tools/check_readme_hq.py"), "--repo",
+                                         str(tree.root), "--receipt", str(file)], capture_output=True, text=True)
+                self.assertEqual(result.returncode, 2, result.stderr)
+                receipt = json.loads(file.read_bytes())
+                self.assertEqual(receipt["result"], "incomplete")
+                self.assertEqual(receipt["cases"]["entrypoint"], source)
+                self.assertEqual(receipt["cases"]["navigation"]["result"], "unchecked")
+                self.assertEqual(receipt["cases"]["local_links"], 0)
+                self.assertTrue(any("navigation, anchors, and first-use" in gap for gap in receipt["unchecked"]))
+
     def test_adopter_receipt_distinguishes_scope_at_one_commit(self):
         readme = "# Guide\n\nThis is a portable demonstration.\n\n## Quickstart\n\n```sh\npython run.py\n```\n"
         with repository({"README.md": readme, "packages/demo/README.md": readme}) as tree:

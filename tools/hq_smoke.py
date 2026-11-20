@@ -199,7 +199,8 @@ def write_receipt(destination, tree, cases, errors, gaps, *, validator_path=None
             "runner_os": os.environ.get("RUNNER_OS") if hosted else None,
         },
         "sources": sources, "cases": cases, "errors": errors, "unchecked": gaps,
-        "result": "failed" if errors else "passed",
+        "result": ("failed" if errors else
+                   "incomplete" if cases.get("navigation", {}).get("result") == "unchecked" else "passed"),
     }
     if tree is not None:
         data["git_objects"] = {"fetch_policy": "allow" if tree.allow_git_fetch else "offline",

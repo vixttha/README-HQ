@@ -354,6 +354,9 @@ def main():
                      "commit": tree.commit}
             entry, count = target_readme(tree, args.subproject, errors, gaps, args.profile)
             cases.update(entrypoint=entry, local_links=count)
+            if entry and suffix(entry) not in MARKDOWN:
+                cases["navigation"] = {"result": "unchecked", "format": suffix(entry) or "extensionless"}
+                gaps.append(f"{entry}: rendered navigation, anchors, and first-use instructions remain unchecked")
             if args.smoke:
                 from hq_smoke import verify_first_action
                 outcome = verify_first_action(tree, args.smoke, allow_network=args.allow_network, subproject=args.subproject)
@@ -386,6 +389,8 @@ def main():
         print(f"README: {cases['entrypoint']}; checked {cases['local_links']} local links")
         for gap in gaps:
             print(f"Unchecked: {gap}")
+        if cases.get("navigation", {}).get("result") == "unchecked":
+            return 2
     else:
         print(f"Validated {cases['standalone_versions']} standalone version(s), {cases['techniques']} techniques, "
               f"{cases['local_links']} local links, and {cases['imported_files']} imported files.")
