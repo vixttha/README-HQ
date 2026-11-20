@@ -25,7 +25,9 @@ POINTS = [
     (96, "92681eb8c11acc404f82be47490875dcb7f80485", "de5bc104bca705225d4b8d7c0e9732ce2200390a", "effective_url"),
     (97, "82daa1a79a7b5f455496fee8974e4a37334bdd99", "e1967a1ab6f9559d2e45e13fd5641b29b86313b8", "unknown_retired"),
 ]
-FOLLOW_UPS = []
+FOLLOW_UPS = [
+    ("edge-case follow-up", "cd3cc3c07e528b3222c9b1da4579191e6920d7a3", "aabd0bb8ef2589c4d379e963961fa961c0669dc9", ["lfs_","bare_gfm"]),
+]
 
 
 def run(directory, *argv):
@@ -74,7 +76,8 @@ def main():
                 row.update(result="not_applicable", detail="Graphify dependency lock is Linux-only")
                 continue
             pattern = "test_graphify_repairs.py" if number == 83 else "test_readme_repairs.py"
-            focused(checkout, pattern, selector)
+            for case in selector if isinstance(selector, list) else [selector]:
+                focused(checkout, pattern, case)
             if number in {86, 94} and linux:
                 result = run(checkout, sys.executable, "tools/verify_plan.py", "--mcp")
                 row["graphify_mcp_partitions"] = result.count("Graphify MCP verified ")
