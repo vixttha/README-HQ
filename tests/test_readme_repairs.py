@@ -395,6 +395,17 @@ A separate [same label](fourth.md).
             original.git("update-ref", "refs/remotes/origin/origin/main", topic.commit)
             self.assertEqual(resolve("origin/main"), ("README.md", topic.commit))
 
+    def test_html_image_alt_distinguishes_missing_and_explicit_empty(self):
+        image = '<svg xmlns="http://www.w3.org/2000/svg"/>'
+        fields = ("", ' alt=""', ' alt="A schematic"')
+        for attributes in fields:
+            doc = f'<img src="diagram.svg"{attributes}>'
+            with self.subTest(attributes=attributes), repository({"README.md": doc, "diagram.svg": image}) as tree:
+                errors, gaps = [], []
+                self.assertEqual(check_document(tree, "README.md", errors, gaps), 1)
+                self.assertTrue(any("requires an alt attribute" in error for error in errors) if not attributes else not errors)
+                self.assertEqual(gaps, [])
+
     def test_svg_root_requires_the_svg_namespace(self):
         default = '<svg xmlns="http://www.w3.org/2000/svg"/>'
         prefixed = '<s:svg xmlns:s="http://www.w3.org/2000/svg"/>'

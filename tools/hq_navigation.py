@@ -78,6 +78,7 @@ class Link:
     image: bool = False
     unnamed: bool = False
     coverage_gap: str | None = None
+    diagnostic: str | None = None
 
 
 def image_sources(value):
@@ -117,6 +118,9 @@ class HtmlLinks(HTMLParser):
                 self.anchors.add(attrs["name"])
             if attrs.get("href"):
                 self.controls.append([attrs["href"], line, bool((attrs.get("aria-label") or "").strip())])
+        if tag == "img" and "alt" not in attrs:
+            source = attrs.get("src") or attrs.get("srcset") or "<img>"
+            self.links.append(Link(source, line, diagnostic="HTML image requires an alt attribute"))
         if tag in {"source", "img"} and "srcset" in attrs:
             srcset = attrs["srcset"] or ""
             try:
@@ -406,6 +410,8 @@ def check_document(tree, source, errors, gaps, *, archive_scope=None):
             if link.coverage_gap:
                 gaps.append(f"{source}:{link.line}: {link.coverage_gap}")
                 continue
+            if link.diagnostic:
+                raise ValueError(link.diagnostic)
             if link.unnamed:
                 raise ValueError("link has no accessible name")
             url = urlsplit(link.path)
