@@ -11,7 +11,11 @@ full SHA already fetched into the checkout. For a same-repository pull request,
 add `pull_request` with its `number` and `source_branch`. Running with
 `--verify-pr` queries GitHub for commit membership and exact-SHA reviews. The
 live observation identifies the base ref, base commit, and head commit. It is
-printed separately from the deterministic receipt.
+printed separately from the deterministic receipt. Observed same-SHA approvals
+and verified write-or-higher eligibility appear in separate fields. An
+unavailable permission yields an unresolved eligibility count and a null
+qualifying total. These point-in-time observations do not represent an owner
+publication decision.
 
 ## Feature evidence links
 
