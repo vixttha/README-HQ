@@ -22,6 +22,8 @@ jobs:
       - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
         with:
           python-version: '3.12'
+      - name: Install hashed README validator dependencies
+        run: python -m pip install --require-hashes -r tools/requirements.txt
       - name: Verify the README HQ baseline
         run: python tools/check_readme_hq.py
       - name: Install pinned Graphify dependencies

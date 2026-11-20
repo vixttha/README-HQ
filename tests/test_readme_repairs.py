@@ -1043,6 +1043,14 @@ class EvidenceTests(unittest.TestCase):
         altered = plan.replace("This is literal", "Changed example")
         self.assertNotEqual(acceptance_sections(altered), acceptance_sections(plan))
 
+    def test_retained_plan_installs_reader_dependencies_before_validation(self):
+        config = (ROOT / ".github/workflows/verify-repair-plan.yml").read_text(encoding="utf-8")
+        reader = config.index("run: python -m pip install --require-hashes -r tools/requirements.txt")
+        validator = config.index("run: python tools/check_readme_hq.py")
+        graphify = config.index(" - name: Install pinned Graphify dependencies")
+        plan = config.index("Check checkpoint order and verify all three Graphify maps over MCP")
+        self.assertTrue(reader < validator < graphify < plan)
+
     def test_plan_file_inventory_is_bound_to_approved_partition(self):
         from verify_plan import GRAPH, read_json
         original = read_json(GRAPH / "manifest.json")
