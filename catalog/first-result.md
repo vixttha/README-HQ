@@ -6,9 +6,11 @@
 
 ## Techniques
 
+- [Distinguish intended checks from results](../techniques/declared-versus-observed-evidence.md) · verified · Show which checks were planned and which actually ran, with a scoped outcome for each.
 - [Execute the documented walkthrough](../techniques/exact-revision-walkthrough.md) · verified · Replay the reader’s published steps at the named revision and verify the result.
 - [Show a recognizable first result](../techniques/first-success-milestone.md) · observed · Tell the reader what success looks like immediately after the first real task.
 
 ## Combinations
 
-No active records on this page.
+- [Guide readers through a pinned walkthrough with evidence](../combinations/pinned-walkthrough-with-evidence.md) · verified · Pair a task link and recognizable output with a pinned walkthrough and evidence of the checks that ran.
+  - Steps: [Route by reader task](../techniques/role-based-entry-points.md) → [Show a recognizable first result](../techniques/first-success-milestone.md) → [Execute the documented walkthrough](../techniques/exact-revision-walkthrough.md) → [Label the scope of compatibility evidence](../techniques/claim-scope-labels.md) → [Distinguish intended checks from results](../techniques/declared-versus-observed-evidence.md)

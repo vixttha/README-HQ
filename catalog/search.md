@@ -6,7 +6,9 @@
 
 Use your browser's Find command (Ctrl+F or Command+F). Offline search covers every page.
 
+- [Distinguish intended checks from results](../techniques/declared-versus-observed-evidence.md) · `declared-versus-observed-evidence` · technique · planned versus executed checks, coverage, release-evidence
 - [Execute the documented walkthrough](../techniques/exact-revision-walkthrough.md) · `exact-revision-walkthrough` · technique · copy-and-run test, walkthrough replay, ci, commands, onboarding
+- [Guide readers through a pinned walkthrough with evidence](../combinations/pinned-walkthrough-with-evidence.md) · `pinned-walkthrough-with-evidence` · combination · two-version walkthrough, first-use evidence path, onboarding, proof-links, release-evidence
 - [Label the scope of compatibility evidence](../techniques/claim-scope-labels.md) · `claim-scope-labels` · technique · release and development evidence, scoped compatibility claims, compatibility, release-evidence
 - [Link authoritative agent instructions](../techniques/agent-instruction-pointer.md) · `agent-instruction-pointer` · technique · agent entry point, agent instruction link, agents, onboarding
 - [Permanent proof links](../techniques/permanent-proof-links.md) · `permanent-proof-links` · technique · durable verification receipt, pinned proof links, ci, git, release-evidence

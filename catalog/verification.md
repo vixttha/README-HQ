@@ -6,10 +6,12 @@
 
 ## Techniques
 
+- [Distinguish intended checks from results](../techniques/declared-versus-observed-evidence.md) · verified · Show which checks were planned and which actually ran, with a scoped outcome for each.
 - [Execute the documented walkthrough](../techniques/exact-revision-walkthrough.md) · verified · Replay the reader’s published steps at the named revision and verify the result.
 - [Label the scope of compatibility evidence](../techniques/claim-scope-labels.md) · observed · State the version, platform, capability, and checks that support a compatibility claim.
 - [Permanent proof links](../techniques/permanent-proof-links.md) · verified · Keep verification traceable with a commit-pinned receipt and recorded run, attempt, artifact ID, and digest.
 
 ## Combinations
 
-No active records on this page.
+- [Guide readers through a pinned walkthrough with evidence](../combinations/pinned-walkthrough-with-evidence.md) · verified · Pair a task link and recognizable output with a pinned walkthrough and evidence of the checks that ran.
+  - Steps: [Route by reader task](../techniques/role-based-entry-points.md) → [Show a recognizable first result](../techniques/first-success-milestone.md) → [Execute the documented walkthrough](../techniques/exact-revision-walkthrough.md) → [Label the scope of compatibility evidence](../techniques/claim-scope-labels.md) → [Distinguish intended checks from results](../techniques/declared-versus-observed-evidence.md)

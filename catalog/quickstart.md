@@ -13,4 +13,5 @@
 
 ## Combinations
 
-No active records on this page.
+- [Guide readers through a pinned walkthrough with evidence](../combinations/pinned-walkthrough-with-evidence.md) · verified · Pair a task link and recognizable output with a pinned walkthrough and evidence of the checks that ran.
+  - Steps: [Route by reader task](../techniques/role-based-entry-points.md) → [Show a recognizable first result](../techniques/first-success-milestone.md) → [Execute the documented walkthrough](../techniques/exact-revision-walkthrough.md) → [Label the scope of compatibility evidence](../techniques/claim-scope-labels.md) → [Distinguish intended checks from results](../techniques/declared-versus-observed-evidence.md)

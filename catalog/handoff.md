@@ -6,10 +6,12 @@
 
 ## Techniques
 
+- [Distinguish intended checks from results](../techniques/declared-versus-observed-evidence.md) · verified · Show which checks were planned and which actually ran, with a scoped outcome for each.
 - [Link authoritative agent instructions](../techniques/agent-instruction-pointer.md) · observed · Point an agent to the repository’s applicable instructions from the README.
 - [Permanent proof links](../techniques/permanent-proof-links.md) · verified · Keep verification traceable with a commit-pinned receipt and recorded run, attempt, artifact ID, and digest.
 - [Route by reader task](../techniques/role-based-entry-points.md) · observed · Give distinct reader goals clear routes from the same homepage.
 
 ## Combinations
 
-No active records on this page.
+- [Guide readers through a pinned walkthrough with evidence](../combinations/pinned-walkthrough-with-evidence.md) · verified · Pair a task link and recognizable output with a pinned walkthrough and evidence of the checks that ran.
+  - Steps: [Route by reader task](../techniques/role-based-entry-points.md) → [Show a recognizable first result](../techniques/first-success-milestone.md) → [Execute the documented walkthrough](../techniques/exact-revision-walkthrough.md) → [Label the scope of compatibility evidence](../techniques/claim-scope-labels.md) → [Distinguish intended checks from results](../techniques/declared-versus-observed-evidence.md)
