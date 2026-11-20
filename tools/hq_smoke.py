@@ -26,6 +26,8 @@ def require_https_url(value, field):
 
 def verify_first_action(tree, path, *, allow_network=False, subproject="."):
     spec = read_json(path)
+    if not isinstance(spec, dict) or ("url" in spec) == ("argv" in spec):
+        raise ValueError("smoke specification requires exactly one of argv and url")
     expected = spec.get("expected")
     if not isinstance(expected, dict) or not expected:
         raise ValueError("first action requires an expected result")
@@ -33,7 +35,15 @@ def verify_first_action(tree, path, *, allow_network=False, subproject="."):
         return {"result": "unchecked", "detail": "an exact commit is required"}
     if spec.get("commit") != tree.commit:
         raise ValueError("smoke specification does not match the selected commit")
+    if "contains" in expected and (
+        not isinstance(expected["contains"], str) or not expected["contains"]
+    ):
+        raise ValueError("expected.contains must be a nonempty string")
     if "url" in spec:
+        if expected.keys() & {"exit", "stream", "file", "file_mode", "file_sha256"}:
+            raise ValueError("URL smoke does not support local action expectations")
+        if type(expected.get("http_status")) is not int or not 100 <= expected["http_status"] <= 599:
+            raise ValueError("remote smoke requires expected.http_status between 100 and 599")
         target = spec["url"]
         require_https_url(target, "url")
         final_url = expected.get("final_url")
@@ -41,10 +51,6 @@ def verify_first_action(tree, path, *, allow_network=False, subproject="."):
             require_https_url(final_url, "expected.final_url")
         if not allow_network:
             return {"result": "unchecked", "detail": "network probe not authorized"}
-        if type(expected.get("http_status")) is not int:
-            raise ValueError("remote smoke requires expected.http_status")
-        if "contains" in expected and (not isinstance(expected["contains"], str) or not expected["contains"]):
-            raise ValueError("expected.contains must be a nonempty string")
         try:
             try:
                 response = urlopen(Request(target, headers={"User-Agent": "README-HQ"}), timeout=20)
@@ -67,15 +73,15 @@ def verify_first_action(tree, path, *, allow_network=False, subproject="."):
         passed = matched and status == expected["http_status"] and observation["final_url_match"] is not False
         return {"result": "passed" if passed else "failed", "url": target, "expected": expected,
                 "observed": {**observation, "content_match": matched}}
-    argv = spec.get("argv")
+    if expected.keys() & {"http_status", "final_url"}:
+        raise ValueError("argv smoke does not support URL action expectations")
+    argv = spec["argv"]
     if not isinstance(argv, list) or not argv or not all(isinstance(arg, str) and arg for arg in argv):
         raise ValueError("local smoke needs a nonempty argv array")
     if type(expected.get("exit")) is not int or not (expected.get("contains") or expected.get("file")):
         raise ValueError("local smoke requires an exit code and a recognizable output or file")
     marker = expected.get("contains")
     stream = expected.get("stream", "either")
-    if "contains" in expected and (not isinstance(marker, str) or not marker):
-        raise ValueError("expected.contains must be a nonempty string")
     if stream not in ("either", "stdout", "stderr") or ("stream" in expected and marker is None):
         raise ValueError("expected.stream requires a marker and must be either, stdout, or stderr")
     name = expected.get("file")
@@ -90,6 +96,9 @@ def verify_first_action(tree, path, *, allow_network=False, subproject="."):
             raise ValueError("expected.file_sha256 must be a lowercase SHA-256")
     elif "file_mode" in expected or "file_sha256" in expected:
         raise ValueError("file expectations require expected.file")
+    timeout = spec.get("timeout", 60)
+    if type(timeout) is not int or not 1 <= timeout <= 300:
+        raise ValueError("smoke timeout must be between 1 and 300 seconds")
     selected = Path(subproject)
     if selected.is_absolute() or selected.drive or ".." in selected.parts or "\\" in subproject:
         raise ValueError("smoke working directory must be relative to the selected repository")
@@ -118,9 +127,6 @@ def verify_first_action(tree, path, *, allow_network=False, subproject="."):
                 return checksum.hexdigest()
 
             before = file_digest(result_file()) if mode != "exists" else None
-            timeout = spec.get("timeout", 60)
-            if type(timeout) is not int or not 1 <= timeout <= 300:
-                raise ValueError("smoke timeout must be between 1 and 300 seconds")
             try:
                 result = subprocess.run(argv, cwd=cwd, capture_output=True, timeout=timeout, check=False)
             except (OSError, subprocess.TimeoutExpired) as error:

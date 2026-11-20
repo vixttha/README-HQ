@@ -386,6 +386,38 @@ A separate [same label](fourth.md).
             self.assertEqual(smoke(action), "failed")
             self.assertEqual(smoke({"url": "https://example.invalid", "expected": {"http_status": 200}}), "unchecked")
 
+    def test_smoke_spec_modes_are_validated_before_execution(self):
+        with repository({"README.md": "# Example"}) as tree:
+            spec = tree.root / "smoke.json"
+            base = {"commit": tree.commit}
+            argv = [sys.executable, "-c", "print('ready')"]
+            url = "https://example.invalid/start"
+
+            def run(values, *, online=False):
+                spec.write_text(json.dumps({**base, **values}), encoding="utf-8")
+                return verify_first_action(tree, spec, allow_network=online)
+
+            local = {"argv": argv, "expected": {"exit": 0, "contains": "ready"}}
+            remote = {"url": url, "expected": {"http_status": 200, "contains": "ready"}}
+            self.assertEqual(run(local)["result"], "passed")
+            self.assertEqual(run(remote)["result"], "unchecked")
+            with patch("hq_smoke.urlopen", return_value=HTTPError(url, 200, "fixture", {}, BytesIO(b"ready"))):
+                self.assertEqual(run(remote, online=True)["result"], "passed")
+            invalid = (
+                ({**local, "url": url}, "exactly one"),
+                ({"expected": local["expected"]}, "exactly one"),
+                ({**remote, "expected": {"http_status": 200, "contains": 1}}, "expected.contains"),
+                ({**local, "expected": {"exit": 0, "file": "ready", "contains": 1}}, "expected.contains"),
+                ({**remote, "expected": {"http_status": 200, "file": "ready"}}, "local action"),
+                ({**local, "expected": {"exit": 0, "contains": "ready", "final_url": url}}, "URL action"),
+            )
+            with patch("hq_smoke.urlopen") as network, patch("hq_smoke.TemporaryDirectory") as execution:
+                for values, message in invalid:
+                    with self.subTest(values=values), self.assertRaisesRegex(ValueError, message):
+                        run(values)
+                network.assert_not_called()
+                execution.assert_not_called()
+
     def test_http_smoke_checks_expected_error_bodies_and_preserves_auth_gates(self):
         with repository({"README.md": "# Guide"}) as tree:
             spec = tree.root / "smoke.json"
