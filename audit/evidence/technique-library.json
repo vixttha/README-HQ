@@ -1,0 +1,91 @@
+{
+  "schema": 1,
+  "library_branch": "README-Technique-Library",
+  "baseline_commit": "ed7968a9685c315bb7d4ebb2d70d57c1e02c5f39",
+  "verified_commit": "59cc5c63a39de34ebdf4f6f829a42a244c1211a8",
+  "workflow_commit": "88a92ce96681e807b882814abbf517a7f27eac06",
+  "run": 44647579406,
+  "attempt": 1,
+  "jobs": [
+    {
+      "os": "ubuntu-latest",
+      "id": 135993986073,
+      "artifact_id": 14589587418,
+      "archive_sha256": "cdb9f0fee8bf3c17e6e37fd1db34245802688837ff1d092438dfed4c26e8c5ba",
+      "result": {
+        "candidate": "59cc5c63a39de34ebdf4f6f829a42a244c1211a8",
+        "baseline": "ed7968a9685c315bb7d4ebb2d70d57c1e02c5f39",
+        "run_id": "44647579406",
+        "attempt": "1",
+        "runner_os": "Linux",
+        "documents": [
+          "README.md",
+          "RESEARCH.md",
+          "TEMPLATES.md"
+        ],
+        "relative_links": 7,
+        "template_link_trials": 2,
+        "broken_link_controls": 2,
+        "document_sha256": {
+          "README.md": "99c65859ee5099f378fbbb9a52672079ae05b79cc91a07bfb5bc85916858702c",
+          "RESEARCH.md": "d968e5a355b2905212dc157aa0f6715d131f0b99550f091c56b2c75efe31e929",
+          "TEMPLATES.md": "47bdd88973870e109649c90bbb32db8bd922afe66d934794e3b771e64c4b7f46"
+        },
+        "git_blob": {
+          "README.md": "c4c974930446efa3f28e119087e63dd44a0a18c7",
+          "RESEARCH.md": "01355ce9605981b47f067a2962cb4ad50f4e6b94",
+          "TEMPLATES.md": "9dab0e88925fa128a9fe1afa4893593654ef98a5"
+        },
+        "graphify": {
+          "version": "0.9.109",
+          "nodes": 6,
+          "edges": 7,
+          "mcp_verified": true,
+          "sha256": "b69a8ff341897ae6daf3bbf8e5cf2732b144a499dfafde19c285dab2816ce606"
+        }
+      }
+    },
+    {
+      "os": "windows-latest",
+      "id": 135993985784,
+      "artifact_id": 14588533339,
+      "archive_sha256": "b04c7d8e92bbec287eabc53514b90bf43a161ee20fb9409d3d84bcc79b553cd9",
+      "result": {
+        "candidate": "59cc5c63a39de34ebdf4f6f829a42a244c1211a8",
+        "baseline": "ed7968a9685c315bb7d4ebb2d70d57c1e02c5f39",
+        "run_id": "44647579406",
+        "attempt": "1",
+        "runner_os": "Windows",
+        "documents": [
+          "README.md",
+          "RESEARCH.md",
+          "TEMPLATES.md"
+        ],
+        "relative_links": 7,
+        "template_link_trials": 2,
+        "broken_link_controls": 2,
+        "document_sha256": {
+          "README.md": "99c65859ee5099f378fbbb9a52672079ae05b79cc91a07bfb5bc85916858702c",
+          "RESEARCH.md": "d968e5a355b2905212dc157aa0f6715d131f0b99550f091c56b2c75efe31e929",
+          "TEMPLATES.md": "47bdd88973870e109649c90bbb32db8bd922afe66d934794e3b771e64c4b7f46"
+        },
+        "git_blob": {
+          "README.md": "c4c974930446efa3f28e119087e63dd44a0a18c7",
+          "RESEARCH.md": "01355ce9605981b47f067a2962cb4ad50f4e6b94",
+          "TEMPLATES.md": "9dab0e88925fa128a9fe1afa4893593654ef98a5"
+        },
+        "graphify": null
+      }
+    }
+  ],
+  "recovery": {
+    "run": 44647416516,
+    "result": "Workflow YAML rejected before job execution",
+    "fix_commit": "88a92ce96681e807b882814abbf517a7f27eac06"
+  },
+  "limits": [
+    "Unpopulated catalog. Populated paths are disposable controls.",
+    "Graphify verifies this document navigation graph.",
+    "CodeRabbit authentication was unavailable."
+  ]
+}
