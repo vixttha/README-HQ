@@ -218,6 +218,27 @@ A separate [same label](fourth.md).
             with self.assertRaisesRegex(LookupError, "frame or decoded pixel limit"):
                 verify_media("limited.gif", data)
 
+    def test_animated_media_reports_truncated_frame_descriptor_in_receipt(self):
+        from PIL import Image
+
+        still = BytesIO()
+        Image.new("RGB", (8, 8), "red").save(still, format="GIF")
+        broken = still.getvalue()[:-1] + b",\x00\x00;"
+        readme = "# Images\n\n![Example](broken.gif)\n\n[Guide](guide.md)\n"
+        with repository({"README.md": readme, "broken.gif": broken, "guide.md": "# Guide\n"}) as tree:
+            receipt = tree.root / "audit.json"
+            result = subprocess.run([sys.executable, str(ROOT / "tools/check_readme_hq.py"),
+                                     "--repo", str(tree.root), "--profile", "reference",
+                                     "--receipt", str(receipt)], capture_output=True, text=True)
+            self.assertEqual(result.returncode, 1, result.stderr)
+            self.assertNotIn("Traceback", result.stderr)
+            diagnostic = "README.md:3: invalid or unreadable image: broken.gif"
+            self.assertIn(diagnostic, result.stderr)
+            record = json.loads(receipt.read_bytes())
+            self.assertEqual(record["result"], "failed")
+            self.assertIn(diagnostic, record["errors"])
+            self.assertEqual(record["cases"]["local_links"], 1)
+
     def test_bad_image_and_unnamed_image_link_are_separate(self):
         readme = "# Images\n[![](broken.png)](README.md)\n[Another dead link](absent.md)\n"
         with repository({"README.md": readme, "broken.png": b"not a PNG"}) as tree:

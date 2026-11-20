@@ -8,6 +8,7 @@ from io import BytesIO
 from pathlib import Path
 import posixpath
 import re
+import struct
 import unicodedata
 from urllib.parse import unquote, urlsplit
 
@@ -366,7 +367,7 @@ def verify_media(path, data):
                     image.load()
                 if image.format == "GIF" and not data.rstrip(b"\0").endswith(b";"):
                     raise ValueError("invalid or unreadable image: GIF trailer missing")
-        except (OSError, SyntaxError, Image.DecompressionBombError) as error:
+        except (OSError, SyntaxError, struct.error, Image.DecompressionBombError) as error:
             raise ValueError("invalid or unreadable image") from error
     else:
         raise LookupError("media format was not inspected")
