@@ -598,6 +598,21 @@ A separate [same label](fourth.md).
             self.assertEqual(check_document(tree, "README.md", errors, gaps), 3)
             self.assertEqual((errors, gaps), ([], []))
 
+    def test_documented_first_action_example_produces_pinned_receipts(self):
+        guide = (ROOT / "README-GUIDE.md").read_text(encoding="utf-8")
+        self.assertIn("python examples/first_action_demo.py first-action-evidence", guide)
+        with tempfile.TemporaryDirectory() as folder:
+            destination = Path(folder) / "first-action-evidence"
+            result = subprocess.run([sys.executable, str(ROOT / "examples/first_action_demo.py"), str(destination)],
+                                    cwd=ROOT, capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            receipts = [json.loads((destination / (name + ".json")).read_bytes())
+                        for name in ("passing", "failing", "url-unchecked")]
+            self.assertEqual(len({item["commit"] for item in receipts}), 1)
+            self.assertEqual([item["cases"]["first_action"]["result"] for item in receipts],
+                             ["passed", "failed", "unchecked"])
+            self.assertEqual(receipts[0]["cases"]["first_action"]["cwd"], "packages/demo")
+
     def test_smoke_runs_in_the_selected_monorepo_package(self):
         description = "# Guide\n\nThis guide documents the test fixture.\n"
         with repository({"README.md": description, "packages/demo/README.md": description,

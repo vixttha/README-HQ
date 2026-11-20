@@ -19,6 +19,19 @@ Run the documented commands from a clean checkout with the advertised prerequisi
 
 Review how the README renders at standard desktop and narrow widths. Check relative assets, links, anchors, long code blocks, and the accessibility of the text and images. Inspect the exact copy and image paths as they will appear on the target homepage.
 
+### Run the first-action example
+
+From the README HQ checkout, install the [locked reader requirements](tools/requirements.txt) and run the [example](examples/first_action_demo.py) with Python. Use `python3` or `py -3` if that is how your system exposes Python.
+
+```sh
+python -m pip install --require-hashes -r tools/requirements.txt
+python examples/first_action_demo.py first-action-evidence
+```
+
+The example creates a disposable repository and pins its exact commit. It runs `python run.py` inside `packages/demo` and writes `passing.json`, `failing.json`, and `url-unchecked.json`. Open `cases.first_action` for each actual outcome. The two command specs share the same invocation and differ in their expected output.
+
+To adapt a spec, set its `commit` to the full SHA selected by `--ref`. Pass it with `--repo`, `--smoke`, and `--receipt`. A local spec uses an `argv` array and `expected.exit` plus an output marker or file outcome. Arguments and expected files use the selected subproject in a temporary shallow checkout. An HTTPS spec uses `url` and `expected.http_status`. Only add `--allow-network` for a URL you intend to probe. The example leaves its URL probe unchecked.
+
 ## Draft, archive, and publish
 
 1. Record the target project, docs version, target ref and full SHA, and current homepage status. Decide the first reader task and who needs additional routes.
