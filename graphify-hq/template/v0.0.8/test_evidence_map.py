@@ -222,14 +222,15 @@ class ProvenanceTests(unittest.TestCase):
                 ident, role = statuses[route]
                 return {"user": {"id": ident}, "permission": role}
             if route == "collaborators/unresolved/permission":
-                raise HTTPError("https://api.github.com", 403, "unavailable", {}, None)
+                raise HTTPError("https://api.github.com", unavailable_status, "unavailable", {}, None)
             return self.fetch(route)
 
-        result = verify_pull_request(self.repo, self.source, self.expected, fetch)
-        self.assertEqual(result["observed_exact_commit_approvals"], 4)
-        self.assertEqual(result["verified_eligible_exact_commit_approvals"], 1)
-        self.assertEqual(result["unresolved_reviewer_eligibility"], 1)
-        self.assertIsNone(result["qualifying_exact_commit_approvals"])
+        for unavailable_status in (403, 503):
+            result = verify_pull_request(self.repo, self.source, self.expected, fetch)
+            self.assertEqual(result["observed_exact_commit_approvals"], 4)
+            self.assertEqual(result["verified_eligible_exact_commit_approvals"], 1)
+            self.assertEqual(result["unresolved_reviewer_eligibility"], 1)
+            self.assertIsNone(result["qualifying_exact_commit_approvals"])
         self.reviews.pop(3)
         result = verify_pull_request(self.repo, self.source, self.expected, fetch)
         self.assertEqual(result["qualifying_exact_commit_approvals"], 1)

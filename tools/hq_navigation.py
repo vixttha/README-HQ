@@ -431,11 +431,11 @@ def verify_media(path, data):
         raise LookupError("media format was not inspected")
 
 
-def check_document(tree, source, errors, gaps, *, archive_scope=None, checked_media=None):
+def check_document(tree, source, errors, gaps, *, archive_scope=None, checked_media=None, source_commit=None):
     if suffix(source) not in MARKDOWN:
         gaps.append(f"{source}: link checking for this README format is unavailable")
         return 0
-    text = tree.read(source).decode("utf-8")
+    text = tree.read(source, source_commit).decode("utf-8")
     _, links, _ = parse_markdown(text)
     count = 0
     anchor_cache = {}
@@ -453,7 +453,8 @@ def check_document(tree, source, errors, gaps, *, archive_scope=None, checked_me
             if target is None:
                 gaps.append(f"{source}:{link.line}: external link not checked: {link.path}")
                 continue
-            path, commit = target
+            path, selected_commit = target
+            commit = selected_commit if selected_commit is not None else source_commit
             entries = tree.entries(commit)
             directory = not path or any(name.startswith(path + "/") for name in entries)
             if path not in entries and not directory:

@@ -44,7 +44,7 @@ Use [the audit workflow](audits/README.md) to examine an existing repository bef
 
 A local smoke check with an expected file requires new or changed bytes by default. Use `expected.file_mode` to require `created` or `updated` specifically, or specify `exists` when existence alone is the intended result. Use `expected.file_sha256` for an exact expected digest.
 
-A required smoke result must match a rendered Quickstart action in the pinned README. The receipt records the README path and line for a match. Other successful probes are supplemental.
+A required smoke result must match a rendered Quickstart action in the pinned README. The receipt records the README path, line, and digest for a match. Simple POSIX, cmd, and PowerShell arguments are supported. Shell pipelines, redirects, and expansions stay supplemental.
 
 HTTP smoke receipts include a digest of the validated specification and an origin and digest for each recorded URL. Paths, query strings, fragments, and content markers stay in the spec.
 
@@ -57,6 +57,6 @@ python tools/check_publication_rules.py vixttha/README-HQ main \
   --require-check 'Recoverable Graphify evidence and plan'
 ```
 
-The read-only report records the observed PR and status check rules. The solo maintainer records the publication decision separately with the exact candidate SHA.
+The read-only report records branch rulesets and classic branch protection when available. Set `GH_TOKEN` with read access to repository administration to inspect restricted protection settings. The solo maintainer records the publication decision separately with the exact candidate SHA.
 
 The reader requires Python 3.11 or newer with Pillow 13.0.0 pinned in `tools/requirements.txt`. Pillow 13 removes Python 3.10 and includes security fixes. Graphify MCP uses its own pinned Python 3.12 environment. [Pillow 13.0.0 release notes](https://pillow.readthedocs.io/en/stable/releasenotes/13.0.0.html) · [PyPI release and wheel hashes](https://pypi.org/pypi/Pillow/13.0.0/json).

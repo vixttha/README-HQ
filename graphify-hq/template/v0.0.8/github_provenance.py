@@ -65,7 +65,7 @@ def reviewer_qualification(user, author, fetch):
         data = fetch(f"collaborators/{name}/permission")
     except HTTPError as error:
         with error:
-            if error.code in {401, 403, 404, 429}:
+            if error.code in {401, 403, 404, 429} or 500 <= error.code <= 599:
                 return None
             raise
     except OSError:

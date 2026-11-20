@@ -17,6 +17,30 @@ def ledger_rows(ledger):
     return [(item["version"], item["issue"]) for item in ledger["checkpoints"]]
 
 
+def visible_lines(markdown):
+    fence = None
+    comment = False
+    for line in markdown.splitlines():
+        marker = re.match(r"^ {0,3}(`{3,}|~{3,})(.*)$", line)
+        if marker and not comment and (fence is None or (
+            marker[1][0] == fence[0] and len(marker[1]) >= len(fence) and not marker[2].strip()
+        )):
+            fence = marker[1] if fence is None else None
+            continue
+        if fence:
+            continue
+        parts = []
+        while line:
+            if comment:
+                _, end, line = line.partition("-->")
+                comment = not end
+            else:
+                visible, start, line = line.partition("<!--")
+                parts.append(visible)
+                comment = bool(start)
+        yield "".join(parts)
+
+
 def check_plan(markdown, ledger, previous=None):
     rows = ledger_rows(ledger)
     scope = ledger["scope"]
@@ -49,16 +73,7 @@ def check_plan(markdown, ledger, previous=None):
             raise ValueError(f"checkpoint {item['version']} has incomplete debug obligations")
 
     sections, observed = [], []
-    fence = None
-    for line in markdown.splitlines():
-        marker = re.match(r"^ {0,3}(`{3,}|~{3,})(.*)$", line)
-        if marker and (fence is None or (
-            marker[1][0] == fence[0] and len(marker[1]) >= len(fence) and not marker[2].strip()
-        )):
-            fence = marker[1] if fence is None else None
-            continue
-        if fence:
-            continue
+    for line in visible_lines(markdown):
         if heading := HEADING.fullmatch(line):
             sections.append((heading[1], []))
         elif re.match(r"^#{1,3}\s", line):

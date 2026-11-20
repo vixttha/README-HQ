@@ -130,6 +130,58 @@ class ReaderTests(unittest.TestCase):
                 self.assertEqual(any("no accessible name" in error for error in errors), not named)
                 self.assertFalse(gaps)
 
+    def test_batch5_review_shell_matching_keeps_windows_paths_and_quoted_operators(self):
+        from check_readme_hq import documented_actions
+        from hq_navigation import parse_markdown
+        from hq_smoke import matches_documented_action
+
+        for shell, command, argv, matched in (
+            ("powershell", r'python ".\My Folder\demo.py"', [sys.executable, r".\My Folder\demo.py"], True),
+            ("cmd", r"python .\demo.py", [sys.executable, r".\demo.py"], True),
+            ("sh", "python demo.py '>'", [sys.executable, "demo.py", ">"], True),
+            ("sh", "python demo.py > result.txt", [sys.executable, "demo.py", ">", "result.txt"], False),
+        ):
+            markdown = f"## Quickstart\n\n```{shell}\n{command}\n```"
+            action, = documented_actions(parse_markdown(markdown)[2])
+            self.assertEqual(action["language"], shell)
+            self.assertEqual(matches_documented_action(action, {"argv": argv}), matched)
+
+    def test_batch5_review_publication_rule_pages_classic_branch_protection_and_branch_syntax(self):
+        from check_publication_rules import evaluate_rules, read_branch_rules, valid_branch
+
+        rule = {"type": "required_status_checks", "parameters": {"required_status_checks": [{"context": "reader"}]}}
+        pages = {"/rules/branches/feature%2Fc%2B%2B?per_page=100&page=1":
+                     ([{"type": "pull_request"}], '<https://api.github.com/next>; rel="next"'),
+                 "/rules/branches/feature%2Fc%2B%2B?per_page=100&page=2": ([rule], "")}
+        self.assertTrue(valid_branch("feature/c++"))
+        self.assertFalse(valid_branch("feature/../main"))
+        combined = read_branch_rules(pages.__getitem__, "feature%2Fc%2B%2B")
+        self.assertEqual(evaluate_rules({"protected": True}, combined, ["reader"])["mechanical_gate"], "observed")
+        classic = {"required_status_checks": {"contexts": ["reader"]},
+                   "required_pull_request_reviews": {"required_approving_review_count": 0}}
+        self.assertEqual(evaluate_rules({"protected": True}, [], ["reader"], classic)["mechanical_gate"], "observed")
+        self.assertEqual(evaluate_rules({"protected": True}, [], ["reader"])["mechanical_gate"], "unavailable")
+
+    def test_batch5_review_quickstart_checks_same_repository_guides_at_the_resolved_commit(self):
+        from check_readme_hq import check_first_action_route
+
+        files = {"README.md": "# Package", "docs/start.md": "# Start\n\n[Install](install.md)\n"}
+        with repository(files) as tree:
+            tree.git("remote", "add", "origin", "https://github.com/example/project.git")
+            tree = GitTree(tree.root)
+            initial = tree.commit
+            (tree.root / "docs/install.md").write_text("# Install", encoding="utf-8")
+            tree.git("add", "docs/install.md")
+            tree.git("-c", "user.name=Fixture", "-c", "user.email=test@example.invalid", "commit", "-qm", "Add install")
+            final = GitTree(tree.root)
+            for revision, expected in ((initial, "failed"), (final.commit, "passed")):
+                route, errors, gaps = {}, [], []
+                actions = [{"kind": "url", "value": f"https://github.com/example/project/blob/{revision}/docs/start.md",
+                            "line": 5}]
+                check_first_action_route(final, "README.md", actions, errors, gaps, route)
+                self.assertEqual(route["result"], expected)
+                self.assertEqual(bool(errors), expected == "failed")
+
     def test_draft_receipt_fingerprints_the_media_bytes_actually_checked(self):
         from check_readme_hq import main
         from hashlib import sha256
@@ -201,6 +253,7 @@ class ReaderTests(unittest.TestCase):
         markdown = "\n".join(rows + sections)
         self.assertEqual(check_plan(markdown, ledger, ledger), 2)
         controls = (
+            ("<!--\n" + markdown + "\n-->", ledger),
             (markdown, {**ledger, "debug_before_merge": False}),
             (markdown, {**ledger, "checkpoints": [item(78), {**item(79), "issue": 78}]}),
             ("\n".join(rows[::-1] + sections), ledger),

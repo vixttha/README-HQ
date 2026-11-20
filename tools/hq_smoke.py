@@ -50,18 +50,52 @@ def matches_documented_action(action, spec):
     actual = spec.get("argv")
     if not isinstance(actual, list) or not actual or not all(isinstance(arg, str) for arg in actual):
         return False
-    lexer = shlex.shlex(action["value"], posix=True, punctuation_chars=True)
-    lexer.whitespace_split = True
-    lexer.commenters = ""
-    try:
-        documented = list(lexer)
-    except ValueError:
-        return False
-    if not documented or any(re.fullmatch(r"[();|&<>]+", arg) or "$" in arg or chr(96) in arg for arg in documented):
+    documented = literal_shell_argv(action["value"], action.get("language", "sh"))
+    if not documented:
         return False
     if documented[0] in {"python", "python3", "python.exe", "python3.exe"} and actual[0] == sys.executable:
         documented[0] = sys.executable
     return documented == actual
+
+
+def literal_shell_argv(value, language):
+    windows = language in {"cmd", "powershell", "pwsh"}
+    quotes = '"' if language == "cmd" else "'\""
+    quote = None
+    escaped = False
+    for index, char in enumerate(value):
+        following = value[index + 1:index + 2]
+        if escaped:
+            escaped = False
+            continue
+        if char == "\\" and not windows and quote != "'":
+            escaped = True
+            continue
+        if windows and ((char == "\\" and following == '"') or (quote and char == quote == following)):
+            return None  # Complex Windows escaping is outside this literal-argv grammar.
+        if language == "cmd" and char in "%!^":
+            return None
+        if language != "cmd" and char in "$`" and quote != "'":
+            return None
+        if quote:
+            if char == quote:
+                quote = None
+        elif char in quotes:
+            quote = char
+        elif char in "();|&<>*?[]~#":
+            return None
+    if quote or escaped:
+        return None
+    lexer = shlex.shlex(value, posix=True)
+    lexer.whitespace_split = True
+    lexer.commenters = ""
+    lexer.quotes = quotes
+    if windows:
+        lexer.escape = ""
+    try:
+        return list(lexer)
+    except ValueError:
+        return None
 
 
 def run_first_action(tree, spec, *, allow_network=False, subproject=".", include_output=False):

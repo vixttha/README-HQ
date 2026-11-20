@@ -276,11 +276,13 @@ def documented_actions(blocks):
             if action_level is None and action.search(heading):
                 action_level = level
         elif action_level is not None and token.type == "fence":
-            language = token.info.strip().split()
-            if not language or language[0].lower() in shell:
+            info = token.info.strip().split()
+            language = info[0].lower() if info else "sh"
+            if language in shell:
                 for offset, command in enumerate(token.content.splitlines(), 2):
                     if command.strip() and not command.lstrip().startswith("#"):
-                        yield {"kind": "argv", "value": command.strip(), "line": token.map[0] + offset}
+                        yield {"kind": "argv", "value": command.strip(), "line": token.map[0] + offset,
+                               "language": language}
                         break
         elif action_level is not None and token.type == "inline":
             children = token.children or []
@@ -304,36 +306,43 @@ def check_first_action_route(tree, source, actions, errors, gaps, route, *, chec
     guides = set()
     route["guides"] = []
     route["result"] = "passed"
+
+    def mark_unchecked(message):
+        gaps.append(message)
+        if route["result"] != "failed":
+            route["result"] = "unchecked"
+
     for action in actions:
         if action["kind"] != "url":
             continue
         url = urlsplit(action["value"])
-        if url.scheme or url.netloc or not url.path:
-            continue
         try:
-            path, commit = target_for(tree, source, url)
+            target = target_for(tree, source, url)
         except ValueError:
             continue  # The homepage link check reports the invalid path.
+        except LookupError:
+            mark_unchecked(f"{source}:{action['line']}: Quickstart guide revision could not be resolved")
+            continue
+        if target is None:
+            continue
+        path, commit = target
         entries = tree.entries(commit)
         guide = path if path in entries else readme_path(entries, path, homepage=not path)
-        if not guide or guide == source or guide in guides:
+        key = (guide, commit)
+        if not guide or key == (source, None) or key in guides:
             continue
-        guides.add(guide)
-        if len(guides) > 8:
-            gaps.append(f"{source}: Quickstart links exceed the eight-guide route check limit")
-            route["result"] = "unchecked"
+        if len(guides) >= 8:
+            mark_unchecked(f"{source}: Quickstart links exceed the eight-guide route check limit")
             break
+        guides.add(key)
         route["guides"].append(guide)
         if suffix(guide) not in MARKDOWN:
-            gaps.append(f"{guide}: Quickstart route content is outside Markdown coverage")
-            route["result"] = "unchecked"
+            mark_unchecked(f"{guide}: Quickstart route content is outside Markdown coverage")
             continue
         before = len(errors)
-        check_document(tree, guide, errors, gaps, checked_media=checked_media)
+        check_document(tree, guide, errors, gaps, checked_media=checked_media, source_commit=commit)
         if len(errors) != before:
             route["result"] = "failed"
-    if any(error.split(":", 1)[0] in guides for error in errors):
-        route["result"] = "failed"
 
 
 def target_readme(tree, subproject, errors, gaps, profile, *, route=None, checked_media=None):
