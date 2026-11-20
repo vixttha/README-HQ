@@ -30,6 +30,7 @@ FOLLOW_UPS = [
     ("Graphify and retained plan integration follow-up", "f696cec1c74897298deb6c75aba4206fe9728688", "885539e9ab0f72e83bdba434cf82aaa9d0280b97", [(123, "existing_graphify_map_keeps"), (122, "retained_plan_installs")]),
     ("Graphify self-map workflow anchor follow-up", "92ae3fc3db62ebe69404d8a253c7dfef6114b3d4", "8e88b42fc61477fc23c67ea203099a3efb3da91b", []),
     ("CodeRabbit review follow-up", "bd393f5e023178a89ff36c4fda803590b5d5fbac", "be9930deba418067a95e695f87a4916e4920540b", [(113, "html_image_accepts"), (118, "quickstart_recognizes_usage")]),
+    ("CodeRabbit responsive image follow-up", "9236e5ee294feee4f9b7e69e12758da0ab1db322", "672b1d3a7afff80282ca1d91b88c60fe34b799d1", [(113, "html_srcset_link_uses")]),
 ]
 GRAPHIFY_ONLY = {116, 122, 123, 124}
 KIT = Path("graphify-hq/template/v0.0.8")
@@ -145,7 +146,7 @@ def main():
         report["follow_ups"].append(row)
         save()
         try:
-            if label == "CodeRabbit review follow-up":
+            if label.startswith("CodeRabbit"):
                 for issue, selector in tests:
                     copied_test(checkout, sha, test_file(issue), selector, baseline=True)
                 row["baseline"] = "reproduced"
