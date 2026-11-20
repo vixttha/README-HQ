@@ -186,7 +186,26 @@ def main():
         follow_up["result"] = "passed"
     finally:
         save()
-    parent = FIXTURE_CONTROL
+    final = "393487e218a4f0cb9475a87189601ef9241636eb"
+    final_tree = "0dcb2f9887ec36caf8799e62387b7d829609ff5a"
+    selectors = ("review_followup_partial_clone", "review_followup_raw_ref", "review_followup_rendered_rows")
+    for selector in selectors:
+        focused_from(checkout, final, READER_TEST, selector, baseline=True)
+    run(checkout, "git", "checkout", "--detach", final)
+    if run(checkout, "git", "rev-parse", "HEAD", "HEAD^", "HEAD^{tree}").split() != [final, FIXTURE_CONTROL, final_tree]:
+        raise ValueError("Review revision differs from its pinned parent or tree")
+    review = {"label": "CodeRabbit and artifact follow-up", "commit": final, "parent": FIXTURE_CONTROL,
+              "tree": final_tree, "baseline": "reproduced", "result": "started"}
+    report["follow_ups"].append(review)
+    try:
+        for selector in selectors:
+            focused(checkout, READER_TEST, selector)
+        if linux:
+            focused(checkout, GRAPHIFY_TEST, "inventory_blob_cap")
+        review["result"] = "passed"
+    finally:
+        save()
+    parent = final
     report["candidate"] = parent
     tasks = [
         ("reader CLI", ("tools/check_readme_hq.py", "--receipt", str(output / "reader.json"))),
