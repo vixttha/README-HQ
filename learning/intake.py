@@ -39,12 +39,25 @@ def fetch_github(route):
 def public_checkpoint(tree, repo, fetch=fetch_github):
     if not REPOSITORY.fullmatch(repo) or not tree.repository or tree.repository.casefold() != repo.casefold():
         raise ValueError("GitHub repository identity is not independently established")
-    repo = repo.casefold()
-    metadata = fetch(repo)
-    if metadata.get("private") is not False or metadata.get("visibility") != "public":
-        raise ValueError("source or target is not confirmed public")
-    if fetch(f"{repo}/commits/{tree.commit}").get("sha") != tree.commit:
+    requested = repo.casefold()
+
+    def identity(metadata):
+        if metadata.get("private") is not False or metadata.get("visibility") != "public":
+            raise ValueError("source or target is not confirmed public")
+        name, stable_id = metadata.get("full_name"), metadata.get("id")
+        if not isinstance(name, str) or not REPOSITORY.fullmatch(name) or type(stable_id) is not int or stable_id < 1:
+            raise ValueError("GitHub repository metadata lacks a verified canonical name or stable ID")
+        return name, stable_id
+
+    name, stable_id = identity(fetch(requested))
+    canonical = name.casefold()
+    if canonical != requested:
+        confirmed_name, confirmed_id = identity(fetch(canonical))
+        if confirmed_name.casefold() != canonical or confirmed_id != stable_id:
+            raise ValueError("GitHub repository identity does not match the canonical name and stable ID")
+    if fetch(f"{canonical}/commits/{tree.commit}").get("sha") != tree.commit:
         raise ValueError("GitHub did not verify this source revision")
+    return {"requested_repository": requested, "canonical_repository": name, "repository_id": stable_id}
 
 
 def validate_request(specification):
@@ -89,16 +102,16 @@ def record_intake(specification, directory, *, fetch=fetch_github):
         if source["id"] in sources:
             raise ValueError("learning source IDs must be unique")
         tree = GitTree(source["checkout"], source["ref"])
-        public_checkpoint(tree, source["repository"], lookup)
+        provenance = public_checkpoint(tree, source["repository"], lookup)
         receipt = verify_anchor(tree, source["path"], source["line"], source["anchor"])
-        identity = (source["repository"].casefold(), tree.commit, source["path"], source["line"])
-        sources[source["id"]] = {"identity": list(identity), **receipt}
+        identity = (provenance["canonical_repository"].casefold(), tree.commit, source["path"], source["line"])
+        sources[source["id"]] = {"identity": list(identity), **provenance, **receipt}
     target = specification["target"]
     if target.get("visibility") != "public":
         raise ValueError("only verified public targets enter shared intake")
     target_tree = GitTree(target["checkout"], target["ref"])
-    public_checkpoint(target_tree, target["repository"], lookup)
-    target_receipt = verify_anchor(target_tree, target["path"], target["line"], target["anchor"])
+    target_provenance = public_checkpoint(target_tree, target["repository"], lookup)
+    target_receipt = {**target_provenance, **verify_anchor(target_tree, target["path"], target["line"], target["anchor"])}
     registry = ROOT / "techniques/registry.json"
     registry_bytes = registry.read_bytes()
     techniques = {row["id"]: row["status"] for row in parse_json(registry_bytes, registry)["techniques"]}

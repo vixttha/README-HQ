@@ -1384,7 +1384,7 @@ class EvidenceTests(unittest.TestCase):
                                   "decision": "adapt", "rationale": "Explain the first result."}]}
             def fetch(route):
                 if route == "example/project":
-                    return {"private": False, "visibility": "public"}
+                    return {"private": False, "visibility": "public", "full_name": "example/project", "id": 17}
                 return {"sha": tree.commit}
             destination = tree.root / "receipts"
             first = intake.record_intake(spec, destination, fetch=fetch)
@@ -1423,7 +1423,7 @@ class EvidenceTests(unittest.TestCase):
                 routes.append(route)
                 if len(routes) > 3:
                     raise HTTPError("https://api.github.com", 429, "fixture budget", {}, None)
-                return {"private": False, "visibility": "public"} if "/commits/" not in route else {
+                return {"private": False, "visibility": "public", "full_name": "example/project", "id": 17} if "/commits/" not in route else {
                     "sha": route.rsplit("/", 1)[1]}
 
             destination = tree.root / "receipts"
@@ -1442,6 +1442,36 @@ class EvidenceTests(unittest.TestCase):
             routes.clear()
             with self.assertRaisesRegex(ValueError, "anchor does not match"):
                 intake.record_intake(spec, destination, fetch=fetch)
+
+    def test_learning_records_verified_canonical_repository_identity(self):
+        loader = importlib.util.spec_from_file_location("intake", ROOT / "learning/intake.py")
+        intake = importlib.util.module_from_spec(loader)
+        loader.loader.exec_module(intake)
+        with repository({"README.md": "# Evidence"}) as tree:
+            tree.git("remote", "add", "origin", "https://github.com/example/old-name.git")
+            source = {"id": "source", "checkout": str(tree.root), "ref": "HEAD",
+                      "repository": "example/old-name", "path": "README.md", "line": 1,
+                      "anchor": "Evidence", "visibility": "public"}
+            request = {"visibility": "public", "sources": [source], "selected": ["source"], "findings": [],
+                       "target": {**source, "audience": "reader", "capability": "verify"}}
+            metadata = {"private": False, "visibility": "public", "full_name": "Example/New-Name", "id": 123}
+            routes = {"example/old-name": metadata, "example/new-name": metadata,
+                      f"example/new-name/commits/{tree.commit}": {"sha": tree.commit}}
+            destination = tree.root / "receipts"
+            path = intake.record_intake(request, destination, fetch=routes.__getitem__)
+            data = json.loads(path.read_bytes())
+            self.assertEqual(path, intake.record_intake(request, destination, fetch=routes.__getitem__))
+            self.assertEqual(data["target"]["repository_id"], 123)
+            self.assertEqual(data["sources"][0]["requested_repository"], "example/old-name")
+            self.assertEqual(data["sources"][0]["canonical_repository"], "Example/New-Name")
+            self.assertEqual(data["sources"][0]["identity"][0], "example/new-name")
+            routes["example/new-name"] = {**metadata, "id": 124}
+            with self.assertRaisesRegex(ValueError, "stable ID"):
+                intake.record_intake(request, destination, fetch=routes.__getitem__)
+            routes["example/new-name"] = {**metadata, "private": True}
+            with self.assertRaisesRegex(ValueError, "not confirmed public"):
+                intake.record_intake(request, destination, fetch=routes.__getitem__)
+            self.assertEqual(list(destination.iterdir()), [path])
 
     def test_learning_structured_rate_limit_and_invalid_anchor_diagnostics(self):
         loader = importlib.util.spec_from_file_location("intake", ROOT / "learning/intake.py")
@@ -1536,7 +1566,7 @@ class EvidenceTests(unittest.TestCase):
                        "target": {**source, "audience": "reader", "capability": "audit"},
                        "findings": [first, second]}
             def fetch(route):
-                return ({"private": False, "visibility": "public"} if route == "example/project"
+                return ({"private": False, "visibility": "public", "full_name": "example/project", "id": 17} if route == "example/project"
                         else {"sha": tree.commit})
             destination = tree.root / "receipts"
             with self.assertRaisesRegex(ValueError, "conflicting recommendation decisions"):
@@ -1573,7 +1603,7 @@ class EvidenceTests(unittest.TestCase):
                 return content
             def fetch(route):
                 if route == "example/project":
-                    return {"private": False, "visibility": "public"}
+                    return {"private": False, "visibility": "public", "full_name": "example/project", "id": 17}
                 return {"sha": tree.commit}
 
             with patch.object(intake, "ROOT", tree.root):
@@ -1607,7 +1637,7 @@ class EvidenceTests(unittest.TestCase):
             ]}), encoding="utf-8")
 
             def fetch(route):
-                return ({"private": False, "visibility": "public"} if route == "example/project"
+                return ({"private": False, "visibility": "public", "full_name": "example/project", "id": 17} if route == "example/project"
                         else {"sha": tree.commit})
 
             destination = tree.root / "evidence"
