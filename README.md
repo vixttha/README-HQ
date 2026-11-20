@@ -19,12 +19,9 @@ Search matches word prefixes across titles, IDs, aliases, tags, and summaries, w
 
 Use the [research guide](RESEARCH.md) to gather evidence and the [record templates](TEMPLATES.md) to add or update an entry. Each technique or combination has one Markdown record. The generated indexes list it under every relevant reader task.
 
-```sh
-python tools/catalog.py build
-python tools/catalog.py check
-```
+Commit the record files. GitHub Actions validates them and refreshes the browser indexes on this branch automatically. The record files are the source for search, and the generated index commit follows when the checks pass.
 
-Commit the record changes and the regenerated `catalog/` pages together. The check reports invalid metadata, duplicate IDs or search names, missing technique steps, and indexes that need rebuilding.
+For a local preview, run `python tools/catalog.py build`. Run `python tools/catalog.py check` to detect invalid metadata, duplicate IDs or search names, missing technique steps, and stale indexes.
 
 ## How to read the evidence
 
