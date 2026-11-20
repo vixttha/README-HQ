@@ -130,6 +130,22 @@ class ReaderTests(unittest.TestCase):
                 self.assertEqual(any("no accessible name" in error for error in errors), not named)
                 self.assertFalse(gaps)
 
+    def test_batch5_review_continuations_scan_each_physical_line_once(self):
+        from hq_smoke import shell_words_continued
+
+        scanned = []
+
+        class PhysicalLine(str):
+            def __iter__(self):
+                scanned.append(self)
+                return super().__iter__()
+
+        lines = [PhysicalLine('python -c "' + chr(92))]
+        lines.extend(PhysicalLine("a" + chr(92)) for _ in range(200))
+        lines.append(PhysicalLine('"'))
+        self.assertEqual(shell_words_continued(lines, "bash"), ('python -c "' + "a" * 200 + '"', 0))
+        self.assertEqual(scanned, lines)
+
     def test_batch5_review_logical_shell_commands_and_bash_expansion(self):
         from check_readme_hq import documented_actions
         from hq_navigation import parse_markdown
@@ -294,6 +310,10 @@ class ReaderTests(unittest.TestCase):
             (markdown, {**ledger, "checkpoints": [item(78), {**item(79), "issue": 78}]}),
             ("\n".join(table[:2] + rows[::-1] + [""] + sections), ledger),
             (markdown.replace("- **After the repair** Pass it.", "```\n- **After the repair** Pass it.\n```"), ledger),
+            (markdown.replace("[#78](https://github.com/vixttha/README-HQ/issues/78)\n",
+                              "[](https://github.com/vixttha/README-HQ/issues/78)\n"), ledger),
+            (markdown.replace("[#78](https://github.com/vixttha/README-HQ/issues/78)\n",
+                              "[ ](https://github.com/vixttha/README-HQ/issues/78)\n"), ledger),
             (markdown.replace("Pass it.", "<!-- Hidden acceptance. -->"), ledger),
             (markdown.replace("[#78](https://github.com/vixttha/README-HQ/issues/78)\n",
                               "<!-- [#78](https://github.com/vixttha/README-HQ/issues/78) -->\n"), ledger),

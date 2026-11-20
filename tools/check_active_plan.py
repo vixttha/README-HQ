@@ -20,6 +20,23 @@ def ledger_rows(ledger):
     return [(item["version"], item["issue"]) for item in ledger["checkpoints"]]
 
 
+def named_link_targets(children):
+    links = set()
+    destination = None
+    named = False
+    for part in children:
+        if part.type == "link_open":
+            destination = part.attrGet("href")
+            named = False
+        elif part.type == "link_close":
+            if destination and named:
+                links.add(destination)
+            destination = None
+        elif destination and part.type in {"text", "code_inline", "image"} and part.content.strip():
+            named = True
+    return links
+
+
 def check_plan(markdown, ledger, previous=None):
     rows = ledger_rows(ledger)
     scope = ledger["scope"]
@@ -75,8 +92,7 @@ def check_plan(markdown, ledger, previous=None):
             children = inline.children or []
             visible = "".join(part.content for part in children if part.type in {"text", "code_inline", "image"})
             if visible.removeprefix(label).strip():
-                links = {part.attrGet("href") for part in children if part.type == "link_open"}
-                sections[-1][1].append((label, links))
+                sections[-1][1].append((label, named_link_targets(children)))
     checkpoints = [(name, body) for name, body in sections if name]
     if observed != rows or [name for name, _ in checkpoints] != [version for version, _ in rows]:
         raise ValueError("Markdown table or checkpoint sections disagree with the ordered ledger")
