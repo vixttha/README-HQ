@@ -121,7 +121,7 @@
         },
         {
           "path": ".github/workflows/readme-hq.yml",
-          "anchor": "python tools/check_readme_hq.py --receipt readme-hq-result.json"
+          "anchor": "run: python tools/check_readme_hq.py --receipt readme-hq-result.json"
         }
       ]
     }
