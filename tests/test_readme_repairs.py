@@ -366,6 +366,24 @@ A separate [same label](fourth.md).
 
 
 class EvidenceTests(unittest.TestCase):
+    def test_documented_review_receipt_passes_and_raw_or_incomplete_receipts_fail(self):
+        guide = (ROOT / "techniques/README.md").read_text(encoding="utf-8")
+        example = json.loads(guide.split("```json\n", 1)[1].split("```", 1)[0])
+        key = (example["source_repository"], example["source_commit"], example["source_path"])
+        inventory = {key: ("unused-in-this-test", sha256(b"# Guide\n").hexdigest(), 1)}
+        path = "evidence/public/sample.json"
+        item = {"url": f"https://github.com/{key[0]}/blob/{key[1]}/{key[2]}#L1",
+                "status": "verified", "receipt": path}
+        incomplete = {key: value for key, value in example.items() if key != "run_url"}
+        raw = {"schema": 1, "commit": key[1], "result": "passed", "cases": {}, "sources": {}}
+        for record in (example, incomplete, raw):
+            with self.subTest(fields=sorted(record)), repository({path: json.dumps(record)}) as tree:
+                if record is example:
+                    self.assertEqual(check_evidence(item, tree, inventory), key)
+                else:
+                    with self.assertRaisesRegex(ValueError, "does not establish"):
+                        check_evidence(item, tree, inventory)
+
     def test_json_duplicates_and_canonical_evidence(self):
         with self.assertRaisesRegex(ValueError, "repeated JSON key"):
             parse_json(b'{"x":{"schema":1,"schema":2}}', "registry")
