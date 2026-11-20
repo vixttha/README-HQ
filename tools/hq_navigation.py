@@ -181,6 +181,12 @@ def inline_links(children, line):
     return links
 
 
+def rendered_table_rows(text):
+    lines = text.split("\n")
+    return [lines[token.map[0]].rstrip("\r") for token in PARSER.parse(text)
+            if token.type == "tr_open" and token.map is not None]
+
+
 def parse_markdown(text):
     anchors = set()
     generated = set()

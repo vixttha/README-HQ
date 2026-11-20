@@ -12,7 +12,7 @@ import unicodedata
 from urllib.parse import unquote, urlsplit
 
 from hq_data import GitTree, UnavailableGitBlob, REPOSITORY, SHA, parse_json
-from hq_navigation import MARKDOWN, check_document, parse_markdown, readme_path, suffix
+from hq_navigation import MARKDOWN, check_document, parse_markdown, readme_path, suffix, rendered_table_rows
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -196,11 +196,15 @@ def check_versions(errors, tree=None):
     for path in sorted(name for name in original if re.fullmatch(r"versions/v[^/]+/(README|CHANGELOG)\.md", name)):
         if entries.get(path) != original[path] or (tree.draft and tree.read(path) != tree.read(path, BASELINE)):
             errors.append(f"{path}: frozen standalone snapshot differs from v0.0.6 baseline")
-    rows = re.findall(r"^\| (v[0-9.]+) \| [^\n]+$", index, re.M)
+    index_rows = rendered_table_rows(index)
+    rows = re.findall(r"^\| (v[0-9.]+) \| [^\n]+$", "\n".join(index_rows), re.M)
     approved_index = tree.read("versions/README.md", BASELINE).decode("utf-8")
-    approved_rows = dict(re.findall(r"^\| (v[0-9.]+) \| ([^\n]+)$", approved_index, re.M))
+    approved_rows = dict(re.findall(r"^\| (v[0-9.]+) \| ([^\n]+)$",
+                                    "\n".join(rendered_table_rows(approved_index)), re.M))
+    if not set(approved_rows) <= set(rows):
+        errors.append("version index is missing an approved rendered release row")
     for version, count in Counter(rows).items():
-        matching = [line for line in index.splitlines() if line.startswith(f"| {version} |")]
+        matching = [line for line in index_rows if line.startswith(f"| {version} |")]
         if count != 1 or not matching[0].endswith(f"| [Map](../graphify-hq/maps/{version}/README.md) |"):
             errors.append(f"{version}: expected one release row linking to its own map")
         guide_targets = re.findall(r"\]\(([^)]+)\)", matching[0])[:-1]
@@ -210,9 +214,10 @@ def check_versions(errors, tree=None):
                 errors.append(f"{version}: release row guide destinations differ from the approved archive")
 
     graph_index = tree.read("graphify-hq/README.md").decode("utf-8")
-    graph_rows = re.findall(r"^\| (v[0-9.]+) \| [^\n]+$", graph_index, re.M)
+    graph_index_rows = rendered_table_rows(graph_index)
+    graph_rows = re.findall(r"^\| (v[0-9.]+) \| [^\n]+$", "\n".join(graph_index_rows), re.M)
     for version in set(rows) | set(graph_rows):
-        matching = [line for line in graph_index.splitlines() if line.startswith(f"| {version} |")]
+        matching = [line for line in graph_index_rows if line.startswith(f"| {version} |")]
         if (version not in rows or len(matching) != 1
                 or re.findall(r"\]\(([^)]+)\)", matching[0]) != [f"maps/{version}/README.md"]):
             errors.append(f"{version}: Graphify landing row must link to its own map")
@@ -230,7 +235,7 @@ def check_versions(errors, tree=None):
     for version in dirs:
         if not VERSION.fullmatch(version) or not all(f"versions/{version}/{x}.md" in entries for x in ("README", "CHANGELOG")):
             errors.append(f"{version}: incomplete standalone version directory")
-        if f"]({version}/README.md)" not in index:
+        if not any(f"]({version}/README.md)" in row for row in index_rows):
             errors.append(f"{version}: standalone README is missing from the index")
     return len(dirs)
 

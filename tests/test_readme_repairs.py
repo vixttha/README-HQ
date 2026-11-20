@@ -682,6 +682,36 @@ class EvidenceTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "receipt"):
             check_evidence({**first, "status": "verified"}, None)
 
+    def test_rendered_tables_ignore_fenced_rows_and_reject_missing_navigation(self):
+        from verify_plan import PLAN, rows
+
+        def fence_table(text):
+            blocks = text.split("\n\n")
+            for i, paragraph in enumerate(blocks):
+                if paragraph.startswith("| "):
+                    blocks[i] = "```markdown\n" + paragraph + "\n```"
+            return "\n\n".join(blocks)
+
+        tree = GitTree(ROOT)
+        plan = tree.read(PLAN).decode()
+        self.assertEqual(len(rows(plan)), 67)
+        self.assertEqual(rows(fence_table(plan)), [])
+        self.assertEqual(rows(plan + "\n" + fence_table(plan)), rows(plan))
+        index = tree.read("versions/README.md").decode()
+        for content, accepted in ((fence_table(index), False), (index + "\n" + fence_table(index), True)):
+            errors = []
+            read = tree.read
+
+            def read_index(path, commit=None):
+                return content.encode() if path == "versions/README.md" and commit is None else read(path, commit)
+
+            with patch.object(tree, "read", side_effect=read_index):
+                check_versions(errors, tree)
+            if accepted:
+                self.assertEqual(errors, [])
+            else:
+                self.assertTrue(any("missing an approved rendered release row" in error for error in errors))
+
     def test_version_rows_and_current_label_are_bound_to_archives(self):
         tree = GitTree(ROOT)
         changes = [

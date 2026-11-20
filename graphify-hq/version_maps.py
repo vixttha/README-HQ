@@ -25,7 +25,7 @@ sys.path.insert(0, str(ROOT / "tools"))
 sys.path.insert(0, str(KIT))
 from evidence_map import publication_path, publish_directory
 from hq_data import SHA, parse_json, physical_lines
-from hq_navigation import MARKDOWN, PARSER, suffix
+from hq_navigation import MARKDOWN, PARSER, rendered_table_rows, suffix
 
 
 def source_bytes(commit, path):
@@ -213,7 +213,7 @@ def main():
         index = (ROOT / "versions/README.md").read_text(encoding="utf-8")
         if type(catalog.get("schema")) is not int or catalog["schema"] != 1:
             raise ValueError("Version catalog requires integer schema 1")
-        coverage_for(catalog["versions"], re.findall(r"^\| (v\d+(?:\.\d+)+) \|", index, re.M), expected)
+        coverage_for(catalog["versions"], re.findall(r"^\| (v\d+(?:\.\d+)+) \|", "\n".join(rendered_table_rows(index)), re.M), expected)
         target = (args.output or HQ / "maps").absolute()
         if args.check:
             build_maps(commit, catalog, target, check=True)

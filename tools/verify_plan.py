@@ -7,6 +7,7 @@ import subprocess
 import sys
 
 from hq_data import GitTree, parse_json, read_json
+from hq_navigation import rendered_table_rows
 
 ROOT = Path(__file__).resolve().parents[1]
 GRAPH = ROOT / "graphify-hq/plans/v0.0.6-repairs"
@@ -64,7 +65,7 @@ def stage_partitions(features, destination, source_commit, repository):
 
 
 def rows(content):
-    return [line for line in content.splitlines() if line.startswith("| " + chr(96) + "v0.0.6.")]
+    return [line for line in rendered_table_rows(content) if line.startswith("| " + chr(96) + "v0.0.6.")]
 
 
 def acceptance_sections(content):
@@ -106,7 +107,7 @@ def verify_index(index, partitions):
             raise ValueError(f"{folder}: missing plan index artifact")
         expected.append((f"{numbers[0]}–{numbers[-1]}", [prefix + item for item in artifacts]))
     actual = []
-    for line in index.splitlines():
+    for line in rendered_table_rows(index):
         if match := re.match(r"^\| (\d+–\d+) \|", line):
             actual.append((match[1], re.findall(r"\]\(([^)]+)\)", line)))
     if actual != expected:
