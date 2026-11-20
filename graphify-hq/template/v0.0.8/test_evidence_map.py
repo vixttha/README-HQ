@@ -4,7 +4,7 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from evidence_map import build, locate, validate_manifest
+from evidence_map import MAX_SOURCE_BYTES, build, locate, source_blob, source_lines, validate_manifest
 from github_provenance import verify_pull_request
 
 class ManifestTests(unittest.TestCase):
@@ -32,6 +32,26 @@ class ManifestTests(unittest.TestCase):
             {"path": "export.py", "anchor": "def export():"},
         ]
         self.assertEqual(validate_manifest(self.manifest), self.manifest)
+
+    def test_inventory_blob_cap_and_text_anchor_boundary(self):
+        binary = b"\xff" * MAX_SOURCE_BYTES
+        name = b"inventory.bin"
+        entry = b"100644 blob " + b"a" * 40 + b"\t" + name + b"\0"
+        for size in (MAX_SOURCE_BYTES - 1, MAX_SOURCE_BYTES, MAX_SOURCE_BYTES + 1):
+            responses = [entry, str(size).encode(), binary[:size]]
+            with self.subTest(size=size), patch("evidence_map.git", side_effect=responses) as git:
+                if size > MAX_SOURCE_BYTES:
+                    with self.assertRaisesRegex(ValueError, f"{size} exceeds limit of {MAX_SOURCE_BYTES} bytes"):
+                        source_blob(self.manifest["source_commit"], name.decode())
+                    self.assertEqual(git.call_count, 2)
+                else:
+                    self.assertEqual(source_blob(self.manifest["source_commit"], name.decode()), binary[:size])
+        with patch("evidence_map.source_blob", return_value=binary):
+            with self.assertRaisesRegex(ValueError, "require UTF-8"):
+                source_lines(self.manifest["source_commit"], name.decode())
+        with patch("evidence_map.source_blob", return_value=b"exact heading\n"):
+            lines, _ = source_lines(self.manifest["source_commit"], "README.md")
+            self.assertEqual(locate(lines, "exact heading", "README.md", 1), 1)
 
     def test_inventory_rejects_invalid_paths_and_duplicates(self):
         for paths in (["README.md", "README.md"], ["tools/../README.md"], [None], "README.md"):

@@ -144,7 +144,7 @@ def source_blob(commit, path):
         raise ValueError(f"{path}: expected regular Git blob, got mode {mode}")
     size = int(git("cat-file", "-s", blob))
     if not 0 <= size <= MAX_SOURCE_BYTES:
-        raise ValueError(f"{path}: source blob size exceeds limit")
+        raise ValueError(f"{path}: source blob size {size} exceeds limit of {MAX_SOURCE_BYTES} bytes")
     return git("cat-file", "blob", blob)
 
 

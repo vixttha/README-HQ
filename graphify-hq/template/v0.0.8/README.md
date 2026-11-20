@@ -20,7 +20,11 @@ Each feature has a unique lowercase ID, a label, and `documented_in`,
 workflow definitions. A reference has a repository-relative `path` and one
 unique, exact source line as its `anchor`, with outer whitespace removed.
 The optional `source_files` list adds file nodes for the source SHA and
-connects matching evidence anchors to their files.
+connects matching evidence anchors to their files. The compiler accepts up to
+64 inventory files and 1,000,000 bytes per Git blob for both inventory and line
+references. Inventory hashing accepts binary bytes, while a line reference
+requires UTF-8 text and an exact anchor of up to 500 characters. The compiler
+reports the observed size when a blob exceeds the cap.
 
 Test links identify definitions. The associated runner job records the
 execution result. The [self-map manifest](self-map.json) supplies feature
