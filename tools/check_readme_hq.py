@@ -305,7 +305,7 @@ def main():
             cases.update(entrypoint=entry, local_links=count)
             if args.smoke:
                 from hq_smoke import verify_first_action
-                outcome = verify_first_action(tree, args.smoke, allow_network=args.allow_network)
+                outcome = verify_first_action(tree, args.smoke, allow_network=args.allow_network, subproject=args.subproject)
                 cases["first_action"] = outcome
                 if outcome["result"] == "failed":
                     errors.append("first action failed its expected result")

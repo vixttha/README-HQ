@@ -169,6 +169,28 @@ A separate [same label](fourth.md).
             self.assertEqual(check_document(tree, "README.md", errors, gaps), 3)
             self.assertEqual((errors, gaps), ([], []))
 
+    def test_smoke_runs_in_the_selected_monorepo_package(self):
+        description = "# Guide\n\nThis guide documents the test fixture.\n"
+        with repository({"README.md": description, "packages/demo/README.md": description,
+                         "run.py": "print('root marker')",
+                         "packages/demo/run.py": "print('package marker')"}) as tree:
+            spec = tree.root / "smoke.json"
+            receipt = tree.root / "receipt.json"
+            argv = [sys.executable, str(ROOT / "tools/check_readme_hq.py"), "--repo", str(tree.root),
+                    "--profile", "reference", "--smoke", str(spec), "--receipt", str(receipt)]
+            for subproject, marker, expected in (
+                ("packages/demo", "root marker", "failed"),
+                ("packages/demo", "package marker", "passed"),
+                (".", "root marker", "passed"),
+            ):
+                with self.subTest(subproject=subproject, marker=marker):
+                    spec.write_text(json.dumps({"commit": tree.commit, "argv": [sys.executable, "run.py"],
+                                                "expected": {"exit": 0, "contains": marker}}), encoding="utf-8")
+                    result = subprocess.run([*argv, "--subproject", subproject], capture_output=True)
+                    self.assertEqual(result.returncode, int(expected == "failed"), result.stderr)
+                    action = json.loads(receipt.read_bytes())["cases"]["first_action"]
+                    self.assertEqual((action["result"], action["cwd"]), (expected, subproject))
+
     def test_existence_only_smoke_never_opens_the_result(self):
         with repository({"README.md": "# Example"}) as tree:
             spec = tree.root / "smoke.json"

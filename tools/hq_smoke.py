@@ -16,7 +16,7 @@ from urllib.request import Request, urlopen
 from hq_data import read_json
 
 
-def verify_first_action(tree, path, *, allow_network=False):
+def verify_first_action(tree, path, *, allow_network=False, subproject="."):
     spec = read_json(path)
     expected = spec.get("expected")
     if not isinstance(expected, dict) or not expected:
@@ -67,15 +67,23 @@ def verify_first_action(tree, path, *, allow_network=False):
             raise ValueError("expected.file_sha256 must be a lowercase SHA-256")
     elif "file_mode" in expected or "file_sha256" in expected:
         raise ValueError("file expectations require expected.file")
+    selected = Path(subproject)
+    if selected.is_absolute() or selected.drive or ".." in selected.parts or "\\" in subproject:
+        raise ValueError("smoke working directory must be relative to the selected repository")
     with TemporaryDirectory(prefix="readme-hq-smoke-") as temp:
         checkout = Path(temp) / "checkout"
         tree.git("worktree", "add", "--detach", str(checkout), tree.commit)
         try:
+            cwd = (checkout / selected).resolve()
+            if not cwd.is_relative_to(checkout.resolve()) or not cwd.is_dir():
+                raise ValueError("smoke working directory is outside the checkout or unavailable")
+            directory = selected.as_posix()
+
             def result_file():
                 if not name:
                     return None
-                path = (checkout / name).resolve()
-                return path if path.is_relative_to(checkout.resolve()) and path.is_file() else None
+                path = (cwd / name).resolve()
+                return path if path.is_relative_to(cwd) and path.is_file() else None
 
             def file_digest(path):
                 if path is None:
@@ -91,9 +99,9 @@ def verify_first_action(tree, path, *, allow_network=False):
             if type(timeout) is not int or not 1 <= timeout <= 300:
                 raise ValueError("smoke timeout must be between 1 and 300 seconds")
             try:
-                result = subprocess.run(argv, cwd=checkout, capture_output=True, timeout=timeout, check=False)
+                result = subprocess.run(argv, cwd=cwd, capture_output=True, timeout=timeout, check=False)
             except (OSError, subprocess.TimeoutExpired) as error:
-                return {"result": "failed", "detail": str(error), "argv": argv, "expected": expected}
+                return {"result": "failed", "detail": str(error), "argv": argv, "cwd": directory, "expected": expected}
             output = result.stdout + result.stderr
             matched = expected.get("contains") is None or expected["contains"].encode() in output
             observation = {}
@@ -110,7 +118,7 @@ def verify_first_action(tree, path, *, allow_network=False):
                 matched &= file_match
                 observation = {"file_before_sha256": before, "file_after_sha256": after, "file_match": file_match}
             return {"result": "passed" if result.returncode == expected["exit"] and matched else "failed",
-                    "argv": argv, "expected": expected,
+                    "argv": argv, "cwd": directory, "expected": expected,
                     "observed": {"exit": result.returncode, "outcome_match": bool(matched),
                                  "output_sha256": sha256(output).hexdigest(), **observation}}
         finally:
