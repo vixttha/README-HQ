@@ -2,8 +2,10 @@
 
 from collections import Counter
 from dataclasses import dataclass
+from hashlib import sha256
 from html.parser import HTMLParser
 from io import BytesIO
+from pathlib import Path
 import posixpath
 import re
 import unicodedata
@@ -19,6 +21,10 @@ from hq_data import REGULAR_MODES, SHA, physical_lines
 MARKDOWN = {".md", ".markdown", ".mdown", ".mkdn"}
 README_FORMATS = [".md", ".markdown", ".mdown", ".mkdn", ".rst", ".adoc", ".asciidoc", ".asc", ".txt", ""]
 IMAGE_FORMATS = {".png": "PNG", ".gif": "GIF", ".jpg": "JPEG", ".jpeg": "JPEG", ".webp": "WEBP"}
+LFS_VERSION = b"version https://git-lfs.github.com/spec/v1"
+LFS_POINTER = re.compile(rb"version https://git-lfs.github.com/spec/v1\r?\n"
+                         rb"oid sha256:([0-9a-f]{64})\r?\nsize (0|[1-9][0-9]*)\r?\n?")
+MAX_CACHED_MEDIA_BYTES = 50 * 1024 * 1024
 LINE_RANGE = re.compile(r"L([0-9]+)(?:-L([0-9]+))?")
 PARSER = MarkdownIt("commonmark").enable("table").enable("strikethrough")
 
@@ -254,6 +260,34 @@ def check_fragment(tree, path, commit, fragment, *, plain=False):
         raise ValueError("missing local heading or named anchor")
 
 
+def media_bytes(tree, path, commit):
+    data = tree.read(path, commit)
+    if not data.startswith(b"version https://git-lfs.github.com/"):
+        return data
+    pointer = LFS_POINTER.fullmatch(data) if len(data) <= 1024 else None
+    if not pointer:
+        if data.startswith(LFS_VERSION + b"\n") and data.split(b"\n", 2)[1].startswith(b"ext-"):
+            raise LookupError("Git LFS pointer extensions were not inspected")
+        raise ValueError("malformed Git LFS media pointer")
+    oid, raw_size = pointer.groups()
+    size = int(raw_size)
+    if size > MAX_CACHED_MEDIA_BYTES:
+        raise LookupError("Git LFS media object exceeds the offline validation limit")
+    digest = oid.decode()
+    common = Path(tree.git("rev-parse", "--path-format=absolute", "--git-common-dir").decode().strip())
+    cached = common / "lfs" / "objects" / digest[:2] / digest[2:4] / digest
+    try:
+        if not cached.is_file():
+            raise LookupError("Git LFS media object unavailable in the local cache")
+        with cached.open("rb") as handle:
+            contents = handle.read(size + 1)
+    except FileNotFoundError as error:
+        raise LookupError("Git LFS media object unavailable in the local cache") from error
+    if len(contents) != size or sha256(contents).hexdigest() != digest:
+        raise ValueError("cached Git LFS media object does not match the pointer")
+    return contents
+
+
 def verify_media(path, data):
     extension = suffix(path)
     if extension == ".svg":
@@ -310,7 +344,7 @@ def check_document(tree, source, errors, gaps, *, archive_scope=None):
             if link.image:
                 if directory:
                     raise ValueError("image target is a directory")
-                verify_media(path, tree.read(path, commit))
+                verify_media(path, media_bytes(tree, path, commit))
             check_fragment(tree, path, commit, unquote(url.fragment), plain=url.query in {"plain=1", "plain=true"})
             count += 1
         except (ValueError, OSError, KeyError) as error:

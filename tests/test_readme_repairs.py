@@ -144,6 +144,30 @@ A separate [same label](fourth.md).
             self.assertTrue(any("unreadable image" in issue for issue in errors))
             self.assertTrue(any("absent.md" in issue for issue in errors))
 
+    def test_lfs_media_distinguishes_unavailable_invalid_and_verified(self):
+        svg = b'<svg xmlns="http://www.w3.org/2000/svg"/>'
+        oid = sha256(svg).hexdigest()
+        pointer = f"version https://git-lfs.github.com/spec/v1\noid sha256:{oid}\nsize {len(svg)}\n"
+        with repository({"README.md": "![Diagram](diagram.svg)\n![Broken](broken.svg)",
+                         "diagram.svg": pointer, "broken.svg": pointer.replace(oid, "bad")}) as tree:
+            def audit():
+                errors, gaps = [], []
+                return check_document(tree, "README.md", errors, gaps), errors, gaps
+
+            count, errors, gaps = audit()
+            self.assertEqual(count, 0)
+            self.assertIn("malformed Git LFS media pointer", errors[0])
+            self.assertIn("unavailable in the local cache", gaps[0])
+            cache = tree.root / ".git/lfs/objects" / oid[:2] / oid[2:4] / oid
+            cache.parent.mkdir(parents=True)
+            cache.write_bytes(b"x" * len(svg))
+            count, errors, gaps = audit()
+            self.assertEqual((count, gaps), (0, []))
+            self.assertTrue(any("does not match the pointer" in error for error in errors))
+            cache.write_bytes(svg)
+            count, errors, gaps = audit()
+            self.assertEqual((count, len(errors), gaps), (1, 1, []))
+
     def test_responsive_image_sources_are_checked_alongside_fallback(self):
         body = ('<picture><source media="(prefers-color-scheme: dark)" '
                 'srcset="dark.svg 1x, dark-large.svg 2x"><source srcset="invalid.svg bad">'
