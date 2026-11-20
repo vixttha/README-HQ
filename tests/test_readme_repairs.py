@@ -191,6 +191,26 @@ A separate [same label](fourth.md).
                     action = json.loads(receipt.read_bytes())["cases"]["first_action"]
                     self.assertEqual((action["result"], action["cwd"]), (expected, subproject))
 
+    def test_smoke_marker_checks_each_stream_independently(self):
+        with repository({"README.md": "# Guide"}) as tree:
+            spec = tree.root / "smoke.json"
+            for marker, stream, observed, result in (
+                ("left", "stdout", ["stdout"], "passed"),
+                ("right", "stderr", ["stderr"], "passed"),
+                ("right", "either", ["stderr"], "passed"),
+                ("right", "stdout", ["stderr"], "failed"),
+                ("leftright", "either", [], "failed"),
+            ):
+                with self.subTest(marker=marker, stream=stream):
+                    spec.write_text(json.dumps({"commit": tree.commit, "argv": [sys.executable, "-c",
+                        "import sys; sys.stdout.write('left'); sys.stderr.write('right')"],
+                        "expected": {"exit": 0, "contains": marker, "stream": stream}}), encoding="utf-8")
+                    outcome = verify_first_action(tree, spec)
+                    self.assertEqual(outcome["result"], result)
+                    self.assertEqual(outcome["observed"]["matched_streams"], observed)
+                    self.assertEqual(outcome["observed"]["stream_sha256"], {
+                        "stdout": sha256(b"left").hexdigest(), "stderr": sha256(b"right").hexdigest()})
+
     def test_existence_only_smoke_never_opens_the_result(self):
         with repository({"README.md": "# Example"}) as tree:
             spec = tree.root / "smoke.json"

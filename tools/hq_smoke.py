@@ -55,6 +55,12 @@ def verify_first_action(tree, path, *, allow_network=False, subproject="."):
         raise ValueError("local smoke needs a nonempty argv array")
     if type(expected.get("exit")) is not int or not (expected.get("contains") or expected.get("file")):
         raise ValueError("local smoke requires an exit code and a recognizable output or file")
+    marker = expected.get("contains")
+    stream = expected.get("stream", "either")
+    if "contains" in expected and (not isinstance(marker, str) or not marker):
+        raise ValueError("expected.contains must be a nonempty string")
+    if stream not in ("either", "stdout", "stderr") or ("stream" in expected and marker is None):
+        raise ValueError("expected.stream requires a marker and must be either, stdout, or stderr")
     name = expected.get("file")
     mode = expected.get("file_mode", "changed")
     digest = expected.get("file_sha256")
@@ -102,8 +108,10 @@ def verify_first_action(tree, path, *, allow_network=False, subproject="."):
                 result = subprocess.run(argv, cwd=cwd, capture_output=True, timeout=timeout, check=False)
             except (OSError, subprocess.TimeoutExpired) as error:
                 return {"result": "failed", "detail": str(error), "argv": argv, "cwd": directory, "expected": expected}
-            output = result.stdout + result.stderr
-            matched = expected.get("contains") is None or expected["contains"].encode() in output
+            streams = {"stdout": result.stdout, "stderr": result.stderr}
+            marker_bytes = marker.encode() if marker is not None else None
+            matched_streams = [key for key, data in streams.items() if marker_bytes is not None and marker_bytes in data]
+            matched = marker is None or (bool(matched_streams) if stream == "either" else stream in matched_streams)
             observation = {}
             if name:
                 path = result_file()
@@ -120,7 +128,9 @@ def verify_first_action(tree, path, *, allow_network=False, subproject="."):
             return {"result": "passed" if result.returncode == expected["exit"] and matched else "failed",
                     "argv": argv, "cwd": directory, "expected": expected,
                     "observed": {"exit": result.returncode, "outcome_match": bool(matched),
-                                 "output_sha256": sha256(output).hexdigest(), **observation}}
+                                 "output_sha256": sha256(result.stdout + result.stderr).hexdigest(),
+                                 "stream_sha256": {key: sha256(data).hexdigest() for key, data in streams.items()},
+                                 "matched_streams": matched_streams, **observation}}
         finally:
             tree.git("worktree", "remove", "--force", str(checkout))
 
