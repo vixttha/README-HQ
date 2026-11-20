@@ -41,3 +41,13 @@ A specialist pass expanded the [technique map](TECHNIQUE-MAP.md) from 108 to 120
 - The closing cross-check revisited keyboard setup, game launch, action inputs and outputs, lesson structure, and Markdown rendering. Those examples fit techniques already in the map. The map retains useful source links under those entries.
 
 The result records qualitative coverage of the public sources surveyed. A statistical completeness estimate would require a defined corpus and independent classification.
+
+### APIs, service startup, file conversion, and accessible examples
+
+A focused pass expanded the [technique map](TECHNIQUE-MAP.md) from 120 to 134 practices. The sources included API standards and consumer guides, container quickstarts, extension activation reference, file-conversion documentation, asset inventories, notebook hosts, and accessibility testing guidance.
+
+- The API sources covered versioned interface contracts, reusable request collections, page traversal, automatic retries, event delivery, and replacement timelines for deprecated interfaces.
+- The other sources covered local service addresses and readiness, extension activation, conversion fidelity, published asset names, notebook preview and execution links, labels that communicate without color, and keyboard checks on rendered READMEs.
+- Closing checks in Microsoft’s API docs, Docker labs, Material Icons, W3C accessibility guidance, and GitHub notebook documentation produced further examples of these mechanisms. The map records concrete examples under the relevant entries.
+
+This pass used source comparison and deduplication. The count describes documented practices in the map and supports a qualitative judgment about diminishing returns within the sampled source families.
