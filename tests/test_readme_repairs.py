@@ -1047,6 +1047,30 @@ class EvidenceTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "anchor does not match"):
                 intake.record_intake(spec, destination, fetch=fetch)
 
+    def test_learning_cli_distinguishes_secondary_rate_limits_from_forbidden(self):
+        loader = importlib.util.spec_from_file_location("intake", ROOT / "learning/intake.py")
+        intake = importlib.util.module_from_spec(loader)
+        loader.loader.exec_module(intake)
+        for status, headers, message, limited in (
+            (403, {"X-RateLimit-Remaining": "17"}, "You have exceeded a secondary rate limit.", True),
+            (403, {"X-RateLimit-Remaining": "0"}, "API rate limit exceeded.", True),
+            (403, {"Retry-After": "60"}, "Request throttled.", True),
+            (429, {}, "Too many requests.", True),
+            (403, {"X-RateLimit-Remaining": "17"}, "Resource not accessible.", False),
+        ):
+            with self.subTest(status=status, headers=headers, message=message):
+                body = BytesIO(json.dumps({"message": message}).encode("utf-8"))
+                response = HTTPError("https://api.github.com", status, "fixture", headers, body)
+                stderr = StringIO()
+                with (patch.object(sys, "argv", ["intake.py", "request.json", "receipts"]),
+                      patch.object(intake, "read_json", return_value={}),
+                      patch.object(intake, "record_intake", side_effect=response),
+                      contextlib.redirect_stderr(stderr), self.assertRaises(SystemExit) as exit_error):
+                    intake.main()
+                self.assertEqual(exit_error.exception.code, 2)
+                self.assertEqual("retry later" in stderr.getvalue(), limited)
+                self.assertEqual("invalid or unverified" in stderr.getvalue(), not limited)
+
     def test_learning_conflicting_decisions_at_same_source_are_rejected(self):
         loader = importlib.util.spec_from_file_location("intake", ROOT / "learning/intake.py")
         intake = importlib.util.module_from_spec(loader)

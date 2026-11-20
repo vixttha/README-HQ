@@ -135,6 +135,24 @@ def record_intake(specification, directory, *, fetch=fetch_github):
     return receipt
 
 
+def is_github_rate_limit(error):
+    if error.code == 429:
+        return True
+    if error.code != 403:
+        return False
+    if error.headers and (
+        error.headers.get("X-RateLimit-Remaining") == "0" or error.headers.get("Retry-After")
+    ):
+        return True
+    try:
+        with error:
+            payload = json.loads(error.read(8192))
+    except (OSError, ValueError):
+        return False
+    message = payload.get("message") if isinstance(payload, dict) else None
+    return isinstance(message, str) and "secondary rate limit" in message.casefold()
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("spec", type=Path, help="public sources, selected references, and target evidence")
@@ -145,7 +163,7 @@ def main():
     except UnknownTechniqueError as error:
         parser.error(str(error))
     except HTTPError as error:
-        if error.code == 429 or (error.code == 403 and error.headers and error.headers.get("X-RateLimit-Remaining") == "0"):
+        if is_github_rate_limit(error):
             parser.error(f"GitHub API rate limit reached (HTTP {error.code}); retry later")
         parser.error("learning request or source proof is invalid or unverified")
     except (KeyError, OSError, TypeError, ValueError):
