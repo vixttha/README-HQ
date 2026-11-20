@@ -8,6 +8,7 @@ import os
 import posixpath
 import re
 import subprocess
+import sys
 from importlib.metadata import version
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
@@ -122,7 +123,7 @@ async def verify_graph(root, commit, routes, directory):
     actual = {(edge["source"], edge["target"]) for edge in saved["links"]}
     require(actual == set(edges), "Graphify export changed the document routes")
 
-    params = StdioServerParameters(command=os.sys.executable, args=["-m", "graphify.serve", str(path)])
+    params = StdioServerParameters(command=sys.executable, args=["-m", "graphify.serve", str(path)])
     async with asyncio.timeout(45), stdio_client(params) as (reader, writer):
         async with ClientSession(reader, writer) as session:
             await session.initialize()
@@ -170,7 +171,7 @@ def main():
         "run_id": os.environ.get("GITHUB_RUN_ID"), "attempt": os.environ.get("GITHUB_RUN_ATTEMPT"),
         "runner_os": os.environ.get("RUNNER_OS"), "documents": sorted(FILES),
         "relative_links": len(candidate_routes), "template_link_trials": 2, "broken_link_controls": 2,
-        "document_sha256": {path: hashlib.sha256((args.candidate / path).read_bytes()).hexdigest() for path in sorted(FILES)},
+        "document_sha256": {path: hashlib.sha256(subprocess.check_output(["git", "-C", str(args.candidate), "show", f"HEAD:{path}"])).hexdigest() for path in sorted(FILES)},
         "git_blob": {path: git(args.candidate, "rev-parse", f"HEAD:{path}") for path in sorted(FILES)},
         "graphify": asyncio.run(verify_graph(args.candidate, args.candidate_sha, candidate_routes, args.output)) if args.graphify else None,
     }

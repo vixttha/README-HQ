@@ -50,7 +50,9 @@ jobs:
         run: python -m pip install --require-hashes -r audit/technique-library-requirements.txt
       - name: Install pinned Graphify
         if: runner.os == 'Linux'
-        run: python -m pip install --require-hashes --only-binary=:all: --no-deps -r locks/graphify-hq/template/v0.0.8/requirements.txt
+        run: |
+          python -m pip install --require-hashes --only-binary=:all: --no-deps -r locks/graphify-hq/template/v0.0.8/requirements.txt
+          python -m pip check
       - name: Verify navigation and record trials
         if: runner.os == 'Windows'
         shell: bash
