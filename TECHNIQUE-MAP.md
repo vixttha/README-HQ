@@ -12,6 +12,7 @@ Help readers decide whether they’re in the right place.
 - **Audience and use cases** — Name the people and jobs the project serves.
 - **Value proposition** — Explain the practical payoff or problem the project removes.
 - **Project status and maturity** — Distinguish a preview, stable release, or archived project.
+- **Distinguish source from the shipped product** — Explain what readers are browsing, which product or distribution it produces, and where each set of terms applies. VS Code does this for Code - OSS and Microsoft’s Visual Studio Code distribution. [VS Code source and distribution](https://github.com/microsoft/vscode/blob/f26893c248aa2b2ef1f3dba2134d9d1806559186/README.md#L9-L15)
 - **Capabilities at a glance** — Show the few important things readers can do today.
 - **Scope boundaries** — Call out material limitations or environments outside the supported scope.
 - **Alternatives and tradeoffs** — Explain when a related tool or approach fits a reader better.
@@ -47,10 +48,12 @@ Get a reader to a first meaningful action.
 - [Write a copyable Quickstart](techniques/copyable-quickstart.md) — Give readers ordered commands they can paste into the supported shell.
 - **Separate platform commands** — Label POSIX and PowerShell paths where their commands differ.
 - **Installation methods** — Distinguish packages, installers, source builds, and other supported options.
+- **Label ownership of installation channels** — Identify who maintains and supports each package or installer so readers know where to report installation problems. GitHub CLI links community-supported routes separately. [GitHub CLI installation links](https://github.com/cli/cli/blob/f24a94ffcb8c344ed5db0e4fb9a4d1fffd42c256/README.md#L33-L58) · [Linux package maintainers](https://github.com/cli/cli/blob/f24a94ffcb8c344ed5db0e4fb9a4d1fffd42c256/docs/install_linux.md#L186-L222)
 - **Starting directory and checkout** — State where commands begin and which revision or project root they expect.
 - **Safe configuration example** — Use labeled placeholders and explain where values belong.
 - **Sample fixture or starter input** — Provide a small known input that readers can use immediately.
 - **Guest or offline first run** — Offer a first-use path with minimal account or network dependencies when supported.
+- **Offer an isolated trial command** — Give the reader a short way to try a tool without installing it into their project. State what runner is required and what can be cached. uv demonstrates a temporary tool environment with `uvx`. [uv README example](https://github.com/astral-sh/uv/blob/c99faeeeeb8318d874007b4c48635d009838c1a0/README.md#L147-L166) · [Environment and cache behavior](https://github.com/astral-sh/uv/blob/c99faeeeeb8318d874007b4c48635d009838c1a0/docs/concepts/tools.md#L10-L38)
 - **Prerequisite or installation check** — Show a fast way to check that the local environment is ready before the demo.
 - **Copy-in or template adoption path** — Identify what to copy, where it goes, and how to check the resulting project.
 - **Upgrade or migration route** — Name the starting version, intended destination, and relevant migration guide.
@@ -70,6 +73,7 @@ Help the reader recognize success and get unstuck.
 - **Recovery beside the failed step** — Put a common failure and its recovery close to the command or action that produces it.
 - **Diagnostic decision guide** — Route different symptoms to the relevant fix instead of listing generic troubleshooting.
 - **Known limitations and workarounds** — State a known constraint and the currently supported path around it.
+- **Explain defaults that change what readers see** — Name the input the tool omits or transforms by default, what a reader may miss, and how to change the behavior. ripgrep puts its default exclusions near its opening description. [ripgrep default search scope](https://github.com/BurntSushi/ripgrep/blob/16f9b2e64a42c43a469f72260226a6c65a4c88b9/README.md#L1-L9)
 
 [Pinned Veraphify result example](https://github.com/vixttha/Veraphify/blob/88d5d08cd8c80de3927858685878e51b6d7c69b8/README.md) · [README HQ registry](https://github.com/vixttha/README-HQ/blob/8d50caec2bc6fcb998994a1fd302294a029325f9/techniques/registry.json)
 
@@ -97,6 +101,7 @@ Get readers to the right information with minimal scanning.
 Make public claims traceable and scoped.
 
 - [Execute the documented walkthrough](techniques/exact-revision-walkthrough.md) — Replay the reader’s published steps at the named revision and verify the result.
+- **Turn examples into regression tests** — Generate test cases from examples in the maintained documentation source so changing an example also changes what gets tested. jq’s docs README describes the process and its Makefile connects manual examples to the test suite. [jq docs README](https://github.com/jqlang/jq/blob/5c001b18d7237cce1fdba63608732163f978dd23/docs/README.md#L1-L22) · [jq test-generation rule](https://github.com/jqlang/jq/blob/5c001b18d7237cce1fdba63608732163f978dd23/Makefile.am#L154-L170)
 - [Permanent proof links](techniques/permanent-proof-links.md) — Keep verification traceable with a commit-pinned receipt and recorded run, attempt, artifact ID, and digest.
 - [Label the scope of compatibility evidence](techniques/claim-scope-labels.md) — State the version, platform, capability, and checks that support a compatibility claim.
 - **Declared versus observed checks** — Show which checks were required and which actually ran, passed, failed, or were skipped.
@@ -107,6 +112,7 @@ Make public claims traceable and scoped.
 - **Publication-path verification** — Test links and assets from the path where the README will actually ship.
 - **Rendered review at two widths** — Check the landing page on wide and narrow layouts for overflow or unreadable content.
 - **Benchmark method and scope** — Describe the workload, environment, revision, and units beside a performance result.
+- **Show a benchmark case that changes the takeaway** — Beside a favorable result, include a reproducible workload or flag change that reduces the advantage or changes performance. ripgrep shows performance cliffs and cases with many matches. [ripgrep performance caveats](https://github.com/BurntSushi/ripgrep/blob/16f9b2e64a42c43a469f72260226a6c65a4c88b9/README.md#L77-L114)
 - **Clean consumer adoption test** — Verify documented copy-in or install steps in a fresh consumer project.
 - **Snapshot source identity** — Record the origin and digest of frozen README or asset bytes when exact archival identity matters.
 
@@ -125,6 +131,7 @@ Help the next owner, contributor, or agent take responsibility for the project.
 - **Security reporting route** — Link the project’s supported private disclosure process when applicable.
 - **Citation instructions** — Point researchers to the maintained citation metadata where appropriate.
 - **Changelog and version navigation** — Show where release history lives and which version the reader is viewing.
+- **Identify the source of truth when repositories are mirrored** — Name the canonical repository and explain which revision identifiers to cite from a mirror. SQLite’s GitHub README points to Fossil and tells readers where to find the official check-in name. [SQLite mirror guidance](https://github.com/sqlite/sqlite/blob/28c1e4669d7649506c5bf640f62ce3abfc0114fa/README.md#L15-L29)
 - **Human guide for a structured inventory** — Pair a machine-readable manifest with an explanation of its reader-facing purpose.
 - **Independent version lines** — Name the product, README, or collection beside each version when their release lines differ.
 - **Versioned section map** — Provide a path to find corresponding sections across archived READMEs.
