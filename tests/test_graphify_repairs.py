@@ -15,7 +15,7 @@ from unittest.mock import patch
 ROOT = Path(__file__).resolve().parents[1]
 KIT = ROOT / "graphify-hq/template/v0.0.8"
 sys.path.insert(0, str(KIT))
-from evidence_map import flex_text, locate, publish_pair, read_published_pair, read_manifest, valid_branch, verify_mcp
+from evidence_map import build, flex_text, locate, publish_pair, read_published_pair, read_manifest, valid_branch, verify_mcp
 from github_provenance import Page, pages
 
 spec = importlib.util.spec_from_file_location("version_maps", ROOT / "graphify-hq/version_maps.py")
@@ -30,6 +30,26 @@ class GraphifyRepairs(unittest.TestCase):
         self.assertEqual(locate(["Heading", "Heading"], "Heading", "README.md", 2), 2)
         self.assertTrue(valid_branch("_docs/nested"))
         self.assertFalse(valid_branch("docs/../nested"))
+
+    def test_duplicate_resolved_destinations_and_distinct_evidence(self):
+        commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
+        first = {"path": "guide.md", "anchor": "Heading"}
+        explicit = {**first, "line": 1}
+        second = {"path": "guide.md", "anchor": "Another heading", "line": 2}
+        feature = {"id": "sample", "label": "Sample", "documented_in": [first, explicit],
+                   "changed_in": [first], "tested_by": [second]}
+        manifest = {"source_commit": commit, "repository": "example/project", "title": "Sample",
+                    "features": [feature]}
+        with tempfile.TemporaryDirectory() as folder, patch(
+            "evidence_map.source_lines", return_value=(["Heading", "Another heading"], "a" * 64)
+        ):
+            with self.assertRaisesRegex(ValueError, "duplicate resolved destination guide.md:L1"):
+                build(manifest, Path(folder))
+            feature["documented_in"] = [first, second]
+            graph, receipt = build(manifest, Path(folder))
+            self.assertEqual(receipt["feature_links"]["feature:sample"],
+                             {"documented_in": 2, "changed_in": 1, "tested_by": 1})
+            asyncio.run(verify_mcp(graph, receipt))
 
     def test_release_heading_beats_a_draft_placeholder(self):
         content = b"Release notes\n=============\n\nUnreleased\n----------\n\n- TODO\n\n2.34.2 (2026-05-14)\n-------------------\n"
