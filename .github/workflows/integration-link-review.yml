@@ -1,0 +1,41 @@
+name: README HQ integration link evidence
+on:
+  push:
+    branches: [audit/v0.0.6-integration-gates]
+permissions:
+  contents: read
+jobs:
+  audit:
+    if: github.event.repository.visibility == 'public' && github.event.repository.private == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+          path: audit-control
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: d12d5c6bd82fe448f64adb3ae48024296b8e6db4
+          fetch-depth: 0
+          persist-credentials: false
+          path: candidate
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.12'
+      - name: Generate exact-candidate reader receipt
+        working-directory: candidate
+        run: |
+          python -m pip install --require-hashes -r tools/requirements.txt
+          python tools/check_readme_hq.py --receipt "$RUNNER_TEMP/reader.json"
+      - name: Classify and observe public GitHub destinations
+        run: python audit-control/audit/integration_link_review.py candidate "$RUNNER_TEMP/reader.json" "$RUNNER_TEMP/link-observations.json"
+      - name: Preserve evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: integration-link-observations-attempt-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/reader.json
+            ${{ runner.temp }}/link-observations.json
+          if-no-files-found: error
