@@ -114,6 +114,20 @@ class ManifestTests(unittest.TestCase):
                 self.assertEqual(receipt["source_sha256"]["README.md"], sha256(checkout_bytes).hexdigest())
                 asyncio.run(verify_mcp(graph, receipt))
 
+    def test_mcp_inventory_rejects_a_count_preserving_wrong_edge(self):
+        commit = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
+        self.manifest.update(source_commit=commit, features=[], source_files=["README.md", "AGENTS.md"])
+        with tempfile.TemporaryDirectory() as folder:
+            graph, receipt = build(validate_manifest(self.manifest), Path(folder))
+            asyncio.run(verify_mcp(graph, receipt))
+            original = json.loads(graph.read_bytes())
+            changed = next(link for link in original["links"] if link["relation"] == "contains_source")
+            changed["source"] = next(node["id"] for node in original["nodes"] if node["id"].startswith("file:")
+                                     and node["id"] != changed["target"])
+            graph.write_text(json.dumps(original), encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "destinations differ"):
+                asyncio.run(verify_mcp(graph, {**receipt, "graph_sha256": sha256(graph.read_bytes()).hexdigest()}))
+
     def test_source_path_must_stay_inside_commit(self):
         test = self.manifest["features"][0]["tested_by"][0]
         for path in ("../secrets.md", "/etc/passwd", "tools/../README.md", ".git/config", "HEAD:README.md"):

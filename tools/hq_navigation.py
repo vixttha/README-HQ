@@ -31,6 +31,8 @@ MAX_MEDIA_FRAMES = 256
 MAX_MEDIA_PIXELS = 100_000_000
 LINE_RANGE = re.compile(r"L([0-9]+)(?:-L([0-9]+))?")
 BARE_WEB = re.compile(r"(?:^|(?<=[\s*_~(]))(?:https?://|www\.)[^\s<>]+")
+HTML_VOID_ELEMENTS = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link",
+                      "meta", "param", "source", "track", "wbr"}
 PARSER = MarkdownIt("commonmark").enable("table").enable("strikethrough")
 
 
@@ -78,6 +80,7 @@ class Link:
     image: bool = False
     unnamed: bool = False
     coverage_gap: str | None = None
+    diagnostic: str | None = None
 
 
 def image_sources(value):
@@ -108,15 +111,25 @@ class HtmlLinks(HTMLParser):
         self.links = []
         self.anchors = set()
         self.controls = []
+        self.hidden_elements = []
 
     def handle_starttag(self, tag, options):
         attrs = dict(options)
         line = self.line + self.getpos()[0] - 1
+        aria_label = (attrs.get("aria-label") or "").strip()
+        hidden = (bool(self.hidden_elements) or "hidden" in attrs
+                  or (attrs.get("aria-hidden") or "").strip().casefold() == "true")
+        if hidden and tag not in HTML_VOID_ELEMENTS:
+            self.hidden_elements.append(tag)
         if tag == "a":
             if attrs.get("name"):
                 self.anchors.add(attrs["name"])
             if attrs.get("href"):
-                self.controls.append([attrs["href"], line, bool((attrs.get("aria-label") or "").strip())])
+                self.controls.append([attrs["href"], line, hidden or bool(aria_label)])
+        if tag == "img" and "alt" not in attrs and not aria_label:
+            source = attrs.get("src") or attrs.get("srcset") or "<img>"
+            self.links.append(Link(source, line,
+                                   diagnostic="HTML image requires an alt attribute or nonempty aria-label"))
         if tag in {"source", "img"} and "srcset" in attrs:
             srcset = attrs["srcset"] or ""
             try:
@@ -125,16 +138,21 @@ class HtmlLinks(HTMLParser):
                 self.links.append(Link(srcset, line, coverage_gap="unsupported image source list"))
             else:
                 self.links.extend(Link(url, line, True) for url in sources)
-        if tag == "img" and attrs.get("src"):
-            self.links.append(Link(attrs["src"], line, True))
-            if self.controls and (attrs.get("alt") or "").strip():
+        if tag == "img":
+            if attrs.get("src"):
+                self.links.append(Link(attrs["src"], line, True))
+            if self.controls and not hidden and (aria_label or (attrs.get("alt") or "").strip()):
                 self.controls[-1][2] = True
 
     def handle_data(self, data):
-        if self.controls and data.strip():
+        if self.controls and not self.hidden_elements and data.strip():
             self.controls[-1][2] = True
 
     def handle_endtag(self, tag):
+        for index in range(len(self.hidden_elements) - 1, -1, -1):
+            if self.hidden_elements[index] == tag:
+                del self.hidden_elements[index:]
+                break
         if tag == "a" and self.controls:
             path, line, named = self.controls.pop()
             self.links.append(Link(path, line, unnamed=not named))
@@ -302,7 +320,7 @@ def target_for(tree, source, url):
     return "" if path == "." else path, None
 
 
-def check_fragment(tree, path, commit, fragment, *, plain=False):
+def check_fragment(tree, path, commit, fragment, *, plain=False, cache=None):
     if not fragment:
         return
     entries = tree.entries(commit)
@@ -311,18 +329,23 @@ def check_fragment(tree, path, commit, fragment, *, plain=False):
         if not target:
             raise LookupError("directory has no supported README for the fragment")
         path = target
-    data = tree.read(path, commit)
-    text = data.decode("utf-8")
-    if plain or suffix(path) not in MARKDOWN:
+    line_mode = plain or suffix(path) not in MARKDOWN
+    draft = tree.draft and commit is None
+    key = (entries[path][1], line_mode)
+    available = cache if cache is not None and not draft else {}
+    if key not in available:
+        text = tree.read(path, commit).decode("utf-8")
+        available[key] = ((len(physical_lines(text.removesuffix("\n"))) if text else 0)
+                          if line_mode else parse_markdown(text)[0])
+    if line_mode:
         coordinates = LINE_RANGE.fullmatch(fragment)
         if not coordinates:
             raise LookupError("fragment format is unsupported for this file")
         start, end = coordinates.groups()
         first, last = int(start), int(end or start)
-        line_count = len(physical_lines(text.removesuffix("\n"))) if text else 0
-        if not 1 <= first <= last <= line_count:
+        if not 1 <= first <= last <= available[key]:
             raise ValueError("source line fragment outside the file or reversed")
-    elif fragment not in parse_markdown(text)[0]:
+    elif fragment not in available[key]:
         raise ValueError("missing local heading or named anchor")
 
 
@@ -401,11 +424,14 @@ def check_document(tree, source, errors, gaps, *, archive_scope=None):
     text = tree.read(source).decode("utf-8")
     _, links, _ = parse_markdown(text)
     count = 0
+    anchor_cache = {}
     for link in links:
         try:
             if link.coverage_gap:
                 gaps.append(f"{source}:{link.line}: {link.coverage_gap}")
                 continue
+            if link.diagnostic:
+                raise ValueError(link.diagnostic)
             if link.unnamed:
                 raise ValueError("link has no accessible name")
             url = urlsplit(link.path)
@@ -431,7 +457,7 @@ def check_document(tree, source, errors, gaps, *, archive_scope=None):
                 gaps.append(f"{source}:{link.line}: raw GitHub file fragment was not checked: {link.path}")
             else:
                 check_fragment(tree, path, commit, unquote(url.fragment),
-                               plain=parse_qs(url.query).get("plain") in (["1"], ["true"]))
+                               plain=parse_qs(url.query).get("plain") in (["1"], ["true"]), cache=anchor_cache)
             count += 1
         except (ValueError, OSError, KeyError) as error:
             errors.append(f"{source}:{link.line}: {error}: {link.path}")

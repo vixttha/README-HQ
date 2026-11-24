@@ -135,7 +135,8 @@ def render_outline(version, repository, receipt, outline):
     commit = receipt["source_commit"]
 
     def link(path, line, label):
-        plain = "?plain=1" if suffix(path) in MARKDOWN else ""
+        rendered = MARKDOWN | {".rst", ".adoc", ".asciidoc", ".asc"}
+        plain = "?plain=1" if suffix(path) in rendered else ""
         return f"[{label}](https://github.com/{repository}/blob/{commit}/{quote(path)}{plain}#L{line})"
 
     heading = [

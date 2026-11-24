@@ -45,9 +45,40 @@ def public_checkpoint(tree, repo, fetch=fetch_github):
         raise ValueError("GitHub did not verify this source revision")
 
 
-def record_intake(specification, directory, *, fetch=fetch_github):
-    if specification.get("visibility") != "public":
+def validate_request(specification):
+    def fields(value, names, label):
+        if not isinstance(value, dict) or any(
+            not isinstance(value.get(name), str) or not value[name].strip() for name in names
+        ):
+            raise ValueError(f"invalid {label} fields")
+
+    fields(specification, ("visibility",), "learning request")
+    if specification["visibility"] != "public":
         raise ValueError("only public requests use this shared intake")
+    for name in ("sources", "selected", "findings"):
+        if not isinstance(specification.get(name), list):
+            raise ValueError(f"learning request requires a {name} array")
+    evidence_fields = ("checkout", "ref", "repository", "path", "anchor", "visibility")
+    for source in specification["sources"]:
+        fields(source, (*evidence_fields, "id"), "source")
+        if type(source.get("line")) is not int or source["line"] < 1:
+            raise ValueError("invalid source line")
+    target = specification.get("target")
+    fields(target, (*evidence_fields, "audience", "capability"), "target")
+    if type(target.get("line")) is not int or target["line"] < 1:
+        raise ValueError("invalid target line")
+    if any(not isinstance(item, str) or not item.strip() for item in specification["selected"]):
+        raise ValueError("selected sources must be nonempty string IDs")
+    for entry in specification["findings"]:
+        fields(entry, ("source",), "finding")
+        if entry.get("candidate") is not None:
+            fields(entry["candidate"], ("problem", "practice", "outcome"), "candidate")
+        if "decision" in entry and not isinstance(entry["decision"], str):
+            raise ValueError("invalid finding decision")
+
+
+def record_intake(specification, directory, *, fetch=fetch_github):
+    validate_request(specification)
     lookup = lru_cache(maxsize=None)(fetch)
     sources = {}
     for source in specification["sources"]:
@@ -83,8 +114,6 @@ def record_intake(specification, directory, *, fetch=fetch_github):
         draft = entry.get("candidate")
         if draft:
             fields = ("problem", "practice", "outcome")
-            if any(not isinstance(draft.get(key), str) or not draft[key].strip() for key in fields):
-                raise ValueError("new candidates require an original problem, practice, and outcome")
             if draft.get("copied_material"):
                 raise ValueError("copied material requires an owner-approved rights review outside shared intake")
             candidates.append({"definition": {key: draft[key] for key in fields},
@@ -114,8 +143,6 @@ def record_intake(specification, directory, *, fetch=fetch_github):
         return [json.loads(record) for record in sorted({json.dumps(item, sort_keys=True) for item in items})]
 
     audience, capability = target["audience"], target["capability"]
-    if not isinstance(audience, str) or not audience.strip() or not isinstance(capability, str) or not capability.strip():
-        raise ValueError("target receipts require an audience and capability")
     data = {"schema": 1, "visibility": "public", "target": {"repository": target["repository"],
             "audience": audience, "capability": capability, **target_receipt},
             "registry_sha256": sha256(registry_bytes).hexdigest(),

@@ -24,7 +24,7 @@ def require_https_url(value, field):
         raise ValueError(f"{field} must be an HTTPS URL without credentials")
 
 
-def verify_first_action(tree, path, *, allow_network=False, subproject="."):
+def verify_first_action(tree, path, *, allow_network=False, subproject=".", include_output=False):
     spec = read_json(path)
     if not isinstance(spec, dict) or ("url" in spec) == ("argv" in spec):
         raise ValueError("smoke specification requires exactly one of argv and url")
@@ -70,9 +70,15 @@ def verify_first_action(tree, path, *, allow_network=False, subproject="."):
                     matched = expected["contains"] in body
         except (OSError, URLError):
             return {"result": "unresolved", "detail": "network destination could not be reached"}
-        passed = matched and status == expected["http_status"] and observation["final_url_match"] is not False
-        return {"result": "passed" if passed else "failed", "url": target, "expected": expected,
-                "observed": {**observation, "content_match": matched}}
+        failures = []
+        if status != expected["http_status"]:
+            failures.append("http-status-mismatch")
+        if not matched:
+            failures.append("output-marker-mismatch")
+        if observation["final_url_match"] is False:
+            failures.append("final-url-mismatch")
+        return {"result": "failed" if failures else "passed", "url": target, "expected": expected,
+                "observed": {**observation, "content_match": matched}, "failure_codes": failures}
     if expected.keys() & {"http_status", "final_url"}:
         raise ValueError("argv smoke does not support URL action expectations")
     argv = spec["argv"]
@@ -144,30 +150,61 @@ def verify_first_action(tree, path, *, allow_network=False, subproject="."):
         try:
             result = subprocess.run(argv, cwd=cwd, env=environment, capture_output=True, timeout=timeout, check=False)
         except (OSError, subprocess.TimeoutExpired) as error:
-            return {"result": "failed", "detail": str(error), "argv": argv, "cwd": directory, "expected": expected}
+            code = "command-timeout" if isinstance(error, subprocess.TimeoutExpired) else "command-start-failed"
+            outcome = {"result": "failed", "failure_codes": [code], "argv": argv,
+                       "cwd": directory, "expected": expected}
+            if include_output:
+                outcome["private_output"] = {
+                    key: bounded_output(getattr(error, key, None) or b"") for key in ("stdout", "stderr")}
+            return outcome
         streams = {"stdout": result.stdout, "stderr": result.stderr}
         marker_bytes = marker.encode() if marker is not None else None
         matched_streams = [key for key, data in streams.items() if marker_bytes is not None and marker_bytes in data]
         matched = marker is None or (bool(matched_streams) if stream == "either" else stream in matched_streams)
+        failures = []
+        if result.returncode != expected["exit"]:
+            failures.append("exit-mismatch")
+        if not matched:
+            failures.append("output-marker-mismatch")
         observation = {}
         if name:
             path = result_file()
             after = file_digest(path) if mode != "exists" or digest is not None else None
             changed = before != after
-            file_match = path is not None and (
-                mode == "exists" or (changed and (
-                    mode == "changed" or (mode == "created" and before is None)
-                    or (mode == "updated" and before is not None)
-                ))
-            ) and (digest is None or after == digest)
-            matched &= file_match
-            observation = {"file_before_sha256": before, "file_after_sha256": after, "file_match": file_match}
-        return {"result": "passed" if result.returncode == expected["exit"] and matched else "failed",
-                "argv": argv, "cwd": directory, "expected": expected,
-                "observed": {"exit": result.returncode, "outcome_match": bool(matched),
-                             "output_sha256": sha256(result.stdout + result.stderr).hexdigest(),
-                             "stream_sha256": {key: sha256(data).hexdigest() for key, data in streams.items()},
-                             "matched_streams": matched_streams, **observation}}
+            file_failure = None
+            if path is None:
+                file_failure = "expected-file-missing"
+            elif mode != "exists" and (
+                not changed or (mode == "created" and before is not None)
+                or (mode == "updated" and before is None)
+            ):
+                file_failure = "expected-file-state-mismatch"
+            elif digest is not None and after != digest:
+                file_failure = "expected-file-digest-mismatch"
+            if file_failure:
+                failures.append(file_failure)
+                matched = False
+            observation = {"file_before_sha256": before, "file_after_sha256": after,
+                           "file_match": file_failure is None}
+        outcome = {"result": "failed" if failures else "passed", "failure_codes": failures,
+                   "argv": argv, "cwd": directory, "expected": expected,
+                   "observed": {"exit": result.returncode, "outcome_match": bool(matched),
+                                "output_sha256": sha256(result.stdout + result.stderr).hexdigest(),
+                                "stream_sha256": {key: sha256(data).hexdigest() for key, data in streams.items()},
+                                "matched_streams": matched_streams, **observation}}
+        if failures and include_output:
+            outcome["private_output"] = {key: bounded_output(data) for key, data in streams.items()}
+        return outcome
+
+
+def bounded_output(data):
+    return {"text": data[:512].decode("utf-8", "replace"), "truncated": len(data) > 512}
+
+
+def coverage_incomplete(cases):
+    smoke = cases.get("first_action", {})
+    return (cases.get("navigation", {}).get("result") == "unchecked"
+            or (smoke.get("required") is True and smoke.get("result") != "passed"))
 
 
 def write_receipt(destination, tree, cases, errors, gaps, *, validator_path=None, scope=None):
@@ -199,7 +236,7 @@ def write_receipt(destination, tree, cases, errors, gaps, *, validator_path=None
             "runner_os": os.environ.get("RUNNER_OS") if hosted else None,
         },
         "sources": sources, "cases": cases, "errors": errors, "unchecked": gaps,
-        "result": "failed" if errors else "passed",
+        "result": "failed" if errors else "incomplete" if coverage_incomplete(cases) else "passed",
     }
     if tree is not None:
         data["git_objects"] = {"fetch_policy": "allow" if tree.allow_git_fetch else "offline",
