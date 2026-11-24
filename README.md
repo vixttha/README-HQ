@@ -28,3 +28,7 @@ python3 tools/check_readme_hq.py
 On Windows, use `py -3 tools/check_readme_hq.py`. A passing check prints counts for the version index, archived technique records, local navigation, and archived source files.
 
 The branch keeps versions and audit findings available between sessions. An authorized human or agent starts each audit, records each new finding, and reviews any resulting project changes.
+
+## Engineering ecosystem
+
+[Owner-approved six architectural laws](ENGINEERING-LAWS.md) apply to this product. Standalone operation and owner authority remain unchanged. The product has no mandatory coordination-tool dependency.
