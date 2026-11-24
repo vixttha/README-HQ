@@ -1563,6 +1563,35 @@ class EvidenceTests(unittest.TestCase):
             self.assertEqual([f for m in manifests for f in m["features"]], features)
             self.assertIn("file-0-2.md", manifests[0]["source_files"])
 
+    def _catalog_fixture(self):
+        def record(status="active", **fields):
+            return "<!-- catalog\n" + json.dumps({"status": status, **fields}) + "\n-->\n# Fixture\n"
+        catalog = self.enterContext(repository({
+            "techniques/first-success-milestone.md": record(),
+            "techniques/relative-navigation.md": record(),
+            "techniques/sample.md": record(),
+            "techniques/old.md": record("retired"),
+            "combinations/reader-path.md": record(steps=["relative-navigation", "sample"]),
+            "combinations/invalid-path.md": record(steps=["relative-navigation", "old"]),
+        }))
+        catalog.git("remote", "add", "origin", "https://github.com/vixttha/README-HQ.git")
+        return catalog
+
+    def _catalog_request(self, intake, request, destination, *, fetch):
+        if not hasattr(self, "_catalog"):
+            self._catalog = self._catalog_fixture()
+        catalog = self._catalog
+        def routes(route):
+            if route == "vixttha/readme-hq":
+                return {"private": False, "visibility": "public", "full_name": "vixttha/README-HQ", "id": 1463992109}
+            if route == f"vixttha/readme-hq/commits/{catalog.commit}":
+                return {"sha": catalog.commit}
+            if route == f"vixttha/readme-hq/compare/{catalog.commit}...README-Technique-Library":
+                return {"status": "ahead"}
+            return fetch(route)
+        return intake.record_intake({**request, "catalog": {"checkout": str(catalog.root), "commit": catalog.commit}},
+                                    destination, fetch=routes)
+
     def test_learning_receipt_is_pinned_and_idempotent(self):
         spec = importlib.util.spec_from_file_location("intake", ROOT / "learning/intake.py")
         intake = importlib.util.module_from_spec(spec)
@@ -1581,16 +1610,16 @@ class EvidenceTests(unittest.TestCase):
                     return {"private": False, "visibility": "public", "full_name": "example/project", "id": 17}
                 return {"sha": tree.commit}
             destination = tree.root / "receipts"
-            first = intake.record_intake(spec, destination, fetch=fetch)
-            self.assertEqual(first, intake.record_intake(spec, destination, fetch=fetch))
+            first = self._catalog_request(intake, spec, destination, fetch=fetch)
+            self.assertEqual(first, self._catalog_request(intake, spec, destination, fetch=fetch))
             record["id"] = "alias"
             spec["selected"] = ["alias"]
             spec["findings"][0]["source"] = "alias"
-            self.assertEqual(first, intake.record_intake(spec, destination, fetch=fetch))
+            self.assertEqual(first, self._catalog_request(intake, spec, destination, fetch=fetch))
             result = json.loads(first.read_bytes())
             self.assertEqual(result["recommendations"][0]["target"]["commit"], tree.commit)
             spec["selected"] = []
-            second = intake.record_intake(spec, destination, fetch=fetch)
+            second = self._catalog_request(intake, spec, destination, fetch=fetch)
             self.assertNotEqual(first, second)
             self.assertEqual(json.loads(second.read_bytes())["recommendations"], [])
 
@@ -1621,7 +1650,7 @@ class EvidenceTests(unittest.TestCase):
                     "sha": route.rsplit("/", 1)[1]}
 
             destination = tree.root / "receipts"
-            record = json.loads(intake.record_intake(spec, destination, fetch=fetch).read_bytes())
+            record = json.loads(self._catalog_request(intake, spec, destination, fetch=fetch).read_bytes())
             self.assertEqual({row["line"] for row in record["sources"]}, set(range(2, 34)))
             self.assertEqual(routes, ["example/project", f"example/project/commits/{tree.commit}",
                                       f"example/project/commits/{later}"])
@@ -1630,12 +1659,12 @@ class EvidenceTests(unittest.TestCase):
                 raise limited
 
             with self.assertRaises(HTTPError) as raised:
-                intake.record_intake(spec, destination, fetch=reject)
+                self._catalog_request(intake, spec, destination, fetch=reject)
             self.assertEqual(raised.exception.code, 429)
             spec["sources"][-1] = {**spec["sources"][-1], "anchor": "absent"}
             routes.clear()
             with self.assertRaisesRegex(ValueError, "anchor does not match"):
-                intake.record_intake(spec, destination, fetch=fetch)
+                self._catalog_request(intake, spec, destination, fetch=fetch)
 
     def test_learning_distinguishes_matched_anchors_on_the_same_line(self):
         loader = importlib.util.spec_from_file_location("intake", ROOT / "learning/intake.py")
@@ -1653,17 +1682,17 @@ class EvidenceTests(unittest.TestCase):
                                         "full_name": "example/project", "id": 17},
                      f"example/project/commits/{tree.commit}": {"sha": tree.commit}}
             destination = tree.root / "receipts"
-            path = intake.record_intake(request, destination, fetch=facts.__getitem__)
+            path = self._catalog_request(intake, request, destination, fetch=facts.__getitem__)
             data = json.loads(path.read_bytes())
             self.assertEqual({row["anchor"] for row in data["sources"]}, {"Start", "Verify"})
             self.assertEqual(len(data["sources"]), 2)
             self.assertEqual({row[-1] for row in data["selected"]}, {"Start", "Verify"})
             request["sources"].pop()
             request["selected"].pop()
-            self.assertEqual(path, intake.record_intake(request, destination, fetch=facts.__getitem__))
+            self.assertEqual(path, self._catalog_request(intake, request, destination, fetch=facts.__getitem__))
             request["sources"][1]["anchor"] = "Unrelated"
             with self.assertRaisesRegex(ValueError, "anchor does not match"):
-                intake.record_intake(request, destination, fetch=facts.__getitem__)
+                self._catalog_request(intake, request, destination, fetch=facts.__getitem__)
 
     def test_learning_records_verified_canonical_repository_identity(self):
         loader = importlib.util.spec_from_file_location("intake", ROOT / "learning/intake.py")
@@ -1680,19 +1709,19 @@ class EvidenceTests(unittest.TestCase):
             routes = {"example/old-name": metadata, "example/new-name": metadata,
                       f"example/new-name/commits/{tree.commit}": {"sha": tree.commit}}
             destination = tree.root / "receipts"
-            path = intake.record_intake(request, destination, fetch=routes.__getitem__)
+            path = self._catalog_request(intake, request, destination, fetch=routes.__getitem__)
             data = json.loads(path.read_bytes())
-            self.assertEqual(path, intake.record_intake(request, destination, fetch=routes.__getitem__))
+            self.assertEqual(path, self._catalog_request(intake, request, destination, fetch=routes.__getitem__))
             self.assertEqual(data["target"]["repository_id"], 123)
             self.assertEqual(data["sources"][0]["requested_repository"], "example/old-name")
             self.assertEqual(data["sources"][0]["canonical_repository"], "Example/New-Name")
             self.assertEqual(data["sources"][0]["identity"][0], "example/new-name")
             routes["example/new-name"] = {**metadata, "id": 124}
             with self.assertRaisesRegex(ValueError, "stable ID"):
-                intake.record_intake(request, destination, fetch=routes.__getitem__)
+                self._catalog_request(intake, request, destination, fetch=routes.__getitem__)
             routes["example/new-name"] = {**metadata, "private": True}
             with self.assertRaisesRegex(ValueError, "not confirmed public"):
-                intake.record_intake(request, destination, fetch=routes.__getitem__)
+                self._catalog_request(intake, request, destination, fetch=routes.__getitem__)
             self.assertEqual(list(destination.iterdir()), [path])
 
     def test_learning_structured_rate_limit_and_invalid_anchor_diagnostics(self):
@@ -1728,7 +1757,7 @@ class EvidenceTests(unittest.TestCase):
         loader.loader.exec_module(intake)
         source = {"checkout": ".", "ref": "HEAD", "repository": "example/project",
                   "path": "README.md", "anchor": "Guide", "visibility": "public", "line": 1, "id": "one"}
-        good = {"visibility": "public", "sources": [source], "selected": [], "findings": [],
+        good = {"visibility": "public", "catalog": {"checkout": ".", "commit": "a"*40}, "sources": [source], "selected": [], "findings": [],
                 "target": {**source, "audience": "reader", "capability": "check"}}
         with tempfile.TemporaryDirectory() as directory:
             folder = Path(directory)
@@ -1795,52 +1824,58 @@ class EvidenceTests(unittest.TestCase):
                         else {"sha": tree.commit})
             destination = tree.root / "receipts"
             with self.assertRaisesRegex(ValueError, "conflicting recommendation decisions"):
-                intake.record_intake(request, destination, fetch=fetch)
+                self._catalog_request(intake, request, destination, fetch=fetch)
             self.assertFalse(destination.exists())
             for sid, decision, count in (("alias", "adopt", 1), ("other", "declined", 2)):
                 request["findings"][1] = {**second, "source": sid, "decision": decision}
-                result = intake.record_intake(request, destination, fetch=fetch)
+                result = self._catalog_request(intake, request, destination, fetch=fetch)
                 self.assertEqual(len(json.loads(result.read_bytes())["recommendations"]), count)
 
-    def test_learning_hashes_the_registry_snapshot_used_by_the_decision(self):
+    def test_learning_hashes_the_pinned_catalog_record_used_by_the_decision(self):
         loader = importlib.util.spec_from_file_location("intake", ROOT / "learning/intake.py")
         intake = importlib.util.module_from_spec(loader)
         loader.loader.exec_module(intake)
         with repository({"README.md": "# Evidence"}) as tree:
             tree.git("remote", "add", "origin", "https://github.com/example/project.git")
-            record = {"id": "example", "checkout": str(tree.root), "ref": "HEAD",
+            source = {"id": "one", "checkout": str(tree.root), "ref": "HEAD",
                       "repository": "example/project", "path": "README.md",
-                      "line": 1, "anchor": "# Evidence", "visibility": "public"}
-            request = {"visibility": "public", "sources": [record], "selected": ["example"],
-                       "target": {**record, "audience": "reader", "capability": "audit"},
-                       "findings": [{"source": "example", "technique": "sample", "decision": "adapt",
-                                     "rationale": "Record a source."}]}
-            registry = tree.root / "techniques/registry.json"
-            registry.parent.mkdir()
-            active = b'{"techniques":[{"id":"sample","status":"active"}]}'
-            retired = active.replace(b"active", b"retired")
-            registry.write_bytes(active)
-            read_bytes = Path.read_bytes
-            def read_then_retire(path):
-                content = read_bytes(path)
-                if path == registry:
-                    path.write_bytes(retired)
-                return content
+                      "line": 1, "anchor": "Evidence", "visibility": "public"}
+            finding = {"source": "one", "decision": "adapt", "rationale": "Record the evidence."}
+            request = {"visibility": "public", "sources": [source], "selected": ["one"],
+                       "target": {**source, "audience": "reader", "capability": "audit"},
+                       "findings": [{**finding, "technique": "relative-navigation"},
+                                    {**finding, "combination": "reader-path"}]}
             def fetch(route):
-                if route == "example/project":
-                    return {"private": False, "visibility": "public", "full_name": "example/project", "id": 17}
-                return {"sha": tree.commit}
-
-            with patch.object(intake, "ROOT", tree.root):
-                with patch.object(Path, "read_bytes", read_then_retire):
-                    path = intake.record_intake(request, tree.root / "evidence", fetch=fetch)
-                result = json.loads(path.read_bytes())
-                self.assertEqual(result["registry_sha256"], sha256(active).hexdigest())
-                self.assertEqual(len(result["recommendations"]), 1)
-                path = intake.record_intake(request, tree.root / "evidence", fetch=fetch)
-                result = json.loads(path.read_bytes())
-                self.assertEqual(result["registry_sha256"], sha256(retired).hexdigest())
-                self.assertEqual(result["recommendations"], [])
+                return {"private": False, "visibility": "public", "full_name": "example/project", "id": 17} if route == "example/project" else {"sha": tree.commit}
+            destination = tree.root / "evidence"
+            path = self._catalog_request(intake, request, destination, fetch=fetch)
+            data = json.loads(path.read_bytes())
+            self.assertEqual(data["schema"], 2)
+            self.assertEqual(data["catalog"]["commit"], self._catalog.commit)
+            records = {row.get("technique", row.get("combination")): row["catalog_record"] for row in data["recommendations"]}
+            self.assertEqual(records["reader-path"]["steps"], ["relative-navigation", "sample"])
+            self.assertEqual(records["relative-navigation"]["sha256"],
+                             sha256(self._catalog.read("techniques/relative-navigation.md")).hexdigest())
+            (self._catalog.root / "techniques/relative-navigation.md").write_text("changed working tree", encoding="utf-8")
+            self.assertEqual(path, self._catalog_request(intake, request, destination, fetch=fetch))
+            for choice in ({"technique": "old"}, {"combination": "invalid-path"},
+                           {"technique": "typo"}, {"technique": "sample", "combination": "reader-path"}):
+                with self.subTest(choice=choice), self.assertRaises(ValueError):
+                    self._catalog_request(intake, {**request, "findings": [{**finding, **choice}]}, destination, fetch=fetch)
+            with self.assertRaises(ValueError):
+                intake.record_intake(request, destination, fetch=fetch)
+            spec = {**request, "catalog": {"checkout": str(self._catalog.root), "commit": self._catalog.commit}}
+            def unrelated(route):
+                if "/compare/" in route:
+                    return {"status": "diverged"}
+                if route == "vixttha/readme-hq":
+                    return {"private": False, "visibility": "public", "full_name": "vixttha/README-HQ", "id": 1463992109}
+                if route == f"vixttha/readme-hq/commits/{self._catalog.commit}":
+                    return {"sha": self._catalog.commit}
+                return fetch(route)
+            with self.assertRaisesRegex(ValueError, "not on README-Technique-Library"):
+                intake.record_intake(spec, destination, fetch=unrelated)
+            self.assertEqual(list(destination.iterdir()), [path])
 
     def test_learning_distinguishes_unknown_retired_and_unselected_ids(self):
         loader = importlib.util.spec_from_file_location("intake", ROOT / "learning/intake.py")
@@ -1855,11 +1890,6 @@ class EvidenceTests(unittest.TestCase):
             request = {"visibility": "public", "sources": [source], "selected": [],
                        "target": {**source, "audience": "reader", "capability": "audit"},
                        "findings": [{**finding, "technique": "typo"}]}
-            registry = tree.root / "techniques/registry.json"
-            registry.parent.mkdir()
-            registry.write_text(json.dumps({"techniques": [
-                {"id": "sample", "status": "active"}, {"id": "old", "status": "retired"},
-            ]}), encoding="utf-8")
 
             def fetch(route):
                 return ({"private": False, "visibility": "public", "full_name": "example/project", "id": 17} if route == "example/project"
@@ -1868,7 +1898,7 @@ class EvidenceTests(unittest.TestCase):
             destination = tree.root / "evidence"
             with patch.object(intake, "ROOT", tree.root):
                 with self.assertRaisesRegex(ValueError, "unknown technique ID"):
-                    intake.record_intake(request, destination, fetch=fetch)
+                    self._catalog_request(intake, request, destination, fetch=fetch)
                 self.assertFalse(destination.exists())
                 for identifier, selected, reason in (
                     ("old", [], "retired"),
@@ -1877,7 +1907,7 @@ class EvidenceTests(unittest.TestCase):
                 ):
                     request["selected"] = selected
                     request["findings"][0]["technique"] = identifier
-                    receipt = intake.record_intake(request, destination, fetch=fetch)
+                    receipt = self._catalog_request(intake, request, destination, fetch=fetch)
                     record = json.loads(receipt.read_bytes())
                     if reason:
                         self.assertEqual(record["recommendations"], [])

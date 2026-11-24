@@ -1,4 +1,6 @@
-# Technique library
+# Archived README HQ technique registry
+
+Use the [README Technique Library](https://github.com/vixttha/README-HQ/tree/README-Technique-Library) for current technique and combination selection. The bundled registry and the historical verification instructions below remain for reproducible archival checks, not new recommendation intake. Changes to maintained techniques belong on the dedicated library branch and require review.
 
 [Open the technique registry](registry.json) or print its index from a checkout.
 
@@ -8,7 +10,7 @@ python3 tools/check_readme_hq.py --list
 
 The catalog can grow with each audit. Every technique has one canonical record and persistent ID. An audit can cite IDs without repeating their definitions.
 
-## Record a discovery
+## Historical registry record format
 
 Compare the improvement against the registry, including retired records. Search for the same reader problem, intervention, and result under alternate wording. Use an existing record when those match. Add an alias for a common alternate name or an evidence link for a new example. Keep project advice in the relevant audit.
 

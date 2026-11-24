@@ -40,7 +40,7 @@ To adapt a spec, set its `commit` to the full SHA selected by `--ref`. Pass it w
 4. Use a distinct publication change to promote the accepted README to the homepage when authorized. Recheck relative paths in that destination. Record the resulting commit, public status, and CI evidence if run.
 5. Link to the frozen copy when answering a request for a specific version. Report a working draft, an accepted archive, and a published homepage with their observed statuses.
 
-Use [the audit workflow](audits/README.md) to examine an existing repository before drafting. The [technique library](techniques/README.md) holds reusable practices to choose from.
+Use [the audit workflow](audits/README.md) to examine an existing repository before drafting. Browse the [README Technique Library](https://github.com/vixttha/README-HQ/tree/README-Technique-Library) for techniques and combinations; record selected IDs, the exact library commit, owner rationale and target verification.
 
 A local smoke check with an expected file requires new or changed bytes by default. Use `expected.file_mode` to require `created` or `updated` specifically, or specify `exists` when existence alone is the intended result. Use `expected.file_sha256` for an exact expected digest.
 

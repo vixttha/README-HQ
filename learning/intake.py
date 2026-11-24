@@ -6,6 +6,7 @@ from email.utils import parsedate_to_datetime
 from functools import lru_cache
 from hashlib import sha256
 import json
+import re
 from pathlib import Path
 import sys
 from tempfile import NamedTemporaryFile
@@ -14,7 +15,12 @@ from urllib.request import Request, urlopen
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
-from hq_data import GitTree, REPOSITORY, parse_json, physical_lines, read_json
+from hq_data import GitTree, REPOSITORY, SHA, parse_json, physical_lines, read_json
+
+
+CATALOG_REPOSITORY = "vixttha/README-HQ"
+CATALOG_BRANCH = "README-Technique-Library"
+CATALOG_ID = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*")
 
 
 class UnknownTechniqueError(ValueError):
@@ -74,6 +80,10 @@ def validate_request(specification):
     fields(specification, ("visibility",), "learning request")
     if specification["visibility"] != "public":
         raise ValueError("only public requests use this shared intake")
+    catalog = specification.get("catalog")
+    fields(catalog, ("checkout", "commit"), "external catalog")
+    if not SHA.fullmatch(catalog["commit"]):
+        raise ValueError("learning requires an external catalog checkout and full commit")
     for name in ("sources", "selected", "findings"):
         if not isinstance(specification.get(name), list):
             raise ValueError(f"learning request requires a {name} array")
@@ -96,9 +106,52 @@ def validate_request(specification):
             raise ValueError("invalid finding decision")
 
 
+def catalog_checkout(specification, fetch):
+    catalog = specification.get("catalog")
+    if not isinstance(catalog, dict) or not isinstance(catalog.get("commit"), str) or not SHA.fullmatch(catalog["commit"]):
+        raise ValueError("learning requires an external catalog checkout and full commit")
+    tree = GitTree(catalog["checkout"], catalog["commit"])
+    provenance = public_checkpoint(tree, CATALOG_REPOSITORY, fetch)
+    comparison = fetch(f"{provenance['canonical_repository'].casefold()}/compare/{tree.commit}...{CATALOG_BRANCH}")
+    if comparison.get("status") not in {"ahead", "identical"}:
+        raise ValueError("catalog commit is not on README-Technique-Library")
+    return tree, provenance
+
+
+def catalog_record(tree, kind, identifier):
+    if not isinstance(identifier, str) or len(identifier) > 80 or not CATALOG_ID.fullmatch(identifier):
+        raise ValueError("catalog record IDs must use lowercase hyphenated slugs")
+    folder = {"technique": "techniques", "combination": "combinations"}[kind]
+    path = f"{folder}/{identifier}.md"
+    if path not in tree.entries():
+        error = UnknownTechniqueError if kind == "technique" else ValueError
+        raise error(f"unknown {kind} ID {identifier!r}: absent from the pinned external catalog")
+    raw = tree.read(path)
+    body = raw.decode("utf-8").replace("\r\n", "\n")
+    marker = "<!-- catalog\n"
+    header, end, text = body.removeprefix(marker).partition("\n-->\n")
+    if not body.startswith(marker) or not end or not text.strip():
+        raise ValueError(f"{path}: missing catalog metadata or record body")
+    metadata = parse_json(header, path)
+    if not isinstance(metadata, dict) or metadata.get("status") not in {"active", "retired"}:
+        raise ValueError(f"{path}: invalid catalog status")
+    record = {"path": path, "sha256": sha256(raw).hexdigest(), "status": metadata["status"]}
+    if kind == "technique" or metadata["status"] == "retired":
+        return record
+    steps = metadata.get("steps")
+    if (not isinstance(steps, list) or not 2 <= len(steps) <= 12
+            or any(not isinstance(step, str) for step in steps) or len(set(steps)) != len(steps)):
+        raise ValueError(f"{path}: expected distinct ordered technique steps")
+    for step in steps:
+        if catalog_record(tree, "technique", step)["status"] != "active":
+            raise ValueError(f"{path}: expected an active record for each combination step")
+    return {**record, "steps": steps}
+
+
 def record_intake(specification, directory, *, fetch=fetch_github):
     validate_request(specification)
     lookup = lru_cache(maxsize=None)(fetch)
+    catalog, catalog_provenance = catalog_checkout(specification, lookup)
     sources = {}
     for source in specification["sources"]:
         if source.get("visibility") != "public":
@@ -117,9 +170,6 @@ def record_intake(specification, directory, *, fetch=fetch_github):
     target_tree = GitTree(target["checkout"], target["ref"])
     target_provenance = public_checkpoint(target_tree, target["repository"], lookup)
     target_receipt = {**target_provenance, **verify_anchor(target_tree, target["path"], target["line"], target["anchor"])}
-    registry = ROOT / "techniques/registry.json"
-    registry_bytes = registry.read_bytes()
-    techniques = {row["id"]: row["status"] for row in parse_json(registry_bytes, registry)["techniques"]}
     selected = set(specification["selected"])
     if not selected <= set(sources):
         raise ValueError("chosen learning sources must have independently verified intake evidence")
@@ -138,14 +188,18 @@ def record_intake(specification, directory, *, fetch=fetch_github):
                 raise ValueError("copied material requires an owner-approved rights review outside shared intake")
             candidates.append({"definition": {key: draft[key] for key in fields},
                                "evidence": sources[source_id], "state": "review-required"})
-        if "technique" not in entry:
+        if "technique" in entry and "combination" in entry:
+            raise ValueError("a recommendation selects one technique or one combination")
+        kind = "combination" if "combination" in entry else "technique"
+        if kind not in entry:
             continue
-        technique = entry["technique"]
-        if not isinstance(technique, str) or technique not in techniques:
-            raise UnknownTechniqueError("learning finding names an unknown technique ID")
-        status = techniques[technique]
-        if status != "active" or source_id not in selected:
-            excluded.append({"technique": technique, "source": sources[source_id]["identity"],
+        identifier = entry[kind]
+        record = catalog_record(catalog, kind, identifier)
+        status = record["status"]
+        if status != "active" and source_id in selected:
+            raise ValueError("expected an active record in the pinned catalog")
+        if source_id not in selected:
+            excluded.append({kind: identifier, "source": sources[source_id]["identity"],
                              "reason": status if status != "active" else "source not selected"})
             continue
         decision = entry.get("decision")
@@ -154,18 +208,19 @@ def record_intake(specification, directory, *, fetch=fetch_github):
         rationale = entry.get("rationale")
         if not isinstance(rationale, str) or not rationale.strip():
             raise ValueError("recommendation needs a target-specific rationale")
-        identity = (technique, *sources[source_id]["identity"])
+        identity = (kind, identifier, *sources[source_id]["identity"])
         if decisions.setdefault(identity, decision) != decision:
-            raise ValueError(f"conflicting recommendation decisions for {technique} and the same source evidence")
-        uses.append({"technique": technique, "decision": decision, "rationale": rationale,
+            raise ValueError(f"conflicting recommendation decisions for {identifier} and the same source evidence")
+        uses.append({kind: identifier, "catalog_record": record, "decision": decision, "rationale": rationale,
                      "source": sources[source_id], "target": target_receipt})
     def unique(items):
         return [json.loads(record) for record in sorted({json.dumps(item, sort_keys=True) for item in items})]
 
     audience, capability = target["audience"], target["capability"]
-    data = {"schema": 1, "visibility": "public", "target": {"repository": target["repository"],
+    data = {"schema": 2, "visibility": "public", "target": {"repository": target["repository"],
             "audience": audience, "capability": capability, **target_receipt},
-            "registry_sha256": sha256(registry_bytes).hexdigest(),
+            "catalog": {"repository": CATALOG_REPOSITORY, "branch": CATALOG_BRANCH,
+                        "commit": catalog.commit, **catalog_provenance},
             "sources": unique(sources.values()), "selected": sorted({tuple(sources[key]["identity"]) for key in selected}),
             "candidates": unique(candidates), "recommendations": unique(uses)}
     if excluded:
