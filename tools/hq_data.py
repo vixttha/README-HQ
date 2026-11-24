@@ -1,8 +1,10 @@
 """Read structured evidence and Git objects without working-tree substitution."""
 
 import json
+import os
 from pathlib import Path
 import re
+import stat
 import subprocess
 from urllib.parse import urlsplit
 
@@ -50,9 +52,15 @@ def github_repository(remote):
     return name if REPOSITORY.fullmatch(name) else None
 
 
+class UnavailableGitBlob(ValueError):
+    """A tracked blob could not be read under the selected Git fetch policy."""
+
+
 class GitTree:
-    def __init__(self, root, ref="HEAD", *, draft=False):
+    def __init__(self, root, ref="HEAD", *, draft=False, allow_git_fetch=False):
         self.root = Path(root).resolve()
+        self.allow_git_fetch = allow_git_fetch
+        self.fetched_blobs = set()
         self.commit = self.git("rev-parse", "--verify", "--end-of-options", f"{ref}^{{commit}}").decode().strip()
         self.draft = draft
         self._entries = {}
@@ -62,8 +70,14 @@ class GitTree:
         )
         self.repository = github_repository(remote.stdout.strip()) if remote.returncode == 0 else None
 
-    def git(self, *args):
-        result = subprocess.run(["git", "--no-replace-objects", *args], cwd=self.root, capture_output=True)
+    def git(self, *args, allow_fetch=False, input_bytes=None):
+        env = os.environ.copy()
+        if allow_fetch:
+            env["GIT_NO_LAZY_FETCH"] = "0"
+        else:
+            env.update(GIT_NO_LAZY_FETCH="1", GIT_ALLOW_PROTOCOL="")
+        result = subprocess.run(["git", "--no-replace-objects", *args], cwd=self.root,
+                                env=env, input=input_bytes, capture_output=True)
         if result.returncode:
             raise ValueError(result.stderr.decode("utf-8", "replace").strip() or "Git command failed")
         return result.stdout
@@ -99,8 +113,39 @@ class GitTree:
         if mode not in REGULAR_MODES:
             raise ValueError(f"{path}: expected a regular tracked file, got mode {mode}")
         if self.draft and commit is None:
-            local = self.root / path
-            if local.is_symlink() or not local.resolve().is_relative_to(self.root):
-                raise ValueError(f"{path}: draft path leaves the repository or is a symlink")
+            local = self.root
+            for part in Path(path).parts:
+                local = local / part
+                if not local.is_relative_to(self.root):
+                    raise ValueError(f"{path}: draft path leaves the repository")
+                info = local.lstat()
+                if stat.S_ISLNK(info.st_mode) or (
+                    getattr(info, "st_file_attributes", 0) & stat.FILE_ATTRIBUTE_REPARSE_POINT
+                ):
+                    raise ValueError(f"{path}: tracked draft path has a symlink or reparse point")
             return local.read_bytes()
-        return self.git("cat-file", "blob", digest)
+        return self._read_blob(path, digest)
+
+    def materialize_checkout_blobs(self):
+        blobs = {digest: path for path, (mode, digest) in self.entries().items() if mode != "160000"}
+        if not blobs:
+            return
+        listing = self.git("cat-file", "--batch-check=%(objectname) %(objecttype)",
+                           input_bytes=("\n".join(blobs) + "\n").encode("ascii"))
+        for line in listing.decode("ascii").splitlines():
+            digest, kind = line.split()
+            if kind != "blob":
+                self._read_blob(blobs[digest], digest)
+
+    def _read_blob(self, path, digest):
+        try:
+            return self.git("cat-file", "blob", digest)
+        except ValueError as offline_error:
+            if not self.allow_git_fetch:
+                raise UnavailableGitBlob(f"{path}: Git blob {digest} unavailable with Git fetching disabled") from offline_error
+        try:
+            body = self.git("cat-file", "blob", digest, allow_fetch=True)
+        except ValueError as error:
+            raise UnavailableGitBlob(f"{path}: Git blob {digest} unavailable after permitted Git read: {error}") from error
+        self.fetched_blobs.add(digest)
+        return body

@@ -104,7 +104,7 @@ def check_moving_pr_observation(directory):
         if endpoint == route:
             return {
                 "number": number, "state": "open", "draft": False, "merged": False,
-                "base": {"repo": {"full_name": repository}},
+                "base": {"repo": {"full_name": repository}, "ref": "main", "sha": "c" * 40},
                 "head": {"repo": {"full_name": repository}, "ref": expected["source_branch"],
                          "sha": new_head if branch_advanced else former_head},
             }

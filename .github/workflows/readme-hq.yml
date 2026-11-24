@@ -43,7 +43,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: readme-hq-${{ matrix.os }}-${{ github.sha }}
+          name: readme-hq-${{ matrix.os }}-${{ github.sha }}-attempt-${{ github.run_attempt }}
           path: readme-hq-result.json
           if-no-files-found: ignore
   graphify:
@@ -82,7 +82,7 @@ jobs:
       - name: Preserve Graphify receipts
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: graphify-receipts-${{ github.sha }}
+          name: graphify-receipts-${{ github.sha }}-attempt-${{ github.run_attempt }}
           path: |
             graphify-hq/maps/**/receipt.json
             graphify-hq/plans/**/receipt.json

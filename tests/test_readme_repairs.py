@@ -62,6 +62,173 @@ class ReaderTests(unittest.TestCase):
                     else:
                         self.assertEqual(record["cases"]["entrypoint"], expected)
 
+    def test_adopter_receipt_distinguishes_scope_at_one_commit(self):
+        readme = "# Guide\n\n## Quickstart\n\n[Read the guide](README.md)\n"
+        with repository({"README.md": readme, "packages/demo/README.md": readme}) as tree:
+            receipt = tree.root / "audit.json"
+            argv = [sys.executable, str(ROOT / "tools/check_readme_hq.py"), "--repo", str(tree.root),
+                    "--receipt", str(receipt)]
+            for origin, profile, subproject in (
+                ("example/first", "reference", "."),
+                ("example/first", "application", "."),
+                ("example/second", "application", "packages/demo"),
+            ):
+                with self.subTest(origin=origin, profile=profile, subproject=subproject):
+                    tree.git("config", "remote.origin.url", f"https://github.com/{origin}.git")
+                    result = subprocess.run([*argv, "--profile", profile, "--subproject", subproject],
+                                            capture_output=True, text=True)
+                    self.assertEqual(result.returncode, 0, result.stderr)
+                    record = json.loads(receipt.read_bytes())
+                    self.assertEqual(record["scope"], {"repository": origin,
+                        "repository_identity": "inferred-from-origin", "profile": profile,
+                        "subproject": subproject, "commit": tree.commit})
+
+    def test_receipt_distinguishes_actions_attempts_jobs_and_standalone(self):
+        from hq_smoke import write_receipt
+
+        with repository({"README.md": "# Guide"}) as tree:
+            receipt = tree.root / "audit.json"
+            env = {"GITHUB_ACTIONS": "true", "GITHUB_REPOSITORY": "example/project",
+                   "GITHUB_RUN_ID": "23", "RUNNER_OS": "Linux"}
+            for attempt, job in (("1", "linux"), ("2", "linux"), ("2", "verification")):
+                with patch.dict(os.environ, {**env, "GITHUB_RUN_ATTEMPT": attempt, "GITHUB_JOB": job}):
+                    write_receipt(receipt, tree, {}, [], [])
+                result = json.loads(receipt.read_bytes())
+                self.assertEqual(result["github_actions"], {
+                    "status": "provided-by-runner", "run_id": "23", "attempt": attempt,
+                    "attempt_url": f"https://github.com/example/project/actions/runs/23/attempts/{attempt}",
+                    "job": job, "runner_os": "Linux"})
+            with patch.dict(os.environ, {"GITHUB_ACTIONS": "false"}):
+                write_receipt(receipt, tree, {}, [], [])
+            result = json.loads(receipt.read_bytes())
+            self.assertIsNone(result["run_url"])
+            self.assertEqual(result["github_actions"]["status"], "unavailable")
+            self.assertIsNone(result["github_actions"]["job"])
+
+    def test_partial_clone_blob_fetch_requires_explicit_permission(self):
+        with repository({"README.md": "# Partial clone fixture\n\nThis guide explains the partial clone fixture."}) as source, tempfile.TemporaryDirectory() as folder:
+            source.git("config", "uploadpack.allowFilter", "true")
+            source.git("config", "uploadpack.allowAnySHA1InWant", "true")
+            clone = Path(folder) / "clone"
+            subprocess.run(["git", "clone", "--quiet", "--no-checkout", "--filter=blob:none",
+                            source.root.as_uri(), str(clone)], check=True)
+            tree = GitTree(clone)
+            blob = tree.entries()["README.md"][1]
+            receipt = Path(folder) / "audit.json"
+            argv = [sys.executable, str(ROOT / "tools/check_readme_hq.py"), "--repo", str(clone),
+                    "--profile", "reference", "--receipt", str(receipt)]
+            offline = subprocess.run(argv, capture_output=True, text=True)
+            self.assertEqual(offline.returncode, 1)
+            self.assertIn("unavailable with Git fetching disabled", offline.stderr)
+            with self.assertRaises(ValueError):
+                tree.git("cat-file", "-e", blob)
+            record = json.loads(receipt.read_bytes())
+            self.assertEqual(record["git_objects"], {"fetch_policy": "offline", "fetched_blobs": []})
+            for extra, mode, fetched in ((["--allow-git-fetch"], "allow", [blob]), ([], "offline", [])):
+                result = subprocess.run([*argv, *extra], capture_output=True, text=True)
+                self.assertEqual(result.returncode, 0, result.stderr)
+                record = json.loads(receipt.read_bytes())
+                self.assertEqual(record["git_objects"], {"fetch_policy": mode, "fetched_blobs": fetched})
+            self.assertEqual(source.read("README.md"), tree.read("README.md"))
+
+    def test_draft_rejects_symlink_ancestors_inside_and_outside_checkout(self):
+        documents = {"README.md": "[Guide](docs/guide.md#draft)",
+                     "docs/guide.md": "# Original", "other/guide.md": "# Draft"}
+        with repository(documents) as tree, tempfile.TemporaryDirectory() as outside:
+            docs = tree.root / "docs"
+            (docs / "guide.md").write_text("# Draft", encoding="utf-8")
+            draft = GitTree(tree.root, draft=True)
+            self.assertEqual(check_document(draft, "README.md", [], []), 1)
+            docs.rename(tree.root / "original-docs")
+            external = Path(outside)
+            (external / "guide.md").write_text("# Draft", encoding="utf-8")
+            for target in (tree.root / "other", external):
+                with self.subTest(target=target):
+                    try:
+                        docs.symlink_to(target, target_is_directory=True)
+                    except OSError:
+                        if os.name != "nt":
+                            raise
+                        subprocess.run(["cmd", "/c", "mklink", "/J", str(docs), str(target)],
+                                       check=True, capture_output=True)
+                    try:
+                        errors = []
+                        self.assertEqual(check_document(draft, "README.md", errors, []), 0)
+                        self.assertEqual(len(errors), 1)
+                        self.assertIn("symlink or reparse point", errors[0])
+                    finally:
+                        if docs.is_symlink():
+                            docs.unlink()
+                        else:
+                            docs.rmdir()
+
+    def test_receipt_persistence_failure_preserves_audit_diagnostics(self):
+        for good in (True, False):
+            target = "README.md" if good else "missing.md"
+            with self.subTest(good=good), repository({"README.md": f"# Guide\n\nThis guide explains the receipt persistence fixture.\n\n[Link]({target})\n"}) as tree:
+                argv = [sys.executable, str(ROOT / "tools/check_readme_hq.py"), "--repo", str(tree.root),
+                        "--profile", "reference", "--receipt"]
+                result = subprocess.run([*argv, str(tree.root)], capture_output=True, text=True)
+                self.assertEqual(result.returncode, 1)
+                self.assertIn("could not write receipt", result.stderr)
+                self.assertNotIn("Traceback", result.stderr)
+                self.assertEqual("missing tracked local target" in result.stderr, not good)
+                receipt = tree.root / "audit.json"
+                control = subprocess.run([*argv, str(receipt)], capture_output=True, text=True)
+                self.assertEqual(control.returncode, int(not good), control.stderr)
+                record = json.loads(receipt.read_bytes())
+                self.assertEqual(record["result"], "passed" if good else "failed")
+
+    def test_review_followup_partial_clone_smoke_and_missing_link_diagnostics(self):
+        description = "# Guide\n\nThis guide explains the source fixture.\n\n[Guide](extra.md#details)"
+        files = {"README.md": description, "extra.md": "# Details", "run.py": "print('ready')"}
+        with repository(files) as source, tempfile.TemporaryDirectory() as folder:
+            source.git("config", "uploadpack.allowFilter", "true")
+            source.git("config", "uploadpack.allowAnySHA1InWant", "true")
+            clone = Path(folder) / "clone"
+            subprocess.run(["git", "clone", "--quiet", "--no-checkout", "--filter=blob:none",
+                            source.root.as_uri(), str(clone)], check=True)
+            tree = GitTree(clone, allow_git_fetch=True)
+            tree.read("README.md")
+            runner_blob = tree.entries()["run.py"][1]
+            with self.assertRaises(ValueError):
+                tree.git("cat-file", "-e", runner_blob)
+            tree.git("remote", "set-url", "origin", str(Path(folder) / "missing"))
+            errors, gaps = [], []
+            self.assertEqual(check_document(tree, "README.md", errors, gaps), 0)
+            self.assertEqual(gaps, [])
+            self.assertIn("unavailable after permitted Git read", errors[0])
+            tree.git("remote", "set-url", "origin", source.root.as_uri())
+            spec = Path(folder) / "smoke.json"
+            spec.write_text(json.dumps({"commit": tree.commit, "argv": [sys.executable, "run.py"],
+                                        "expected": {"exit": 0, "contains": "ready"}}), encoding="utf-8")
+            with patch.dict(os.environ, {"GIT_NO_LAZY_FETCH": "1"}):
+                self.assertEqual(verify_first_action(tree, spec)["result"], "passed")
+            self.assertIn(runner_blob, tree.fetched_blobs)
+
+    def test_review_followup_raw_ref_namespace_is_explicit(self):
+        with repository({"guide.md": "# First"}) as tree:
+            repository_url = "https://github.com/example/project.git"
+            tree.git("remote", "add", "origin", repository_url)
+            tree.git("tag", "release", tree.commit)
+            tree.git("-c", "user.name=Fixture", "-c", "user.email=test@example.invalid",
+                     "commit", "--allow-empty", "-qm", "Branch release")
+            other = GitTree(tree.root)
+            tree.git("update-ref", "refs/remotes/origin/release", other.commit)
+            root = "https://raw.githubusercontent.com/example/project"
+            for ref, expected in (("refs/tags/release", tree.commit), ("refs/heads/release", other.commit)):
+                self.assertEqual(same_repo_target(other, urlsplit(f"{root}/{ref}/guide.md")),
+                                 ("guide.md", expected))
+            with self.assertRaisesRegex(ValueError, "conflicting commits"):
+                same_repo_target(other, urlsplit(f"{root}/release/guide.md"))
+
+    def test_review_followup_rendered_rows_normalize_line_endings(self):
+        from hq_navigation import rendered_table_rows
+
+        for newline in ("\n", "\r\n", "\r"):
+            content = newline.join(["| Name |", "| --- |", "| Value |", ""])
+            self.assertEqual(rendered_table_rows(content), ["| Name |", "| Value |"])
+
     def test_pinned_readme_and_monorepo_routes(self):
         with repository({"README.md": "# Root", ".github/README.md": "# Published",
                          "docs/README.md": "# Docs", "packages/example/README.md": "# Subproject"}) as tree:
@@ -172,6 +339,39 @@ A separate [same label](fourth.md).
             with self.assertRaisesRegex(LookupError, "unresolved"):
                 same_repo_target(tree, urlsplit("https://github.com/example/project/blob/absent/README.md"))
 
+    def test_plain_query_parameters_allow_order_independent_line_links(self):
+        with repository({"guide.md": "# Heading\nsecond line\n", "README.md": "# Links"}) as tree:
+            tree.git("remote", "add", "origin", "https://github.com/example/project.git")
+            route = f"https://github.com/example/project/blob/{tree.commit}/guide.md"
+            queries = ("plain=1", "plain=1&ref_type=heads", "ref_type=heads&plain=1", "plain=true")
+            readme = "\n".join(f"[Line]({route}?{query}#L2)" for query in queries)
+            readme += f"\n[Out of bounds]({route}?ignored=1&plain=1#L99)\n"
+            (tree.root / "README.md").write_text(readme, encoding="utf-8")
+            errors, gaps = [], []
+            self.assertEqual(check_document(GitTree(tree.root, draft=True), "README.md", errors, gaps), 4)
+            self.assertEqual(gaps, [])
+            self.assertEqual(len(errors), 1)
+            self.assertIn("outside the file", errors[0])
+
+    def test_raw_github_files_do_not_verify_rendered_heading_fragments(self):
+        with repository({"guide.md": "# Heading\n", "README.md": "# Links"}) as tree:
+            tree.git("remote", "add", "origin", "https://github.com/example/project.git")
+            github = "https://github.com/example/project"
+            raw = "https://raw.githubusercontent.com/example/project"
+            routes = (f"{github}/raw/{tree.commit}/guide.md#heading",
+                      f"{raw}/{tree.commit}/guide.md#heading",
+                      f"{github}/blob/{tree.commit}/guide.md#heading",
+                      f"{raw}/{tree.commit}/guide.md",
+                      f"{raw}/{tree.commit}/missing.md#heading")
+            readme = "\n".join(f"[File]({route})" for route in routes)
+            (tree.root / "README.md").write_text(readme, encoding="utf-8")
+            errors, gaps = [], []
+            self.assertEqual(check_document(GitTree(tree.root, draft=True), "README.md", errors, gaps), 4)
+            self.assertEqual(len(gaps), 2)
+            self.assertTrue(all("raw GitHub file fragment was not checked" in gap for gap in gaps))
+            self.assertEqual(len(errors), 1)
+            self.assertIn("missing tracked local target", errors[0])
+
     def test_public_refs_ignore_local_aliases_and_use_the_remote_default(self):
         with repository({"README.md": "# Default"}) as original:
             original.git("remote", "add", "origin", "https://github.com/example/project.git")
@@ -194,6 +394,21 @@ A separate [same label](fourth.md).
             self.assertEqual(resolve("release/next"), ("README.md", original.commit))
             original.git("update-ref", "refs/remotes/origin/origin/main", topic.commit)
             self.assertEqual(resolve("origin/main"), ("README.md", topic.commit))
+
+    def test_svg_root_requires_the_svg_namespace(self):
+        default = '<svg xmlns="http://www.w3.org/2000/svg"/>'
+        prefixed = '<s:svg xmlns:s="http://www.w3.org/2000/svg"/>'
+        invalid = {"foreign.svg": '<svg xmlns="urn:other"/>', "bare.svg": "<svg/>",
+                   "broken.svg": '<svg xmlns="http://www.w3.org/2000/svg">'}
+        images = {"default.svg": default, "prefixed.svg": prefixed, **invalid}
+        readme = "\n".join(f"![Diagram]({name})" for name in images)
+        with repository({"README.md": readme, **images}) as tree:
+            errors, gaps = [], []
+            self.assertEqual(check_document(tree, "README.md", errors, gaps), 2)
+            self.assertEqual(gaps, [])
+            self.assertEqual(len(errors), 3)
+            self.assertTrue(all("SVG namespace" in error for error in errors[:2]))
+            self.assertIn("invalid SVG image", errors[2])
 
     def test_animated_media_decodes_later_frames_and_bounds_coverage(self):
         from PIL import Image
@@ -335,6 +550,25 @@ A separate [same label](fourth.md).
                     action = json.loads(receipt.read_bytes())["cases"]["first_action"]
                     self.assertEqual((action["result"], action["cwd"]), (expected, subproject))
 
+    def test_smoke_checkout_keeps_git_metadata_and_files_isolated(self):
+        readme = "# Original"
+        with repository({"README.md": readme}) as tree:
+            tree.git("config", "readme-hq.fixture", "original")
+            before = tree.git("show-ref")
+            command = (
+                "import pathlib, subprocess; "
+                "subprocess.run(['git', 'config', 'readme-hq.fixture', 'changed'], check=True); "
+                "subprocess.run(['git', 'branch', 'smoke-fixture'], check=True); "
+                "pathlib.Path('README.md').write_text('changed'); print('ready')"
+            )
+            spec = tree.root / "smoke.json"
+            spec.write_text(json.dumps({"commit": tree.commit, "argv": [sys.executable, "-c", command],
+                                        "expected": {"exit": 0, "contains": "ready"}}), encoding="utf-8")
+            self.assertEqual(verify_first_action(tree, spec)["result"], "passed")
+            self.assertEqual(tree.git("config", "readme-hq.fixture").strip(), b"original")
+            self.assertEqual(tree.git("show-ref"), before)
+            self.assertEqual((tree.root / "README.md").read_text(encoding="utf-8"), readme)
+
     def test_smoke_marker_checks_each_stream_independently(self):
         with repository({"README.md": "# Guide"}) as tree:
             spec = tree.root / "smoke.json"
@@ -385,6 +619,38 @@ A separate [same label](fourth.md).
             action["expected"]["contains"] = "wrong"
             self.assertEqual(smoke(action), "failed")
             self.assertEqual(smoke({"url": "https://example.invalid", "expected": {"http_status": 200}}), "unchecked")
+
+    def test_smoke_spec_modes_are_validated_before_execution(self):
+        with repository({"README.md": "# Example"}) as tree:
+            spec = tree.root / "smoke.json"
+            base = {"commit": tree.commit}
+            argv = [sys.executable, "-c", "print('ready')"]
+            url = "https://example.invalid/start"
+
+            def run(values, *, online=False):
+                spec.write_text(json.dumps({**base, **values}), encoding="utf-8")
+                return verify_first_action(tree, spec, allow_network=online)
+
+            local = {"argv": argv, "expected": {"exit": 0, "contains": "ready"}}
+            remote = {"url": url, "expected": {"http_status": 200, "contains": "ready"}}
+            self.assertEqual(run(local)["result"], "passed")
+            self.assertEqual(run(remote)["result"], "unchecked")
+            with patch("hq_smoke.urlopen", return_value=HTTPError(url, 200, "fixture", {}, BytesIO(b"ready"))):
+                self.assertEqual(run(remote, online=True)["result"], "passed")
+            invalid = (
+                ({**local, "url": url}, "exactly one"),
+                ({"expected": local["expected"]}, "exactly one"),
+                ({**remote, "expected": {"http_status": 200, "contains": 1}}, "expected.contains"),
+                ({**local, "expected": {"exit": 0, "file": "ready", "contains": 1}}, "expected.contains"),
+                ({**remote, "expected": {"http_status": 200, "file": "ready"}}, "local action"),
+                ({**local, "expected": {"exit": 0, "contains": "ready", "final_url": url}}, "URL action"),
+            )
+            with patch("hq_smoke.urlopen") as network, patch("hq_smoke.TemporaryDirectory") as execution:
+                for values, message in invalid:
+                    with self.subTest(values=values), self.assertRaisesRegex(ValueError, message):
+                        run(values)
+                network.assert_not_called()
+                execution.assert_not_called()
 
     def test_http_smoke_checks_expected_error_bodies_and_preserves_auth_gates(self):
         with repository({"README.md": "# Guide"}) as tree:
@@ -532,6 +798,38 @@ class EvidenceTests(unittest.TestCase):
             evidence_identity({**first, "visibility": "private"})
         with self.assertRaisesRegex(ValueError, "receipt"):
             check_evidence({**first, "status": "verified"}, None)
+
+    def test_rendered_tables_ignore_fenced_rows_and_reject_missing_navigation(self):
+        from verify_plan import PLAN, rows
+
+        def fence_table(text):
+            blocks = text.split("\n\n")
+            for i, paragraph in enumerate(blocks):
+                if paragraph.startswith("| "):
+                    blocks[i] = "```markdown\n" + paragraph + "\n```"
+            return "\n\n".join(blocks)
+
+        tree = GitTree(ROOT)
+        plan = tree.read(PLAN).decode()
+        self.assertEqual(len(rows(plan)), 67)
+        self.assertEqual(rows(fence_table(plan)), [])
+        self.assertEqual(rows(plan + "\n" + fence_table(plan)), rows(plan))
+        index = tree.read("versions/README.md").decode()
+        sample = "\n\n".join(block for block in fence_table(index).split("\n\n") if block.startswith("```markdown"))
+        self.assertTrue(sample)
+        for content, accepted in ((fence_table(index), False), (index + "\n" + sample, True)):
+            errors = []
+            read = tree.read
+
+            def read_index(path, commit=None):
+                return content.encode() if path == "versions/README.md" and commit is None else read(path, commit)
+
+            with patch.object(tree, "read", side_effect=read_index):
+                check_versions(errors, tree)
+            if accepted:
+                self.assertEqual(errors, [])
+            else:
+                self.assertTrue(any("missing an approved rendered release row" in error for error in errors))
 
     def test_version_rows_and_current_label_are_bound_to_archives(self):
         tree = GitTree(ROOT)
@@ -705,6 +1003,73 @@ class EvidenceTests(unittest.TestCase):
             second = intake.record_intake(spec, destination, fetch=fetch)
             self.assertNotEqual(first, second)
             self.assertEqual(json.loads(second.read_bytes())["recommendations"], [])
+
+    def test_learning_reuses_metadata_and_verifies_each_source_anchor(self):
+        loader = importlib.util.spec_from_file_location("intake", ROOT / "learning/intake.py")
+        intake = importlib.util.module_from_spec(loader)
+        loader.loader.exec_module(intake)
+        headings = ["# Evidence"] + [f"Unique source {i}" for i in range(32)]
+        with repository({"README.md": "\n".join(headings)}) as tree:
+            tree.git("remote", "add", "origin", "https://github.com/example/project.git")
+            first = [{"id": f"source-{i}", "checkout": str(tree.root), "ref": tree.commit,
+                      "repository": "Example/Project", "path": "README.md", "line": i+2,
+                      "anchor": headings[i+1], "visibility": "public"} for i in range(32)]
+            tree.git("-c", "user.name=Fixture", "-c", "user.email=test@example.invalid",
+                     "commit", "--allow-empty", "-qm", "Distinct source revision")
+            later = GitTree(tree.root).commit
+            target = {**first[0], "ref": later, "repository": "example/project",
+                      "audience": "reader", "capability": "audit"}
+            spec = {"visibility": "public", "sources": first, "target": target,
+                    "selected": [], "findings": []}
+            routes = []
+
+            def fetch(route):
+                routes.append(route)
+                if len(routes) > 3:
+                    raise HTTPError("https://api.github.com", 429, "fixture budget", {}, None)
+                return {"private": False, "visibility": "public"} if "/commits/" not in route else {
+                    "sha": route.rsplit("/", 1)[1]}
+
+            destination = tree.root / "receipts"
+            record = json.loads(intake.record_intake(spec, destination, fetch=fetch).read_bytes())
+            self.assertEqual({row["line"] for row in record["sources"]}, set(range(2, 34)))
+            self.assertEqual(routes, ["example/project", f"example/project/commits/{tree.commit}",
+                                      f"example/project/commits/{later}"])
+            limited = HTTPError("https://api.github.com", 429, "fixture budget", {}, None)
+            def reject(route):
+                raise limited
+
+            with self.assertRaises(HTTPError) as raised:
+                intake.record_intake(spec, destination, fetch=reject)
+            self.assertEqual(raised.exception.code, 429)
+            spec["sources"][-1] = {**spec["sources"][-1], "anchor": "absent"}
+            routes.clear()
+            with self.assertRaisesRegex(ValueError, "anchor does not match"):
+                intake.record_intake(spec, destination, fetch=fetch)
+
+    def test_learning_cli_distinguishes_secondary_rate_limits_from_forbidden(self):
+        loader = importlib.util.spec_from_file_location("intake", ROOT / "learning/intake.py")
+        intake = importlib.util.module_from_spec(loader)
+        loader.loader.exec_module(intake)
+        for status, headers, message, limited in (
+            (403, {"X-RateLimit-Remaining": "17"}, "You have exceeded a secondary rate limit.", True),
+            (403, {"X-RateLimit-Remaining": "0"}, "API rate limit exceeded.", True),
+            (403, {"Retry-After": "60"}, "Request throttled.", True),
+            (429, {}, "Too many requests.", True),
+            (403, {"X-RateLimit-Remaining": "17"}, "Resource not accessible.", False),
+        ):
+            with self.subTest(status=status, headers=headers, message=message):
+                body = BytesIO(json.dumps({"message": message}).encode("utf-8"))
+                response = HTTPError("https://api.github.com", status, "fixture", headers, body)
+                stderr = StringIO()
+                with (patch.object(sys, "argv", ["intake.py", "request.json", "receipts"]),
+                      patch.object(intake, "read_json", return_value={}),
+                      patch.object(intake, "record_intake", side_effect=response),
+                      contextlib.redirect_stderr(stderr), self.assertRaises(SystemExit) as exit_error):
+                    intake.main()
+                self.assertEqual(exit_error.exception.code, 2)
+                self.assertEqual("retry later" in stderr.getvalue(), limited)
+                self.assertEqual("invalid or unverified" in stderr.getvalue(), not limited)
 
     def test_learning_conflicting_decisions_at_same_source_are_rejected(self):
         loader = importlib.util.spec_from_file_location("intake", ROOT / "learning/intake.py")

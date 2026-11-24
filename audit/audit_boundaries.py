@@ -97,7 +97,8 @@ def check_review_pagination_boundary(directory):
             if endpoint == route:
                 project = {"full_name": repository}
                 return {"number": 17, "state": "open", "merged": False, "draft": False,
-                        "base": {"repo": project}, "head": {"repo": project, "ref": "docs/readme", "sha": source}}
+                        "base": {"repo": project, "ref": "main", "sha": "c" * 40},
+                        "head": {"repo": project, "ref": "docs/readme", "sha": source}}
             prefix = route + "/reviews?per_page=100&page="
             require(endpoint.startswith(prefix), endpoint)
             page = int(endpoint.removeprefix(prefix))

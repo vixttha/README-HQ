@@ -46,7 +46,9 @@ def pages(fetch, route):
 
 def fingerprint(pr):
     head = pr["head"]
-    return (head["sha"], head["ref"], (head["repo"] or {}).get("full_name"),
+    base = pr["base"]
+    return (base["sha"], base["ref"], base["repo"]["full_name"],
+            head["sha"], head["ref"], (head["repo"] or {}).get("full_name"),
             pr["state"], pr["draft"], pr["merged"], pr.get("merge_commit_sha"))
 
 
@@ -60,13 +62,14 @@ def verify_pull_request(repository, source, expected, fetch=None):
 
     pr = fetch(route)
     observed = fingerprint(pr)
-    head = pr["head"]
+    head, base = pr["head"], pr["base"]
     if (
         pr["number"] != num
         or pr["base"]["repo"]["full_name"].lower() != repository.lower()
         or (head["repo"] or {}).get("full_name", "").lower() != repository.lower()
         or head["ref"] != expected["source_branch"]
         or not COMMIT.fullmatch(head["sha"])
+        or not base["ref"] or not COMMIT.fullmatch(base["sha"])
     ):
         raise ValueError(f"GitHub PR #{num} does not match the expected source repository and branch")
 
@@ -94,6 +97,8 @@ def verify_pull_request(repository, source, expected, fetch=None):
         "source_commit": source,
         "source_relation": "current head" if is_head else "historical PR commit",
         "head_commit": head["sha"],
+        "base_ref": base["ref"],
+        "base_commit": base["sha"],
         "pr_state": state,
         "merge_commit": pr["merge_commit_sha"] if pr["merged"] else None,
         "exact_commit_approvals": approvals,
