@@ -40,6 +40,28 @@ def repository(files):
 
 
 class ReaderTests(unittest.TestCase):
+    def test_historical_learning_uses_original_blob_and_lines_under_replacement(self):
+        loader = importlib.util.spec_from_file_location("historical_learning", ROOT / "learning/audit_learning.py")
+        historical = importlib.util.module_from_spec(loader)
+        loader.loader.exec_module(historical)
+        with repository({"README.md": "# Original evidence\n"}) as tree:
+            commit = tree.commit
+            blob = tree.git("rev-parse", f"{commit}:README.md").decode().strip()
+            (tree.root / "README.md").write_text("# Replacement evidence\n", encoding="utf-8")
+            tree.git("add", "README.md")
+            tree.git("-c", "user.name=Fixture", "-c", "user.email=test@example.invalid", "commit", "-qm", "replacement")
+            replacement = tree.resolve("HEAD")
+            tree.git("replace", commit, replacement)
+            replaced = subprocess.check_output(["git", "rev-parse", f"{commit}:README.md"], cwd=tree.root).decode().strip()
+            self.assertNotEqual(replaced, blob)
+            source = {"repository": tree.root.name, "commit": commit, "blob": blob,
+                      "line": 1, "anchor": "# Original evidence", "status": "observed"}
+            with contextlib.redirect_stdout(StringIO()) as output:
+                historical.verify_sources({"source": source}, tree.root.parent)
+            self.assertIn("Observed exact README source", output.getvalue())
+            with self.assertRaisesRegex(ValueError, "blob"):
+                historical.verify_sources({"source": {**source, "blob": replaced}}, tree.root.parent)
+
     def test_repo_cli_requires_root_and_supports_explicit_subproject(self):
         body = "# Guide\n\nThis guide explains the reference fixture.\n"
         with repository({"README.md": body, "packages/demo/README.md": body}) as tree:
