@@ -79,11 +79,17 @@ def optimized_verification(base):
         ):
             code=loader % (str(ROOT/"learning/audit_learning.py"),{"fixture":value},str(base))
             result=subprocess.run([sys.executable,*mode,"-c",code],cwd=ROOT,capture_output=True,text=True)
-            require((result.returncode==0)==good and ("Observed exact README source" in result.stdout)==good,
-                    f"optimization mismatch: {mode} {label}: {result.stderr}")
-            if not good:
-                require("ValueError" in result.stderr,"expected explicit validation failure")
-            cases.append({"optimization":bool(mode),"case":label,"returncode":result.returncode})
+            if mode:
+                require(result.returncode != 0 and "The historical learning audit requires assertions enabled" in result.stderr and "Observed exact README source" not in result.stdout,
+                        f"optimized historical verifier did not refuse explicitly: {label}: {result.stderr}")
+                outcome="explicit unsupported-mode refusal"
+            else:
+                require((result.returncode==0)==good and ("Observed exact README source" in result.stdout)==good,
+                        f"normal verification mismatch: {label}: {result.stderr}")
+                if not good:
+                    require("ValueError" in result.stderr,"expected explicit validation failure")
+                outcome="verified" if good else "explicit invalid-evidence rejection"
+            cases.append({"optimization":bool(mode),"case":label,"returncode":result.returncode,"outcome":outcome})
     return {"cases":cases,"scope":"original learning verify_sources acceptance boundary; not all historical audit assertions"}
 
 def replacement_refs(base):
