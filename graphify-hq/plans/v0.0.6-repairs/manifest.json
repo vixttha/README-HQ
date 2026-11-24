@@ -1,0 +1,633 @@
+{
+  "repository": "vixttha/README-HQ",
+  "source_commit": "3d0dd01dfab1e02328dc012b254142d801f6215e",
+  "title": "README HQ v0.0.6 checkpoints 1 through 24",
+  "source_files": [
+    "plans/v0.0.6-repairs/README.md",
+    "audit/audit_v006.py",
+    "audit/audit_portability.py",
+    "learning/audit_learning.py"
+  ],
+  "features": [
+    {
+      "id": "v0-0-6-1",
+      "label": "v0.0.6.1 · #1 · Default homepage discovery",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.1` | [#1](https://github.com/vixttha/README-HQ/issues/1) | Default homepage discovery | High | Audited `v0.0.6` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Add a clear route from the default GitHub landing page to the active README HQ version, version index, and Graphify index."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_v006.py",
+          "anchor": "def check_landing(worktree):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-2",
+      "label": "v0.0.6.2 · #2 · Archived BART homepage links",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.2` | [#2](https://github.com/vixttha/README-HQ/issues/2) | Archived BART homepage links | High | `v0.0.6.1` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.1` | [#1](https://github.com/vixttha/README-HQ/issues/1) | Default homepage discovery | High | Audited `v0.0.6` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Restore navigable documentation links for the BART v0.0.3 and v0.0.4 homepage snapshots while preserving the frozen README bytes."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_v006.py",
+          "anchor": "def check_archive_navigation(worktree):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-3",
+      "label": "v0.0.6.3 · #3 · Source provenance and tracked modes",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.3` | [#3](https://github.com/vixttha/README-HQ/issues/3) | Source provenance and tracked modes | High | `v0.0.6.2` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.2` | [#2](https://github.com/vixttha/README-HQ/issues/2) | Archived BART homepage links | High | `v0.0.6.1` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Verify the archive's source repository, commit, path, blob, and tracked mode against independently pinned evidence."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_v006.py",
+          "anchor": "def check_archive_provenance(worktree):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-4",
+      "label": "v0.0.6.4 · #4 · Frozen standalone version integrity",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.4` | [#4](https://github.com/vixttha/README-HQ/issues/4) | Frozen standalone version integrity | High | `v0.0.6.3` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.3` | [#3](https://github.com/vixttha/README-HQ/issues/3) | Source provenance and tracked modes | High | `v0.0.6.2` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Bind accepted standalone README and changelog bytes to source evidence used by archive validation and Graphify."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_v006.py",
+          "anchor": "def check_standalone_version_drift(worktree):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-5",
+      "label": "v0.0.6.5 · #5 · Version-to-map and homepage mapping",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.5` | [#5](https://github.com/vixttha/README-HQ/issues/5) | Version-to-map and homepage mapping | Medium | `v0.0.6.4` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.4` | [#4](https://github.com/vixttha/README-HQ/issues/4) | Frozen standalone version integrity | High | `v0.0.6.3` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Require each version row to link to its own map and make the homepage current version agree with the canonical index."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_v006.py",
+          "anchor": "def check_index_mapping(worktree):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-6",
+      "label": "v0.0.6.6 · #6 · GitHub Markdown navigation",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.6` | [#6](https://github.com/vixttha/README-HQ/issues/6) | GitHub Markdown navigation | Medium | `v0.0.6.5` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.5` | [#5](https://github.com/vixttha/README-HQ/issues/5) | Version-to-map and homepage mapping | Medium | `v0.0.6.4` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Check rendered Markdown link forms and GitHub heading anchors while ignoring inline code and other literal examples."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_v006.py",
+          "anchor": "def check_markdown(worktree):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-7",
+      "label": "v0.0.6.7 · #7 · Record-specific Graphify evidence",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.7` | [#7](https://github.com/vixttha/README-HQ/issues/7) | Record-specific Graphify evidence | Medium | `v0.0.6.6` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.6` | [#6](https://github.com/vixttha/README-HQ/issues/6) | GitHub Markdown navigation | Medium | `v0.0.6.5` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Give each Graphify record the correct verification reference for its own artifact."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_v006.py",
+          "anchor": "def check_graph_evidence(worktree):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-8",
+      "label": "v0.0.6.8 · #8 · Technique registry field types",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.8` | [#8](https://github.com/vixttha/README-HQ/issues/8) | Technique registry field types | Medium | `v0.0.6.7` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.7` | [#7](https://github.com/vixttha/README-HQ/issues/7) | Record-specific Graphify evidence | Medium | `v0.0.6.6` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Enforce the registry schema and explicit field types before normalizing IDs or aliases."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_v006.py",
+          "anchor": "def check_registry_shape(worktree):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-9",
+      "label": "v0.0.6.9 · #9 · Failed batch recovery",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.9` | [#9](https://github.com/vixttha/README-HQ/issues/9) | Failed batch recovery | Medium | `v0.0.6.8` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.8` | [#8](https://github.com/vixttha/README-HQ/issues/8) | Technique registry field types | Medium | `v0.0.6.7` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Publish a complete Graphify batch only after all maps and receipts pass, with a safe retry path."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_v006.py",
+          "anchor": "def check_graph_output_retry(worktree, temporary):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-10",
+      "label": "v0.0.6.10 · #10 · Graphify table escaping",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.10` | [#10](https://github.com/vixttha/README-HQ/issues/10) | Graphify table escaping | Low | `v0.0.6.9` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.9` | [#9](https://github.com/vixttha/README-HQ/issues/9) | Failed batch recovery | Medium | `v0.0.6.8` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Escape delimiters in catalog titles and summaries before rendering Markdown table cells."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_v006.py",
+          "anchor": "def check_outline_rendering(worktree):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-11",
+      "label": "v0.0.6.11 · #11 · Automatic repository mode and runner safety",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.11` | [#11](https://github.com/vixttha/README-HQ/issues/11) | Automatic repository mode and runner safety | High | `v0.0.6.10` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.10` | [#10](https://github.com/vixttha/README-HQ/issues/10) | Graphify table escaping | Low | `v0.0.6.9` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Classify the trusted hosting repository before any jobs are scheduled. Verify public, private, internal, unknown, and fork-PR metadata. Only verified public mode may schedule standard hosted validation. Use offline validation or an explicitly configured private environment for private/internal mode, and keep evidence private."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_portability.py",
+          "anchor": "def inspect_workflow(worktree):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-12",
+      "label": "v0.0.6.12 · #12 · Portable adopter target and ref",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.12` | [#12](https://github.com/vixttha/README-HQ/issues/12) | Portable adopter target and ref | High | `v0.0.6.11` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.11` | [#11](https://github.com/vixttha/README-HQ/issues/11) | Automatic repository mode and runner safety | High | `v0.0.6.10` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Run an explicit target/ref for a plain project and a monorepo without requiring HQ's history, registry, or version folders. Report the selected repo, entry point, Git tree, applicable checks, and verification gaps."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_portability.py",
+          "anchor": "def check_adopter(worktree, directory):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-13",
+      "label": "v0.0.6.13 · #13 · GitHub-visible README discovery",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.13` | [#13](https://github.com/vixttha/README-HQ/issues/13) | GitHub-visible README discovery | High | `v0.0.6.12` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.12` | [#12](https://github.com/vixttha/README-HQ/issues/12) | Portable adopter target and ref | High | `v0.0.6.11` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Resolve the GitHub-visible README using .github, root, and docs precedence. Run link checks relative to the selected file. Cover competing files, a docs-only README, and a reportable missing README."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_portability.py",
+          "anchor": "def check_surface(worktree):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-14",
+      "label": "v0.0.6.14 · #14 · Mechanical README quality gates",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.14` | [#14](https://github.com/vixttha/README-HQ/issues/14) | Mechanical README quality gates | High | `v0.0.6.13` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.13` | [#13](https://github.com/vixttha/README-HQ/issues/13) | GitHub-visible README discovery | High | `v0.0.6.12` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Add a profile-aware quality check for empty and placeholder content, visible first action, justified prerequisites, and verifiable material claims. Detect GitHub display truncation and keep qualitative review as a separate result."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_portability.py",
+          "anchor": "def check_quality(worktree):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-15",
+      "label": "v0.0.6.15 · #15 · Repository-root-relative links",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.15` | [#15](https://github.com/vixttha/README-HQ/issues/15) | Repository-root-relative links | Medium | `v0.0.6.14` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.14` | [#14](https://github.com/vixttha/README-HQ/issues/14) | Mechanical README quality gates | High | `v0.0.6.13` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Resolve leading-slash GitHub paths from the repository root and ordinary relative paths from the README location. Test both forms in nested folders and continue rejecting references outside the selected repository tree."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_portability.py",
+          "anchor": "def check_root_relative(worktree):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-16",
+      "label": "v0.0.6.16 · #16 · Published Git tree link verification",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.16` | [#16](https://github.com/vixttha/README-HQ/issues/16) | Published Git tree link verification | High | `v0.0.6.15` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.15` | [#15](https://github.com/vixttha/README-HQ/issues/15) | Repository-root-relative links | Medium | `v0.0.6.14` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Validate checkout-relative and recognized same-repository links against the exact tracked publication tree and ref. Exercise untracked paths, wrong-case paths, explicit refs, and existing links on both Linux and Windows. Report any ref that cannot be resolved."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_portability.py",
+          "anchor": "def check_same_repository_links(worktree):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-17",
+      "label": "v0.0.6.17 · #17 · Default-branch publication coverage",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.17` | [#17](https://github.com/vixttha/README-HQ/issues/17) | Default-branch publication coverage | Medium | `v0.0.6.16` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.16` | [#16](https://github.com/vixttha/README-HQ/issues/16) | Published Git tree link verification | High | `v0.0.6.15` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Validate the adopter's configured publication branch on supported push and PR events while preserving the pre-scheduling visibility gate. Test at least main, master, trunk, and a custom branch."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "audit/audit_portability.py",
+          "anchor": "def inspect_workflow(worktree):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-18",
+      "label": "v0.0.6.18 · #18 · Verified source and run binding",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.18` | [#18](https://github.com/vixttha/README-HQ/issues/18) | Verified source and run binding | High | `v0.0.6.17` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.17` | [#17](https://github.com/vixttha/README-HQ/issues/17) | Default-branch publication coverage | Medium | `v0.0.6.16` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Bind each finding to a source repository, full commit, path or artifact digest, and anchor. Use observed for a documented pattern. Require outcome, environment, and exact execution evidence before marking a behavioral claim verified."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "learning/audit_learning.py",
+          "anchor": "def check_evidence_binding(worktree, registry, original):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-19",
+      "label": "v0.0.6.19 · #19 · Canonical evidence identity",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.19` | [#19](https://github.com/vixttha/README-HQ/issues/19) | Canonical evidence identity | Medium | `v0.0.6.18` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.18` | [#18](https://github.com/vixttha/README-HQ/issues/18) | Verified source and run binding | High | `v0.0.6.17` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Normalize evidence identity to repository, commit, path, and evidence span while grouping same-file observations under the same source. Preserve relevant source lines and keep aliases or mirrors from inflating independent corroboration."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "learning/audit_learning.py",
+          "anchor": "def check_evidence_identity(worktree, registry, original):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-20",
+      "label": "v0.0.6.20 · #20 · Duplicate mechanism detection",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.20` | [#20](https://github.com/vixttha/README-HQ/issues/20) | Duplicate mechanism detection | Medium | `v0.0.6.19` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.19` | [#19](https://github.com/vixttha/README-HQ/issues/19) | Canonical evidence identity | Medium | `v0.0.6.18` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Detect exact repeated mechanisms with a canonical signature, flag semantic overlap for review, and retain one stable ID with aliases and corroborating evidence. Test against both active and retired techniques."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "learning/audit_learning.py",
+          "anchor": "def check_duplicate_mechanism(worktree, registry, original):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-21",
+      "label": "v0.0.6.21 · #21 · Durable source-learning intake",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.21` | [#21](https://github.com/vixttha/README-HQ/issues/21) | Durable source-learning intake | High | `v0.0.6.20` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.20` | [#20](https://github.com/vixttha/README-HQ/issues/20) | Duplicate mechanism detection | Medium | `v0.0.6.19` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Create an idempotent learning intake for supplied source repositories and in-flight discoveries. Persist source revision, candidate identity, disposition, and provenance. Demonstrate that repeated intake records new evidence once and retains versioned history."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "learning/audit_learning.py",
+          "anchor": "def check_workflow_gaps(worktree, temporary):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-22",
+      "label": "v0.0.6.22 · #22 · Project-specific recommendation receipts",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.22` | [#22](https://github.com/vixttha/README-HQ/issues/22) | Project-specific recommendation receipts | High | `v0.0.6.21` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.21` | [#21](https://github.com/vixttha/README-HQ/issues/21) | Durable source-learning intake | High | `v0.0.6.20` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Bind recommendations to a target tree, owner-selected references, actual audience and capabilities, and the matching technique record. Record adopt, adapt, already present, declined, irrelevant, or insufficient evidence. Test that changing target facts or allowed sources changes the applicable recommendations."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "learning/audit_learning.py",
+          "anchor": "def check_workflow_gaps(worktree, temporary):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-23",
+      "label": "v0.0.6.23 · #23 · Public and private learning separation",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.23` | [#23](https://github.com/vixttha/README-HQ/issues/23) | Public and private learning separation | High | `v0.0.6.22` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.22` | [#22](https://github.com/vixttha/README-HQ/issues/22) | Project-specific recommendation receipts | High | `v0.0.6.21` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Keep public shared learning and private project receipts isolated. Require independently resolved visibility and provenance before public admission. Verify using a synthetic private marker that public outputs and logs contain no private identifiers, links, or excerpts."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "learning/audit_learning.py",
+          "anchor": "def check_public_scope(worktree, registry, original):"
+        }
+      ]
+    },
+    {
+      "id": "v0-0-6-24",
+      "label": "v0.0.6.24 · #24 · Reuse and attribution boundary",
+      "documented_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.24` | [#24](https://github.com/vixttha/README-HQ/issues/24) | Reuse and attribution boundary | Medium | `v0.0.6.23` |"
+        },
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "| `v0.0.6.23` | [#23](https://github.com/vixttha/README-HQ/issues/23) | Public and private learning separation | High | `v0.0.6.22` |"
+        }
+      ],
+      "changed_in": [
+        {
+          "path": "plans/v0.0.6-repairs/README.md",
+          "anchor": "- Record an owner decision on the HQ template's own reuse terms. For learning from an external example, cite the evidence and store an original abstraction. Require explicit license and attribution metadata before including copied material. Keep unresolved rights visible."
+        }
+      ],
+      "tested_by": [
+        {
+          "path": "learning/audit_learning.py",
+          "anchor": "def check_workflow_gaps(worktree, temporary):"
+        }
+      ]
+    }
+  ]
+}
