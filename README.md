@@ -22,9 +22,15 @@ To check a README HQ checkout, use Python 3.11 or newer.
 ```sh
 git clone --branch repair/v0.0.6-integration-candidate https://github.com/vixttha/README-HQ.git
 cd README-HQ
-git rev-parse HEAD
-git checkout --detach HEAD
-python3 -m pip install --require-hashes -r tools/requirements.txt
+# Replace with the full commit SHA from the accepted review, not a branch tip.
+approved_sha=REPLACE_WITH_APPROVED_40_CHARACTER_SHA
+case "$approved_sha" in
+  *[!0-9a-f]*|'') exit 1 ;;
+esac
+test "${#approved_sha}" -eq 40 &&
+git checkout --detach "$approved_sha" &&
+test "$(git rev-parse HEAD)" = "$approved_sha" &&
+python3 -m pip install --require-hashes -r tools/requirements.txt &&
 python3 tools/check_readme_hq.py
 ```
 
@@ -52,4 +58,4 @@ See the [learning intake](learning/README.md) and [reuse and attribution terms](
 
 A compatible agent may enumerate the target repository's branch refs, resolve this branch to a commit, and read its entry point at that exact commit. Read-only discovery confers no execution, write, integration or release authority. If this branch or marker is absent, the tool is absent or legacy/unverified; continue independently. Check the target's own instructions and owner scope before any action. The marker describes a capability, not a required registry or package version.
 
-Installation convention: human or agent selects a reviewed exact source SHA, checks the dedicated target branch and collisions, follows this product's own installation guide, and records source/target SHA and preserved product state. Never merge a template workspace wholesale into product source. Existing installations require explicit reviewed upgrades; preserve local records and prior receipts. Optional evidence links do not authorize writes. No mandatory coordinator or other ecosystem tool.
+Installation convention: human or agent selects a reviewed exact source SHA, checks the dedicated target branch and collisions, follows [this product's own installation guide](#use-readme-hq), and records source/target SHA and preserved product state. Never merge a template workspace wholesale into product source. Existing installations require explicit reviewed upgrades; preserve local records and prior receipts. Optional evidence links do not authorize writes. No mandatory coordinator or other ecosystem tool.
