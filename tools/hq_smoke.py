@@ -5,6 +5,7 @@ import json
 import os
 from pathlib import Path
 import platform
+import re
 import subprocess
 import sys
 from tempfile import TemporaryDirectory
@@ -54,10 +55,38 @@ def verify_first_action(tree, path, *, allow_network=False):
         raise ValueError("local smoke needs a nonempty argv array")
     if type(expected.get("exit")) is not int or not (expected.get("contains") or expected.get("file")):
         raise ValueError("local smoke requires an exit code and a recognizable output or file")
+    name = expected.get("file")
+    mode = expected.get("file_mode", "changed")
+    digest = expected.get("file_sha256")
+    if "file" in expected:
+        if not isinstance(name, str) or not name or Path(name).is_absolute() or Path(name).drive or ".." in Path(name).parts:
+            raise ValueError("expected.file must be a repository-relative file")
+        if mode not in ("changed", "created", "updated", "exists"):
+            raise ValueError("expected.file_mode must be changed, created, updated, or exists")
+        if "file_sha256" in expected and (not isinstance(digest, str) or not re.fullmatch(r"[0-9a-f]{64}", digest)):
+            raise ValueError("expected.file_sha256 must be a lowercase SHA-256")
+    elif "file_mode" in expected or "file_sha256" in expected:
+        raise ValueError("file expectations require expected.file")
     with TemporaryDirectory(prefix="readme-hq-smoke-") as temp:
         checkout = Path(temp) / "checkout"
         tree.git("worktree", "add", "--detach", str(checkout), tree.commit)
         try:
+            def result_file():
+                if not name:
+                    return None
+                path = (checkout / name).resolve()
+                return path if path.is_relative_to(checkout.resolve()) and path.is_file() else None
+
+            def file_digest(path):
+                if path is None:
+                    return None
+                with path.open("rb") as handle:
+                    checksum = sha256()
+                    for chunk in iter(lambda: handle.read(65536), b""):
+                        checksum.update(chunk)
+                return checksum.hexdigest()
+
+            before = file_digest(result_file()) if mode != "exists" else None
             timeout = spec.get("timeout", 60)
             if type(timeout) is not int or not 1 <= timeout <= 300:
                 raise ValueError("smoke timeout must be between 1 and 300 seconds")
@@ -67,24 +96,37 @@ def verify_first_action(tree, path, *, allow_network=False):
                 return {"result": "failed", "detail": str(error), "argv": argv, "expected": expected}
             output = result.stdout + result.stderr
             matched = expected.get("contains") is None or expected["contains"].encode() in output
-            if "file" in expected:
-                path = (checkout / expected["file"]).resolve()
-                matched &= path.is_relative_to(checkout) and path.is_file()
+            observation = {}
+            if name:
+                path = result_file()
+                after = file_digest(path) if mode != "exists" or digest is not None else None
+                changed = before != after
+                file_match = path is not None and (
+                    mode == "exists" or (changed and (
+                        mode == "changed" or (mode == "created" and before is None)
+                        or (mode == "updated" and before is not None)
+                    ))
+                ) and (digest is None or after == digest)
+                matched &= file_match
+                observation = {"file_before_sha256": before, "file_after_sha256": after, "file_match": file_match}
             return {"result": "passed" if result.returncode == expected["exit"] and matched else "failed",
                     "argv": argv, "expected": expected,
                     "observed": {"exit": result.returncode, "outcome_match": bool(matched),
-                                 "output_sha256": sha256(output).hexdigest()}}
+                                 "output_sha256": sha256(output).hexdigest(), **observation}}
         finally:
             tree.git("worktree", "remove", "--force", str(checkout))
 
 
-def write_receipt(destination, tree, cases, errors, gaps):
-    sources = {}
+def write_receipt(destination, tree, cases, errors, gaps, *, validator_path=None):
+    sources, unavailable_sources = {}, []
     if tree:
         name = cases.get("entrypoint") or "README.md"
         for path in (name, "tools/check_readme_hq.py"):
             if path in tree.entries():
-                sources[path] = sha256(tree.read(path)).hexdigest()
+                try:
+                    sources[path] = sha256(tree.read(path)).hexdigest()
+                except (KeyError, OSError, ValueError):
+                    unavailable_sources.append(path)
     run = os.environ.get("GITHUB_RUN_ID")
     repo = os.environ.get("GITHUB_REPOSITORY")
     data = {
@@ -96,4 +138,8 @@ def write_receipt(destination, tree, cases, errors, gaps):
         "sources": sources, "cases": cases, "errors": errors, "unchecked": gaps,
         "result": "failed" if errors else "passed",
     }
+    if unavailable_sources:
+        data["unavailable_sources"] = unavailable_sources
+    if validator_path is not None:
+        data["validator"] = {"filename": validator_path.name, "sha256": sha256(validator_path.read_bytes()).hexdigest()}
     destination.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")

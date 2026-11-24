@@ -10,6 +10,7 @@ import unicodedata
 from urllib.parse import unquote, urlsplit
 
 from markdown_it import MarkdownIt
+from markdown_it.rules_inline import autolink, html_inline, image, link
 from PIL import Image
 
 from hq_data import REGULAR_MODES, SHA, physical_lines
@@ -20,6 +21,22 @@ README_FORMATS = [".md", ".markdown", ".mdown", ".mkdn", ".rst", ".adoc", ".asci
 IMAGE_FORMATS = {".png": "PNG", ".gif": "GIF", ".jpg": "JPEG", ".jpeg": "JPEG", ".webp": "WEBP"}
 LINE_RANGE = re.compile(r"L([0-9]+)(?:-L([0-9]+))?")
 PARSER = MarkdownIt("commonmark").enable("table").enable("strikethrough")
+
+
+def locate_inline(rule, kind):
+    def located(state, silent):
+        start = state.pos
+        previous = len(state.tokens)
+        matched = rule(state, silent)
+        if matched and not silent:
+            token = next(item for item in state.tokens[previous:] if item.type == kind)
+            token.meta["source_line_offset"] = state.src.count("\n", 0, start)
+        return matched
+    return located
+
+
+for rule, kind in ((link, "link_open"), (autolink, "link_open"), (image, "image"), (html_inline, "html_inline")):
+    PARSER.inline.ruler.at(rule.__name__, locate_inline(rule, kind))
 
 
 def suffix(path):
@@ -49,6 +66,28 @@ class Link:
     line: int
     image: bool = False
     unnamed: bool = False
+    coverage_gap: str | None = None
+
+
+def image_sources(value):
+    if "data:" in value.lower():
+        raise ValueError("unsupported inline image source")
+    candidates = []
+    remaining = value
+    while remaining := remaining.lstrip(" ,\t\r\n\f"):
+        match = re.match(r"([^ \t\r\n\f]+)(.*)", remaining, re.DOTALL)
+        url, remaining = match.groups()
+        if url.endswith(","):
+            candidates.append(url.rstrip(","))
+            continue
+        descriptor, _, remaining = remaining.partition(",")
+        descriptor = descriptor.strip()
+        if descriptor and not re.fullmatch(r"(?:[1-9]\d*w|(?:[0-9]+(?:\.[0-9]+)?|\.[0-9]+)x)", descriptor):
+            raise ValueError("unsupported image source descriptor")
+        candidates.append(url)
+    if not candidates:
+        raise ValueError("empty image source list")
+    return candidates
 
 
 class HtmlLinks(HTMLParser):
@@ -67,6 +106,14 @@ class HtmlLinks(HTMLParser):
                 self.anchors.add(attrs["name"])
             if attrs.get("href"):
                 self.controls.append([attrs["href"], line, bool((attrs.get("aria-label") or "").strip())])
+        if tag in {"source", "img"} and "srcset" in attrs:
+            srcset = attrs["srcset"] or ""
+            try:
+                sources = image_sources(srcset)
+            except ValueError:
+                self.links.append(Link(srcset, line, coverage_gap="unsupported image source list"))
+            else:
+                self.links.extend(Link(url, line, True) for url in sources)
         if tag == "img" and attrs.get("src"):
             self.links.append(Link(attrs["src"], line, True))
             if self.controls and (attrs.get("alt") or "").strip():
@@ -85,13 +132,14 @@ class HtmlLinks(HTMLParser):
 def inline_links(children, line):
     links = []
     for index, token in enumerate(children):
+        occurrence = line + token.meta.get("source_line_offset", 0)
         if token.type == "image":
-            links.append(Link(token.attrGet("src"), line, True))
+            links.append(Link(token.attrGet("src"), occurrence, True))
         elif token.type == "link_open":
             end = next((i for i in range(index + 1, len(children)) if children[i].type == "link_close"), len(children))
             name = "".join(item.content for item in children[index + 1:end]
                            if item.type in {"text", "code_inline", "image"})
-            links.append(Link(token.attrGet("href"), line, unnamed=not name.strip()))
+            links.append(Link(token.attrGet("href"), occurrence, unnamed=not name.strip()))
     return links
 
 
@@ -123,6 +171,7 @@ def parse_markdown(text):
             html = HtmlLinks(line)
             for item in token.children:
                 if item.type == "html_inline":
+                    html.line = line + item.meta.get("source_line_offset", 0) - html.getpos()[0] + 1
                     html.feed(item.content)
                 elif item.type in {"text", "code_inline"}:
                     html.handle_data(item.content)
@@ -146,10 +195,25 @@ def same_repo_target(tree, url):
     candidates = segments[3:]
     for count in range(len(candidates) - (segments[2] != "tree"), 0, -1):
         ref = "/".join(candidates[:count])
-        try:
-            commit = tree.resolve(ref)
-        except ValueError:
+        if SHA.fullmatch(ref) or ref == "HEAD":
+            names = [ref]
+        else:
+            names = [f"refs/heads/{ref}", f"refs/remotes/origin/{ref}", f"refs/tags/{ref}"]
+            if re.fullmatch(r"[0-9a-f]{4,39}", ref):
+                objects = tree.git("rev-parse", f"--disambiguate={ref}").decode().split()
+                if len(objects) == 1:
+                    names.append(objects[0])
+        resolved = set()
+        for name in names:
+            try:
+                resolved.add(tree.resolve(name))
+            except ValueError:
+                continue
+        if not resolved:
             continue
+        if len(resolved) > 1:
+            raise ValueError(f"conflicting commits for same-repository ref: {ref}")
+        commit = resolved.pop()
         return "/".join(candidates[count:]), commit
     raise LookupError(f"unresolved same-repository ref: {url.path}")
 
@@ -171,7 +235,7 @@ def check_fragment(tree, path, commit, fragment, *, plain=False):
         return
     entries = tree.entries(commit)
     if path not in entries:
-        target = readme_path(entries, path)
+        target = readme_path(entries, path, homepage=not path)
         if not target:
             raise LookupError("directory has no supported README for the fragment")
         path = target
@@ -223,6 +287,9 @@ def check_document(tree, source, errors, gaps, *, archive_scope=None):
     count = 0
     for link in links:
         try:
+            if link.coverage_gap:
+                gaps.append(f"{source}:{link.line}: {link.coverage_gap}")
+                continue
             if link.unnamed:
                 raise ValueError("link has no accessible name")
             url = urlsplit(link.path)

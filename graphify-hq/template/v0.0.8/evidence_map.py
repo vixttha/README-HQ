@@ -3,6 +3,7 @@
 import argparse
 import asyncio
 from collections import Counter
+from contextlib import contextmanager
 import hashlib
 import json
 import os
@@ -177,46 +178,85 @@ def origin_repository():
     return url.path.strip("/").removesuffix(".git") if url.hostname == "github.com" else None
 
 
-def publish_directory(staged, destination):
+def publication_path(destination):
+    return destination.with_name(f".{destination.name}.publish-lock")
+
+
+@contextmanager
+def publication_guard(destination):
     destination.parent.mkdir(parents=True, exist_ok=True)
-    lock = destination.with_name(f".{destination.name}.publish-lock")
-    lock.mkdir()
-    previous = lock / "previous"
-    try:
+    state = publication_path(destination)
+    state.mkdir(exist_ok=True)
+    mutex = state / "writer"
+    with mutex.open("a+b") as handle:
+        handle.seek(0)
+        try:
+            if os.name == "nt":
+                import msvcrt
+                msvcrt.locking(handle.fileno(), msvcrt.LK_NBLCK, 1)
+            else:
+                import fcntl
+                fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except OSError as error:
+            raise ValueError(f"{destination}: a publisher is already active") from error
+        previous = state / "previous"
         if destination.is_symlink() or (destination.exists() and not destination.is_dir()):
             raise ValueError(f"{destination}: expected an output directory")
-        if destination.exists():
-            os.replace(destination, previous)
-        try:
-            os.replace(staged, destination)
-        except OSError:
-            if previous.exists():
-                os.replace(previous, destination)
-            raise
         if previous.exists():
-            shutil.rmtree(previous)
-    finally:
-        if not previous.exists():
-            lock.rmdir()
+            if destination.exists():
+                shutil.rmtree(previous)
+            else:
+                os.replace(previous, destination)
+        yield previous
+
+
+def replace_directory(staged, destination, previous):
+    if destination.exists():
+        os.replace(destination, previous)
+    try:
+        os.replace(staged, destination)
+    except OSError:
+        if previous.exists():
+            os.replace(previous, destination)
+        raise
+    if previous.exists():
+        shutil.rmtree(previous)
+
+
+def publish_directory(staged, destination):
+    with publication_guard(destination) as previous:
+        replace_directory(staged, destination, previous)
 
 
 def publish_pair(output, files):
-    output.parent.mkdir(parents=True, exist_ok=True)
-    with tempfile.TemporaryDirectory(dir=output.parent) as staging:
-        folder = Path(staging) / "pair"
-        if output.is_symlink():
-            raise ValueError("Output directory is a symbolic link")
-        if output.exists():
-            shutil.copytree(output, folder, symlinks=True)
-        else:
-            folder.mkdir()
-        for name, data in files.items():
-            target = folder / name
-            if target.is_symlink() or (target.exists() and not target.is_file()):
-                raise ValueError(f"{name}: cannot replace a non-regular output")
-            target.write_bytes(data)
-        publish_directory(folder, output)
+    with publication_guard(output) as previous:
+        with tempfile.TemporaryDirectory(dir=output.parent) as staging:
+            folder = Path(staging) / "pair"
+            if output.exists():
+                shutil.copytree(output, folder, symlinks=True)
+            else:
+                folder.mkdir()
+            for name, data in files.items():
+                target = folder / name
+                if target.is_symlink() or (target.exists() and not target.is_file()):
+                    raise ValueError(f"{name}: cannot replace a non-regular output")
+                target.write_bytes(data)
+            replace_directory(folder, output, previous)
 
+
+def read_published_pair(output):
+    folders = (output, publication_path(output) / "previous")
+    for _ in range(4):
+        for folder in folders:
+            try:
+                graph = (folder / "graph.json").read_bytes()
+                receipt = (folder / "receipt.json").read_bytes()
+            except FileNotFoundError:
+                continue
+            data = json.loads(receipt)
+            if hashlib.sha256(graph).hexdigest() == data.get("graph_sha256"):
+                return {"graph.json": graph, "receipt.json": receipt}
+    raise ValueError(f"{output}: no complete Graphify generation could be read")
 
 
 def build(manifest, folder):
@@ -387,8 +427,9 @@ def main():
         receipt["repository_provenance"] = provenance
         files = {"graph.json": path.read_bytes(), "receipt.json": (json.dumps(receipt, indent=2) + "\n").encode()}
         if args.check:
+            published = read_published_pair(args.output)
             for name, expected in files.items():
-                if (args.output / name).read_bytes() != expected:
+                if published[name] != expected:
                     raise ValueError("Deterministic rebuild differs: " + name)
         else:
             publish_pair(args.output, files)
