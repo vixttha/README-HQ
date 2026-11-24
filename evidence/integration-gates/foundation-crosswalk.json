@@ -1,0 +1,484 @@
+{
+  "status": "working evidence index",
+  "candidate": "d12d5c6bd82fe448f64adb3ae48024296b8e6db4",
+  "source_plan": "7f4562b8f44544bc9dd4b479fcd1bc30ca07ca94",
+  "counts": {
+    "owner publication pending": 1,
+    "related passing regression; full criterion not yet reviewed": 57,
+    "combined Graphify evidence only; checkpoint-specific review pending": 3,
+    "specific evidence not located in this crosswalk": 4,
+    "owner license decision pending": 1,
+    "live merge-group proof pending": 1
+  },
+  "rows": [
+    {
+      "checkpoint": "v0.0.6.1",
+      "issue": 1,
+      "repair": "Default homepage discovery",
+      "status": "owner publication pending",
+      "evidence": "draft root README; main unchanged"
+    },
+    {
+      "checkpoint": "v0.0.6.2",
+      "issue": 2,
+      "repair": "Archived BART homepage links",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_fragments_and_rendered_link_forms`"
+    },
+    {
+      "checkpoint": "v0.0.6.3",
+      "issue": 3,
+      "repair": "Source provenance and tracked modes",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_registry_and_inventory_cannot_vouch_for_each_other`"
+    },
+    {
+      "checkpoint": "v0.0.6.4",
+      "issue": 4,
+      "repair": "Frozen standalone version integrity",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_version_rows_and_current_label_are_bound_to_archives`"
+    },
+    {
+      "checkpoint": "v0.0.6.5",
+      "issue": 5,
+      "repair": "Version-to-map and homepage mapping",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_version_rows_and_current_label_are_bound_to_archives`"
+    },
+    {
+      "checkpoint": "v0.0.6.6",
+      "issue": 6,
+      "repair": "GitHub Markdown navigation",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_fragments_and_rendered_link_forms`"
+    },
+    {
+      "checkpoint": "v0.0.6.7",
+      "issue": 7,
+      "repair": "Record-specific Graphify evidence",
+      "status": "combined Graphify evidence only; checkpoint-specific review pending",
+      "evidence": "MCP combined run"
+    },
+    {
+      "checkpoint": "v0.0.6.8",
+      "issue": 8,
+      "repair": "Technique registry field types",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_wrong_registry_shapes_fail_without_a_traceback_and_write_a_receipt`"
+    },
+    {
+      "checkpoint": "v0.0.6.9",
+      "issue": 9,
+      "repair": "Failed batch recovery",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_partition_late_write_failure_leaves_destination_available_for_retry`"
+    },
+    {
+      "checkpoint": "v0.0.6.10",
+      "issue": 10,
+      "repair": "Graphify table escaping",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_rendered_tables_ignore_fenced_rows_and_reject_missing_navigation`"
+    },
+    {
+      "checkpoint": "v0.0.6.11",
+      "issue": 11,
+      "repair": "Automatic repository mode and runner safety",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_public_reader_workflow_preserves_the_validator_exit`"
+    },
+    {
+      "checkpoint": "v0.0.6.12",
+      "issue": 12,
+      "repair": "Portable adopter target and ref",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_repo_cli_requires_root_and_supports_explicit_subproject`, `test_pinned_readme_and_monorepo_routes`"
+    },
+    {
+      "checkpoint": "v0.0.6.13",
+      "issue": 13,
+      "repair": "GitHub-visible README discovery",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_root_fragments_follow_the_effective_homepage`, `test_adopter_detects_an_org_homepage_as_incomplete`"
+    },
+    {
+      "checkpoint": "v0.0.6.14",
+      "issue": 14,
+      "repair": "Mechanical README quality gates",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_quality_and_smoke_have_separate_outcomes`"
+    },
+    {
+      "checkpoint": "v0.0.6.15",
+      "issue": 15,
+      "repair": "Repository-root-relative links",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_pinned_readme_and_monorepo_routes`"
+    },
+    {
+      "checkpoint": "v0.0.6.16",
+      "issue": 16,
+      "repair": "Published Git tree link verification",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_fetched_repository_refs_are_resolved_without_a_local_branch`, `test_partial_clone_blob_fetch_requires_explicit_permission`"
+    },
+    {
+      "checkpoint": "v0.0.6.17",
+      "issue": 17,
+      "repair": "Default-branch publication coverage",
+      "status": "specific evidence not located in this crosswalk",
+      "evidence": "—"
+    },
+    {
+      "checkpoint": "v0.0.6.18",
+      "issue": 18,
+      "repair": "Verified source and run binding",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_documented_review_receipt_passes_and_raw_or_incomplete_receipts_fail`"
+    },
+    {
+      "checkpoint": "v0.0.6.19",
+      "issue": 19,
+      "repair": "Canonical evidence identity",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_json_duplicates_and_canonical_evidence`, `test_learning_records_verified_canonical_repository_identity`"
+    },
+    {
+      "checkpoint": "v0.0.6.20",
+      "issue": 20,
+      "repair": "Duplicate mechanism detection",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_learning_conflicting_decisions_at_same_source_are_rejected`"
+    },
+    {
+      "checkpoint": "v0.0.6.21",
+      "issue": 21,
+      "repair": "Durable source-learning intake",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_learning_receipt_is_pinned_and_idempotent`"
+    },
+    {
+      "checkpoint": "v0.0.6.22",
+      "issue": 22,
+      "repair": "Project-specific recommendation receipts",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_learning_distinguishes_unknown_retired_and_unselected_ids`"
+    },
+    {
+      "checkpoint": "v0.0.6.23",
+      "issue": 23,
+      "repair": "Public and private learning separation",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_public_learning_refusal_writes_nothing`"
+    },
+    {
+      "checkpoint": "v0.0.6.24",
+      "issue": 24,
+      "repair": "Reuse and attribution boundary",
+      "status": "owner license decision pending",
+      "evidence": "REUSE.md; no approved license"
+    },
+    {
+      "checkpoint": "v0.0.6.25",
+      "issue": 25,
+      "repair": "Exact Markdown evidence permalinks",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_graphify_evidence_line_links_use_source_mode_for_rendered_formats`"
+    },
+    {
+      "checkpoint": "v0.0.6.26",
+      "issue": 26,
+      "repair": "Rendered Graphify source anchors",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_exact_anchors_and_explicit_line`"
+    },
+    {
+      "checkpoint": "v0.0.6.27",
+      "issue": 27,
+      "repair": "Behavioral first-use validation",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_required_smoke_distinguishes_pass_failure_and_incomplete_coverage`, `test_required_smoke_needs_a_matching_documented_action`"
+    },
+    {
+      "checkpoint": "v0.0.6.28",
+      "issue": 28,
+      "repair": "Media and accessible image links",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_bad_image_and_unnamed_image_link_are_separate`, `test_mixed_markdown_html_image_link_names_keep_both_targets`"
+    },
+    {
+      "checkpoint": "v0.0.6.29",
+      "issue": 29,
+      "repair": "Complete diagnostics",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_broken_inline_links_reference_the_exact_occurrence_line`, `test_receipt_persistence_failure_preserves_audit_diagnostics`"
+    },
+    {
+      "checkpoint": "v0.0.6.30",
+      "issue": 30,
+      "repair": "Target evidence binding",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_adopter_receipt_distinguishes_scope_at_one_commit`, `test_learning_receipt_is_pinned_and_idempotent`"
+    },
+    {
+      "checkpoint": "v0.0.6.31",
+      "issue": 31,
+      "repair": "Optimization-safe verification",
+      "status": "specific evidence not located in this crosswalk",
+      "evidence": "—"
+    },
+    {
+      "checkpoint": "v0.0.6.32",
+      "issue": 32,
+      "repair": "Durable acceptance receipts",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_receipt_distinguishes_actions_attempts_jobs_and_standalone`, `test_receipt_identifies_executing_validator_separately_from_target_bytes`"
+    },
+    {
+      "checkpoint": "v0.0.6.33",
+      "issue": 33,
+      "repair": "Graphify roadmap capacity",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_partition_capacity_preserves_order`, `test_partition_writer_handles_more_than_three_partitions`"
+    },
+    {
+      "checkpoint": "v0.0.6.34",
+      "issue": 34,
+      "repair": "MCP evidence destinations",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_mcp_inventory_rejects_a_count_preserving_wrong_edge`"
+    },
+    {
+      "checkpoint": "v0.0.6.35",
+      "issue": 35,
+      "repair": "Repository provenance",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_unrelated_repository_or_branch_is_rejected`"
+    },
+    {
+      "checkpoint": "v0.0.6.36",
+      "issue": 36,
+      "repair": "Git source file modes",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_source_path_must_stay_inside_commit`"
+    },
+    {
+      "checkpoint": "v0.0.6.37",
+      "issue": 37,
+      "repair": "Unambiguous JSON inputs",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_json_duplicates_and_canonical_evidence`"
+    },
+    {
+      "checkpoint": "v0.0.6.38",
+      "issue": 38,
+      "repair": "Source line bounds",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_anchor_resolves_to_one_exact_line`"
+    },
+    {
+      "checkpoint": "v0.0.6.39",
+      "issue": 39,
+      "repair": "Archive inventory completeness",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_registry_and_inventory_cannot_vouch_for_each_other`"
+    },
+    {
+      "checkpoint": "v0.0.6.40",
+      "issue": 40,
+      "repair": "Version map coverage",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_coverage_and_duplicate_manifest_keys`"
+    },
+    {
+      "checkpoint": "v0.0.6.41",
+      "issue": 41,
+      "repair": "Exact Git line coordinates",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_review_followup_rendered_rows_normalize_line_endings`"
+    },
+    {
+      "checkpoint": "v0.0.6.42",
+      "issue": 42,
+      "repair": "Binary media inventory",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_inventory_blob_cap_and_text_anchor_boundary`"
+    },
+    {
+      "checkpoint": "v0.0.6.43",
+      "issue": 43,
+      "repair": "Graph and receipt publication",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_atomic_pair_preserves_prior_graph_on_conflict`, `test_graphify_reader_and_writer_recover_an_interrupted_publication`"
+    },
+    {
+      "checkpoint": "v0.0.6.44",
+      "issue": 44,
+      "repair": "Bounded GitHub PR history",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_historical_commit_requires_github_membership`"
+    },
+    {
+      "checkpoint": "v0.0.6.45",
+      "issue": 45,
+      "repair": "External reader entry points",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_http_smoke_checks_expected_error_bodies_and_preserves_auth_gates`, `test_http_smoke_records_and_can_require_the_effective_url`"
+    },
+    {
+      "checkpoint": "v0.0.6.46",
+      "issue": 46,
+      "repair": "Learning source coordinates",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_learning_structured_rate_limit_and_invalid_anchor_diagnostics`"
+    },
+    {
+      "checkpoint": "v0.0.6.47",
+      "issue": 47,
+      "repair": "Technique retirement in recommendations",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_learning_distinguishes_unknown_retired_and_unselected_ids`"
+    },
+    {
+      "checkpoint": "v0.0.6.48",
+      "issue": 48,
+      "repair": "Complete MCP readback at supported limits",
+      "status": "combined Graphify evidence only; checkpoint-specific review pending",
+      "evidence": "MCP combined run"
+    },
+    {
+      "checkpoint": "v0.0.6.49",
+      "issue": 49,
+      "repair": "Git branch-name compatibility",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_batch5_review_publication_rule_pages_classic_branch_protection_and_branch_syntax`"
+    },
+    {
+      "checkpoint": "v0.0.6.50",
+      "issue": 50,
+      "repair": "Checkpoint label and fixture ownership",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_plan_acceptance_checks_reject_missing_or_changed_obligations`, `test_plan_file_inventory_is_bound_to_approved_partition`"
+    },
+    {
+      "checkpoint": "v0.0.6.51",
+      "issue": 51,
+      "repair": "Graphify plan index links",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_rendered_tables_ignore_fenced_rows_and_reject_missing_navigation`"
+    },
+    {
+      "checkpoint": "v0.0.6.52",
+      "issue": 52,
+      "repair": "Clean checkout line-ending compatibility",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_review_followup_rendered_rows_normalize_line_endings`"
+    },
+    {
+      "checkpoint": "v0.0.6.53",
+      "issue": 53,
+      "repair": "Immutable Git object reads",
+      "status": "specific evidence not located in this crosswalk",
+      "evidence": "—"
+    },
+    {
+      "checkpoint": "v0.0.6.54",
+      "issue": 54,
+      "repair": "Exact MCP relation fields",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_mcp_inventory_rejects_a_count_preserving_wrong_edge`"
+    },
+    {
+      "checkpoint": "v0.0.6.55",
+      "issue": 55,
+      "repair": "Immutable learning-source commits",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_learning_receipt_is_pinned_and_idempotent`"
+    },
+    {
+      "checkpoint": "v0.0.6.56",
+      "issue": 56,
+      "repair": "Packaged Graphify self-map",
+      "status": "combined Graphify evidence only; checkpoint-specific review pending",
+      "evidence": "MCP combined run"
+    },
+    {
+      "checkpoint": "v0.0.6.57",
+      "issue": 57,
+      "repair": "Version-index row uniqueness",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_version_rows_and_current_label_are_bound_to_archives`"
+    },
+    {
+      "checkpoint": "v0.0.6.58",
+      "issue": 58,
+      "repair": "Merge-queue validation",
+      "status": "live merge-group proof pending",
+      "evidence": "workflow declares merge_group"
+    },
+    {
+      "checkpoint": "v0.0.6.59",
+      "issue": 59,
+      "repair": "Consistent PR head observation",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_base_provenance_rejects_retargeting_with_the_same_head`, `test_merge_sha_is_distinct_from_source_sha`"
+    },
+    {
+      "checkpoint": "v0.0.6.60",
+      "issue": 60,
+      "repair": "Technique list output encoding",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_ascii_technique_listing`"
+    },
+    {
+      "checkpoint": "v0.0.6.61",
+      "issue": 61,
+      "repair": "Technique lookup key collisions",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_json_duplicates_and_canonical_evidence`"
+    },
+    {
+      "checkpoint": "v0.0.6.62",
+      "issue": 62,
+      "repair": "Exact review pagination boundary",
+      "status": "specific evidence not located in this crosswalk",
+      "evidence": "—"
+    },
+    {
+      "checkpoint": "v0.0.6.63",
+      "issue": 63,
+      "repair": "GitHub README markup coverage",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_rich_text_navigation_reports_explicit_incomplete_status`, `test_adopter_detects_an_org_homepage_as_incomplete`"
+    },
+    {
+      "checkpoint": "v0.0.6.64",
+      "issue": 64,
+      "repair": "Joined Unicode emoji in exact anchors",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_exact_anchors_and_explicit_line`"
+    },
+    {
+      "checkpoint": "v0.0.6.65",
+      "issue": 65,
+      "repair": "Release-specific change anchoring",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_release_heading_beats_a_draft_placeholder`"
+    },
+    {
+      "checkpoint": "v0.0.6.66",
+      "issue": 66,
+      "repair": "Rendered fragment destinations",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_root_fragments_follow_the_effective_homepage`, `test_fragments_and_rendered_link_forms`"
+    },
+    {
+      "checkpoint": "v0.0.6.67",
+      "issue": 67,
+      "repair": "Custom named anchor navigation",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_fragments_and_rendered_link_forms`"
+    }
+  ]
+}
