@@ -1,0 +1,755 @@
+{
+  "status": "working acceptance register",
+  "original_candidate": "d12d5c6bd82fe448f64adb3ae48024296b8e6db4",
+  "rehearsal_candidate": "95a54600184d7b95235fc401eb26797cf4ab5b57",
+  "source_plan": "7f4562b8f44544bc9dd4b479fcd1bc30ca07ca94",
+  "rows": [
+    {
+      "checkpoint": "v0.0.6.1",
+      "issue": 1,
+      "repair": "Default homepage discovery",
+      "status": "publication or owner/scope dependency",
+      "evidence": "draft root README; main unchanged",
+      "acceptance_criteria": [
+        "Add a clear route from the default GitHub landing page to the active README HQ version, version index, and Graphify index.",
+        "Open the default repo page or plain clone and follow every advertised link to its expected target."
+      ],
+      "reconciliation_note": "Root homepage and discovery routes staged; main unchanged. Publication not accepted."
+    },
+    {
+      "checkpoint": "v0.0.6.2",
+      "issue": 2,
+      "repair": "Archived BART homepage links",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_fragments_and_rendered_link_forms`",
+      "acceptance_criteria": [
+        "Restore navigable documentation links for the BART v0.0.3 and v0.0.4 homepage snapshots while preserving the frozen README bytes.",
+        "Verify both indexed reading paths and all reported relative destinations. Compare archived README hashes with the audited copies."
+      ],
+      "reconciliation_note": "Related evidence retained; individual source/fixture/criterion review not completed in this pass."
+    },
+    {
+      "checkpoint": "v0.0.6.3",
+      "issue": 3,
+      "repair": "Source provenance and tracked modes",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_registry_and_inventory_cannot_vouch_for_each_other`",
+      "acceptance_criteria": [
+        "Verify the archive's source repository, commit, path, blob, and tracked mode against independently pinned evidence.",
+        "Reject an unrelated or nonexistent source commit and a mode-only change. Verify valid imported snapshots still pass."
+      ],
+      "reconciliation_note": "Related evidence retained; individual source/fixture/criterion review not completed in this pass."
+    },
+    {
+      "checkpoint": "v0.0.6.4",
+      "issue": 4,
+      "repair": "Frozen standalone version integrity",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_version_rows_and_current_label_are_bound_to_archives`",
+      "acceptance_criteria": [
+        "Bind accepted standalone README and changelog bytes to source evidence used by archive validation and Graphify.",
+        "Change a frozen changelog in a disposable checkout and confirm the candidate checks reject the drift. Verify the unchanged snapshot passes."
+      ],
+      "reconciliation_note": "Related evidence retained; individual source/fixture/criterion review not completed in this pass."
+    },
+    {
+      "checkpoint": "v0.0.6.5",
+      "issue": 5,
+      "repair": "Version-to-map and homepage mapping",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_version_rows_and_current_label_are_bound_to_archives`",
+      "acceptance_criteria": [
+        "Require each version row to link to its own map and make the homepage current version agree with the canonical index.",
+        "Retarget the v0.0.6 row to the v0.0.5 map and the homepage to v0.0.1. Confirm both valid-but-wrong targets are rejected."
+      ],
+      "reconciliation_note": "Reviewed test_version_rows_and_current_label_are_bound_to_archives: wrong graph-index destination and rolled-back current label rejected; original version-row map retarget case still needs explicit clause-by-clause review."
+    },
+    {
+      "checkpoint": "v0.0.6.6",
+      "issue": 6,
+      "repair": "GitHub Markdown navigation",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_fragments_and_rendered_link_forms`",
+      "acceptance_criteria": [
+        "Check rendered Markdown link forms and GitHub heading anchors while ignoring inline code and other literal examples.",
+        "Reject missing targets in titled, reference-style, and supported HTML links. Accept the Setext anchor and inline-code example."
+      ],
+      "reconciliation_note": "Related evidence retained; individual source/fixture/criterion review not completed in this pass."
+    },
+    {
+      "checkpoint": "v0.0.6.7",
+      "issue": 7,
+      "repair": "Record-specific Graphify evidence",
+      "status": "combined Graphify evidence only; checkpoint-specific review pending",
+      "evidence": "MCP combined run",
+      "acceptance_criteria": [
+        "Give each Graphify record the correct verification reference for its own artifact.",
+        "Query the standalone and imported version nodes over MCP and verify they cite the validators that cover their respective artifacts."
+      ],
+      "reconciliation_note": "Related evidence retained; individual source/fixture/criterion review not completed in this pass."
+    },
+    {
+      "checkpoint": "v0.0.6.8",
+      "issue": 8,
+      "repair": "Technique registry field types",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_wrong_registry_shapes_fail_without_a_traceback_and_write_a_receipt`",
+      "acceptance_criteria": [
+        "Enforce the registry schema and explicit field types before normalizing IDs or aliases.",
+        "Reject a Boolean schema and a string in place of the aliases array. Preserve the valid catalog and the public list command."
+      ],
+      "reconciliation_note": "Reviewed malformed registry test: null/array/invalid item fail with receipt. Boolean schema and string aliases not separately demonstrated by this named test."
+    },
+    {
+      "checkpoint": "v0.0.6.9",
+      "issue": 9,
+      "repair": "Failed batch recovery",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_partition_late_write_failure_leaves_destination_available_for_retry`",
+      "acceptance_criteria": [
+        "Publish a complete Graphify batch only after all maps and receipts pass, with a safe retry path.",
+        "Force the second map build to fail. Confirm the destination remains safe and rerunning the same output succeeds when the fault is removed."
+      ],
+      "reconciliation_note": "Reviewed partition write failure/retry test; it is a manifest staging test, not proof of second Graphify map-build failure. Need full build failure control."
+    },
+    {
+      "checkpoint": "v0.0.6.10",
+      "issue": 10,
+      "repair": "Graphify table escaping",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_rendered_tables_ignore_fenced_rows_and_reject_missing_navigation`",
+      "acceptance_criteria": [
+        "Escape delimiters in catalog titles and summaries before rendering Markdown table cells.",
+        "Generate a row with pipe characters and verify it renders as exactly three cells with the original readable text."
+      ],
+      "reconciliation_note": "Reviewed Graphify table_cell pipe escape assertion; rendered catalog three-cell outcome not independently demonstrated in this pass."
+    },
+    {
+      "checkpoint": "v0.0.6.11",
+      "issue": 11,
+      "repair": "Automatic repository mode and runner safety",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_public_reader_workflow_preserves_the_validator_exit`",
+      "acceptance_criteria": [
+        "Classify the trusted hosting repository before any jobs are scheduled. Verify public, private, internal, unknown, and fork-PR metadata. Only verified public mode may schedule standard hosted validation. Use offline validation or an explicitly configured private environment for private/internal mode, and keep evidence private."
+      ],
+      "reconciliation_note": "Related evidence retained; individual source/fixture/criterion review not completed in this pass."
+    },
+    {
+      "checkpoint": "v0.0.6.12",
+      "issue": 12,
+      "repair": "Portable adopter target and ref",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_repo_cli_requires_root_and_supports_explicit_subproject`, `test_pinned_readme_and_monorepo_routes`",
+      "acceptance_criteria": [
+        "Run an explicit target/ref for a plain project and a monorepo without requiring HQ's history, registry, or version folders. Report the selected repo, entry point, Git tree, applicable checks, and verification gaps."
+      ],
+      "reconciliation_note": "Related evidence retained; individual source/fixture/criterion review not completed in this pass."
+    },
+    {
+      "checkpoint": "v0.0.6.13",
+      "issue": 13,
+      "repair": "GitHub-visible README discovery",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_root_fragments_follow_the_effective_homepage`, `test_adopter_detects_an_org_homepage_as_incomplete`",
+      "acceptance_criteria": [
+        "Resolve the GitHub-visible README using .github, root, and docs precedence. Run link checks relative to the selected file. Cover competing files, a docs-only README, and a reportable missing README."
+      ],
+      "reconciliation_note": "Related evidence retained; individual source/fixture/criterion review not completed in this pass."
+    },
+    {
+      "checkpoint": "v0.0.6.14",
+      "issue": 14,
+      "repair": "Mechanical README quality gates",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_quality_and_smoke_have_separate_outcomes`",
+      "acceptance_criteria": [
+        "Add a profile-aware quality check for empty and placeholder content, visible first action, justified prerequisites, and verifiable material claims. Detect GitHub display truncation and keep qualitative review as a separate result."
+      ],
+      "reconciliation_note": "Related evidence retained; individual source/fixture/criterion review not completed in this pass."
+    },
+    {
+      "checkpoint": "v0.0.6.15",
+      "issue": 15,
+      "repair": "Repository-root-relative links",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_pinned_readme_and_monorepo_routes`",
+      "acceptance_criteria": [
+        "Resolve leading-slash GitHub paths from the repository root and ordinary relative paths from the README location. Test both forms in nested folders and continue rejecting references outside the selected repository tree."
+      ],
+      "reconciliation_note": "Related evidence retained; individual source/fixture/criterion review not completed in this pass."
+    },
+    {
+      "checkpoint": "v0.0.6.16",
+      "issue": 16,
+      "repair": "Published Git tree link verification",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_fetched_repository_refs_are_resolved_without_a_local_branch`, `test_partial_clone_blob_fetch_requires_explicit_permission`",
+      "acceptance_criteria": [
+        "Validate checkout-relative and recognized same-repository links against the exact tracked publication tree and ref. Exercise untracked paths, wrong-case paths, explicit refs, and existing links on both Linux and Windows. Report any ref that cannot be resolved."
+      ],
+      "reconciliation_note": "Related evidence retained; individual source/fixture/criterion review not completed in this pass."
+    },
+    {
+      "checkpoint": "v0.0.6.17",
+      "issue": 17,
+      "repair": "Default-branch publication coverage",
+      "status": "new targeted controls passed; scope limitation remains",
+      "evidence": "—",
+      "acceptance_criteria": [
+        "Validate the adopter's configured publication branch on supported push and PR events while preserving the pre-scheduling visibility gate. Test at least main, master, trunk, and a custom branch."
+      ],
+      "reconciliation_note": "Two public runner replays passed actual guard-source comparison plus 48 synthetic branch input cases and 8 nonpublic controls per platform. Live custom/fork scheduling not exercised."
+    },
+    {
+      "checkpoint": "v0.0.6.18",
+      "issue": 18,
+      "repair": "Verified source and run binding",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_documented_review_receipt_passes_and_raw_or_incomplete_receipts_fail`",
+      "acceptance_criteria": [
+        "Bind each finding to a source repository, full commit, path or artifact digest, and anchor. Use observed for a documented pattern. Require outcome, environment, and exact execution evidence before marking a behavioral claim verified."
+      ],
+      "reconciliation_note": "Related evidence retained; individual source/fixture/criterion review not completed in this pass."
+    },
+    {
+      "checkpoint": "v0.0.6.19",
+      "issue": 19,
+      "repair": "Canonical evidence identity",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_json_duplicates_and_canonical_evidence`, `test_learning_records_verified_canonical_repository_identity`",
+      "acceptance_criteria": [
+        "Normalize evidence identity to repository, commit, path, and evidence span while grouping same-file observations under the same source. Preserve relevant source lines and keep aliases or mirrors from inflating independent corroboration."
+      ],
+      "reconciliation_note": "Reviewed canonical evidence test: same-file normalization and duplicate JSON check; independent span/mirror inflation needs additional criterion proof."
+    },
+    {
+      "checkpoint": "v0.0.6.20",
+      "issue": 20,
+      "repair": "Duplicate mechanism detection",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_learning_conflicting_decisions_at_same_source_are_rejected`",
+      "acceptance_criteria": [
+        "Detect exact repeated mechanisms with a canonical signature, flag semantic overlap for review, and retain one stable ID with aliases and corroborating evidence. Test against both active and retired techniques."
+      ],
+      "reconciliation_note": "Related evidence retained; individual source/fixture/criterion review not completed in this pass."
+    },
+    {
+      "checkpoint": "v0.0.6.21",
+      "issue": 21,
+      "repair": "Durable source-learning intake",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_learning_receipt_is_pinned_and_idempotent`",
+      "acceptance_criteria": [
+        "Create an idempotent learning intake for supplied source repositories and in-flight discoveries. Persist source revision, candidate identity, disposition, and provenance. Demonstrate that repeated intake records new evidence once and retains versioned history."
+      ],
+      "reconciliation_note": "Reviewed pinned/idempotent receipt test: identical request and renamed source ID reuse one receipt; selection change yields distinct receipt. New source revision history needs separate explicit proof."
+    },
+    {
+      "checkpoint": "v0.0.6.22",
+      "issue": 22,
+      "repair": "Project-specific recommendation receipts",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_learning_distinguishes_unknown_retired_and_unselected_ids`",
+      "acceptance_criteria": [
+        "Bind recommendations to a target tree, owner-selected references, actual audience and capabilities, and the matching technique record. Record adopt, adapt, already present, declined, irrelevant, or insufficient evidence. Test that changing target facts or allowed sources changes the applicable recommendations."
+      ],
+      "reconciliation_note": "Related evidence retained; individual source/fixture/criterion review not completed in this pass."
+    },
+    {
+      "checkpoint": "v0.0.6.23",
+      "issue": 23,
+      "repair": "Public and private learning separation",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_public_learning_refusal_writes_nothing`",
+      "acceptance_criteria": [
+        "Keep public shared learning and private project receipts isolated. Require independently resolved visibility and provenance before public admission. Verify using a synthetic private marker that public outputs and logs contain no private identifiers, links, or excerpts."
+      ],
+      "reconciliation_note": "Reviewed private input refusal: output directory not created. Full log and synthetic private marker leakage control still needed."
+    },
+    {
+      "checkpoint": "v0.0.6.24",
+      "issue": 24,
+      "repair": "Reuse and attribution boundary",
+      "status": "publication or owner/scope dependency",
+      "evidence": "REUSE.md; no approved license",
+      "acceptance_criteria": [
+        "Record an owner decision on the HQ template's own reuse terms. For learning from an external example, cite the evidence and store an original abstraction. Require explicit license and attribution metadata before including copied material. Keep unresolved rights visible."
+      ],
+      "reconciliation_note": "No approved standalone reuse license. Four BART snapshot roots have identical retained MIT license; six roots have no root license entry. Root absence not full rights clearance."
+    },
+    {
+      "checkpoint": "v0.0.6.25",
+      "issue": 25,
+      "repair": "Exact Markdown evidence permalinks",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_graphify_evidence_line_links_use_source_mode_for_rendered_formats`",
+      "acceptance_criteria": [
+        "Generate immutable Markdown source links with the commit, file path, plain-file mode, and accurate line fragment. Verify at least one public source link opens with its exact line highlighted."
+      ],
+      "reconciliation_note": "Related evidence retained; individual source/fixture/criterion review not completed in this pass."
+    },
+    {
+      "checkpoint": "v0.0.6.26",
+      "issue": 26,
+      "repair": "Rendered Graphify source anchors",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_exact_anchors_and_explicit_line`",
+      "acceptance_criteria": [
+        "Select source anchors from rendered source structure or explicit reviewed line anchors. Ignore fenced and indented code for heading and changelog detection. Report an ambiguous or absent anchor."
+      ],
+      "reconciliation_note": "Related evidence retained; individual source/fixture/criterion review not completed in this pass."
+    },
+    {
+      "checkpoint": "v0.0.6.27",
+      "issue": 27,
+      "repair": "Behavioral first-use validation",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_required_smoke_distinguishes_pass_failure_and_incomplete_coverage`, `test_required_smoke_needs_a_matching_documented_action`",
+      "acceptance_criteria": [
+        "Support explicitly declared, authorized first-use smoke checks with exact revision, environment, invocation, and expected result. Fail on unsuccessful exit and on successful exit with the wrong outcome. Record unsupported, skipped, and unverified scenarios clearly."
+      ],
+      "reconciliation_note": "Related evidence retained; individual source/fixture/criterion review not completed in this pass."
+    },
+    {
+      "checkpoint": "v0.0.6.28",
+      "issue": 28,
+      "repair": "Media and accessible image links",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_bad_image_and_unnamed_image_link_are_separate`, `test_mixed_markdown_html_image_link_names_keep_both_targets`",
+      "acceptance_criteria": [
+        "Verify local media against the published blob using supported format checks. Require a meaningful accessible name for image-only controls and links. Preserve decorative empty alt text where adjacent accessible content already describes the action."
+      ],
+      "reconciliation_note": "Related evidence retained; individual source/fixture/criterion review not completed in this pass."
+    },
+    {
+      "checkpoint": "v0.0.6.29",
+      "issue": 29,
+      "repair": "Complete diagnostics",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_broken_inline_links_reference_the_exact_occurrence_line`, `test_receipt_persistence_failure_preserves_audit_diagnostics`",
+      "acceptance_criteria": [
+        "Collect file and line diagnostics per URL, continue across independent validation cases, and return a failing result with each observed defect. Keep explicit reporting for sections the validator cannot inspect."
+      ],
+      "reconciliation_note": "Related evidence retained; individual source/fixture/criterion review not completed in this pass."
+    },
+    {
+      "checkpoint": "v0.0.6.30",
+      "issue": 30,
+      "repair": "Target evidence binding",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_adopter_receipt_distinguishes_scope_at_one_commit`, `test_learning_receipt_is_pinned_and_idempotent`",
+      "acceptance_criteria": [
+        "Require a resolved target evidence receipt for applicable claims. Verify target facts against a pinned tree, report unresolved evidence, and abstain or mark the recommendation preliminary when the target match cannot be established. Link this pilot defect to the broader project-specific recommendation work in #22."
+      ],
+      "reconciliation_note": "Related evidence retained; individual source/fixture/criterion review not completed in this pass."
+    },
+    {
+      "checkpoint": "v0.0.6.31",
+      "issue": 31,
+      "repair": "Optimization-safe verification",
+      "status": "technical criterion supported; historical acceptance remains open",
+      "evidence": "—",
+      "acceptance_criteria": [
+        "Use explicit conditional failures for provenance and pass/fail reporting, or fail clearly before verification in unsupported execution modes. Test identical malformed evidence under normal and optimized interpreter settings."
+      ],
+      "reconciliation_note": "Technical criterion supported: on both platforms normal valid evidence succeeds; wrong hash, wrong anchor and zero line fail; optimized historical audit explicitly refuses before verification, which the original acceptance allows. Two exact-candidate public runner replays and downloaded ZIP digests verified. Historical checkpoint granularity not retrospectively accepted."
+    },
+    {
+      "checkpoint": "v0.0.6.32",
+      "issue": 32,
+      "repair": "Durable acceptance receipts",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_receipt_distinguishes_actions_attempts_jobs_and_standalone`, `test_receipt_identifies_executing_validator_separately_from_target_bytes`",
+      "acceptance_criteria": [
+        "Generate an exact-SHA, machine-readable acceptance receipt with expected cases, outcomes, skips, source hashes, tool versions, and run references. Preserve accepted public receipts in a durable location and keep private evidence isolated."
+      ],
+      "reconciliation_note": "Related evidence retained; individual source/fixture/criterion review not completed in this pass."
+    },
+    {
+      "checkpoint": "v0.0.6.33",
+      "issue": 33,
+      "repair": "Graphify roadmap capacity",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_partition_capacity_preserves_order`, `test_partition_writer_handles_more_than_three_partitions`",
+      "acceptance_criteria": [
+        "Generalize Graphify plan partitioning for arbitrary checkpoint counts and verify that no checkpoint is dropped, duplicated, or disconnected across maps."
+      ],
+      "reconciliation_note": "Reviewed 100-item partition/order and 100-item writer tests; live Graphify verified 67 nodes across three partitions. Combined evidence is strong for partition coverage, but not a distinct historical checkpoint receipt."
+    },
+    {
+      "checkpoint": "v0.0.6.34",
+      "issue": 34,
+      "repair": "MCP evidence destinations",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_mcp_inventory_rejects_a_count_preserving_wrong_edge`",
+      "acceptance_criteria": [
+        "Verify each outgoing edge against its expected target ID, relation, pinned path, and source range. Reject changed destinations even when totals match."
+      ],
+      "reconciliation_note": "Reviewed actual MCP count-preserving wrong-edge rejection; original full target/relation/path/range matrix needs separate confirmation."
+    },
+    {
+      "checkpoint": "v0.0.6.35",
+      "issue": 35,
+      "repair": "Repository provenance",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_unrelated_repository_or_branch_is_rejected`",
+      "acceptance_criteria": [
+        "Bind repository identity to independently established source provenance. Report local graph verification and remote provenance as distinct results and reject an unrelated repository label when provenance is claimed."
+      ],
+      "reconciliation_note": "Related evidence retained; individual source/fixture/criterion review not completed in this pass."
+    },
+    {
+      "checkpoint": "v0.0.6.36",
+      "issue": 36,
+      "repair": "Git source file modes",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_source_path_must_stay_inside_commit`",
+      "acceptance_criteria": [
+        "Inspect the pinned Git tree entry mode. Reject symlink evidence with a path diagnostic or resolve it inside the same pinned tree with explicit path and mode records."
+      ],
+      "reconciliation_note": "Related evidence retained; individual source/fixture/criterion review not completed in this pass."
+    },
+    {
+      "checkpoint": "v0.0.6.37",
+      "issue": 37,
+      "repair": "Unambiguous JSON inputs",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_json_duplicates_and_canonical_evidence`",
+      "acceptance_criteria": [
+        "Reject repeated JSON object keys at any depth before schema validation in registry, archive, version catalog, and Graphify manifest inputs. Include the input path and duplicate key in the diagnostic."
+      ],
+      "reconciliation_note": "Reviewed nested repeated-key rejection in parser; full registry/archive/catalog/manifest path-specific matrix remains to review."
+    },
+    {
+      "checkpoint": "v0.0.6.38",
+      "issue": 38,
+      "repair": "Source line bounds",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_anchor_resolves_to_one_exact_line`",
+      "acceptance_criteria": [
+        "Validate positive inline source line and line-range fragments against the target file, with tests for reversed and out-of-bounds ranges as well as valid last-line references."
+      ],
+      "reconciliation_note": "Related evidence retained; individual source/fixture/criterion review not completed in this pass."
+    },
+    {
+      "checkpoint": "v0.0.6.39",
+      "issue": 39,
+      "repair": "Archive inventory completeness",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_registry_and_inventory_cannot_vouch_for_each_other`",
+      "acceptance_criteria": [
+        "Validate the retained import inventory against an independent pinned listing and check archived README links against the imported tree. Fail on coordinated deletion of required files and manifest entries."
+      ],
+      "reconciliation_note": "Related evidence retained; individual source/fixture/criterion review not completed in this pass."
+    },
+    {
+      "checkpoint": "v0.0.6.40",
+      "issue": 40,
+      "repair": "Version map coverage",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_coverage_and_duplicate_manifest_keys`",
+      "acceptance_criteria": [
+        "Require independently defined coverage for every advertised version. Reject empty or incomplete record sets and identify missing versions and record IDs before publishing verified artifacts."
+      ],
+      "reconciliation_note": "Related evidence retained; individual source/fixture/criterion review not completed in this pass."
+    },
+    {
+      "checkpoint": "v0.0.6.41",
+      "issue": 41,
+      "repair": "Exact Git line coordinates",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_review_followup_rendered_rows_normalize_line_endings`",
+      "acceptance_criteria": [
+        "Use one explicit Git-compatible line model for locating evidence and generating source links. Test embedded Unicode separators and CRLF against pinned physical line numbers."
+      ],
+      "reconciliation_note": "Related evidence retained; individual source/fixture/criterion review not completed in this pass."
+    },
+    {
+      "checkpoint": "v0.0.6.42",
+      "issue": 42,
+      "repair": "Binary media inventory",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_inventory_blob_cap_and_text_anchor_boundary`",
+      "acceptance_criteria": [
+        "Hash and inventory supported binary blobs without decoding them. Require text decoding only for line anchors, and report unsupported anchor types clearly."
+      ],
+      "reconciliation_note": "Related evidence retained; individual source/fixture/criterion review not completed in this pass."
+    },
+    {
+      "checkpoint": "v0.0.6.43",
+      "issue": 43,
+      "repair": "Graph and receipt publication",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_atomic_pair_preserves_prior_graph_on_conflict`, `test_graphify_reader_and_writer_recover_an_interrupted_publication`",
+      "acceptance_criteria": [
+        "Stage and validate the graph and receipt as a pair. Preserve the prior accepted pair on a publication failure and test recovery and repeat builds."
+      ],
+      "reconciliation_note": "Reviewed publication conflict preservation test; full recovery and repeat build criterion still needs evidence review."
+    },
+    {
+      "checkpoint": "v0.0.6.44",
+      "issue": 44,
+      "repair": "Bounded GitHub PR history",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_historical_commit_requires_github_membership`",
+      "acceptance_criteria": [
+        "Check for a capped commit listing. Resolve membership through a complete supported evidence route or report that membership could not be verified from the bounded response."
+      ],
+      "reconciliation_note": "Related evidence retained; individual source/fixture/criterion review not completed in this pass."
+    },
+    {
+      "checkpoint": "v0.0.6.45",
+      "issue": 45,
+      "repair": "External reader entry points",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_http_smoke_checks_expected_error_bodies_and_preserves_auth_gates`, `test_http_smoke_records_and_can_require_the_effective_url`",
+      "acceptance_criteria": [
+        "Verify explicitly declared, authorized remote first-action URLs against an expected result when supported. Record unchecked, unresolved, gated, and broken routes distinctly in offline and online checks."
+      ],
+      "reconciliation_note": "Related evidence retained; individual source/fixture/criterion review not completed in this pass."
+    },
+    {
+      "checkpoint": "v0.0.6.46",
+      "issue": 46,
+      "repair": "Learning source coordinates",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_learning_structured_rate_limit_and_invalid_anchor_diagnostics`",
+      "acceptance_criteria": [
+        "Require a positive in-range integer coordinate and a meaningful nonempty anchor before comparing the pinned contents. Cover zero, negative, empty, and valid first/last-line evidence."
+      ],
+      "reconciliation_note": "Related evidence retained; individual source/fixture/criterion review not completed in this pass."
+    },
+    {
+      "checkpoint": "v0.0.6.47",
+      "issue": 47,
+      "repair": "Technique retirement in recommendations",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_learning_distinguishes_unknown_retired_and_unselected_ids`",
+      "acceptance_criteria": [
+        "Resolve existing recommendations against the canonical technique state and applicable registry revision. Exclude retired IDs from active recommendations and preserve prior decision history."
+      ],
+      "reconciliation_note": "Reviewed unknown/retired/unselected/active cases; canonical decision registry hash separately covered. Prior decision history criterion remains to review."
+    },
+    {
+      "checkpoint": "v0.0.6.48",
+      "issue": 48,
+      "repair": "Complete MCP readback at supported limits",
+      "status": "combined Graphify evidence only; checkpoint-specific review pending",
+      "evidence": "MCP combined run",
+      "acceptance_criteria": [
+        "Verify complete relationship readback for every supported manifest. Query by relation or page results, detect truncation explicitly, and test long valid paths at the documented limits."
+      ],
+      "reconciliation_note": "Related evidence retained; individual source/fixture/criterion review not completed in this pass."
+    },
+    {
+      "checkpoint": "v0.0.6.49",
+      "issue": 49,
+      "repair": "Git branch-name compatibility",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_batch5_review_publication_rule_pages_classic_branch_protection_and_branch_syntax`",
+      "acceptance_criteria": [
+        "Validate source branch names with Git-compatible rules and compare the literal name to the API response. Exercise leading underscores, nested ref names, and invalid refs."
+      ],
+      "reconciliation_note": "Related evidence retained; individual source/fixture/criterion review not completed in this pass."
+    },
+    {
+      "checkpoint": "v0.0.6.50",
+      "issue": 50,
+      "repair": "Checkpoint label and fixture ownership",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_plan_acceptance_checks_reject_missing_or_changed_obligations`, `test_plan_file_inventory_is_bound_to_approved_partition`",
+      "acceptance_criteria": [
+        "Bind the checkpoint label, planned change anchor, and reproduction fixture to the corresponding issue. Reject each independently when the manifest, graph, and receipt agree on unrelated evidence."
+      ],
+      "reconciliation_note": "Related evidence retained; individual source/fixture/criterion review not completed in this pass."
+    },
+    {
+      "checkpoint": "v0.0.6.51",
+      "issue": 51,
+      "repair": "Graphify plan index links",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_rendered_tables_ignore_fenced_rows_and_reject_missing_navigation`",
+      "acceptance_criteria": [
+        "Validate each repair-plan index link against the exact partition and artifact in the checked-out tree. Cover missing and existing-but-wrong graph, manifest, and receipt destinations."
+      ],
+      "reconciliation_note": "Related evidence retained; individual source/fixture/criterion review not completed in this pass."
+    },
+    {
+      "checkpoint": "v0.0.6.52",
+      "issue": 52,
+      "repair": "Clean checkout line-ending compatibility",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_review_followup_rendered_rows_normalize_line_endings`",
+      "acceptance_criteria": [
+        "Preserve the bytes of Graphify inputs and generated files across supported checkout settings or compare authoritative Git blobs. Verify default and autocrlf checkouts with real input drift still failing."
+      ],
+      "reconciliation_note": "Related evidence retained; individual source/fixture/criterion review not completed in this pass."
+    },
+    {
+      "checkpoint": "v0.0.6.53",
+      "issue": 53,
+      "repair": "Immutable Git object reads",
+      "status": "new targeted controls passed; scope limitation remains",
+      "evidence": "—",
+      "acceptance_criteria": [
+        "Ensure every pinned evidence read uses the original Git object regardless of local replacement refs. Verify the reported line coordinates and digest against that object in both the compiler and version-map builder."
+      ],
+      "reconciliation_note": "Two public runner replays used real replacement refs; Ubuntu compiler original digest and L1 anchor plus version-builder original bytes, Windows reader original bytes. Full MCP regeneration in presence of replacement refs not yet reproduced by this control."
+    },
+    {
+      "checkpoint": "v0.0.6.54",
+      "issue": 54,
+      "repair": "Exact MCP relation fields",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_mcp_inventory_rejects_a_count_preserving_wrong_edge`",
+      "acceptance_criteria": [
+        "Verify typed graph relationship fields or parse an unambiguous MCP representation. Accept valid paths with bracketed text while counting and checking only actual relationship fields."
+      ],
+      "reconciliation_note": "Related evidence retained; individual source/fixture/criterion review not completed in this pass."
+    },
+    {
+      "checkpoint": "v0.0.6.55",
+      "issue": 55,
+      "repair": "Immutable learning-source commits",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_learning_receipt_is_pinned_and_idempotent`",
+      "acceptance_criteria": [
+        "Resolve each requested source revision to a full immutable commit before verifying and recording a source observation. Require receipt provenance to retain the resolved SHA and test that moving input refs cannot change a saved observation."
+      ],
+      "reconciliation_note": "Related evidence retained; individual source/fixture/criterion review not completed in this pass."
+    },
+    {
+      "checkpoint": "v0.0.6.56",
+      "issue": 56,
+      "repair": "Packaged Graphify self-map",
+      "status": "combined Graphify evidence only; checkpoint-specific review pending",
+      "evidence": "MCP combined run",
+      "acceptance_criteria": [
+        "Provide and test a self-map for the actual vendored layout, or route the example explicitly to the working upstream tree. Verify the documented command from a clean checkout and check its graph over MCP."
+      ],
+      "reconciliation_note": "Related evidence retained; individual source/fixture/criterion review not completed in this pass."
+    },
+    {
+      "checkpoint": "v0.0.6.57",
+      "issue": 57,
+      "repair": "Version-index row uniqueness",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_version_rows_and_current_label_are_bound_to_archives`",
+      "acceptance_criteria": [
+        "Require exactly one row per advertised version in the canonical version table. Reject duplicate labels even when their destinations and other columns are identical."
+      ],
+      "reconciliation_note": "Related evidence retained; individual source/fixture/criterion review not completed in this pass."
+    },
+    {
+      "checkpoint": "v0.0.6.58",
+      "issue": 58,
+      "repair": "Merge-queue validation",
+      "status": "publication or owner/scope dependency",
+      "evidence": "workflow declares merge_group",
+      "acceptance_criteria": [
+        "Support checks_requested for adopters that use a merge queue. Verify a queued synthetic merge candidate reports the README and Graphify statuses against the queue SHA under the intended runner policy."
+      ],
+      "reconciliation_note": "Personal-owned repository; GitHub documented live queue feature unavailable. Workflow declares merge_group checks_requested; live queue adopter scope remains for owner acceptance."
+    },
+    {
+      "checkpoint": "v0.0.6.59",
+      "issue": 59,
+      "repair": "Consistent PR head observation",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_base_provenance_rejects_retargeting_with_the_same_head`, `test_merge_sha_is_distinct_from_source_sha`",
+      "acceptance_criteria": [
+        "Bind the PR observation to coherent head metadata. Recheck the head across dependent evidence reads and retry or report an unstable observation when it changes. Keep historical member and current head results distinct."
+      ],
+      "reconciliation_note": "Reviewed same-head base retargeting negative control; original changing-head race and historical membership distinction need explicit criterion review."
+    },
+    {
+      "checkpoint": "v0.0.6.60",
+      "issue": 60,
+      "repair": "Technique list output encoding",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_ascii_technique_listing`",
+      "acceptance_criteria": [
+        "Make technique list output safe and explicit across supported stream encodings. Keep output and exit status consistent when rendering fails, and test redirected ASCII and UTF-8 output."
+      ],
+      "reconciliation_note": "Reviewed redirected ASCII output success; UTF-8 plus rendering failure outcome still needs explicit criterion proof."
+    },
+    {
+      "checkpoint": "v0.0.6.61",
+      "issue": 61,
+      "repair": "Technique lookup key collisions",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_json_duplicates_and_canonical_evidence`",
+      "acceptance_criteria": [
+        "Reject cross-record exact collisions across the lookup fields promised by the technique guide, or define an explicit disambiguation rule and use it consistently for lookup. Test IDs, aliases, and outcome keys."
+      ],
+      "reconciliation_note": "Related evidence retained; individual source/fixture/criterion review not completed in this pass."
+    },
+    {
+      "checkpoint": "v0.0.6.62",
+      "issue": 62,
+      "repair": "Exact review pagination boundary",
+      "status": "technical criterion supported; historical acceptance remains open",
+      "evidence": "—",
+      "acceptance_criteria": [
+        "Use the review endpoint pagination metadata to distinguish complete results from an intentionally bounded observation. Test 999, 1,000, and more than 1,000 reviews and never represent a partial count as exact."
+      ],
+      "reconciliation_note": "Technical criterion supported: 999, 1000, 1001 reviews return exact counts with 10,10,11 pages; explicit observation cap fails closed. Both platforms, two replays; downloaded artifact hashes verified. No historical checkpoint granularity claim."
+    },
+    {
+      "checkpoint": "v0.0.6.63",
+      "issue": 63,
+      "repair": "GitHub README markup coverage",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_rich_text_navigation_reports_explicit_incomplete_status`, `test_adopter_detects_an_org_homepage_as_incomplete`",
+      "acceptance_criteria": [
+        "Recognize headings in supported non-Markdown README formats or require a reviewed explicit anchor with a clear unsupported-format result. Test the three pinned README formats and compare the chosen anchor with the actual document heading."
+      ],
+      "reconciliation_note": "Reviewed RST and AsciiDoc fixture anchor recognition; original three pinned format documents still need exact source comparison."
+    },
+    {
+      "checkpoint": "v0.0.6.64",
+      "issue": 64,
+      "repair": "Joined Unicode emoji in exact anchors",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_exact_anchors_and_explicit_line`",
+      "acceptance_criteria": [
+        "Permit supported well-formed emoji joiner sequences in exact source anchors and preserve their original text and line coordinates. Test a joined emoji and a plain heading in the same pinned file."
+      ],
+      "reconciliation_note": "Related evidence retained; individual source/fixture/criterion review not completed in this pass."
+    },
+    {
+      "checkpoint": "v0.0.6.65",
+      "issue": 65,
+      "repair": "Release-specific change anchoring",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_release_heading_beats_a_draft_placeholder`",
+      "acceptance_criteria": [
+        "Bind the changelog anchor to the requested release section or a reviewed explicit source line. Reject draft placeholders as release evidence and test a newer unreleased section above the requested release."
+      ],
+      "reconciliation_note": "Reviewed release heading above unreleased draft placeholder; negative case with absent requested release still needs explicit proof."
+    },
+    {
+      "checkpoint": "v0.0.6.66",
+      "issue": 66,
+      "repair": "Rendered fragment destinations",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_root_fragments_follow_the_effective_homepage`, `test_fragments_and_rendered_link_forms`",
+      "acceptance_criteria": [
+        "Resolve a directory route to the GitHub-rendered README before checking its fragment. Validate supported Markdown extensions and distinguish a missing fragment from an unchecked target."
+      ],
+      "reconciliation_note": "Related evidence retained; individual source/fixture/criterion review not completed in this pass."
+    },
+    {
+      "checkpoint": "v0.0.6.67",
+      "issue": 67,
+      "repair": "Custom named anchor navigation",
+      "status": "related passing regression; full criterion not yet reviewed",
+      "evidence": "`test_fragments_and_rendered_link_forms`",
+      "acceptance_criteria": [
+        "Recognize documented custom anchor destinations alongside generated heading anchors, while retaining missing-target diagnostics. Verify the fixture against GitHub-rendered HTML and the offline checker."
+      ],
+      "reconciliation_note": "Related evidence retained; individual source/fixture/criterion review not completed in this pass."
+    }
+  ]
+}
