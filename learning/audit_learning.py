@@ -137,7 +137,7 @@ def verify_sources(sources, directory=None):
                 project.mkdir()
                 git(project, "init", "--quiet")
                 git(project, "fetch", "--quiet", "--depth=1", f"https://github.com/vixttha/{name}.git", commit)
-            actual = git(project, "rev-parse", f"{commit}:README.md").decode().strip()
+            actual = git(project, "--no-replace-objects", "rev-parse", f"{commit}:README.md").decode().strip()
             if actual != source["blob"]:
                 raise ValueError("learning source blob does not match the pinned evidence")
             lines = git(project, "--no-replace-objects", "show", f"{commit}:README.md").decode().split("\n")

@@ -9,7 +9,7 @@ A README HQ audit is a source-based review of a repository's front door. It iden
 3. Walk the first task as a new human reader. Verify prerequisites, supported platform, command order, output, and next action. Verify headings, anchors, path and case accuracy, image alternatives, and rendering where possible.
 4. Walk the first task as an agent. Verify where to find authoritative instructions, what version and SHA are in scope, which files are entry points, what command proves success, and which write or release actions the owner controls.
 5. For findings, distinguish static inspection from a run at the selected ref. Record severity, reader impact, source file and lines or a commit link, verification status, and a specific fix. List untested routes and any access limits.
-6. Search the [technique registry](../techniques/registry.json) by outcome, aliases, and existing IDs. Check the target's docs and CI for existing use. Record what is already present, what the project could adopt, and what applies elsewhere. Extend an existing technique's evidence for corroboration. Add a new record only for a distinct mechanism with evidence.
+6. Search the [README Technique Library](https://github.com/vixttha/README-HQ/tree/README-Technique-Library) by outcome, aliases, and existing IDs. Check the target's docs and CI for existing use. Record what is already present, what the project could adopt, and what applies elsewhere. Propose extensions to the external library in its own reviewed change. Add a new record only for a distinct mechanism with evidence; record the pinned catalog commit.
 
 ## Audit record
 
