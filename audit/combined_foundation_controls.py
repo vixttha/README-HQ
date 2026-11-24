@@ -12,7 +12,7 @@ from tempfile import TemporaryDirectory
 
 ROOT = Path(sys.argv[1]).resolve()
 OUT = Path(sys.argv[2])
-CANDIDATE = "0d1fbf4c2d89bad7513f89e618829152a13d53cc"
+CANDIDATE = "5adfd75f7a3a5864626bdbebff5d2249c381a975"
 def require(condition, detail):
     if not condition:
         raise ValueError(detail)

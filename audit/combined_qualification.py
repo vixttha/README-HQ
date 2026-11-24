@@ -10,7 +10,8 @@ from tempfile import TemporaryDirectory
 ROOT=Path(sys.argv[1]).resolve()
 OUT=Path(sys.argv[2]).resolve()
 OUT.mkdir()
-FINAL="0d1fbf4c2d89bad7513f89e618829152a13d53cc"
+FINAL="5adfd75f7a3a5864626bdbebff5d2249c381a975"
+COMBINED="0d1fbf4c2d89bad7513f89e618829152a13d53cc"
 REHEARSAL="95a54600184d7b95235fc401eb26797cf4ab5b57"
 CATALOG_FIX="90c2944f9c293313af42042fa9a782a69f4e431b"
 CATALOG="88feb6971d2f49c530535f09d0defb1e9e1808bf"
@@ -57,7 +58,9 @@ def merge_proof():
         rows.append({"pr":n,"source":source,"merge":merge,"tree":tree})
         previous=merge
     require(git("show","-s","--format=%P",REHEARSAL)==previous,"route correction parent")
-    require(git("show","-s","--format=%P",FINAL).split()==[REHEARSAL,CATALOG_FIX],"combined parents")
+    require(git("show","-s","--format=%P",COMBINED).split()==[REHEARSAL,CATALOG_FIX],"combined parents")
+    run(["git","merge-base","--is-ancestor",COMBINED,FINAL])
+    require(set(git("diff","--name-only",COMBINED,FINAL).splitlines())=={"README.md","AGENTS.md","techniques/README.md","learning/audit_learning.py","tests/test_readme_repairs.py"},"unexpected follow-up paths")
     require(git("merge-tree","--write-tree",FINAL,CATALOG_FIX)==git("rev-parse",FINAL+"^{tree}"),"catalog still conflicts")
     require(not git("diff","--name-only",STAGES[-1][1],FINAL,"--","history/","versions/","evidence/"),"frozen material changed")
     return {"stages":rows,"catalog_parent":CATALOG_FIX,"combined_tree":git("rev-parse",FINAL+"^{tree}"),"frozen_material_unchanged":True}
@@ -196,7 +199,38 @@ def live_catalog_and_policy():
         require(len(list((OUT/"catalog").iterdir()))==1,"invalid intake wrote a receipt")
     return {"catalog":CATALOG,"schema":2,"ordered_steps":combo["catalog_record"]["steps"],"policy_source":POLICY,"law_and_discovery_parity":True,"scope":"live public catalog and pinned Git reads; not autonomous agent certification"}
 
-for name,fn in (("catalog_policy",live_catalog_and_policy),("merge",merge_proof),("reader",reader),("graphify",graphify),("adoption",adopt),("external",external),("publication",publication)):
+def approved_pin():
+    import re
+    if os.name=="nt":
+        return {"coverage":"POSIX documentation guard, tested on Ubuntu; Windows reader validated separately"}
+    readme=(ROOT/"README.md").read_text(encoding="utf-8")
+    command=re.search(r"```sh\n(git clone --branch repair/v0\.0\.6-integration-candidate[^\n]*\n[\s\S]*?)\n```",readme)
+    require(command is not None,"documented trial missing")
+    command=command.group(1)
+    require("git checkout --detach \"$approved_sha\"" in command and "git checkout --detach HEAD" not in command,"unpinned checkout")
+    with TemporaryDirectory(prefix="pin-check-") as folder:
+        temp=Path(folder)
+        env=os.environ.copy()
+        env["PATH"]=str(temp)+os.pathsep+env["PATH"]
+        env["PIN_EXPECTED"]=FINAL
+        env["PIN_LOG"]=str(temp/"calls")
+        fake=temp/"git"
+        fake.write_text("#!/bin/sh\ncase \"$1\" in\nclone) mkdir -p README-HQ;;\ncheckout) [ \"$3\" = \"$PIN_EXPECTED\" ];;\nrev-parse) printf '%s\\n' \"${PIN_ACTUAL:-$PIN_EXPECTED}\";;\n*) exit 1;;\nesac\n",encoding="utf-8")
+        fake.chmod(0o755)
+        python=temp/"python3"
+        python.write_text("#!/bin/sh\nprintf '%s\\n' \"$*\" >> \"$PIN_LOG\"\n",encoding="utf-8")
+        python.chmod(0o755)
+        for label,approved,actual,expected in (("placeholder","REPLACE_WITH_APPROVED_40_CHARACTER_SHA",FINAL,1),("wrong","a"*40,FINAL,1),("moved",FINAL,"b"*40,1),("correct",FINAL,FINAL,0)):
+            work=temp/label;work.mkdir()
+            env["PIN_ACTUAL"]=actual
+            log=temp/"calls"
+            if log.exists():log.unlink()
+            result=subprocess.run(["sh","-c",command.replace("REPLACE_WITH_APPROVED_40_CHARACTER_SHA",approved)],cwd=work,env=env,capture_output=True)
+            require(result.returncode==expected,"unexpected pin control "+label)
+            require(log.exists()==(expected==0),"installation ran for rejected SHA "+label)
+        return {"guard_cases":4,"rejected_before_install":3}
+
+for name,fn in (("approved_pin",approved_pin),("catalog_policy",live_catalog_and_policy),("merge",merge_proof),("reader",reader),("graphify",graphify),("adoption",adopt),("external",external),("publication",publication)):
     check(name,fn)
 report["result"]="passed" if all(x["status"]=="passed" for x in report["checks"].values()) else "failed"
 (OUT/"summary.json").write_text(json.dumps(report,indent=2)+"\n",encoding="utf-8")

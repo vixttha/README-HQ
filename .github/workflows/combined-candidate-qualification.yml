@@ -1,7 +1,7 @@
-name: Combined candidate independent qualification
+name: Final candidate independent requalification
 on:
   push:
-    branches: [audit/v006-combined-qualification]
+    branches: [audit/v006-final-acceptance]
 permissions:
   contents: read
 jobs:
@@ -20,7 +20,7 @@ jobs:
           path: audit-control
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
-          ref: 0d1fbf4c2d89bad7513f89e618829152a13d53cc
+          ref: 5adfd75f7a3a5864626bdbebff5d2249c381a975
           fetch-depth: 0
           persist-credentials: false
           path: candidate
@@ -43,6 +43,9 @@ jobs:
       - name: Re-run targeted foundation controls at combined SHA
         if: always()
         run: python audit-control/audit/combined_foundation_controls.py candidate "${{ runner.temp }}/integration-evidence/foundation-controls.json"
+      - name: Re-run criterion controls on final Linux candidate
+        if: always() && runner.os == 'Linux'
+        run: python audit-control/audit/foundation_criterion_review.py candidate "${{ runner.temp }}/integration-evidence/criterion-review.json"
       - name: Preserve all qualification receipts
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
