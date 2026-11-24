@@ -1,0 +1,56 @@
+name: Final stack conflict diagnostic
+on:
+  push:
+    branches: [audit/v006-final-merge-conflicts]
+permissions:
+  contents: read
+jobs:
+  inspect:
+    if: github.event.repository.private == false && github.event.repository.visibility == 'public'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Compare frozen candidate and sibling fixes
+        shell: bash
+        run: |
+          set -euo pipefail
+          candidate=95a54600184d7b95235fc401eb26797cf4ab5b57
+          library=90c2944f9c293313af42042fa9a782a69f4e431b
+          foundation=8d50caec2bc6fcb998994a1fd302294a029325f9
+          git cat-file -e "$candidate^{commit}"
+          git cat-file -e "$library^{commit}"
+          mkdir -p "$RUNNER_TEMP/merge-review"
+          {
+            echo "candidate=$candidate library=$library"
+            git merge-base "$candidate" "$library"
+            test "$(git merge-base "$candidate" "$library")" = "$foundation"
+            set +e
+            git merge-tree --write-tree --messages "$candidate" "$library"
+            rc=$?
+            set -e
+            echo "merge_tree_exit=$rc"
+            test "$rc" -le 1
+            echo "Candidate learning intake catalog routing:"
+            git show "$candidate:learning/intake.py" | grep -nE 'registry =|catalog_checkout|registry_sha256|schema.*1'
+            echo "Sibling learning intake catalog routing:"
+            git show "$library:learning/intake.py" | grep -nE 'catalog_checkout|catalog_commit|schema.*2'
+            for policy in 26a3ce7eb131e98213680670369366a34c53d947 b1bbc9a72a5193afcaeaf823f097753070bfa43f; do
+              if git merge-base --is-ancestor "$policy" "$candidate"; then
+                echo "policy=$policy ancestor=yes"
+              else
+                echo "policy=$policy ancestor=no"
+              fi
+            done
+            echo "Candidate law and discovery markers (absence is not behavioral evidence):"
+            git grep -n -e ENGINEERING-ECOSYSTEM-LAWS-001 -e capability-discovery "$candidate" -- README.md AGENTS.md || true
+          } | tee "$RUNNER_TEMP/merge-review/diagnostic.txt"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: merge-conflict-diagnostic
+          path: ${{ runner.temp }}/merge-review/
+          if-no-files-found: error
