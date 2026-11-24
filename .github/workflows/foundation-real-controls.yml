@@ -1,0 +1,39 @@
+name: Foundation real-source and MCP controls
+on:
+  push:
+    branches: [audit/v006-foundation-real-controls]
+permissions:
+  contents: read
+jobs:
+  controls:
+    if: github.event.repository.private == false && github.event.repository.visibility == 'public'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+          path: audit-control
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: 5adfd75f7a3a5864626bdbebff5d2249c381a975
+          fetch-depth: 0
+          persist-credentials: false
+          path: candidate
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.12'
+      - name: Install locked reader and Graphify dependencies
+        working-directory: candidate
+        run: |
+          python -m pip install --require-hashes -r tools/requirements.txt
+          python -m pip install --require-hashes --only-binary=:all: --no-deps -r graphify-hq/template/v0.0.8/requirements.txt
+          python -m pip check
+      - name: Replay original criteria at final candidate
+        run: PYTHONHASHSEED=0 python audit-control/audit/foundation_real_controls.py candidate "${{ runner.temp }}/foundation-real-controls"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: foundation-real-controls
+          path: ${{ runner.temp }}/foundation-real-controls/
+          if-no-files-found: error
