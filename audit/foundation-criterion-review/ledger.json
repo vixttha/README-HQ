@@ -1,0 +1,1279 @@
+{
+  "candidate": "0d1fbf4c2d89bad7513f89e618829152a13d53cc",
+  "plan": "7f4562b8f44544bc9dd4b479fcd1bc30ca07ca94",
+  "previous_crosswalk": "70d208a2539d77b1bfa5e0d596074cd609158851",
+  "status": "criterion inventory and scoped evidence; not issue closure",
+  "primary_runs": [
+    45403537294,
+    45403575409
+  ],
+  "targeted_foundation_run": 45403830871,
+  "rows": [
+    {
+      "checkpoint": "v0.0.6.1",
+      "issue": 1,
+      "repair": "Default homepage discovery",
+      "criteria": [
+        "Add a clear route from the default GitHub landing page to the active README HQ version, version index, and Graphify index.",
+        "Open the default repo page or plain clone and follow every advertised link to its expected target."
+      ],
+      "related_tests": [],
+      "current_review": "Candidate homepage route exists; actual default main publication pending.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.2",
+      "issue": 2,
+      "repair": "Archived BART homepage links",
+      "criteria": [
+        "Restore navigable documentation links for the BART v0.0.3 and v0.0.4 homepage snapshots while preserving the frozen README bytes.",
+        "Verify both indexed reading paths and all reported relative destinations. Compare archived README hashes with the audited copies."
+      ],
+      "related_tests": [
+        {
+          "name": "test_fragments_and_rendered_link_forms",
+          "path": "tests/test_readme_repairs.py",
+          "line": 559,
+          "end": 589
+        }
+      ],
+      "current_review": "Prior 89-observation audit classified route access, not rendered navigation semantics or exact linked content.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.3",
+      "issue": 3,
+      "repair": "Source provenance and tracked modes",
+      "criteria": [
+        "Verify the archive's source repository, commit, path, blob, and tracked mode against independently pinned evidence.",
+        "Reject an unrelated or nonexistent source commit and a mode-only change. Verify valid imported snapshots still pass."
+      ],
+      "related_tests": [
+        {
+          "name": "test_registry_and_inventory_cannot_vouch_for_each_other",
+          "path": "tests/test_readme_repairs.py",
+          "line": 1432,
+          "end": 1453
+        }
+      ],
+      "current_review": "Prior registry test does not directly exercise imported file mode; added focused mode/manifest control.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.4",
+      "issue": 4,
+      "repair": "Frozen standalone version integrity",
+      "criteria": [
+        "Bind accepted standalone README and changelog bytes to source evidence used by archive validation and Graphify.",
+        "Change a frozen changelog in a disposable checkout and confirm the candidate checks reject the drift. Verify the unchanged snapshot passes."
+      ],
+      "related_tests": [
+        {
+          "name": "test_version_rows_and_current_label_are_bound_to_archives",
+          "path": "tests/test_readme_repairs.py",
+          "line": 1388,
+          "end": 1416
+        }
+      ],
+      "current_review": "Prior version-row test does not directly mutate frozen changelog; added direct candidate control.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.5",
+      "issue": 5,
+      "repair": "Version-to-map and homepage mapping",
+      "criteria": [
+        "Require each version row to link to its own map and make the homepage current version agree with the canonical index.",
+        "Retarget the v0.0.6 row to the v0.0.5 map and the homepage to v0.0.1. Confirm both valid-but-wrong targets are rejected."
+      ],
+      "related_tests": [
+        {
+          "name": "test_version_rows_and_current_label_are_bound_to_archives",
+          "path": "tests/test_readme_repairs.py",
+          "line": 1388,
+          "end": 1416
+        }
+      ],
+      "current_review": "Related test source located; exact criterion coverage and original checkpoint acceptance still need human/agent review.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.6",
+      "issue": 6,
+      "repair": "GitHub Markdown navigation",
+      "criteria": [
+        "Check rendered Markdown link forms and GitHub heading anchors while ignoring inline code and other literal examples.",
+        "Reject missing targets in titled, reference-style, and supported HTML links. Accept the Setext anchor and inline-code example."
+      ],
+      "related_tests": [
+        {
+          "name": "test_fragments_and_rendered_link_forms",
+          "path": "tests/test_readme_repairs.py",
+          "line": 559,
+          "end": 589
+        }
+      ],
+      "current_review": "Related test source located; exact criterion coverage and original checkpoint acceptance still need human/agent review.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.7",
+      "issue": 7,
+      "repair": "Record-specific Graphify evidence",
+      "criteria": [
+        "Give each Graphify record the correct verification reference for its own artifact.",
+        "Query the standalone and imported version nodes over MCP and verify they cite the validators that cover their respective artifacts."
+      ],
+      "related_tests": [],
+      "current_review": "Combined MCP verification, still needs explicit per-record validator citation review.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.8",
+      "issue": 8,
+      "repair": "Technique registry field types",
+      "criteria": [
+        "Enforce the registry schema and explicit field types before normalizing IDs or aliases.",
+        "Reject a Boolean schema and a string in place of the aliases array. Preserve the valid catalog and the public list command."
+      ],
+      "related_tests": [
+        {
+          "name": "test_wrong_registry_shapes_fail_without_a_traceback_and_write_a_receipt",
+          "path": "tests/test_readme_repairs.py",
+          "line": 1417,
+          "end": 1431
+        }
+      ],
+      "current_review": "Prior wrong-shape test lacks exact bool/aliases cases; added targeted controls.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.9",
+      "issue": 9,
+      "repair": "Failed batch recovery",
+      "criteria": [
+        "Publish a complete Graphify batch only after all maps and receipts pass, with a safe retry path.",
+        "Force the second map build to fail. Confirm the destination remains safe and rerunning the same output succeeds when the fault is removed."
+      ],
+      "related_tests": [
+        {
+          "name": "test_partition_late_write_failure_leaves_destination_available_for_retry",
+          "path": "tests/test_readme_repairs.py",
+          "line": 1526,
+          "end": 1542
+        }
+      ],
+      "current_review": "Plan partition retry is related but not a full failed version-map batch replay.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.10",
+      "issue": 10,
+      "repair": "Graphify table escaping",
+      "criteria": [
+        "Escape delimiters in catalog titles and summaries before rendering Markdown table cells.",
+        "Generate a row with pipe characters and verify it renders as exactly three cells with the original readable text."
+      ],
+      "related_tests": [
+        {
+          "name": "test_rendered_tables_ignore_fenced_rows_and_reject_missing_navigation",
+          "path": "tests/test_readme_repairs.py",
+          "line": 1356,
+          "end": 1387
+        }
+      ],
+      "current_review": "Prior rendered-row test is indirect; added real render_outline fixture.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.11",
+      "issue": 11,
+      "repair": "Automatic repository mode and runner safety",
+      "criteria": [
+        "Classify the trusted hosting repository before any jobs are scheduled. Verify public, private, internal, unknown, and fork-PR metadata. Only verified public mode may schedule standard hosted validation. Use offline validation or an explicitly configured private environment for private/internal mode, and keep evidence private."
+      ],
+      "related_tests": [
+        {
+          "name": "test_public_reader_workflow_preserves_the_validator_exit",
+          "path": "tests/test_readme_repairs.py",
+          "line": 477,
+          "end": 483
+        }
+      ],
+      "current_review": "Synthetic workflow guard and public-runner observations; no private hosted jobs or live fork scheduler test.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.12",
+      "issue": 12,
+      "repair": "Portable adopter target and ref",
+      "criteria": [
+        "Run an explicit target/ref for a plain project and a monorepo without requiring HQ's history, registry, or version folders. Report the selected repo, entry point, Git tree, applicable checks, and verification gaps."
+      ],
+      "related_tests": [
+        {
+          "name": "test_repo_cli_requires_root_and_supports_explicit_subproject",
+          "path": "tests/test_readme_repairs.py",
+          "line": 43,
+          "end": 64
+        },
+        {
+          "name": "test_pinned_readme_and_monorepo_routes",
+          "path": "tests/test_readme_repairs.py",
+          "line": 551,
+          "end": 558
+        }
+      ],
+      "current_review": "Related test source located; exact criterion coverage and original checkpoint acceptance still need human/agent review.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.13",
+      "issue": 13,
+      "repair": "GitHub-visible README discovery",
+      "criteria": [
+        "Resolve the GitHub-visible README using .github, root, and docs precedence. Run link checks relative to the selected file. Cover competing files, a docs-only README, and a reportable missing README."
+      ],
+      "related_tests": [
+        {
+          "name": "test_root_fragments_follow_the_effective_homepage",
+          "path": "tests/test_readme_repairs.py",
+          "line": 625,
+          "end": 640
+        },
+        {
+          "name": "test_adopter_detects_an_org_homepage_as_incomplete",
+          "path": "tests/test_readme_repairs.py",
+          "line": 339,
+          "end": 357
+        }
+      ],
+      "current_review": "Related test source located; exact criterion coverage and original checkpoint acceptance still need human/agent review.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.14",
+      "issue": 14,
+      "repair": "Mechanical README quality gates",
+      "criteria": [
+        "Add a profile-aware quality check for empty and placeholder content, visible first action, justified prerequisites, and verifiable material claims. Detect GitHub display truncation and keep qualitative review as a separate result."
+      ],
+      "related_tests": [
+        {
+          "name": "test_quality_and_smoke_have_separate_outcomes",
+          "path": "tests/test_readme_repairs.py",
+          "line": 1044,
+          "end": 1058
+        }
+      ],
+      "current_review": "Related test source located; exact criterion coverage and original checkpoint acceptance still need human/agent review.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.15",
+      "issue": 15,
+      "repair": "Repository-root-relative links",
+      "criteria": [
+        "Resolve leading-slash GitHub paths from the repository root and ordinary relative paths from the README location. Test both forms in nested folders and continue rejecting references outside the selected repository tree."
+      ],
+      "related_tests": [
+        {
+          "name": "test_pinned_readme_and_monorepo_routes",
+          "path": "tests/test_readme_repairs.py",
+          "line": 551,
+          "end": 558
+        }
+      ],
+      "current_review": "Related test source located; exact criterion coverage and original checkpoint acceptance still need human/agent review.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.16",
+      "issue": 16,
+      "repair": "Published Git tree link verification",
+      "criteria": [
+        "Validate checkout-relative and recognized same-repository links against the exact tracked publication tree and ref. Exercise untracked paths, wrong-case paths, explicit refs, and existing links on both Linux and Windows. Report any ref that cannot be resolved."
+      ],
+      "related_tests": [
+        {
+          "name": "test_fetched_repository_refs_are_resolved_without_a_local_branch",
+          "path": "tests/test_readme_repairs.py",
+          "line": 641,
+          "end": 660
+        },
+        {
+          "name": "test_partial_clone_blob_fetch_requires_explicit_permission",
+          "path": "tests/test_readme_repairs.py",
+          "line": 420,
+          "end": 445
+        }
+      ],
+      "current_review": "Related test source located; exact criterion coverage and original checkpoint acceptance still need human/agent review.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.17",
+      "issue": 17,
+      "repair": "Default-branch publication coverage",
+      "criteria": [
+        "Validate the adopter's configured publication branch on supported push and PR events while preserving the pre-scheduling visibility gate. Test at least main, master, trunk, and a custom branch."
+      ],
+      "related_tests": [],
+      "current_review": "Public Ubuntu control at combined SHA passed synthetic branch selection; actual alternate branch scheduler events not exercised.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.18",
+      "issue": 18,
+      "repair": "Verified source and run binding",
+      "criteria": [
+        "Bind each finding to a source repository, full commit, path or artifact digest, and anchor. Use observed for a documented pattern. Require outcome, environment, and exact execution evidence before marking a behavioral claim verified."
+      ],
+      "related_tests": [
+        {
+          "name": "test_documented_review_receipt_passes_and_raw_or_incomplete_receipts_fail",
+          "path": "tests/test_readme_repairs.py",
+          "line": 1326,
+          "end": 1343
+        }
+      ],
+      "current_review": "Related test source located; exact criterion coverage and original checkpoint acceptance still need human/agent review.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.19",
+      "issue": 19,
+      "repair": "Canonical evidence identity",
+      "criteria": [
+        "Normalize evidence identity to repository, commit, path, and evidence span while grouping same-file observations under the same source. Preserve relevant source lines and keep aliases or mirrors from inflating independent corroboration."
+      ],
+      "related_tests": [
+        {
+          "name": "test_json_duplicates_and_canonical_evidence",
+          "path": "tests/test_readme_repairs.py",
+          "line": 1344,
+          "end": 1355
+        },
+        {
+          "name": "test_learning_records_verified_canonical_repository_identity",
+          "path": "tests/test_readme_repairs.py",
+          "line": 1697,
+          "end": 1726
+        }
+      ],
+      "current_review": "Related test source located; exact criterion coverage and original checkpoint acceptance still need human/agent review.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.20",
+      "issue": 20,
+      "repair": "Duplicate mechanism detection",
+      "criteria": [
+        "Detect exact repeated mechanisms with a canonical signature, flag semantic overlap for review, and retain one stable ID with aliases and corroborating evidence. Test against both active and retired techniques."
+      ],
+      "related_tests": [
+        {
+          "name": "test_learning_conflicting_decisions_at_same_source_are_rejected",
+          "path": "tests/test_readme_repairs.py",
+          "line": 1804,
+          "end": 1833
+        }
+      ],
+      "current_review": "Prior recommendation-conflict test is not canonical duplicate-mechanism validation; added active/retired collision control.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.21",
+      "issue": 21,
+      "repair": "Durable source-learning intake",
+      "criteria": [
+        "Create an idempotent learning intake for supplied source repositories and in-flight discoveries. Persist source revision, candidate identity, disposition, and provenance. Demonstrate that repeated intake records new evidence once and retains versioned history."
+      ],
+      "related_tests": [
+        {
+          "name": "test_learning_receipt_is_pinned_and_idempotent",
+          "path": "tests/test_readme_repairs.py",
+          "line": 1595,
+          "end": 1625
+        },
+        {
+          "name": "test_learning_hashes_the_pinned_catalog_record_used_by_the_decision",
+          "path": "tests/test_readme_repairs.py",
+          "line": 1834,
+          "end": 1879
+        }
+      ],
+      "current_review": "Related test source located; exact criterion coverage and original checkpoint acceptance still need human/agent review.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.22",
+      "issue": 22,
+      "repair": "Project-specific recommendation receipts",
+      "criteria": [
+        "Bind recommendations to a target tree, owner-selected references, actual audience and capabilities, and the matching technique record. Record adopt, adapt, already present, declined, irrelevant, or insufficient evidence. Test that changing target facts or allowed sources changes the applicable recommendations."
+      ],
+      "related_tests": [
+        {
+          "name": "test_learning_distinguishes_unknown_retired_and_unselected_ids",
+          "path": "tests/test_readme_repairs.py",
+          "line": 1880,
+          "end": 1918
+        },
+        {
+          "name": "test_learning_hashes_the_pinned_catalog_record_used_by_the_decision",
+          "path": "tests/test_readme_repairs.py",
+          "line": 1834,
+          "end": 1879
+        }
+      ],
+      "current_review": "Related test source located; exact criterion coverage and original checkpoint acceptance still need human/agent review.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.23",
+      "issue": 23,
+      "repair": "Public and private learning separation",
+      "criteria": [
+        "Keep public shared learning and private project receipts isolated. Require independently resolved visibility and provenance before public admission. Verify using a synthetic private marker that public outputs and logs contain no private identifiers, links, or excerpts."
+      ],
+      "related_tests": [
+        {
+          "name": "test_public_learning_refusal_writes_nothing",
+          "path": "tests/test_readme_repairs.py",
+          "line": 1919,
+          "end": 1928
+        }
+      ],
+      "current_review": "Private-request rejection test is related; full private marker log scan not established.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.24",
+      "issue": 24,
+      "repair": "Reuse and attribution boundary",
+      "criteria": [
+        "Record an owner decision on the HQ template's own reuse terms. For learning from an external example, cite the evidence and store an original abstraction. Require explicit license and attribution metadata before including copied material. Keep unresolved rights visible."
+      ],
+      "related_tests": [],
+      "current_review": "Owner standalone licensing decision pending.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.25",
+      "issue": 25,
+      "repair": "Exact Markdown evidence permalinks",
+      "criteria": [
+        "Generate immutable Markdown source links with the commit, file path, plain-file mode, and accurate line fragment. Verify at least one public source link opens with its exact line highlighted."
+      ],
+      "related_tests": [
+        {
+          "name": "test_graphify_evidence_line_links_use_source_mode_for_rendered_formats",
+          "path": "tests/test_graphify_repairs.py",
+          "line": 62,
+          "end": 72
+        }
+      ],
+      "current_review": "Generated immutable links tested; live highlighted browser rendering not established.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.26",
+      "issue": 26,
+      "repair": "Rendered Graphify source anchors",
+      "criteria": [
+        "Select source anchors from rendered source structure or explicit reviewed line anchors. Ignore fenced and indented code for heading and changelog detection. Report an ambiguous or absent anchor."
+      ],
+      "related_tests": [
+        {
+          "name": "test_exact_anchors_and_explicit_line",
+          "path": "tests/test_graphify_repairs.py",
+          "line": 27,
+          "end": 33
+        }
+      ],
+      "current_review": "Related test source located; exact criterion coverage and original checkpoint acceptance still need human/agent review.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.27",
+      "issue": 27,
+      "repair": "Behavioral first-use validation",
+      "criteria": [
+        "Support explicitly declared, authorized first-use smoke checks with exact revision, environment, invocation, and expected result. Fail on unsuccessful exit and on successful exit with the wrong outcome. Record unsupported, skipped, and unverified scenarios clearly."
+      ],
+      "related_tests": [
+        {
+          "name": "test_required_smoke_distinguishes_pass_failure_and_incomplete_coverage",
+          "path": "tests/test_readme_repairs.py",
+          "line": 1059,
+          "end": 1092
+        },
+        {
+          "name": "test_required_smoke_needs_a_matching_documented_action",
+          "path": "tests/test_readme_repairs.py",
+          "line": 1103,
+          "end": 1129
+        }
+      ],
+      "current_review": "Related test source located; exact criterion coverage and original checkpoint acceptance still need human/agent review.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.28",
+      "issue": 28,
+      "repair": "Media and accessible image links",
+      "criteria": [
+        "Verify local media against the published blob using supported format checks. Require a meaningful accessible name for image-only controls and links. Preserve decorative empty alt text where adjacent accessible content already describes the action."
+      ],
+      "related_tests": [
+        {
+          "name": "test_bad_image_and_unnamed_image_link_are_separate",
+          "path": "tests/test_readme_repairs.py",
+          "line": 878,
+          "end": 887
+        },
+        {
+          "name": "test_mixed_markdown_html_image_link_names_keep_both_targets",
+          "path": "tests/test_readme_repairs.py",
+          "line": 114,
+          "end": 132
+        }
+      ],
+      "current_review": "Related test source located; exact criterion coverage and original checkpoint acceptance still need human/agent review.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.29",
+      "issue": 29,
+      "repair": "Complete diagnostics",
+      "criteria": [
+        "Collect file and line diagnostics per URL, continue across independent validation cases, and return a failing result with each observed defect. Keep explicit reporting for sections the validator cannot inspect."
+      ],
+      "related_tests": [
+        {
+          "name": "test_broken_inline_links_reference_the_exact_occurrence_line",
+          "path": "tests/test_readme_repairs.py",
+          "line": 605,
+          "end": 624
+        },
+        {
+          "name": "test_receipt_persistence_failure_preserves_audit_diagnostics",
+          "path": "tests/test_readme_repairs.py",
+          "line": 484,
+          "end": 500
+        }
+      ],
+      "current_review": "Related test source located; exact criterion coverage and original checkpoint acceptance still need human/agent review.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.30",
+      "issue": 30,
+      "repair": "Target evidence binding",
+      "criteria": [
+        "Require a resolved target evidence receipt for applicable claims. Verify target facts against a pinned tree, report unresolved evidence, and abstain or mark the recommendation preliminary when the target match cannot be established. Link this pilot defect to the broader project-specific recommendation work in #22."
+      ],
+      "related_tests": [
+        {
+          "name": "test_adopter_receipt_distinguishes_scope_at_one_commit",
+          "path": "tests/test_readme_repairs.py",
+          "line": 377,
+          "end": 397
+        },
+        {
+          "name": "test_learning_receipt_is_pinned_and_idempotent",
+          "path": "tests/test_readme_repairs.py",
+          "line": 1595,
+          "end": 1625
+        }
+      ],
+      "current_review": "Related test source located; exact criterion coverage and original checkpoint acceptance still need human/agent review.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.31",
+      "issue": 31,
+      "repair": "Optimization-safe verification",
+      "criteria": [
+        "Use explicit conditional failures for provenance and pass/fail reporting, or fail clearly before verification in unsupported execution modes. Test identical malformed evidence under normal and optimized interpreter settings."
+      ],
+      "related_tests": [],
+      "current_review": "Combined Ubuntu targeted normal and optimized cases passed within historical source verifier scope.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.32",
+      "issue": 32,
+      "repair": "Durable acceptance receipts",
+      "criteria": [
+        "Generate an exact-SHA, machine-readable acceptance receipt with expected cases, outcomes, skips, source hashes, tool versions, and run references. Preserve accepted public receipts in a durable location and keep private evidence isolated."
+      ],
+      "related_tests": [
+        {
+          "name": "test_receipt_distinguishes_actions_attempts_jobs_and_standalone",
+          "path": "tests/test_readme_repairs.py",
+          "line": 398,
+          "end": 419
+        },
+        {
+          "name": "test_receipt_identifies_executing_validator_separately_from_target_bytes",
+          "path": "tests/test_readme_repairs.py",
+          "line": 1300,
+          "end": 1316
+        }
+      ],
+      "current_review": "Related test source located; exact criterion coverage and original checkpoint acceptance still need human/agent review.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.33",
+      "issue": 33,
+      "repair": "Graphify roadmap capacity",
+      "criteria": [
+        "Generalize Graphify plan partitioning for arbitrary checkpoint counts and verify that no checkpoint is dropped, duplicated, or disconnected across maps."
+      ],
+      "related_tests": [
+        {
+          "name": "test_partition_capacity_preserves_order",
+          "path": "tests/test_readme_repairs.py",
+          "line": 1520,
+          "end": 1525
+        },
+        {
+          "name": "test_partition_writer_handles_more_than_three_partitions",
+          "path": "tests/test_readme_repairs.py",
+          "line": 1543,
+          "end": 1551
+        }
+      ],
+      "current_review": "Related test source located; exact criterion coverage and original checkpoint acceptance still need human/agent review.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.34",
+      "issue": 34,
+      "repair": "MCP evidence destinations",
+      "criteria": [
+        "Verify each outgoing edge against its expected target ID, relation, pinned path, and source range. Reject changed destinations even when totals match."
+      ],
+      "related_tests": [
+        {
+          "name": "test_mcp_inventory_rejects_a_count_preserving_wrong_edge",
+          "path": "graphify-hq/template/v0.0.8/test_evidence_map.py",
+          "line": 117,
+          "end": 130
+        }
+      ],
+      "current_review": "Related test source located; exact criterion coverage and original checkpoint acceptance still need human/agent review.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.35",
+      "issue": 35,
+      "repair": "Repository provenance",
+      "criteria": [
+        "Bind repository identity to independently established source provenance. Report local graph verification and remote provenance as distinct results and reject an unrelated repository label when provenance is claimed."
+      ],
+      "related_tests": [
+        {
+          "name": "test_unrelated_repository_or_branch_is_rejected",
+          "path": "graphify-hq/template/v0.0.8/test_evidence_map.py",
+          "line": 191,
+          "end": 199
+        }
+      ],
+      "current_review": "Related test source located; exact criterion coverage and original checkpoint acceptance still need human/agent review.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.36",
+      "issue": 36,
+      "repair": "Git source file modes",
+      "criteria": [
+        "Inspect the pinned Git tree entry mode. Reject symlink evidence with a path diagnostic or resolve it inside the same pinned tree with explicit path and mode records."
+      ],
+      "related_tests": [
+        {
+          "name": "test_source_path_must_stay_inside_commit",
+          "path": "graphify-hq/template/v0.0.8/test_evidence_map.py",
+          "line": 131,
+          "end": 138
+        }
+      ],
+      "current_review": "Related test source located; exact criterion coverage and original checkpoint acceptance still need human/agent review.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.37",
+      "issue": 37,
+      "repair": "Unambiguous JSON inputs",
+      "criteria": [
+        "Reject repeated JSON object keys at any depth before schema validation in registry, archive, version catalog, and Graphify manifest inputs. Include the input path and duplicate key in the diagnostic."
+      ],
+      "related_tests": [
+        {
+          "name": "test_json_duplicates_and_canonical_evidence",
+          "path": "tests/test_readme_repairs.py",
+          "line": 1344,
+          "end": 1355
+        }
+      ],
+      "current_review": "Related test source located; exact criterion coverage and original checkpoint acceptance still need human/agent review.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.38",
+      "issue": 38,
+      "repair": "Source line bounds",
+      "criteria": [
+        "Validate positive inline source line and line-range fragments against the target file, with tests for reversed and out-of-bounds ranges as well as valid last-line references."
+      ],
+      "related_tests": [
+        {
+          "name": "test_anchor_resolves_to_one_exact_line",
+          "path": "graphify-hq/template/v0.0.8/test_evidence_map.py",
+          "line": 139,
+          "end": 171
+        }
+      ],
+      "current_review": "Related test source located; exact criterion coverage and original checkpoint acceptance still need human/agent review.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.39",
+      "issue": 39,
+      "repair": "Archive inventory completeness",
+      "criteria": [
+        "Validate the retained import inventory against an independent pinned listing and check archived README links against the imported tree. Fail on coordinated deletion of required files and manifest entries."
+      ],
+      "related_tests": [
+        {
+          "name": "test_registry_and_inventory_cannot_vouch_for_each_other",
+          "path": "tests/test_readme_repairs.py",
+          "line": 1432,
+          "end": 1453
+        }
+      ],
+      "current_review": "Related test source located; exact criterion coverage and original checkpoint acceptance still need human/agent review.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.40",
+      "issue": 40,
+      "repair": "Version map coverage",
+      "criteria": [
+        "Require independently defined coverage for every advertised version. Reject empty or incomplete record sets and identify missing versions and record IDs before publishing verified artifacts."
+      ],
+      "related_tests": [
+        {
+          "name": "test_coverage_and_duplicate_manifest_keys",
+          "path": "tests/test_graphify_repairs.py",
+          "line": 103,
+          "end": 114
+        }
+      ],
+      "current_review": "Related test source located; exact criterion coverage and original checkpoint acceptance still need human/agent review.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.41",
+      "issue": 41,
+      "repair": "Exact Git line coordinates",
+      "criteria": [
+        "Use one explicit Git-compatible line model for locating evidence and generating source links. Test embedded Unicode separators and CRLF against pinned physical line numbers."
+      ],
+      "related_tests": [
+        {
+          "name": "test_review_followup_rendered_rows_normalize_line_endings",
+          "path": "tests/test_readme_repairs.py",
+          "line": 544,
+          "end": 550
+        }
+      ],
+      "current_review": "Related test source located; exact criterion coverage and original checkpoint acceptance still need human/agent review.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.42",
+      "issue": 42,
+      "repair": "Binary media inventory",
+      "criteria": [
+        "Hash and inventory supported binary blobs without decoding them. Require text decoding only for line anchors, and report unsupported anchor types clearly."
+      ],
+      "related_tests": [
+        {
+          "name": "test_inventory_blob_cap_and_text_anchor_boundary",
+          "path": "graphify-hq/template/v0.0.8/test_evidence_map.py",
+          "line": 39,
+          "end": 65
+        }
+      ],
+      "current_review": "Related test source located; exact criterion coverage and original checkpoint acceptance still need human/agent review.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.43",
+      "issue": 43,
+      "repair": "Graph and receipt publication",
+      "criteria": [
+        "Stage and validate the graph and receipt as a pair. Preserve the prior accepted pair on a publication failure and test recovery and repeat builds."
+      ],
+      "related_tests": [
+        {
+          "name": "test_atomic_pair_preserves_prior_graph_on_conflict",
+          "path": "tests/test_graphify_repairs.py",
+          "line": 123,
+          "end": 132
+        },
+        {
+          "name": "test_graphify_reader_and_writer_recover_an_interrupted_publication",
+          "path": "tests/test_graphify_repairs.py",
+          "line": 133,
+          "end": 172
+        }
+      ],
+      "current_review": "Related test source located; exact criterion coverage and original checkpoint acceptance still need human/agent review.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.44",
+      "issue": 44,
+      "repair": "Bounded GitHub PR history",
+      "criteria": [
+        "Check for a capped commit listing. Resolve membership through a complete supported evidence route or report that membership could not be verified from the bounded response."
+      ],
+      "related_tests": [
+        {
+          "name": "test_historical_commit_requires_github_membership",
+          "path": "graphify-hq/template/v0.0.8/test_evidence_map.py",
+          "line": 185,
+          "end": 190
+        }
+      ],
+      "current_review": "Related test source located; exact criterion coverage and original checkpoint acceptance still need human/agent review.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.45",
+      "issue": 45,
+      "repair": "External reader entry points",
+      "criteria": [
+        "Verify explicitly declared, authorized remote first-action URLs against an expected result when supported. Record unchecked, unresolved, gated, and broken routes distinctly in offline and online checks."
+      ],
+      "related_tests": [
+        {
+          "name": "test_http_smoke_checks_expected_error_bodies_and_preserves_auth_gates",
+          "path": "tests/test_readme_repairs.py",
+          "line": 1184,
+          "end": 1211
+        },
+        {
+          "name": "test_http_smoke_records_and_can_require_the_effective_url",
+          "path": "tests/test_readme_repairs.py",
+          "line": 1212,
+          "end": 1239
+        }
+      ],
+      "current_review": "Related test source located; exact criterion coverage and original checkpoint acceptance still need human/agent review.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.46",
+      "issue": 46,
+      "repair": "Learning source coordinates",
+      "criteria": [
+        "Require a positive in-range integer coordinate and a meaningful nonempty anchor before comparing the pinned contents. Cover zero, negative, empty, and valid first/last-line evidence."
+      ],
+      "related_tests": [
+        {
+          "name": "test_learning_structured_rate_limit_and_invalid_anchor_diagnostics",
+          "path": "tests/test_readme_repairs.py",
+          "line": 1727,
+          "end": 1753
+        },
+        {
+          "name": "test_learning_distinguishes_matched_anchors_on_the_same_line",
+          "path": "tests/test_readme_repairs.py",
+          "line": 1669,
+          "end": 1696
+        }
+      ],
+      "current_review": "Prior rate-limit test is indirect; added first/last, zero, negative, empty and bounds source-coordinate controls.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.47",
+      "issue": 47,
+      "repair": "Technique retirement in recommendations",
+      "criteria": [
+        "Resolve existing recommendations against the canonical technique state and applicable registry revision. Exclude retired IDs from active recommendations and preserve prior decision history."
+      ],
+      "related_tests": [
+        {
+          "name": "test_learning_distinguishes_unknown_retired_and_unselected_ids",
+          "path": "tests/test_readme_repairs.py",
+          "line": 1880,
+          "end": 1918
+        },
+        {
+          "name": "test_learning_hashes_the_pinned_catalog_record_used_by_the_decision",
+          "path": "tests/test_readme_repairs.py",
+          "line": 1834,
+          "end": 1879
+        }
+      ],
+      "current_review": "Related test source located; exact criterion coverage and original checkpoint acceptance still need human/agent review.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.48",
+      "issue": 48,
+      "repair": "Complete MCP readback at supported limits",
+      "criteria": [
+        "Verify complete relationship readback for every supported manifest. Query by relation or page results, detect truncation explicitly, and test long valid paths at the documented limits."
+      ],
+      "related_tests": [],
+      "current_review": "Combined MCP check, still requires limit-specific complete readback proof.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.49",
+      "issue": 49,
+      "repair": "Git branch-name compatibility",
+      "criteria": [
+        "Validate source branch names with Git-compatible rules and compare the literal name to the API response. Exercise leading underscores, nested ref names, and invalid refs."
+      ],
+      "related_tests": [
+        {
+          "name": "test_batch5_review_publication_rule_pages_classic_branch_protection_and_branch_syntax",
+          "path": "tests/test_readme_repairs.py",
+          "line": 198,
+          "end": 213
+        }
+      ],
+      "current_review": "Related test source located; exact criterion coverage and original checkpoint acceptance still need human/agent review.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.50",
+      "issue": 50,
+      "repair": "Checkpoint label and fixture ownership",
+      "criteria": [
+        "Bind the checkpoint label, planned change anchor, and reproduction fixture to the corresponding issue. Reject each independently when the manifest, graph, and receipt agree on unrelated evidence."
+      ],
+      "related_tests": [
+        {
+          "name": "test_plan_acceptance_checks_reject_missing_or_changed_obligations",
+          "path": "tests/test_readme_repairs.py",
+          "line": 1454,
+          "end": 1473
+        },
+        {
+          "name": "test_plan_file_inventory_is_bound_to_approved_partition",
+          "path": "tests/test_readme_repairs.py",
+          "line": 1504,
+          "end": 1519
+        }
+      ],
+      "current_review": "Related test source located; exact criterion coverage and original checkpoint acceptance still need human/agent review.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.51",
+      "issue": 51,
+      "repair": "Graphify plan index links",
+      "criteria": [
+        "Validate each repair-plan index link against the exact partition and artifact in the checked-out tree. Cover missing and existing-but-wrong graph, manifest, and receipt destinations."
+      ],
+      "related_tests": [
+        {
+          "name": "test_rendered_tables_ignore_fenced_rows_and_reject_missing_navigation",
+          "path": "tests/test_readme_repairs.py",
+          "line": 1356,
+          "end": 1387
+        }
+      ],
+      "current_review": "Related test source located; exact criterion coverage and original checkpoint acceptance still need human/agent review.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.52",
+      "issue": 52,
+      "repair": "Clean checkout line-ending compatibility",
+      "criteria": [
+        "Preserve the bytes of Graphify inputs and generated files across supported checkout settings or compare authoritative Git blobs. Verify default and autocrlf checkouts with real input drift still failing."
+      ],
+      "related_tests": [
+        {
+          "name": "test_review_followup_rendered_rows_normalize_line_endings",
+          "path": "tests/test_readme_repairs.py",
+          "line": 544,
+          "end": 550
+        }
+      ],
+      "current_review": "Related test source located; exact criterion coverage and original checkpoint acceptance still need human/agent review.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.53",
+      "issue": 53,
+      "repair": "Immutable Git object reads",
+      "criteria": [
+        "Ensure every pinned evidence read uses the original Git object regardless of local replacement refs. Verify the reported line coordinates and digest against that object in both the compiler and version-map builder."
+      ],
+      "related_tests": [],
+      "current_review": "Combined Ubuntu targeted replacement-ref control passed real compiler and version-map source reads.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.54",
+      "issue": 54,
+      "repair": "Exact MCP relation fields",
+      "criteria": [
+        "Verify typed graph relationship fields or parse an unambiguous MCP representation. Accept valid paths with bracketed text while counting and checking only actual relationship fields."
+      ],
+      "related_tests": [
+        {
+          "name": "test_mcp_inventory_rejects_a_count_preserving_wrong_edge",
+          "path": "graphify-hq/template/v0.0.8/test_evidence_map.py",
+          "line": 117,
+          "end": 130
+        }
+      ],
+      "current_review": "Related test source located; exact criterion coverage and original checkpoint acceptance still need human/agent review.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.55",
+      "issue": 55,
+      "repair": "Immutable learning-source commits",
+      "criteria": [
+        "Resolve each requested source revision to a full immutable commit before verifying and recording a source observation. Require receipt provenance to retain the resolved SHA and test that moving input refs cannot change a saved observation."
+      ],
+      "related_tests": [
+        {
+          "name": "test_learning_receipt_is_pinned_and_idempotent",
+          "path": "tests/test_readme_repairs.py",
+          "line": 1595,
+          "end": 1625
+        }
+      ],
+      "current_review": "Related test source located; exact criterion coverage and original checkpoint acceptance still need human/agent review.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.56",
+      "issue": 56,
+      "repair": "Packaged Graphify self-map",
+      "criteria": [
+        "Provide and test a self-map for the actual vendored layout, or route the example explicitly to the working upstream tree. Verify the documented command from a clean checkout and check its graph over MCP."
+      ],
+      "related_tests": [],
+      "current_review": "Packaged self-map validated over MCP by regular runner; clean documented invocation criterion needs explicit review.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.57",
+      "issue": 57,
+      "repair": "Version-index row uniqueness",
+      "criteria": [
+        "Require exactly one row per advertised version in the canonical version table. Reject duplicate labels even when their destinations and other columns are identical."
+      ],
+      "related_tests": [
+        {
+          "name": "test_version_rows_and_current_label_are_bound_to_archives",
+          "path": "tests/test_readme_repairs.py",
+          "line": 1388,
+          "end": 1416
+        }
+      ],
+      "current_review": "Prior row test covers wrong destinations; added duplicate row negative control.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.58",
+      "issue": 58,
+      "repair": "Merge-queue validation",
+      "criteria": [
+        "Support checks_requested for adopters that use a merge queue. Verify a queued synthetic merge candidate reports the README and Graphify statuses against the queue SHA under the intended runner policy."
+      ],
+      "related_tests": [],
+      "current_review": "Personal public repo is not eligible for live merge queues; portable trigger present, adopter proof pending.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.59",
+      "issue": 59,
+      "repair": "Consistent PR head observation",
+      "criteria": [
+        "Bind the PR observation to coherent head metadata. Recheck the head across dependent evidence reads and retry or report an unstable observation when it changes. Keep historical member and current head results distinct."
+      ],
+      "related_tests": [
+        {
+          "name": "test_base_provenance_rejects_retargeting_with_the_same_head",
+          "path": "graphify-hq/template/v0.0.8/test_evidence_map.py",
+          "line": 172,
+          "end": 184
+        },
+        {
+          "name": "test_merge_sha_is_distinct_from_source_sha",
+          "path": "graphify-hq/template/v0.0.8/test_evidence_map.py",
+          "line": 240,
+          "end": 250
+        }
+      ],
+      "current_review": "Related test source located; exact criterion coverage and original checkpoint acceptance still need human/agent review.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.60",
+      "issue": 60,
+      "repair": "Technique list output encoding",
+      "criteria": [
+        "Make technique list output safe and explicit across supported stream encodings. Keep output and exit status consistent when rendering fails, and test redirected ASCII and UTF-8 output."
+      ],
+      "related_tests": [
+        {
+          "name": "test_ascii_technique_listing",
+          "path": "tests/test_readme_repairs.py",
+          "line": 1317,
+          "end": 1325
+        }
+      ],
+      "current_review": "ASCII output covered; added UTF-8 redirected execution.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.61",
+      "issue": 61,
+      "repair": "Technique lookup key collisions",
+      "criteria": [
+        "Reject cross-record exact collisions across the lookup fields promised by the technique guide, or define an explicit disambiguation rule and use it consistently for lookup. Test IDs, aliases, and outcome keys."
+      ],
+      "related_tests": [
+        {
+          "name": "test_json_duplicates_and_canonical_evidence",
+          "path": "tests/test_readme_repairs.py",
+          "line": 1344,
+          "end": 1355
+        }
+      ],
+      "current_review": "Prior evidence identity test does not exercise cross-record lookup collisions; added direct key collision controls.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.62",
+      "issue": 62,
+      "repair": "Exact review pagination boundary",
+      "criteria": [
+        "Use the review endpoint pagination metadata to distinguish complete results from an intentionally bounded observation. Test 999, 1,000, and more than 1,000 reviews and never represent a partial count as exact."
+      ],
+      "related_tests": [],
+      "current_review": "Combined Ubuntu targeted 999/1000/1001 pagination and cap controls passed.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.63",
+      "issue": 63,
+      "repair": "GitHub README markup coverage",
+      "criteria": [
+        "Recognize headings in supported non-Markdown README formats or require a reviewed explicit anchor with a clear unsupported-format result. Test the three pinned README formats and compare the chosen anchor with the actual document heading."
+      ],
+      "related_tests": [
+        {
+          "name": "test_rich_text_navigation_reports_explicit_incomplete_status",
+          "path": "tests/test_readme_repairs.py",
+          "line": 358,
+          "end": 376
+        },
+        {
+          "name": "test_adopter_detects_an_org_homepage_as_incomplete",
+          "path": "tests/test_readme_repairs.py",
+          "line": 339,
+          "end": 357
+        }
+      ],
+      "current_review": "Related test source located; exact criterion coverage and original checkpoint acceptance still need human/agent review.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.64",
+      "issue": 64,
+      "repair": "Joined Unicode emoji in exact anchors",
+      "criteria": [
+        "Permit supported well-formed emoji joiner sequences in exact source anchors and preserve their original text and line coordinates. Test a joined emoji and a plain heading in the same pinned file."
+      ],
+      "related_tests": [
+        {
+          "name": "test_exact_anchors_and_explicit_line",
+          "path": "tests/test_graphify_repairs.py",
+          "line": 27,
+          "end": 33
+        }
+      ],
+      "current_review": "Related test source located; exact criterion coverage and original checkpoint acceptance still need human/agent review.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.65",
+      "issue": 65,
+      "repair": "Release-specific change anchoring",
+      "criteria": [
+        "Bind the changelog anchor to the requested release section or a reviewed explicit source line. Reject draft placeholders as release evidence and test a newer unreleased section above the requested release."
+      ],
+      "related_tests": [
+        {
+          "name": "test_release_heading_beats_a_draft_placeholder",
+          "path": "tests/test_graphify_repairs.py",
+          "line": 92,
+          "end": 102
+        }
+      ],
+      "current_review": "Related test source located; exact criterion coverage and original checkpoint acceptance still need human/agent review.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.66",
+      "issue": 66,
+      "repair": "Rendered fragment destinations",
+      "criteria": [
+        "Resolve a directory route to the GitHub-rendered README before checking its fragment. Validate supported Markdown extensions and distinguish a missing fragment from an unchecked target."
+      ],
+      "related_tests": [
+        {
+          "name": "test_root_fragments_follow_the_effective_homepage",
+          "path": "tests/test_readme_repairs.py",
+          "line": 625,
+          "end": 640
+        },
+        {
+          "name": "test_fragments_and_rendered_link_forms",
+          "path": "tests/test_readme_repairs.py",
+          "line": 559,
+          "end": 589
+        }
+      ],
+      "current_review": "Related test source located; exact criterion coverage and original checkpoint acceptance still need human/agent review.",
+      "acceptance": "not signed off"
+    },
+    {
+      "checkpoint": "v0.0.6.67",
+      "issue": 67,
+      "repair": "Custom named anchor navigation",
+      "criteria": [
+        "Recognize documented custom anchor destinations alongside generated heading anchors, while retaining missing-target diagnostics. Verify the fixture against GitHub-rendered HTML and the offline checker."
+      ],
+      "related_tests": [
+        {
+          "name": "test_fragments_and_rendered_link_forms",
+          "path": "tests/test_readme_repairs.py",
+          "line": 559,
+          "end": 589
+        }
+      ],
+      "current_review": "Offline fixture covered; actual rendered GitHub HTML validation remains outstanding.",
+      "acceptance": "not signed off"
+    }
+  ]
+}
