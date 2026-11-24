@@ -174,7 +174,7 @@ def live_catalog_and_policy():
         technique=next(row for row in rows if row.get("technique")=="relative-navigation")
         combo=next(row for row in rows if row.get("combination")=="pinned-walkthrough-with-evidence")
         require(len(combo["catalog_record"]["steps"])==5,"ordered combination")
-        require(technique["catalog_record"]["sha256"]==sha256((catalog/"techniques/relative-navigation.md").read_bytes()).hexdigest() or os.name=="nt","record digest")
+        require(technique["catalog_record"]["sha256"]==sha256(subprocess.check_output(["git","--no-replace-objects","show",CATALOG+":techniques/relative-navigation.md"],cwd=catalog)).hexdigest(),"record digest")
         (catalog/"techniques/relative-navigation.md").write_text("changed working tree",encoding="utf-8")
         require(intake.record_intake(request,OUT/"catalog",fetch=fetch)==path,"catalog working tree changed receipt")
         for bad in ({k:v for k,v in request.items() if k!="catalog"},
