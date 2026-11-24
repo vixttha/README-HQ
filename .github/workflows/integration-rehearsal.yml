@@ -1,0 +1,47 @@
+name: README HQ integration rehearsal and adoption
+on:
+  push:
+    branches: [audit/v0.0.6-foundation-reconciliation]
+permissions:
+  contents: read
+jobs:
+  qualification:
+    if: github.event.repository.visibility == 'public' && github.event.repository.private == false
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+          path: audit-control
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: 95a54600184d7b95235fc401eb26797cf4ab5b57
+          fetch-depth: 0
+          persist-credentials: false
+          path: candidate
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.12'
+      - name: Install locked reader requirements
+        working-directory: candidate
+        run: python -m pip install --require-hashes -r tools/requirements.txt
+      - name: Install Linux-pinned Graphify environment
+        if: runner.os == 'Linux'
+        working-directory: candidate
+        run: |
+          python -m pip install --require-hashes --only-binary=:all: --no-deps -r graphify-hq/template/v0.0.8/requirements.txt
+          python -m pip check
+      - name: Validate merge rehearsal, regression and adoption
+        run: python audit-control/audit/integration_rehearsal.py candidate "${{ runner.temp }}/integration-evidence"
+      - name: Preserve all qualification receipts
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: integration-rehearsal-${{ matrix.os }}-attempt-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/integration-evidence/
+          if-no-files-found: error
