@@ -139,6 +139,7 @@ def live_catalog_and_policy():
     import importlib.util
     from hashlib import sha256
     import re
+    from urllib.error import HTTPError
     def blob(ref,path):
         return subprocess.check_output(["git","--no-replace-objects","show",ref+":"+path],cwd=ROOT)
     require(blob(FINAL,"ENGINEERING-LAWS.md")==blob(POLICY,"ENGINEERING-LAWS.md"),"law source drift")
@@ -165,7 +166,12 @@ def live_catalog_and_policy():
         request={"visibility":"public","catalog":{"checkout":str(catalog),"commit":CATALOG},"sources":[source],"selected":["sample"],"target":{**source,"audience":"reader","capability":"test"},"findings":[{**finding,"technique":"relative-navigation"},{**finding,"combination":"pinned-walkthrough-with-evidence"}]}
         def fetch(route):
             # Authenticated read-only GET on the public repository, no token output.
-            return json.loads(subprocess.check_output(["gh","api","--method","GET","repos/"+route],cwd=ROOT))
+            result=subprocess.run(["gh","api","--method","GET","repos/"+route],cwd=ROOT,capture_output=True)
+            if result.returncode != 0:
+                if b"HTTP 404" in result.stderr:
+                    raise HTTPError("https://api.github.com/repos/"+route,404,"Not Found",{},None)
+                raise RuntimeError("unexpected GitHub API failure in qualification")
+            return json.loads(result.stdout)
         path=intake.record_intake(request,OUT/"catalog",fetch=fetch)
         data=json.loads(path.read_bytes())
         require(data["schema"]==2 and data["catalog"]["commit"]==CATALOG,"catalog receipt pin")
@@ -183,6 +189,8 @@ def live_catalog_and_policy():
                 intake.record_intake(bad,OUT/"catalog",fetch=fetch)
             except ValueError:
                 pass
+            except HTTPError as error:
+                require(error.code==404 and "catalog" in bad,"unexpected API failure on negative control")
             else:
                 raise ValueError("missing or off-branch catalog accepted")
         require(len(list((OUT/"catalog").iterdir()))==1,"invalid intake wrote a receipt")
