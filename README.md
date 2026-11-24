@@ -15,13 +15,14 @@ README HQ helps people understand a GitHub project and take their first useful s
 
 ## Use README HQ
 
-For the current repair trial, ask your agent to use `vixttha/README-HQ` at `repair/v0.0.6-batch-1` and name the target repository. The agent records the exact trial commit and reads the target repository’s own instructions. Use `readme-hq` for the published version archive.
+For the current repair trial, ask your agent to use `vixttha/README-HQ` at `repair/v0.0.6-batch-5` (the v0.0.6.140 trial candidate, not a published release) and name the target repository. The agent records the exact trial commit and reads the target repository’s own instructions. Use `readme-hq` for the published version archive.
 
 To check a README HQ checkout, use Python 3.11 or newer.
 
 ```sh
-git clone --branch repair/v0.0.6-batch-1 https://github.com/vixttha/README-HQ.git
+git clone --branch repair/v0.0.6-batch-5 https://github.com/vixttha/README-HQ.git
 cd README-HQ
+git checkout --detach d12d5c6bd82fe448f64adb3ae48024296b8e6db4
 python3 -m pip install --require-hashes -r tools/requirements.txt
 python3 tools/check_readme_hq.py
 ```
