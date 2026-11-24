@@ -30,6 +30,12 @@ jobs:
       - name: Install pinned reader dependencies
         working-directory: candidate
         run: python -m pip install --require-hashes -r tools/requirements.txt
+      - name: Install Linux-pinned Graphify environment
+        if: runner.os == 'Linux'
+        working-directory: candidate
+        run: |
+          python -m pip install --require-hashes --only-binary=:all: --no-deps -r graphify-hq/template/v0.0.8/requirements.txt
+          python -m pip check
       - name: Run targeted controls on frozen candidate
         run: python audit-control/audit/foundation_acceptance_controls.py candidate "${{ runner.temp }}/foundation-controls.json"
       - name: Retain receipts

@@ -99,22 +99,29 @@ def replacement_refs(base):
     require(git(project,"show",original+":guide.md").startswith("Replacement"),"negative control ineffective")
     sys.path.insert(0,str(ROOT/"tools"))
     sys.path.insert(0,str(ROOT/"graphify-hq/template/v0.0.8"))
-    compiler=load("evidence_map","graphify-hq/template/v0.0.8/evidence_map.py")
-    versions=load("version_maps","graphify-hq/version_maps.py")
     from hq_data import GitTree
-    prev=Path.cwd()
+    require(GitTree(project,original).read("guide.md")==body,"reader source read changed")
+    result={"original_digest":hashlib.sha256(body).hexdigest(),"replacement_digest":hashlib.sha256(replacement).hexdigest(),"reader_original_bytes":True}
     try:
-        os.chdir(project)
-        lines,digest=compiler.source_lines(original,"guide.md")
-        require(compiler.locate(lines,"# Evidence","guide.md")==1,"compiler accepted replacement coordinate")
-        require(digest==hashlib.sha256(body).hexdigest(),"compiler accepted replacement digest")
-        versions.ROOT=project
-        require(versions.source_bytes(original,"guide.md")==body,"version map source read changed")
-        require(GitTree(project,original).read("guide.md")==body,"reader source read changed")
+        if os.name == "nt":
+            result.update(graphify_scope="not run: vendored dependency hashes are Linux-specific")
+        else:
+            compiler=load("evidence_map","graphify-hq/template/v0.0.8/evidence_map.py")
+            versions=load("version_maps","graphify-hq/version_maps.py")
+            prev=Path.cwd()
+            try:
+                os.chdir(project)
+                lines,digest=compiler.source_lines(original,"guide.md")
+                require(compiler.locate(lines,"# Evidence","guide.md")==1,"compiler accepted replacement coordinate")
+                require(digest==hashlib.sha256(body).hexdigest(),"compiler accepted replacement digest")
+                versions.ROOT=project
+                require(versions.source_bytes(original,"guide.md")==body,"version map source read changed")
+                result.update(compiler_anchor=1,version_builder_original_bytes=True,graphify_scope="real compiler and version-map read paths; no full MCP regeneration")
+            finally:
+                os.chdir(prev)
     finally:
-        os.chdir(prev)
         git(project,"replace","-d",original)
-    return {"compiler_anchor":1,"original_digest":hashlib.sha256(body).hexdigest(),"replacement_digest":hashlib.sha256(replacement).hexdigest(),"version_builder_original_bytes":True,"reader_original_bytes":True,"scope":"real replacement refs; compiler and version-map read paths, not a full MCP regeneration"}
+    return result
 
 def review_pagination():
     module=load("acceptance_provenance","graphify-hq/template/v0.0.8/github_provenance.py")
