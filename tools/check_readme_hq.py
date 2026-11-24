@@ -12,7 +12,7 @@ import unicodedata
 from urllib.parse import unquote, urlsplit
 
 from hq_data import GitTree, REPOSITORY, SHA, parse_json
-from hq_navigation import MARKDOWN, check_document, parse_markdown, readme_path, suffix, rendered_table_rows
+from hq_navigation import MARKDOWN, check_document, parse_markdown, readme_path, suffix, rendered_table_rows, target_for
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -240,7 +240,7 @@ def check_versions(errors, tree=None):
     return len(dirs)
 
 
-def check_navigation(errors, tree=None, gaps=None):
+def check_navigation(errors, tree=None, gaps=None, *, checked_media=None):
     tree = tree or GitTree(ROOT)
     gaps = gaps if gaps is not None else []
     entries = tree.entries()
@@ -249,19 +249,26 @@ def check_navigation(errors, tree=None, gaps=None):
     documents.update(name for name in ("REUSE.md", "learning/README.md") if name in entries)
     documents.update(name for name in entries if suffix(name) in MARKDOWN and
                      name.startswith(("audits/", "versions/", "graphify-hq/maps/")))
-    count = sum(check_document(tree, path, errors, gaps) for path in sorted(documents))
+    count = sum(check_document(tree, path, errors, gaps, checked_media=checked_media)
+                for path in sorted(documents))
     for name in sorted(entries):
         if re.fullmatch(r"history/[^/]+/(?:published-v[^/]+|main-rebrand-v[^/]+)/README\.md", name):
-            count += check_document(tree, name, errors, gaps, archive_scope=name.rsplit("/", 1)[0])
+            count += check_document(tree, name, errors, gaps, archive_scope=name.rsplit("/", 1)[0],
+                                    checked_media=checked_media)
     return count
 
 
-def has_first_action(blocks):
+def documented_actions(blocks):
+    from hq_smoke import shell_words_continued
+
     action = re.compile(r"^(?:quick[ -]?start|getting started|install(?:ation)?|setup|usage|use|run|try|play|build)\b", re.I)
     label = re.compile(r"^(?:install(?:ation)?|setup|quick[ -]?start|getting started|run|try|play|build|launch|open)\b", re.I)
     shell = {"", "sh", "shell", "bash", "zsh", "powershell", "pwsh", "cmd", "console", "terminal", "shell-session"}
     action_level = None
+    start_line = 0
     for i, token in enumerate(blocks):
+        if token.map is not None:
+            start_line = token.map[0]
         if token.type == "heading_open":
             level = int(token.tag[1:])
             if action_level is not None and level <= action_level:
@@ -271,11 +278,12 @@ def has_first_action(blocks):
             if action_level is None and action.search(heading):
                 action_level = level
         elif action_level is not None and token.type == "fence":
-            language = token.info.strip().split()
-            if (not language or language[0].lower() in shell) and any(
-                line.strip() and not line.lstrip().startswith("#") for line in token.content.splitlines()
-            ):
-                return True
+            info = token.info.strip().split()
+            language = info[0].lower() if info else "sh"
+            if language in shell and (logical := shell_words_continued(token.content.splitlines(), language)):
+                command, offset = logical
+                yield {"kind": "argv", "value": command, "line": token.map[0] + offset + 2,
+                       "language": language}
         elif action_level is not None and token.type == "inline":
             children = token.children or []
             for index, item in enumerate(children):
@@ -285,11 +293,59 @@ def has_first_action(blocks):
                 name = "".join(child.content for child in children[index + 1:end])
                 href = item.attrGet("href") or ""
                 if href and not href.startswith("#") and label.match(name.strip()):
-                    return True
-    return False
+                    offset = item.meta.get("source_line_offset", 0)
+                    yield {"kind": "url", "value": href, "line": start_line + offset + 1}
 
 
-def target_readme(tree, subproject, errors, gaps, profile):
+def has_first_action(blocks):
+    return next(documented_actions(blocks), None) is not None
+
+
+def check_first_action_route(tree, source, actions, errors, gaps, route, *, checked_media=None):
+    """Check local guide links selected by Quickstart, one guide hop deep."""
+    guides = set()
+    route["guides"] = []
+    route["result"] = "passed"
+
+    def mark_unchecked(message):
+        gaps.append(message)
+        if route["result"] != "failed":
+            route["result"] = "unchecked"
+
+    for action in actions:
+        if action["kind"] != "url":
+            continue
+        url = urlsplit(action["value"])
+        try:
+            target = target_for(tree, source, url)
+        except ValueError:
+            continue  # The homepage link check reports the invalid path.
+        except LookupError:
+            mark_unchecked(f"{source}:{action['line']}: Quickstart guide revision could not be resolved")
+            continue
+        if target is None:
+            continue
+        path, commit = target
+        entries = tree.entries(commit)
+        guide = path if path in entries else readme_path(entries, path, homepage=not path)
+        key = (guide, commit)
+        if not guide or key == (source, None) or key in guides:
+            continue
+        if len(guides) >= 8:
+            mark_unchecked(f"{source}: Quickstart links exceed the eight-guide route check limit")
+            break
+        guides.add(key)
+        route["guides"].append(guide)
+        if suffix(guide) not in MARKDOWN:
+            mark_unchecked(f"{guide}: Quickstart route content is outside Markdown coverage")
+            continue
+        before = len(errors)
+        check_document(tree, guide, errors, gaps, checked_media=checked_media, source_commit=commit)
+        if len(errors) != before:
+            route["result"] = "failed"
+
+
+def target_readme(tree, subproject, errors, gaps, profile, *, route=None, checked_media=None):
     prefix = Path(subproject).as_posix().removeprefix("./")
     if Path(subproject).is_absolute() or ".." in Path(subproject).parts or "\\" in subproject:
         raise ValueError("subproject must be relative to the selected repository")
@@ -314,7 +370,11 @@ def target_readme(tree, subproject, errors, gaps, profile):
     if profile != "reference" and not has_first_action(blocks):
         errors.append(f"{source}: no discoverable first action for {profile}")
     gaps.append(f"{source}: editorial quality and material claims require human or agent review")
-    return source, check_document(tree, source, errors, gaps)
+    count = check_document(tree, source, errors, gaps, checked_media=checked_media)
+    if route is not None and profile != "reference":
+        check_first_action_route(tree, source, documented_actions(blocks), errors, gaps, route,
+                                 checked_media=checked_media)
+    return source, count
 
 
 def main():
@@ -347,6 +407,7 @@ def main():
         args.profile = "application"
     errors, gaps, records = [], [], []
     cases = {}
+    checked_media = set() if args.receipt else None
     scope = None
     try:
         if args.draft and args.ref != "HEAD":
@@ -361,15 +422,25 @@ def main():
                      "repository_identity": "inferred-from-origin" if tree.repository else "unavailable",
                      "profile": args.profile, "subproject": PurePosixPath(args.subproject).as_posix(),
                      "commit": tree.commit}
-            entry, count = target_readme(tree, args.subproject, errors, gaps, args.profile)
+            route = {}
+            entry, count = target_readme(tree, args.subproject, errors, gaps, args.profile, route=route,
+                                         checked_media=checked_media)
             cases.update(entrypoint=entry, local_links=count)
+            if route:
+                cases["first_action_route"] = route
             if entry and suffix(entry) not in MARKDOWN:
                 cases["navigation"] = {"result": "unchecked", "format": suffix(entry) or "extensionless"}
                 gaps.append(f"{entry}: rendered navigation, anchors, and first-use instructions remain unchecked")
             if args.smoke:
                 from hq_smoke import verify_first_action
+                actions, source_sha256 = [], None
+                if entry and suffix(entry) in MARKDOWN:
+                    source_bytes = tree.read(entry)
+                    source_sha256 = hashlib.sha256(source_bytes).hexdigest()
+                    actions = list(documented_actions(parse_markdown(source_bytes.decode("utf-8"))[2]))
                 outcome = verify_first_action(tree, args.smoke, allow_network=args.allow_network,
-                                              subproject=args.subproject, include_output=args.include_smoke_output)
+                                              subproject=args.subproject, include_output=args.include_smoke_output,
+                                              entrypoint=entry, actions=actions, source_sha256=source_sha256)
                 if args.require_smoke:
                     outcome["required"] = True
                 cases["first_action"] = outcome
@@ -379,15 +450,23 @@ def main():
                     errors.append(f"first action failed its expected result{detail}")
                 elif outcome["result"] != "passed":
                     gaps.append(f"first action {outcome['result']}: {outcome['detail']}")
+                elif outcome["documentation"]["status"] != "matched":
+                    gaps.append("first action passed as supplemental evidence without a matching documented action")
             else:
                 gaps.append("first action execution not checked: no explicit smoke spec")
         else:
             records = check_registry(errors, tree)
             cases.update(standalone_versions=check_versions(errors, tree), techniques=len(records),
-                         local_links=check_navigation(errors, tree, gaps), imported_files=check_history(errors, tree))
+                         local_links=check_navigation(errors, tree, gaps, checked_media=checked_media),
+                         imported_files=check_history(errors, tree))
     except (KeyError, OSError, TypeError, ValueError) as error:
         errors.append(str(error))
     if args.receipt:
+        if checked_media:
+            cases["checked_media"] = [
+                {"path": path, "base_commit": revision, "draft": draft, "sha256": digest}
+                for path, revision, draft, digest in sorted(checked_media)
+            ]
         from hq_smoke import write_receipt
         try:
             write_receipt(args.receipt, locals().get("tree"), cases, errors, gaps,

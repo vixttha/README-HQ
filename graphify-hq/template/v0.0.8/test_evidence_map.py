@@ -206,6 +206,37 @@ class ProvenanceTests(unittest.TestCase):
         ]
         self.assertEqual(self.verify()["exact_commit_approvals"], 1)
 
+    def test_pr_review_totals_distinguish_verified_and_unresolved_authority(self):
+        from urllib.error import HTTPError
+
+        self.pr["user"] = {"id": 1}
+        names = ("author", "writer", "reader", "unresolved", "stale")
+        self.reviews = [{"user": {"id": i, "login": name}, "state": "APPROVED",
+                         "commit_id": self.head if name == "stale" else self.source}
+                        for i, name in enumerate(names, 1)]
+
+        def fetch(route):
+            statuses = {"collaborators/writer/permission": (2, "write"),
+                        "collaborators/reader/permission": (3, "read")}
+            if route in statuses:
+                ident, role = statuses[route]
+                return {"user": {"id": ident}, "permission": role}
+            if route == "collaborators/unresolved/permission":
+                raise HTTPError("https://api.github.com", unavailable_status, "unavailable", {}, None)
+            return self.fetch(route)
+
+        for unavailable_status in (403, 503):
+            result = verify_pull_request(self.repo, self.source, self.expected, fetch)
+            self.assertEqual(result["observed_exact_commit_approvals"], 4)
+            self.assertEqual(result["verified_eligible_exact_commit_approvals"], 1)
+            self.assertEqual(result["unresolved_reviewer_eligibility"], 1)
+            self.assertIsNone(result["qualifying_exact_commit_approvals"])
+        self.reviews.pop(3)
+        result = verify_pull_request(self.repo, self.source, self.expected, fetch)
+        self.assertEqual(result["qualifying_exact_commit_approvals"], 1)
+        self.assertEqual(result["head_commit"], self.head)
+        self.assertEqual(result["base_commit"], self.pr["base"]["sha"])
+
     def test_merge_sha_is_distinct_from_source_sha(self):
         self.pr.update(state="closed", merged=True, merge_commit_sha="c" * 40)
         outcome = self.verify()

@@ -20,7 +20,7 @@ from hq_data import REGULAR_MODES, SHA, physical_lines
 
 
 MARKDOWN = {".md", ".markdown", ".mdown", ".mkdn"}
-README_FORMATS = [".md", ".markdown", ".mdown", ".mkdn", ".rst", ".adoc", ".asciidoc", ".asc", ".txt", ""]
+README_FORMATS = [".md", ".markdown", ".mdown", ".mkdn", ".rst", ".adoc", ".asciidoc", ".asc", ".org", ".txt", ""]
 IMAGE_FORMATS = {".png": "PNG", ".gif": "GIF", ".jpg": "JPEG", ".jpeg": "JPEG", ".webp": "WEBP"}
 LFS_HOSTS = (b"version https://git-lfs.github.com/", b"version https://hawser.github.com/")
 LFS_POINTER = re.compile(rb"version https://(?:git-lfs|hawser)\.github\.com/spec/v1\n"
@@ -158,6 +158,21 @@ class HtmlLinks(HTMLParser):
             self.links.append(Link(path, line, unnamed=not named))
 
 
+def inline_link_has_name(children, line):
+    if not any(item.type == "html_inline" for item in children):
+        return any(item.content.strip() for item in children if item.type in {"text", "code_inline", "image"})
+    html = HtmlLinks(line)
+    outer = ["", line, False]
+    html.controls.append(outer)
+    for item in children:
+        if item.type == "html_inline":
+            html.feed(item.content)
+        elif item.type in {"text", "code_inline", "image"}:
+            html.handle_data(item.content)
+    html.close()
+    return outer[2]
+
+
 def inline_links(children, line):
     links = []
     current_line = line
@@ -169,9 +184,8 @@ def inline_links(children, line):
         elif token.type == "link_open":
             in_link = True
             end = next((i for i in range(index + 1, len(children)) if children[i].type == "link_close"), len(children))
-            name = "".join(item.content for item in children[index + 1:end]
-                           if item.type in {"text", "code_inline", "image"})
-            links.append(Link(token.attrGet("href"), occurrence, unnamed=not name.strip()))
+            named = inline_link_has_name(children[index + 1:end], occurrence)
+            links.append(Link(token.attrGet("href"), occurrence, unnamed=not named))
         elif token.type == "link_close":
             in_link = False
         elif token.type in {"hardbreak", "softbreak"}:
@@ -417,11 +431,11 @@ def verify_media(path, data):
         raise LookupError("media format was not inspected")
 
 
-def check_document(tree, source, errors, gaps, *, archive_scope=None):
+def check_document(tree, source, errors, gaps, *, archive_scope=None, checked_media=None, source_commit=None):
     if suffix(source) not in MARKDOWN:
         gaps.append(f"{source}: link checking for this README format is unavailable")
         return 0
-    text = tree.read(source).decode("utf-8")
+    text = tree.read(source, source_commit).decode("utf-8")
     _, links, _ = parse_markdown(text)
     count = 0
     anchor_cache = {}
@@ -439,7 +453,8 @@ def check_document(tree, source, errors, gaps, *, archive_scope=None):
             if target is None:
                 gaps.append(f"{source}:{link.line}: external link not checked: {link.path}")
                 continue
-            path, commit = target
+            path, selected_commit = target
+            commit = selected_commit if selected_commit is not None else source_commit
             entries = tree.entries(commit)
             directory = not path or any(name.startswith(path + "/") for name in entries)
             if path not in entries and not directory:
@@ -452,7 +467,11 @@ def check_document(tree, source, errors, gaps, *, archive_scope=None):
             if link.image:
                 if directory:
                     raise ValueError("image target is a directory")
-                verify_media(path, media_bytes(tree, path, commit))
+                contents = media_bytes(tree, path, commit)
+                verify_media(path, contents)
+                if checked_media is not None:
+                    identity = (path, commit or tree.commit, tree.draft and commit is None, sha256(contents).hexdigest())
+                    checked_media.add(identity)
             if url.fragment and github_route(url)[2:3] == ["raw"]:
                 gaps.append(f"{source}:{link.line}: raw GitHub file fragment was not checked: {link.path}")
             else:
