@@ -1,0 +1,28 @@
+name: Licensing review integrity
+on:
+  push:
+    branches: [repair/v0.0.6-licensing-review]
+  pull_request:
+    paths:
+      - 'docs/licensing/**'
+      - '.github/workflows/licensing-review.yml'
+permissions:
+  contents: read
+jobs:
+  review-only:
+    if: github.event.repository.private == false && github.event.repository.visibility == 'public'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.12'
+      - run: python docs/licensing/verify_review.py licensing-review-receipt.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: licensing-review-integrity
+          path: licensing-review-receipt.json
