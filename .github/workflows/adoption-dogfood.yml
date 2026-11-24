@@ -1,0 +1,44 @@
+name: Six-project adoption and README HQ dogfood
+on:
+  push:
+    branches: [Personal-Copy-README-HQ]
+permissions:
+  contents: read
+jobs:
+  benchmark:
+    if: github.event.repository.private == false && github.event.repository.visibility == 'public'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          path: review
+          persist-credentials: false
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: 5adfd75f7a3a5864626bdbebff5d2249c381a975
+          path: candidate
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.12'
+      - name: Install locked reader requirements
+        working-directory: candidate
+        run: python -m pip install --require-hashes -r tools/requirements.txt
+      - name: Compare pinned public snapshots and isolated README drafts
+        run: python review/audit/adoption-benchmark.py candidate "${{ runner.temp }}/adoption"
+      - name: Verify dogfood draft and run README HQ's own documented example
+        if: always()
+        shell: bash
+        run: |
+          cp review/audit/dogfood-homepage.md candidate/README.md
+          cd candidate
+          python tools/check_readme_hq.py --draft --receipt "${{ runner.temp }}/adoption/self-draft-reader.json"
+          python examples/first_action_demo.py "${{ runner.temp }}/adoption/self-first-action"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: adoption-and-self-use-receipts
+          path: ${{ runner.temp }}/adoption/
+          if-no-files-found: error

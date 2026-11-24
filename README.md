@@ -13,6 +13,14 @@ README HQ helps people understand a GitHub project and take their first useful s
 | Browse techniques learned from reviews | [README Technique Library](https://github.com/vixttha/README-HQ/tree/README-Technique-Library) |
 | Invoke README HQ from an agent | [Agent entry point](AGENTS.md) |
 
+## Start with one useful result
+
+**Human reader:** start with [the README guide](README-GUIDE.md), then [the first-action example](README-GUIDE.md#run-the-first-action-example). The example produces three receipts (pass, fail and unchecked) so you can see what the validator actually establishes.
+
+**Coding agent:** read [AGENTS.md](AGENTS.md) before selecting a target. Resolve both the tool and target to full commit SHAs, use the [audit workflow](audits/README.md), and record recommendations through [learning intake](learning/README.md) using the independently pinned external library.
+
+**Maintainer:** consult the [version index](versions/README.md), [Graphify evidence maps](graphify-hq/README.md), [reader workflow](.github/workflows/readme-hq.yml) and [publication gate instructions](README-GUIDE.md#inspect-the-publication-gate). A passing mechanical check does not establish owner acceptance or authorize publication.
+
 ## Use README HQ
 
 For the current repair trial, ask your agent to use `vixttha/README-HQ` at `repair/v0.0.6-integration-candidate` (the combined v0.0.6 repair draft, not a published release) and name the target repository. Resolve the branch to an exact SHA and confirm it against the approved review evidence before use. The agent records the exact trial commit and reads the target repository’s own instructions. Use `readme-hq` for the published version archive.

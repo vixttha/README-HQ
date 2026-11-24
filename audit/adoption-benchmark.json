@@ -1,0 +1,140 @@
+{
+  "candidate": "5adfd75f7a3a5864626bdbebff5d2249c381a975",
+  "catalog": "88feb6971d2f49c530535f09d0defb1e9e1808bf",
+  "homepage_baseline": "a7a989ffb6b664df86aae0ea01053ea2fc0a4405",
+  "scope": "Public read-only repository snapshots and isolated draft changes; no adopter product changes or commands executed; document-route proxy, not human or independent agent performance.",
+  "targets": [
+    {
+      "repo": "vixttha/AlderVale-Pact-of-Ten",
+      "commit": "3f8fc59317cca811f2958b6871737cc68e167376",
+      "profile": "application",
+      "tasks": [
+        {
+          "kind": "human_onboarding",
+          "path": "docs/VALIDATION.md",
+          "label": "First playthrough and supported validation"
+        },
+        {
+          "kind": "agent_navigation",
+          "path": "AGENTS.md",
+          "label": "Repository agent rules"
+        },
+        {
+          "kind": "evidence_recovery",
+          "path": "docs/AGENT_OPERATIONS.md",
+          "label": "Agent operations and handoff"
+        }
+      ]
+    },
+    {
+      "repo": "vixttha/Blender-Agent-Refinement-Toolkit",
+      "commit": "392d8d7a1c262227cba3c08d5577af38c74b4e25",
+      "profile": "library",
+      "tasks": [
+        {
+          "kind": "human_onboarding",
+          "path": "docs/HARNESS.md",
+          "label": "CLI and MCP setup"
+        },
+        {
+          "kind": "agent_navigation",
+          "path": "AGENTS.md",
+          "label": "Agent operating rules"
+        },
+        {
+          "kind": "evidence_recovery",
+          "path": ".github/workflows/ci.yml",
+          "label": "Public CI definition"
+        }
+      ]
+    },
+    {
+      "repo": "vixttha/Veraphify",
+      "commit": "add4a029312c958a5e126990fc49e802c0112c27",
+      "profile": "library",
+      "tasks": [
+        {
+          "kind": "human_onboarding",
+          "path": "docs/adopter-walkthrough.md",
+          "label": "Two-version walkthrough"
+        },
+        {
+          "kind": "agent_navigation",
+          "path": "ENGINEERING-LAWS.md",
+          "label": "Engineering authority and independence"
+        },
+        {
+          "kind": "evidence_recovery",
+          "path": "docs/verification.md",
+          "label": "Verification and rerun evidence"
+        }
+      ]
+    },
+    {
+      "repo": "vixttha/Provenistem",
+      "commit": "d64d0c73538e79af0292642c1f23bafe2e979ec0",
+      "profile": "reference",
+      "tasks": [
+        {
+          "kind": "human_onboarding",
+          "path": "packages/provenistem/docs/ADOPTION.md",
+          "label": "Adoption and collision checks"
+        },
+        {
+          "kind": "agent_navigation",
+          "path": "packages/provenistem/LIBRARY-AGENT-GUIDE.md",
+          "label": "Agent guide"
+        },
+        {
+          "kind": "evidence_recovery",
+          "path": ".github/workflows/validate.yml",
+          "label": "Validation workflow"
+        }
+      ]
+    },
+    {
+      "repo": "vixttha/Lydite-Test-Vault-Template",
+      "commit": "eae4c9d9d56ed132b400d7c0f56a9babfe5cba07",
+      "profile": "reference",
+      "tasks": [
+        {
+          "kind": "human_onboarding",
+          "path": "starter/test-vault/README.md",
+          "label": "Install the starter"
+        },
+        {
+          "kind": "agent_navigation",
+          "path": "docs/testing.md",
+          "label": "Test and receipt workflow"
+        },
+        {
+          "kind": "evidence_recovery",
+          "path": ".github/workflows/validate.yml",
+          "label": "Public validation definition"
+        }
+      ]
+    },
+    {
+      "repo": "vixttha/Brand-Identity-Template",
+      "commit": "74a4666404fb4aa427881d0907cacbc8c65e2cfc",
+      "profile": "reference",
+      "tasks": [
+        {
+          "kind": "human_onboarding",
+          "path": "brand-identity/README.md",
+          "label": "Brand kit workflow"
+        },
+        {
+          "kind": "agent_navigation",
+          "path": "ENGINEERING-LAWS.md",
+          "label": "Engineering authority and independence"
+        },
+        {
+          "kind": "evidence_recovery",
+          "path": ".github/workflows/brand-identity.yml",
+          "label": "Brand verification workflow"
+        }
+      ]
+    }
+  ]
+}
