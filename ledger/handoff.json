@@ -3,12 +3,16 @@
   "active": {
     "issue": 8,
     "version": "v0.0.6.8",
-    "phase": "Validate",
-    "next_action": "Original aggregate repair commit contains type gates; confirmed ancestor of qualified PR #162. Run directed #8 controls on public Ubuntu/Windows, including Boolean schema, alias string, nonstring alias and valid --list. Retain candidate unchanged.",
+    "phase": "Internal Auditor",
+    "next_action": "Read both OS directed logs and unchanged registry digest, original type-check implementation and aggregate ancestor; review candidate Graphify/CodeRabbit qualification and dependency.",
     "fix_sha": "562d278ad49d0b4f34c742f0c87e9c63cd8dd664",
     "candidate_sha": "79619d43bc04ccc49097e62058fd3dc0653dd672",
     "pull_request": 162,
-    "evidence": []
+    "evidence": [
+      "https://github.com/vixttha/README-HQ/actions/runs/45670701349/attempts/1",
+      "https://github.com/vixttha/README-HQ/actions/runs/45662947823/attempts/1",
+      "https://github.com/vixttha/README-HQ/actions/runs/45662963152/attempts/1"
+    ]
   },
   "history": [
     {
