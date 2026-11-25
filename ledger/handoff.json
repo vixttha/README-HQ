@@ -3,8 +3,8 @@
   "active": {
     "issue": 8,
     "version": "v0.0.6.8",
-    "phase": "Internal Auditor",
-    "next_action": "Read both OS directed logs and unchanged registry digest, original type-check implementation and aggregate ancestor; review candidate Graphify/CodeRabbit qualification and dependency.",
+    "phase": "Head",
+    "next_action": "Technical criterion passed: both exact-candidate public OS receipts show Boolean schema, string alias and nonstring alias rejection, valid list 17 records, identical registry SHA-256; original fix ancestor and PR head unchanged, Graphify and CodeRabbit passed. #7 individual acceptance and publication remain outstanding. No merge.",
     "fix_sha": "562d278ad49d0b4f34c742f0c87e9c63cd8dd664",
     "candidate_sha": "79619d43bc04ccc49097e62058fd3dc0653dd672",
     "pull_request": 162,
