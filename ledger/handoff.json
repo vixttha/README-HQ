@@ -3,12 +3,16 @@
   "active": {
     "issue": 9,
     "version": "v0.0.6.9",
-    "phase": "Validate",
-    "next_action": "Original aggregate repair stages complete maps before publication. Verify fresh real second-map failure, zero partial output, retry with MCP readback and occupied output preservation on public Ubuntu; reuse unchanged qualified full candidate Windows results.",
+    "phase": "Internal Auditor",
+    "next_action": "Read exact candidate #9 fault/retry receipt, six graph digests and MCP results; compare original aggregate repair staging and PR head.",
     "fix_sha": "562d278ad49d0b4f34c742f0c87e9c63cd8dd664",
     "candidate_sha": "79619d43bc04ccc49097e62058fd3dc0653dd672",
     "pull_request": 162,
-    "evidence": []
+    "evidence": [
+      "https://github.com/vixttha/README-HQ/actions/runs/45671225194/attempts/1",
+      "https://github.com/vixttha/README-HQ/actions/runs/45662947823/attempts/1",
+      "https://github.com/vixttha/README-HQ/actions/runs/45662963152/attempts/1"
+    ]
   },
   "history": [
     {
