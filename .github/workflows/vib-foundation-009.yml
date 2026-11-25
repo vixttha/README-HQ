@@ -1,0 +1,39 @@
+name: VIB foundation 009 Graphify batch recovery
+on:
+  push:
+    branches: [audit/vib-foundation-009]
+permissions:
+  contents: read
+jobs:
+  verify:
+    if: github.event.repository.visibility == 'public' && github.event.repository.private == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+          path: control
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: 79619d43bc04ccc49097e62058fd3dc0653dd672
+          fetch-depth: 0
+          persist-credentials: false
+          path: candidate
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.12'
+      - name: Exact checkpoint controls and Graphify MCP retry
+        working-directory: candidate
+        shell: bash
+        run: |
+          python -m pip install --require-hashes -r tools/requirements.txt
+          python -m pip install --require-hashes --only-binary=:all: --no-deps -r graphify-hq/template/v0.0.8/requirements.txt
+          python -m pip check
+          python ../control/audit/vib-009.py "$RUNNER_TEMP/vib-009.json"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: vib-009-ubuntu-attempt-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/vib-009.json
+          if-no-files-found: error
