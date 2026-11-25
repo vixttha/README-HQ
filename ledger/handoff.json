@@ -3,11 +3,11 @@
   "active": {
     "issue": 10,
     "version": "v0.0.6.10",
-    "phase": "Worker",
-    "next_action": "Verify three rendered cells and original readable pipe text using actual Graphify renderer at exact candidate.",
-    "fix_sha": null,
-    "candidate_sha": null,
-    "pull_request": null,
+    "phase": "Validate",
+    "next_action": "Original fix escapes title and summary before rendering; exact-candidate public Ubuntu control renders three rows and checks parsed cell count and original readable text.",
+    "fix_sha": "562d278ad49d0b4f34c742f0c87e9c63cd8dd664",
+    "candidate_sha": "79619d43bc04ccc49097e62058fd3dc0653dd672",
+    "pull_request": 162,
     "evidence": []
   },
   "history": [
