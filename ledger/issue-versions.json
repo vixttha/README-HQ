@@ -95,7 +95,7 @@
     {
       "issue": 11,
       "version": "v0.0.6.11",
-      "state": "assigned",
+      "state": "in_progress",
       "acceptance": [
         "Classify the trusted hosting repository before any jobs are scheduled. Verify public, private, internal, unknown, and fork-PR metadata. Only verified public mode may schedule standard hosted validation. Use offline validation or an explicitly configured private environment for private/internal mode, and keep evidence private."
       ]
