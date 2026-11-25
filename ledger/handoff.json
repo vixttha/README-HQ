@@ -3,11 +3,11 @@
   "active": {
     "issue": 8,
     "version": "v0.0.6.8",
-    "phase": "Worker",
-    "next_action": "Owner requested v0.0.6.8–67; verify original registry schema/alias rejection, valid public list and exact candidate evidence. #7 individual acceptance remains outstanding; no closure or integration until dependencies reconciled.",
-    "fix_sha": null,
-    "candidate_sha": null,
-    "pull_request": null,
+    "phase": "Validate",
+    "next_action": "Original aggregate repair commit contains type gates; confirmed ancestor of qualified PR #162. Run directed #8 controls on public Ubuntu/Windows, including Boolean schema, alias string, nonstring alias and valid --list. Retain candidate unchanged.",
+    "fix_sha": "562d278ad49d0b4f34c742f0c87e9c63cd8dd664",
+    "candidate_sha": "79619d43bc04ccc49097e62058fd3dc0653dd672",
+    "pull_request": 162,
     "evidence": []
   },
   "history": [
