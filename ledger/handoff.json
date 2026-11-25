@@ -1,6 +1,15 @@
 {
   "schema_version": 1,
-  "active": null,
+  "active": {
+    "issue": 9,
+    "version": "v0.0.6.9",
+    "phase": "Worker",
+    "next_action": "Owner scope #9: reproduce actual second-map failure and retry exact candidate on public Ubuntu with Graphify MCP; no product edits unless confirmed defect.",
+    "fix_sha": null,
+    "candidate_sha": null,
+    "pull_request": null,
+    "evidence": []
+  },
   "history": [
     {
       "handoff": {
