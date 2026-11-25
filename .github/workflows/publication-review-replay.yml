@@ -1,0 +1,45 @@
+name: Publication review replay
+on:
+  push:
+    branches: [audit/v006-publication-review-replay]
+permissions:
+  contents: read
+env:
+  PYTHONHASHSEED: '0'
+  PYTHONDONTWRITEBYTECODE: '1'
+  PIP_DISABLE_PIP_VERSION_CHECK: '1'
+jobs:
+  historical:
+    if: github.event.repository.private == false && github.event.repository.visibility == 'public'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        audit: [audit_assurance, audit_markup, audit_provenance]
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: e82690a770d5e31e91c0d53b8f077e60e83652c5
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.12'
+      - name: Install locked dependencies
+        run: |
+          python -m pip install --require-hashes -r tools/requirements.txt
+          python -m pip install --require-hashes --only-binary=:all: --no-deps -r graphify-hq/template/v0.0.8/requirements.txt
+          python -m pip check
+      - name: Verify exact revision and replay
+        shell: bash
+        run: |
+          test "$(git rev-parse HEAD)" = "e82690a770d5e31e91c0d53b8f077e60e83652c5"
+          python audit/${{ matrix.audit }}.py 2>&1 | tee "${{ matrix.audit }}.log"
+      - name: Retain replay log
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ${{ matrix.audit }}-e82690a770d5e31e91c0d53b8f077e60e83652c5
+          path: ${{ matrix.audit }}.log
+          if-no-files-found: ignore
