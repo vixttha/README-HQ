@@ -339,10 +339,15 @@ def write_receipt(destination, tree, cases, errors, gaps, *, validator_path=None
     sources, unavailable_sources = {}, []
     if tree:
         name = cases.get("entrypoint") or "README.md"
+        # Retain the first observed digest for every audited draft input.
+        if tree.draft:
+            sources.update(tree.draft_source_digests)
         for path in (name, "tools/check_readme_hq.py"):
             try:
                 if path in tree.entries():
-                    sources[path] = sha256(tree.read(path)).hexdigest()
+                    # Rechecking a known input may detect drift, but must not
+                    # replace its original evidence.
+                    sources.setdefault(path, sha256(tree.read(path)).hexdigest())
             except (KeyError, OSError, ValueError):
                 unavailable_sources.append(path)
                 if tree.draft and path in tree.draft_source_digests:

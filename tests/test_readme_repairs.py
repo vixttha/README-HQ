@@ -15,7 +15,7 @@ from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
-from hq_data import GitTree, parse_json
+from hq_data import GitTree, clean_git_environment, parse_json
 from hq_navigation import check_document, readme_path, same_repo_target
 from urllib.error import HTTPError
 from urllib.parse import urlsplit
@@ -28,19 +28,81 @@ from verify_plan import acceptance_sections, split_checkpoints, stage_partitions
 def repository(files):
     with tempfile.TemporaryDirectory() as temp:
         root = Path(temp)
-        subprocess.run(["git", "init", "-q", "--initial-branch=fixture-base", str(root)], check=True)
+        environment = clean_git_environment()
+        subprocess.run(["git", "init", "-q", "--initial-branch=fixture-base", str(root)], check=True, env=environment)
         for name, content in files.items():
             path = root / name
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_bytes(content.encode() if isinstance(content, str) else content)
-        subprocess.run(["git", "config", "commit.gpgSign", "false"], cwd=root, check=True)
-        subprocess.run(["git", "add", "."], cwd=root, check=True)
+        subprocess.run(["git", "config", "commit.gpgSign", "false"], cwd=root, check=True, env=environment)
+        subprocess.run(["git", "add", "."], cwd=root, check=True, env=environment)
         subprocess.run(["git", "-c", "user.name=Fixture", "-c", "user.email=test@example.invalid",
-                        "commit", "-qm", "Fixture"], cwd=root, check=True)
+                        "commit", "-qm", "Fixture"], cwd=root, check=True, env=environment)
         yield GitTree(root)
 
 
 class ReaderTests(unittest.TestCase):
+    def test_review_publication_observation_refuses_mixed_or_changing_rules(self):
+        from check_publication_rules import main
+        from unittest.mock import Mock
+        metadata = {"protected": True, "commit": {"sha": "a" * 40}}
+        pr = {"type": "pull_request"}
+        status = {"type": "required_status_checks", "parameters": {"required_status_checks": [{"context": "reader"}]}}
+        classic = {"required_status_checks": {"contexts": ["reader"]}}
+        args = ["check_publication_rules.py", "example/repo", "main", "--require-check", "reader"]
+        for first, second, expected, observation in (
+            ([pr], [pr], 2, "split-endpoint-coverage"),
+            ([pr, status], [pr], 2, "changed-during-read"),
+            ([pr, status], [pr, status], 0, "repeated-reads-agree-not-atomic"),
+        ):
+            responses = [metadata, first, classic, second, metadata, classic]
+            def response(request, timeout):
+                item = Mock()
+                item.__enter__ = Mock(return_value=item)
+                item.__exit__ = Mock(return_value=False)
+                item.headers = {}
+                item.read.return_value = json.dumps(responses.pop(0))
+                return item
+            with patch("sys.argv", args), patch("check_publication_rules.urlopen", side_effect=response), contextlib.redirect_stdout(StringIO()) as output:
+                self.assertEqual(main(), expected)
+            self.assertEqual(json.loads(output.getvalue())["configuration_observation"], observation)
+            self.assertFalse(responses)
+
+
+    def test_review_fixture_setup_cannot_modify_caller_repository(self):
+        with repository({"README.md": "# Caller"}) as caller:
+            caller.git("config", "commit.gpgSign", "true")
+            before = (caller.root / ".git/index").read_bytes()
+            with patch.dict(os.environ, {"GIT_DIR": str(caller.root / ".git"),
+                                         "GIT_WORK_TREE": str(caller.root),
+                                         "GIT_INDEX_FILE": str(caller.root / ".git/index")}):
+                with repository({"README.md": "# Isolated fixture"}) as fixture:
+                    self.assertNotEqual(fixture.commit, caller.commit)
+                    self.assertEqual(fixture.read("README.md"), b"# Isolated fixture")
+            self.assertEqual(caller.git("config", "commit.gpgSign").strip(), b"true")
+            self.assertEqual((caller.root / ".git/index").read_bytes(), before)
+            self.assertEqual(caller.resolve("HEAD"), caller.commit)
+
+    def test_review_draft_receipt_retains_all_observed_inputs(self):
+        from hq_smoke import write_receipt
+        files = {"README.md": "# Guide\n\nA meaningful project description.\n\n[Guide](guide.md#draft)\n",
+                 "guide.md": "# Original\n"}
+        with repository(files) as committed:
+            draft = GitTree(committed.root, draft=True, track_draft_reads=True)
+            guide = committed.root / "guide.md"
+            guide.write_bytes(b"# Draft\n")
+            errors, gaps = [], []
+            check_document(draft, "README.md", errors, gaps)
+            self.assertFalse(errors)
+            guide.write_bytes(b"# Later\n")
+            receipt = committed.root / "audit.json"
+            write_receipt(receipt, draft, {"entrypoint": "README.md"}, errors, gaps)
+            data = json.loads(receipt.read_bytes())
+            self.assertEqual(data["sources"]["guide.md"], sha256(b"# Draft\n").hexdigest())
+            self.assertEqual(data["sources"]["README.md"], sha256(files["README.md"].encode()).hexdigest())
+            self.assertNotEqual(data["sources"]["guide.md"], sha256(guide.read_bytes()).hexdigest())
+
+
     def test_review_draft_reads_detect_changed_bytes(self):
         with repository({"README.md": "# Original"}) as committed:
             tree = GitTree(committed.root, draft=True, track_draft_reads=True)

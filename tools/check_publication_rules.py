@@ -112,6 +112,15 @@ def main():
             result.update(mechanical_gate="incomplete", configuration_observation="changed-during-read")
         else:
             result["configuration_observation"] = "repeated-reads-agree-not-atomic"
+            # Never combine partial requirements from separate endpoints to
+            # claim success. At least one observed configuration must contain
+            # the complete gate on its own.
+            rules_only = evaluate_rules(metadata, rules, options.require_check)
+            classic_only = evaluate_rules(metadata, [], options.require_check, classic)
+            if (result["mechanical_gate"] == "observed"
+                    and rules_only["mechanical_gate"] != "observed"
+                    and classic_only["mechanical_gate"] != "observed"):
+                result.update(mechanical_gate="incomplete", configuration_observation="split-endpoint-coverage")
         result.update(repository=options.repository, branch=options.branch, branch_commit=metadata["commit"]["sha"])
     except (KeyError, OSError, TypeError, ValueError, HTTPException):
         print(json.dumps({"mechanical_gate": "unavailable", "owner_exact_sha_publication_decision": "separate"}))
