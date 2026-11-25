@@ -20,7 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
-          ref: e82690a770d5e31e91c0d53b8f077e60e83652c5
+          ref: 5caf5c03630c3684158c7def8f050b72d6a61e94
           fetch-depth: 0
           persist-credentials: false
       - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
@@ -34,12 +34,12 @@ jobs:
       - name: Verify exact revision and replay
         shell: bash
         run: |
-          test "$(git rev-parse HEAD)" = "e82690a770d5e31e91c0d53b8f077e60e83652c5"
+          test "$(git rev-parse HEAD)" = "5caf5c03630c3684158c7def8f050b72d6a61e94"
           python audit/${{ matrix.audit }}.py 2>&1 | tee "${{ matrix.audit }}.log"
       - name: Retain replay log
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: ${{ matrix.audit }}-e82690a770d5e31e91c0d53b8f077e60e83652c5
+          name: ${{ matrix.audit }}-5caf5c03630c3684158c7def8f050b72d6a61e94
           path: ${{ matrix.audit }}.log
           if-no-files-found: ignore
