@@ -1,8 +1,8 @@
-# README HQ repair pipeline v0.0.6.78–v0.0.6.141
+# README HQ repair pipeline v0.0.6.78–v0.0.6.143
 
 **Status** Active planning. Implementation awaits owner approval. The sequence continues after checkpoint `v0.0.6.77` is verified.
 
-This continuation covers 64 assigned GitHub issues in checkpoints .78–.141 (historical assignments retained; current issue states may differ). Checkpoint numbers match issues #78–#140 in this snapshot. Each repair has its own commit and post-fix debug gate. The [full-stack triage](TRIAGE.md) covers all 139 open issues across this and the two earlier plans. The observed baseline is [draft PR #68 at `8d50cae`](https://github.com/vixttha/README-HQ/commit/8d50caec2bc6fcb998994a1fd302294a029325f9). [Checkpoints .1–.67](https://github.com/vixttha/README-HQ/blob/7f4562b8f44544bc9dd4b479fcd1bc30ca07ca94/plans/v0.0.6-repairs/README.md) · [Checkpoints .68–.77](https://github.com/vixttha/README-HQ/blob/ac07987cfe11d6592b8def2ff16b72a6b2c0a203/plans/v0.0.6.68-to-v0.0.6.77/README.md) · [Machine-readable ledger](checkpoints.json)
+This continuation covers 66 assigned GitHub issues in checkpoints .78–.143 (historical assignments retained; current issue states may differ). Checkpoint numbers match issues #78–#140 in this snapshot. Each repair has its own commit and post-fix debug gate. The [full-stack triage](TRIAGE.md) covers all 139 open issues across this and the two earlier plans. The observed baseline is [draft PR #68 at `8d50cae`](https://github.com/vixttha/README-HQ/commit/8d50caec2bc6fcb998994a1fd302294a029325f9). [Checkpoints .1–.67](https://github.com/vixttha/README-HQ/blob/7f4562b8f44544bc9dd4b479fcd1bc30ca07ca94/plans/v0.0.6-repairs/README.md) · [Checkpoints .68–.77](https://github.com/vixttha/README-HQ/blob/ac07987cfe11d6592b8def2ff16b72a6b2c0a203/plans/v0.0.6.68-to-v0.0.6.77/README.md) · [Machine-readable ledger](checkpoints.json)
 
 | Checkpoint | GitHub issue | Repair | Priority | Start after |
 | --- | --- | --- | --- | --- |
@@ -70,6 +70,8 @@ This continuation covers 64 assigned GitHub issues in checkpoints .78–.141 (hi
 | `v0.0.6.139` | [#139](https://github.com/vixttha/README-HQ/issues/139) | Bind draft receipts to the checked media bytes | Medium | `v0.0.6.138` |
 | `v0.0.6.140` | [#140](https://github.com/vixttha/README-HQ/issues/140) | Honor accessible names in mixed Markdown and HTML image links | Medium | `v0.0.6.139` |
 | `v0.0.6.141` | [#147](https://github.com/vixttha/README-HQ/issues/147) | Resolve learning intake against a pinned external technique catalog | Unassigned (severity not evidenced) | `v0.0.6.140` |
+| `v0.0.6.142` | [#158](https://github.com/vixttha/README-HQ/issues/158) | Reconcile external catalog repair with six-stack integration | High | `v0.0.6.141` |
+| `v0.0.6.143` | [#161](https://github.com/vixttha/README-HQ/issues/161) | Resolve historical learning blob identity without replacement refs | Unassigned — issue does not establish severity | `v0.0.6.142` |
 
 ## Repair batches
 
@@ -508,3 +510,33 @@ Keep the existing acceptance records for the 67-checkpoint candidate open until 
 - **Post-fix acceptance** New receipts pin the external catalog commit and preserve `relative-navigation` plus the valid ordered five-step combination; unavailable or invalid catalogs never silently fall back to bundled entries. Missing/retired steps fail explicitly, repeated inputs are idempotent, and legacy receipts remain readable. Replay the original failure and passing control at the **exact repair SHA**, with post-fix debug before advancement or merge consideration.
 - **Passing control and platforms** Pinned valid external-only entry and complete combination succeed with stable provenance; historical receipt remains readable; unavailable catalog and retired-step negative controls fail explicitly. Standard public `ubuntu-latest` and `windows-latest`, plus Graphify MCP for catalog provenance and graph relations.
 - **Evidence and limits** [Draft PR #150](https://github.com/vixttha/README-HQ/pull/150) at [`90c2944`](https://github.com/vixttha/README-HQ/commit/90c2944f9c293313af42042fa9a782a69f4e431b) reports a successful [Ubuntu, Windows, and Graphify run](https://github.com/vixttha/README-HQ/actions/runs/44671236678/attempts/1). This is draft evidence, not independent acceptance or owner approval. #146 was addressed on `readme-hq` at `788f212`, #148 on `README-Technique-Library` at `5eb7412`, and #149 on `Provenistem` at `e0ffb32`; preserve their separate issue records and gates. No implementation or runner action is authorized by this plan.
+
+## Backlog reconciliation — 2026-11-25
+
+2026-11-25 reconciliation: #159 is an unnumbered publication scope gate (wording parity is not proof of all behavior); #156 is an unnumbered integration gate; #153 is policy, not a defect. #147/.141 remains open and independently gated despite combined draft evidence. #53/.53 remains separate from #161/.143: compiler/version-map vs historical learning verifier. Final candidate 5adfd75f7a3a5864626bdbebff5d2249c381a975 reports 94 reader tests per OS and independent qualification; 67 foundation criteria mapped, 23 direct scoped controls, individual acceptance incomplete. Navigation classification is not semantic proof. Publication remains held; issue comments confer no approval. Licensing direction reported in #156 comment is not a grant or authority. No closure inferred.
+
+[Evidence 1](https://github.com/vixttha/README-HQ/issues/159) · [Evidence 2](https://github.com/vixttha/README-HQ/issues/156) · [Evidence 3](https://github.com/vixttha/README-HQ/issues/153) · [Evidence 4](https://github.com/vixttha/README-HQ/issues/53) · [Evidence 5](https://github.com/vixttha/README-HQ/blob/1d155868f83d6e78fc016343fd59cc27286792d8/audit/final-acceptance/README.md) · [Evidence 6](https://github.com/vixttha/README-HQ/issues/156#issuecomment-7133783228)
+
+### v0.0.6.142
+
+- **Issue:** [#158](https://github.com/vixttha/README-HQ/issues/158); High; awaiting approval.
+- **Affected revision:** `95a54600184d7b95235fc401eb26797cf4ab5b57`.
+- **Replay:** At 95a54600184d7b95235fc401eb26797cf4ab5b57 and sibling 90c2944f9c293313af42042fa9a782a69f4e431b, replay merge-tree against common ancestor 8d50caec2bc6fcb998994a1fd302294a029325f9; expect exit 1 and conflicts in README-GUIDE.md, learning/README.md, learning/intake.py, techniques/README.md, tests/test_readme_repairs.py.
+- **Post-fix acceptance:** At exact repair SHA preserve both parent histories and frozen archives, reconcile all five paths, retain canonical repository identity, anchors, retry diagnostics, unknown/conflicting ID controls, schema 1 readability and schema 2 external catalog provenance; replay external-only ID, ordered combination, unavailable/mismatched catalog, reader regressions, Graphify and adoption. Trial instructions must point to qualified revision. Record post-fix debug and independent #147 acceptance separately.
+- **Passing control:** Valid pinned external catalog yields stable schema 2 receipt and ordered combination; legacy receipt readable; unchanged frozen archives and ordinary adoption pass.
+- **Public runners:** ubuntu-latest, windows-latest; Graphify MCP (related scope as applicable).
+- **Related issues:** [#147](https://github.com/vixttha/README-HQ/issues/147), [#156](https://github.com/vixttha/README-HQ/issues/156), [#159](https://github.com/vixttha/README-HQ/issues/159). Sibling PR #150 at 90c2944f9c293313af42042fa9a782a69f4e431b; Combined draft #160 and #162 at 5adfd75f7a3a5864626bdbebff5d2249c381a975.
+- **Evidence:** [1](https://github.com/vixttha/README-HQ/actions/runs/45401522882/job/138471057676) · [2](https://github.com/vixttha/README-HQ/issues/158#issuecomment-7133547475) · [3](https://github.com/vixttha/README-HQ/actions/runs/45406882814) · [4](https://github.com/vixttha/README-HQ/blob/1d155868f83d6e78fc016343fd59cc27286792d8/audit/final-acceptance/README.md). Reported draft repair 5adfd75f7a3a5864626bdbebff5d2249c381a975; independent run 45406882814, 94 reader tests per OS; acceptance remains pending.
+- **Limits:** Draft qualification evidence, not owner approval or merge acceptance. Replay own failure and passing control at exact repair SHA before advancement. No implementation authorized.
+
+### v0.0.6.143
+
+- **Issue:** [#161](https://github.com/vixttha/README-HQ/issues/161); Unassigned — issue does not establish severity; awaiting approval.
+- **Affected revision:** `1223ba654dfb8bba32d2aca1ba1514f89eef724e`.
+- **Replay:** At affected SHA create differing original and replacement README blobs and a local Git replacement ref; historical learning verify_sources reads original bytes but ordinary rev-parse resolves replacement blob. Replay valid original identity and incorrect replacement identity.
+- **Post-fix acceptance:** At exact repair SHA both byte and blob identity reads resolve original objects; valid original line/blob accepted with replacement refs present, replacement blob ID rejected; frozen snapshots unchanged. Replay .53 compiler/version-map case independently and record post-fix debug.
+- **Passing control:** Original pinned blob and line pass with and without replacement refs; replacement ID fails.
+- **Public runners:** ubuntu-latest, windows-latest; Graphify MCP (related scope as applicable).
+- **Related issues:** [#53](https://github.com/vixttha/README-HQ/issues/53), [#156](https://github.com/vixttha/README-HQ/issues/156). .53 Graphify compiler/version-map original-object reads; distinct historical learning verifier path; Draft repair 5adfd75f7a3a5864626bdbebff5d2249c381a975.
+- **Evidence:** [1](https://github.com/vixttha/README-HQ/blob/1223ba654dfb8bba32d2aca1ba1514f89eef724e/learning/audit_learning.py) · [2](https://github.com/vixttha/README-HQ/issues/161#issuecomment-7133362292) · [3](https://github.com/vixttha/README-HQ/issues/161#issuecomment-7133550908) · [4](https://github.com/vixttha/README-HQ/actions/runs/45406506188/job/138488566086) · [5](https://github.com/vixttha/README-HQ/actions/runs/45406882814) · [6](https://github.com/vixttha/README-HQ/blob/1d155868f83d6e78fc016343fd59cc27286792d8/audit/final-acceptance/README.md). Reported repair 5adfd75f7a3a5864626bdbebff5d2249c381a975; 94/94 each OS and independent run 45406882814. Graphify applies to related .53 regression, not a substitute for historical learning case.
+- **Limits:** Draft qualification evidence, not owner approval or merge acceptance. Replay own failure and passing control at exact repair SHA before advancement. No implementation authorized.
