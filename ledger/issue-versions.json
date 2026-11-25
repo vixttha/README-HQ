@@ -68,7 +68,7 @@
     {
       "issue": 8,
       "version": "v0.0.6.8",
-      "state": "in_progress",
+      "state": "staged",
       "acceptance": [
         "Enforce the registry schema and explicit field types before normalizing IDs or aliases.",
         "Reject a Boolean schema and a string in place of the aliases array. Preserve the valid catalog and the public list command."

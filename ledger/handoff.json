@@ -1,19 +1,6 @@
 {
   "schema_version": 1,
-  "active": {
-    "issue": 8,
-    "version": "v0.0.6.8",
-    "phase": "Head",
-    "next_action": "Technical criterion passed: both exact-candidate public OS receipts show Boolean schema, string alias and nonstring alias rejection, valid list 17 records, identical registry SHA-256; original fix ancestor and PR head unchanged, Graphify and CodeRabbit passed. #7 individual acceptance and publication remain outstanding. No merge.",
-    "fix_sha": "562d278ad49d0b4f34c742f0c87e9c63cd8dd664",
-    "candidate_sha": "79619d43bc04ccc49097e62058fd3dc0653dd672",
-    "pull_request": 162,
-    "evidence": [
-      "https://github.com/vixttha/README-HQ/actions/runs/45670701349/attempts/1",
-      "https://github.com/vixttha/README-HQ/actions/runs/45662947823/attempts/1",
-      "https://github.com/vixttha/README-HQ/actions/runs/45662963152/attempts/1"
-    ]
-  },
+  "active": null,
   "history": [
     {
       "handoff": {
@@ -28,6 +15,25 @@
       },
       "disposition": "deferred",
       "decision": "Owner directed work on v0.0.6.8–67 and latest VIB upgrade. Defer #1's live default-page verification until authorized publication; do not close or accept #1. #2–7 remain assigned outside current execution scope.",
+      "merged_sha": null
+    },
+    {
+      "handoff": {
+        "issue": 8,
+        "version": "v0.0.6.8",
+        "phase": "Head",
+        "next_action": "Technical criterion passed: both exact-candidate public OS receipts show Boolean schema, string alias and nonstring alias rejection, valid list 17 records, identical registry SHA-256; original fix ancestor and PR head unchanged, Graphify and CodeRabbit passed. #7 individual acceptance and publication remain outstanding. No merge.",
+        "fix_sha": "562d278ad49d0b4f34c742f0c87e9c63cd8dd664",
+        "candidate_sha": "79619d43bc04ccc49097e62058fd3dc0653dd672",
+        "pull_request": 162,
+        "evidence": [
+          "https://github.com/vixttha/README-HQ/actions/runs/45670701349/attempts/1",
+          "https://github.com/vixttha/README-HQ/actions/runs/45662947823/attempts/1",
+          "https://github.com/vixttha/README-HQ/actions/runs/45662963152/attempts/1"
+        ]
+      },
+      "disposition": "staged",
+      "decision": "Owner's requested v0.0.6.8–67 execution scope: stage #8 technical acceptance on existing open PR #162, retain dependency #7 individual sign-off and final integration/publication gates. Do not close issue or claim integrated.",
       "merged_sha": null
     }
   ]
