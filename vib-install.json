@@ -2,7 +2,7 @@
   "schema_version": 1,
   "package": "Version-Issues-Hub",
   "source_repository": "vixttha/Version-Issues-Hub",
-  "source_sha": "265e0e4724bc409b16d2605fc4d59d2f3f658eaf",
+  "source_sha": "44573ae95e143116caacd891c842065a6d32743f",
   "target_repository": "vixttha/README-HQ",
   "target_repository_id": 1463992109,
   "product_branch": "main",
@@ -12,17 +12,19 @@
   "target_version": "v0.0.7",
   "enforcement": "disabled",
   "package_files_sha256": {
-    "README.md": "e5220e0873f7e0cf6c95a76df367409bac045dda1255e7694f0938c0e700f7b7",
+    "README.md": "9da27f29fef66e28e94090422ee1c5c6dbef74bbefc77ffdff3d34cd83c4f563",
     "WORKFLOW.md": "bb178351ba1767997dabff83d0542ac08c38241c3d448813c6fc08dfe6fbc816",
     "tools/checkpoint.py": "f444c18b83191edc7bd8a07b9b0852699467a169416443a6ca72c3022b426a25",
-    "tools/install.py": "de80d7545d3e76789b19c18474aa657d16f1437f33eb8c0f4fb0c4efa9789ca7",
+    "tools/install.py": "e40fba45415a83aed0bc5567d80ad35bbecfb14848a9dbc716d728e599a2e248",
     "tools/session.py": "7151e41337544cbde6aa9ab3f5c70974315f12a5a4ab2ae9fb7d2e5bcdc89fd7",
     "tools/gate.py": "dba66f94529c5d5ff0e0dea03516a12faecbb12e3a69efbc637a545c5293792e",
     "tools/standard.py": "1317ce33722205ebc3bdbf83c581680b7d18fa62ddcaf590eb29a9d7ae92d001",
     "STANDARD.md": "5cf7c1c331718d1e0256c1c18fab29e784cc23832c189b2c610fda57f22e7d30",
     "GATE.md": "e979cdec5c06e979a6de61eb247ac54e17193d6c5698413fbccfea5a4c64ed2b",
     "AGENTS.md": "f0f7c09692d2125000bb8e948d1253b1de10da9edeea36a22d5ca48944a8027c",
-    "tools/lifecycle.py": "5521d40a103e90de0b79238f1347e2ce645d78e618c9b05ebc0d6b4bfec052ed",
-    "LIFECYCLE.md": "a4ee95455004804f92d0064c921929d0d06bfdf6dc30b68d4fc451de59f83eb3"
+    "tools/lifecycle.py": "3aad97e097727263c9e525ddcb04b853a7c519d71243f1bbcf958e9606b7fa94",
+    "LIFECYCLE.md": "a4ee95455004804f92d0064c921929d0d06bfdf6dc30b68d4fc451de59f83eb3",
+    "VIB-LICENSE.md": "9eb48619fbc193ab7bb327b090cfcc703000265b83e670f81f231d0b1c43c56e",
+    "VIB-NOTICE.md": "77c1cdba73b23125222e5f8a2cf4ea9c0e51922035ec8059227000d18fe27ce1"
   }
 }
