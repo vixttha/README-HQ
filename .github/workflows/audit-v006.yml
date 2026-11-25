@@ -11,6 +11,7 @@ env:
 jobs:
   findings:
     name: Reproduce the audit findings and query Graphify
+    if: github.event.repository.visibility == 'public' && toJSON(github.event.repository.private) == 'false'
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
@@ -30,6 +31,7 @@ jobs:
         run: python audit/audit_v006.py | tee -a "$GITHUB_STEP_SUMMARY"
   minimum-python:
     name: Verify the documented minimum Python
+    if: github.event.repository.visibility == 'public' && toJSON(github.event.repository.private) == 'false'
     runs-on: windows-latest
     timeout-minutes: 8
     steps:

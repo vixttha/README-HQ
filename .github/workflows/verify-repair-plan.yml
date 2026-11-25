@@ -11,7 +11,7 @@ env:
 jobs:
   validate:
     name: Verify the repair plan and Graphify evidence
-    if: github.repository == 'vixttha/README-HQ' && github.event.repository.private == false
+    if: github.repository == 'vixttha/README-HQ' && github.event.repository.visibility == 'public' && toJSON(github.event.repository.private) == 'false'
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:

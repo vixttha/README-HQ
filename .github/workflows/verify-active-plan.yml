@@ -6,7 +6,7 @@ permissions:
   contents: read
 jobs:
   structure:
-    if: github.event.repository.visibility == 'public'
+    if: github.event.repository.visibility == 'public' && toJSON(github.event.repository.private) == 'false'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:

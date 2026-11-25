@@ -32,6 +32,12 @@ The example creates a disposable repository and pins its exact commit. It runs `
 
 To adapt a spec, set its `commit` to the full SHA selected by `--ref`. Pass it with `--repo`, `--smoke`, and `--receipt`. A local spec uses an `argv` array and `expected.exit` plus an output marker or file outcome. Arguments and expected files use the selected subproject in a temporary shallow checkout. An HTTPS spec uses `url` and `expected.http_status`. Only add `--allow-network` for a URL you intend to probe. The example leaves its URL probe unchecked. Add `--require-smoke` when the audit must prove a passing first action. A skipped, gated, or unresolved required check produces an incomplete receipt and exits 2. A failed expectation exits 1 and lists structured mismatch codes in the receipt. Command stdout and stderr stay out of receipts by default. For a private failure receipt, `--include-smoke-output` retains the first 512 bytes of each stream with a truncation flag. This opt-in copies raw output without secret detection. Keep those receipts out of public artifacts.
 
+## Choose an authorized validation environment
+
+Standard hosted workflow jobs are public-only. Use GitHub's trusted hosting repository metadata: visibility must be public and the private flag must be an actual Boolean false. Missing, conflicting, private or internal metadata does not authorize standard hosted execution. For a fork pull request, the hosting/base repository controls runner policy, not a fork's claimed visibility; separately record the PR head and tested merge checkout. Read-only permissions and ordinary pull-request events do not authorize access to private material.
+
+For private, internal, unknown or inaccessible targets, use an authorized offline checkout (or a separately owner-configured private environment). Run the reader with `--repo`, `--ref` and a receipt path in private storage, without network or Git-fetch opt-ins. Do not upload its output, identifiers, receipts or artifacts to public locations. Report unresolved visibility and coverage to the owner. No private hosted jobs are required by README HQ.
+
 ## Install on a dedicated target branch
 
 Use the reviewed full source SHA, not a moving branch tip. Before copying or publishing files, confirm that applicable reuse terms authorize the installation. A trial or review-only licensing draft grants no additional rights. Until then, use the separate source checkout for read-only consumer audits.

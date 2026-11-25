@@ -607,6 +607,46 @@ class ReaderTests(unittest.TestCase):
                         else:
                             docs.rmdir()
 
+    def test_all_hosted_jobs_require_explicit_public_metadata(self):
+        import re
+        guard = "github.event.repository.visibility == 'public' && toJSON(github.event.repository.private) == 'false'"
+        workflow_dir = ROOT / ".github/workflows"
+        checked = 0
+        for path in sorted(workflow_dir.glob("*.yml")):
+            source = path.read_text(encoding="utf-8")
+            if "jobs:\\n" not in source:
+                continue
+            jobs = re.split(r"(?m)^  [A-Za-z0-9_-]+:\\s*$", source.split("jobs:\\n", 1)[1])
+            for job in jobs:
+                if not re.search(r"(?m)^    runs-on:", job):
+                    continue
+                header = job.split("    steps:", 1)[0]
+                match = re.search(r"(?m)^    if: (.*)$", header)
+                self.assertIsNotNone(match, path.name)
+                condition = match.group(1)
+                if condition == ">-":
+                    condition = " ".join(line.strip() for line in header[match.end():].splitlines()
+                                         if line.startswith("      "))
+                self.assertIn(guard, condition, path.name)
+                checked += 1
+        self.assertGreaterEqual(checked, 7)
+        # Model only the two strict metadata predicates, not the Actions scheduler.
+        def allowed(host, fork_head=None):
+            return host.get("visibility") == "public" and json.dumps(host.get("private")) == "false"
+        for host, fork, expected in (
+            ({"visibility": "public", "private": False}, None, True),
+            ({"visibility": "private", "private": True}, None, False),
+            ({"visibility": "internal", "private": True}, None, False),
+            ({}, None, False),
+            ({"visibility": "public"}, None, False),
+            ({"visibility": "public", "private": "false"}, None, False),
+            ({"visibility": "public", "private": True}, None, False),
+            ({"visibility": "private", "private": True}, {"visibility": "public", "private": False}, False),
+            ({"visibility": "public", "private": False}, {"visibility": "public", "private": False}, True),
+        ):
+            with self.subTest(host=host, fork=fork):
+                self.assertEqual(allowed(host, fork), expected)
+
     def test_public_reader_workflow_preserves_the_validator_exit(self):
         config = (ROOT / ".github/workflows/readme-hq.yml").read_text(encoding="utf-8")
         self.assertIn("\n        run: python tools/check_readme_hq.py --receipt readme-hq-result.json\n"

@@ -14,7 +14,7 @@ jobs:
   validate:
     name: README HQ on ${{ matrix.os }}
     if: >-
-      github.event.repository.private == false && github.event.repository.visibility == 'public' &&
+      github.event.repository.visibility == 'public' && toJSON(github.event.repository.private) == 'false' &&
       (github.event_name != 'push' ||
       github.ref_name == (vars.README_HQ_PUBLICATION_BRANCH || github.event.repository.default_branch) ||
       github.ref_name == 'readme-hq' || github.ref_name == 'graphify-hq' ||
@@ -49,7 +49,7 @@ jobs:
   graphify:
     name: Recoverable Graphify evidence and plan
     if: >-
-      github.event.repository.private == false && github.event.repository.visibility == 'public' &&
+      github.event.repository.visibility == 'public' && toJSON(github.event.repository.private) == 'false' &&
       (github.event_name != 'push' ||
       github.ref_name == (vars.README_HQ_PUBLICATION_BRANCH || github.event.repository.default_branch) ||
       github.ref_name == 'readme-hq' || github.ref_name == 'graphify-hq' ||
