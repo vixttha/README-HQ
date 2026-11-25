@@ -1,6 +1,15 @@
 {
   "schema_version": 1,
-  "active": null,
+  "active": {
+    "issue": 8,
+    "version": "v0.0.6.8",
+    "phase": "Worker",
+    "next_action": "Owner requested v0.0.6.8–67; verify original registry schema/alias rejection, valid public list and exact candidate evidence. #7 individual acceptance remains outstanding; no closure or integration until dependencies reconciled.",
+    "fix_sha": null,
+    "candidate_sha": null,
+    "pull_request": null,
+    "evidence": []
+  },
   "history": [
     {
       "handoff": {
