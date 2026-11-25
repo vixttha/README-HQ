@@ -1,19 +1,6 @@
 {
   "schema_version": 1,
-  "active": {
-    "issue": 9,
-    "version": "v0.0.6.9",
-    "phase": "Head",
-    "next_action": "Technical criterion passed: exact candidate public Ubuntu job 139406723300 forced second subprocess failure, left empty target, rebuilt six maps/17 records with MCP verified and graph digest matching, refused occupied output without changes. Artifact 15050161279. Product head unchanged; Graphify Linux scope, existing full Windows checks passed.",
-    "fix_sha": "562d278ad49d0b4f34c742f0c87e9c63cd8dd664",
-    "candidate_sha": "79619d43bc04ccc49097e62058fd3dc0653dd672",
-    "pull_request": 162,
-    "evidence": [
-      "https://github.com/vixttha/README-HQ/actions/runs/45671225194/attempts/1",
-      "https://github.com/vixttha/README-HQ/actions/runs/45662947823/attempts/1",
-      "https://github.com/vixttha/README-HQ/actions/runs/45662963152/attempts/1"
-    ]
-  },
+  "active": null,
   "history": [
     {
       "handoff": {
@@ -47,6 +34,25 @@
       },
       "disposition": "staged",
       "decision": "Owner's requested v0.0.6.8–67 execution scope: stage #8 technical acceptance on existing open PR #162, retain dependency #7 individual sign-off and final integration/publication gates. Do not close issue or claim integrated.",
+      "merged_sha": null
+    },
+    {
+      "handoff": {
+        "issue": 9,
+        "version": "v0.0.6.9",
+        "phase": "Head",
+        "next_action": "Technical criterion passed: exact candidate public Ubuntu job 139406723300 forced second subprocess failure, left empty target, rebuilt six maps/17 records with MCP verified and graph digest matching, refused occupied output without changes. Artifact 15050161279. Product head unchanged; Graphify Linux scope, existing full Windows checks passed.",
+        "fix_sha": "562d278ad49d0b4f34c742f0c87e9c63cd8dd664",
+        "candidate_sha": "79619d43bc04ccc49097e62058fd3dc0653dd672",
+        "pull_request": 162,
+        "evidence": [
+          "https://github.com/vixttha/README-HQ/actions/runs/45671225194/attempts/1",
+          "https://github.com/vixttha/README-HQ/actions/runs/45662947823/attempts/1",
+          "https://github.com/vixttha/README-HQ/actions/runs/45662963152/attempts/1"
+        ]
+      },
+      "disposition": "staged",
+      "decision": "Owner-directed sequential completion: stage qualified #9 on open PR #162, no closure or integration.",
       "merged_sha": null
     }
   ]

@@ -77,7 +77,7 @@
     {
       "issue": 9,
       "version": "v0.0.6.9",
-      "state": "in_progress",
+      "state": "staged",
       "acceptance": [
         "Publish a complete Graphify batch only after all maps and receipts pass, with a safe retry path.",
         "Force the second map build to fail. Confirm the destination remains safe and rerunning the same output succeeds when the fault is removed."
