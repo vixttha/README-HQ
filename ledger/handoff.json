@@ -3,11 +3,11 @@
   "active": {
     "issue": 11,
     "version": "v0.0.6.11",
-    "phase": "Worker",
-    "next_action": "Verify trusted hosting repository public-only pre-scheduling guards for all product workflows; cover private/internal/unknown and fork metadata synthetically, offline evidence route. Never dispatch private jobs.",
-    "fix_sha": null,
-    "candidate_sha": null,
-    "pull_request": null,
+    "phase": "Validate",
+    "next_action": "All seven hosted jobs across five workflows now require explicit public visibility and actual Boolean false private metadata. New source guard regression models public/private/internal/unknown/conflicting/fork-host cases. Offline route documented. Verify fresh public candidate checks and CodeRabbit, no private jobs. Staged #8–10 require requalification at changed candidate before integration.",
+    "fix_sha": "16e459de2d8fb08ff059e9ac4a68bb55c6e6fdfc",
+    "candidate_sha": "43e29074099742a2c73741176286a44ccdf861a1",
+    "pull_request": 162,
     "evidence": []
   },
   "history": [
