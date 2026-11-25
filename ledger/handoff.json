@@ -3,8 +3,8 @@
   "active": {
     "issue": 10,
     "version": "v0.0.6.10",
-    "phase": "Internal Auditor",
-    "next_action": "Verify actual rendered cells and original text, original fix ancestry, exact candidate PR and retained artifact.",
+    "phase": "Head",
+    "next_action": "Technical criterion passed: exact candidate job 139422585746 parsed three rows with three cells and exact readable text in all cases, including original pipe fixture and stronger literal markup controls. Artifact 15052530756 digest sha256:b46a6bd836e4e9669f452478a97ffa88e1cfc575fb3f077b16d92c9038a6fba6. Graphify Linux scope. PR head unchanged.",
     "fix_sha": "562d278ad49d0b4f34c742f0c87e9c63cd8dd664",
     "candidate_sha": "79619d43bc04ccc49097e62058fd3dc0653dd672",
     "pull_request": 162,
