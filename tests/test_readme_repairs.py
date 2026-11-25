@@ -614,9 +614,9 @@ class ReaderTests(unittest.TestCase):
         checked = 0
         for path in sorted(workflow_dir.glob("*.yml")):
             source = path.read_text(encoding="utf-8")
-            if "jobs:\\n" not in source:
+            if "jobs:\n" not in source:
                 continue
-            jobs = re.split(r"(?m)^  [A-Za-z0-9_-]+:\\s*$", source.split("jobs:\\n", 1)[1])
+            jobs = re.split(r"(?m)^  [A-Za-z0-9_-]+:\s*$", source.split("jobs:\n", 1)[1])
             for job in jobs:
                 if not re.search(r"(?m)^    runs-on:", job):
                     continue
