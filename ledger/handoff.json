@@ -1,5 +1,14 @@
 {
   "schema_version": 1,
-  "active": null,
+  "active": {
+    "issue": 1,
+    "version": "v0.0.6.1",
+    "phase": "Worker",
+    "next_action": "Verify default homepage discovery against the original issue, actual main, and the qualified PR #162. No integration or release authorized.",
+    "fix_sha": null,
+    "candidate_sha": null,
+    "pull_request": null,
+    "evidence": []
+  },
   "history": []
 }

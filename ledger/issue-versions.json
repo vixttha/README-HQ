@@ -5,7 +5,7 @@
     {
       "issue": 1,
       "version": "v0.0.6.1",
-      "state": "assigned",
+      "state": "in_progress",
       "acceptance": [
         "Add a clear route from the default GitHub landing page to the active README HQ version, version index, and Graphify index.",
         "Open the default repo page or plain clone and follow every advertised link to its expected target."
