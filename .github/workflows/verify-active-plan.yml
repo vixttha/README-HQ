@@ -1,0 +1,37 @@
+name: README HQ active repair ledger
+on:
+  push:
+    branches: [plan/v0.0.6.78-to-v0.0.6.128]
+permissions:
+  contents: read
+jobs:
+  structure:
+    if: github.event.repository.visibility == 'public' && toJSON(github.event.repository.private) == 'false'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      PLAN: plans/v0.0.6.78-to-v0.0.6.128
+      BEFORE: ${{ github.event.before }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.12'
+      - name: Install pinned Markdown parser
+        run: |
+          python -m pip install --require-hashes --only-binary=:all: -r tools/markdown-requirements.txt
+      - name: Check the current repair ledger and preserve published mappings
+        shell: bash
+        run: |
+          args=()
+          if [[ "$BEFORE" =~ ^[0-9a-f]{40}$ && "$BEFORE" != 0000000000000000000000000000000000000000 ]]; then
+            git cat-file -e "$BEFORE^{commit}" || git fetch --no-tags origin "$BEFORE"
+            if git cat-file -e "$BEFORE:$PLAN/checkpoints.json"; then
+              git show "$BEFORE:$PLAN/checkpoints.json" > "$RUNNER_TEMP/previous-checkpoints.json"
+              args+=(--previous-ledger "$RUNNER_TEMP/previous-checkpoints.json")
+            fi
+          fi
+          python tools/check_active_plan.py "$PLAN" "${args[@]}"

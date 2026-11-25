@@ -1,0 +1,11 @@
+# Learn from verified public sources
+
+Run the [intake command](intake.py) with a JSON specification and an output directory for public receipts. Each source supplies a unique id, a local Git checkout, a GitHub repository, a ref, a path, a positive line, an anchor, and public visibility. The target uses the same evidence fields plus an audience and capability. Select source IDs and record a decision and rationale for each applicable technique or combination. Supply a top-level `catalog` object with `checkout` (a local Git checkout of the [README Technique Library](https://github.com/vixttha/README-HQ/tree/README-Technique-Library)) and `commit` (a full commit SHA on the library branch). Each finding names either `technique` or `combination`. No fallback to the bundled registry is allowed. A new candidate provides its own problem, practice, and outcome.
+
+The intake verifies public visibility and exact commit against GitHub and verifies the anchor against the pinned Git blob. Submitting identical evidence and decisions yields the same receipt. Changed source, target or catalog commits yield distinct history. Schema 2 receipts identify the pinned catalog, record path, record SHA-256 and ordered combination steps. Schema 1 receipts remain historical evidence. Only active records with selected sources can produce recommendations; every combination step must be active. Selected retired records and unknown IDs stop intake; known unselected records are explicitly excluded. Requests without a catalog fail closed. Keep private inputs outside shared intake.
+
+Reuse decisions and source attribution are recorded under [project and imported material terms](../REUSE.md). The earlier [learning pilot](https://github.com/vixttha/README-HQ/tree/a8d97d0559853538d4d814edf5c998e42cfec3d2/learning) documents the historical experiments.
+
+The intake receipt retains the requested and canonical GitHub repository names, the API repository ID, and the exact matched anchor and line. A canonical rename is accepted only when the canonical metadata confirms the same public repository ID. Different anchors on one line can represent distinct evidence.
+
+Pass `--json-errors` to receive a structured diagnostic on standard error. Retryable API and transport failures have separate codes from invalid evidence. Retry timing is included when GitHub supplies it.
