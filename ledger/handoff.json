@@ -3,8 +3,8 @@
   "active": {
     "issue": 1,
     "version": "v0.0.6.1",
-    "phase": "Worker",
-    "next_action": "Verify default homepage discovery against the original issue, actual main, and the qualified PR #162. No integration or release authorized.",
+    "phase": "Head",
+    "next_action": "BLOCKER: #1 requires the actual default GitHub landing page or plain clone to expose the active version, version index and Graphify. main remains a7a989ffb6b664df86aae0ea01053ea2fc0a4405 with a two-line README; PR #162 at 79619d43bc04ccc49097e62058fd3dc0653dd672 contains the repaired routes, branch and PR run 45662947823 / 45662963152 pass. Publication is not authorized and #156/#24/#132 remain open. Owner decision required: explicitly defer only live-default verification of #1 until approved publication, or keep #1 active. No issue closure or next claim; no invented fix SHA.",
     "fix_sha": null,
     "candidate_sha": null,
     "pull_request": null,
