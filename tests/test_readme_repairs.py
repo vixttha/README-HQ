@@ -1545,7 +1545,9 @@ class EvidenceTests(unittest.TestCase):
             verify_with(original)
 
     def test_plan_acceptance_preserves_heading_text_inside_fenced_examples(self):
-        documented = "### v0.0.6.1\n\n- Run the example.\n"
+        # End the list before a top-level indented fence; otherwise the
+        # Markdown parser may treat the opener as part of the list item.
+        documented = "### v0.0.6.1\n\n- Run the example.\n\nExample follows.\n\n"
         example = ("   ````markdown\n## This is literal\n```\n"
                    "### v0.0.6.99\n~~~\n````\n"
                    "~~~markdown\n## Also literal\n~~~\n")
