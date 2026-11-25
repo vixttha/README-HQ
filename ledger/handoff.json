@@ -3,8 +3,8 @@
   "active": {
     "issue": 9,
     "version": "v0.0.6.9",
-    "phase": "Internal Auditor",
-    "next_action": "Read exact candidate #9 fault/retry receipt, six graph digests and MCP results; compare original aggregate repair staging and PR head.",
+    "phase": "Head",
+    "next_action": "Technical criterion passed: exact candidate public Ubuntu job 139406723300 forced second subprocess failure, left empty target, rebuilt six maps/17 records with MCP verified and graph digest matching, refused occupied output without changes. Artifact 15050161279. Product head unchanged; Graphify Linux scope, existing full Windows checks passed.",
     "fix_sha": "562d278ad49d0b4f34c742f0c87e9c63cd8dd664",
     "candidate_sha": "79619d43bc04ccc49097e62058fd3dc0653dd672",
     "pull_request": 162,
