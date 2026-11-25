@@ -99,7 +99,8 @@ def check_checkpoint_evidence(worktree_path):
         feature["changed_in"] = [{"path": "README.md", "anchor": "# README HQ"}]
         feature["tested_by"] = [{"path": "audit/audit_v006.py", "anchor": "def check_archive_navigation(worktree):"}]
         write_json(manifest, data)
-        run(worktree_path, sys.executable, str(KIT), str(manifest), str(directory))
+        historical_compiler = worktree_path / "graphify-hq/template/v0.0.8/evidence_map.py"
+        run(worktree_path, sys.executable, str(historical_compiler), str(manifest), str(directory))
         check_live_plan(worktree_path)
     print("I50: Exact 49-checkpoint verification passed an unrelated Graphify label, change, and test fixture.", flush=True)
 
