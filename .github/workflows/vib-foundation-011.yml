@@ -1,0 +1,83 @@
+name: VIB foundation 011 public-only guard controls
+on:
+  push:
+    branches: [audit/vib-foundation-011]
+permissions:
+  contents: read
+jobs:
+  verify:
+    if: github.event.repository.visibility == 'public' && toJSON(github.event.repository.private) == 'false'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+          path: control
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: 43e29074099742a2c73741176286a44ccdf861a1
+          fetch-depth: 0
+          persist-credentials: false
+          path: candidate
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.12'
+      - name: Synthetic public expression
+        id: public
+        if: ${{ fromJSON('{"visibility":"public","private":false}').visibility == 'public' && toJSON(fromJSON('{"visibility":"public","private":false}').private) == 'false' }}
+        run: echo "public predicate matched"
+      - name: Synthetic private expression
+        id: private
+        if: ${{ fromJSON('{"visibility":"private","private":true}').visibility == 'public' && toJSON(fromJSON('{"visibility":"private","private":true}').private) == 'false' }}
+        run: echo "public predicate matched"
+      - name: Synthetic internal expression
+        id: internal
+        if: ${{ fromJSON('{"visibility":"internal","private":true}').visibility == 'public' && toJSON(fromJSON('{"visibility":"internal","private":true}').private) == 'false' }}
+        run: echo "public predicate matched"
+      - name: Synthetic missing expression
+        id: missing
+        if: ${{ fromJSON('{}').visibility == 'public' && toJSON(fromJSON('{}').private) == 'false' }}
+        run: echo "public predicate matched"
+      - name: Synthetic missing_private expression
+        id: missing_private
+        if: ${{ fromJSON('{"visibility":"public"}').visibility == 'public' && toJSON(fromJSON('{"visibility":"public"}').private) == 'false' }}
+        run: echo "public predicate matched"
+      - name: Synthetic string_false expression
+        id: string_false
+        if: ${{ fromJSON('{"visibility":"public","private":"false"}').visibility == 'public' && toJSON(fromJSON('{"visibility":"public","private":"false"}').private) == 'false' }}
+        run: echo "public predicate matched"
+      - name: Synthetic conflicting expression
+        id: conflicting
+        if: ${{ fromJSON('{"visibility":"public","private":true}').visibility == 'public' && toJSON(fromJSON('{"visibility":"public","private":true}').private) == 'false' }}
+        run: echo "public predicate matched"
+      - name: Synthetic fork_public expression
+        id: fork_public
+        if: ${{ fromJSON('{"visibility":"public","private":false,"head":{"visibility":"public","private":false}}').visibility == 'public' && toJSON(fromJSON('{"visibility":"public","private":false,"head":{"visibility":"public","private":false}}').private) == 'false' }}
+        run: echo "public predicate matched"
+      - name: Synthetic fork_private_host expression
+        id: fork_private_host
+        if: ${{ fromJSON('{"visibility":"private","private":true,"head":{"visibility":"public","private":false}}').visibility == 'public' && toJSON(fromJSON('{"visibility":"private","private":true,"head":{"visibility":"public","private":false}}').private) == 'false' }}
+        run: echo "public predicate matched"
+      - name: Check actual synthetic expression outcomes and offline reader
+        working-directory: candidate
+        shell: bash
+        env:
+          CASE_PUBLIC: ${{ steps.public.outcome }}
+          CASE_PRIVATE: ${{ steps.private.outcome }}
+          CASE_INTERNAL: ${{ steps.internal.outcome }}
+          CASE_MISSING: ${{ steps.missing.outcome }}
+          CASE_MISSING_PRIVATE: ${{ steps.missing_private.outcome }}
+          CASE_STRING_FALSE: ${{ steps.string_false.outcome }}
+          CASE_CONFLICTING: ${{ steps.conflicting.outcome }}
+          CASE_FORK_PUBLIC: ${{ steps.fork_public.outcome }}
+          CASE_FORK_PRIVATE_HOST: ${{ steps.fork_private_host.outcome }}
+        run: |
+          python -m pip install --require-hashes -r tools/requirements.txt
+          python ../control/audit/vib-011.py "$RUNNER_TEMP/vib-011.json"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: vib-011-attempt-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/vib-011.json
+          if-no-files-found: error
