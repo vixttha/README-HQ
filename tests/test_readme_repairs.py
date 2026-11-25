@@ -28,11 +28,12 @@ from verify_plan import acceptance_sections, split_checkpoints, stage_partitions
 def repository(files):
     with tempfile.TemporaryDirectory() as temp:
         root = Path(temp)
-        subprocess.run(["git", "init", "-q", str(root)], check=True)
+        subprocess.run(["git", "init", "-q", "--initial-branch=fixture-base", str(root)], check=True)
         for name, content in files.items():
             path = root / name
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_bytes(content.encode() if isinstance(content, str) else content)
+        subprocess.run(["git", "config", "commit.gpgSign", "false"], cwd=root, check=True)
         subprocess.run(["git", "add", "."], cwd=root, check=True)
         subprocess.run(["git", "-c", "user.name=Fixture", "-c", "user.email=test@example.invalid",
                         "commit", "-qm", "Fixture"], cwd=root, check=True)
@@ -40,6 +41,41 @@ def repository(files):
 
 
 class ReaderTests(unittest.TestCase):
+    def test_review_git_selectors_cannot_redirect_selected_tree(self):
+        with repository({"README.md": "# Source A"}) as first, repository({"README.md": "# Source B"}) as second:
+            with patch.dict(os.environ, {"GIT_DIR": str(first.root / ".git"), "GIT_WORK_TREE": str(second.root),
+                                         "GIT_INDEX_FILE": str(first.root / ".git/index")}):
+                selected = GitTree(second.root)
+                self.assertEqual(selected.commit, second.commit)
+                self.assertEqual(selected.read("README.md"), b"# Source B")
+
+    def test_review_smoke_rejects_ambiguous_bash_and_http_redirects(self):
+        from hq_smoke import HTTPSRedirectHandler, literal_shell_argv, run_first_action
+        from urllib.request import Request
+        self.assertIsNone(literal_shell_argv(r'python run.py "\$demo"', "bash"))
+        self.assertEqual(literal_shell_argv('python run.py "two words"', "bash"), ["python", "run.py", "two words"])
+        handler = HTTPSRedirectHandler()
+        with self.assertRaises(ValueError):
+            handler.redirect_request(Request("https://example.invalid"), None, 302, "Found", {}, "http://example.invalid")
+        self.assertEqual(handler.redirect_request(Request("https://example.invalid"), None, 302, "Found", {},
+                                                   "https://example.invalid/ok").full_url, "https://example.invalid/ok")
+        with repository({"README.md": "# Example"}) as tree:
+            spec = {"commit": tree.commit, "url": "https://example.invalid", "expected": {"http_status": 200}}
+            with patch("hq_smoke.urlopen", return_value=HTTPError("http://example.invalid", 200, "fixture", {}, BytesIO())):
+                self.assertEqual(run_first_action(tree, spec, allow_network=True)["failure_codes"], ["invalid-https-redirect"])
+
+    def test_review_quickstart_incomplete_local_guide(self):
+        pointer = "version https://git-lfs.github.com/spec/v1\noid sha256:" + "0" * 64 + "\nsize 42\n"
+        files = {"README.md": "# Guide\n\nA meaningful project description.\n\n## Quickstart\n\n[Get started](guide.md)\n",
+                 "guide.md": "# Start\n\n![Diagram](diagram.png)\n", "diagram.png": pointer}
+        with repository(files) as tree:
+            errors, gaps, route = [], [], {}
+            from check_readme_hq import check_first_action_route
+            check_first_action_route(tree, "README.md", [{"kind": "url", "value": "guide.md", "line": 7}],
+                                     errors, gaps, route)
+            self.assertFalse(errors)
+            self.assertEqual(route["result"], "unchecked")
+
     def test_historical_learning_uses_original_blob_and_lines_under_replacement(self):
         loader = importlib.util.spec_from_file_location("historical_learning", ROOT / "learning/audit_learning.py")
         historical = importlib.util.module_from_spec(loader)
@@ -502,6 +538,8 @@ class ReaderTests(unittest.TestCase):
                       "      - name: Run reader regressions\n"
                       "        run: python -m unittest discover", config)
         self.assertIn("      - name: Preserve the exact-SHA receipt\n        if: always()", config)
+        validator_step = config.split("      - name: Validate the pinned tree\n", 1)[1].split("      - name:", 1)[0]
+        self.assertNotIn("continue-on-error:", validator_step)
 
     def test_receipt_persistence_failure_preserves_audit_diagnostics(self):
         for good in (True, False):
@@ -1199,7 +1237,7 @@ A separate [same label](fourth.md).
             with patch("hq_smoke.urlopen") as network, patch("hq_smoke.TemporaryDirectory") as execution:
                 for values, message in invalid:
                     with self.subTest(values=values), self.assertRaisesRegex(ValueError, message):
-                        run(values)
+                        run(values, online=True)
                 network.assert_not_called()
                 execution.assert_not_called()
 

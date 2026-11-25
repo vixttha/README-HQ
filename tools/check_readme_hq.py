@@ -340,7 +340,13 @@ def check_first_action_route(tree, source, actions, errors, gaps, route, *, chec
             mark_unchecked(f"{guide}: Quickstart route content is outside Markdown coverage")
             continue
         before = len(errors)
-        check_document(tree, guide, errors, gaps, checked_media=checked_media, source_commit=commit)
+        guide_gaps = []
+        check_document(tree, guide, errors, guide_gaps, checked_media=checked_media, source_commit=commit)
+        for gap in guide_gaps:
+            if ": external link not checked: " in gap:
+                gaps.append(gap)
+            else:
+                mark_unchecked(gap)
         if len(errors) != before:
             route["result"] = "failed"
 

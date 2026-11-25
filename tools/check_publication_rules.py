@@ -1,6 +1,7 @@
 """Read the effective GitHub publication rules without changing the repository."""
 
 import argparse
+from http.client import HTTPException
 import json
 import os
 import re
@@ -86,17 +87,33 @@ def main():
     try:
         metadata, _ = get(f"/branches/{branch}")
         rules = read_branch_rules(get, branch)
-        classic = None
-        if metadata["protected"]:
+        def read_classic(protected):
+            if not protected:
+                return None
             try:
-                classic, _ = get(f"/branches/{branch}/protection")
+                return get(f"/branches/{branch}/protection")[0]
             except HTTPError as error:
                 with error:
                     if error.code not in {401, 403, 404, 429} and not 500 <= error.code <= 599:
                         raise
+            except (HTTPException, OSError):
+                pass
+            return None
+
+        classic = read_classic(metadata["protected"])
+        repeated_rules = read_branch_rules(get, branch)
+        repeated_metadata, _ = get(f"/branches/{branch}")
+        repeated_classic = read_classic(repeated_metadata["protected"])
         result = evaluate_rules(metadata, rules, options.require_check, classic)
+        # Separate REST endpoints cannot provide an atomic snapshot.
+        if (rules != repeated_rules or classic != repeated_classic
+                or metadata["protected"] != repeated_metadata["protected"]
+                or metadata["commit"]["sha"] != repeated_metadata["commit"]["sha"]):
+            result.update(mechanical_gate="incomplete", configuration_observation="changed-during-read")
+        else:
+            result["configuration_observation"] = "repeated-reads-agree-not-atomic"
         result.update(repository=options.repository, branch=options.branch, branch_commit=metadata["commit"]["sha"])
-    except (KeyError, OSError, TypeError, ValueError):
+    except (KeyError, OSError, TypeError, ValueError, HTTPException):
         print(json.dumps({"mechanical_gate": "unavailable", "owner_exact_sha_publication_decision": "separate"}))
         return 2
     print(json.dumps(result, indent=2))

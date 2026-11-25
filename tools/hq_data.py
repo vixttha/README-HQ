@@ -52,6 +52,16 @@ def github_repository(remote):
     return name if REPOSITORY.fullmatch(name) else None
 
 
+def clean_git_environment():
+    """Prevent inherited repository selectors from redirecting explicit Git operations."""
+    env = os.environ.copy()
+    names = subprocess.check_output(["git", "rev-parse", "--local-env-vars"], env=env).decode("ascii").splitlines()
+    for key in list(env):
+        if key in names or key.startswith(("GIT_CONFIG_KEY_", "GIT_CONFIG_VALUE_")):
+            env.pop(key, None)
+    return env
+
+
 class UnavailableGitBlob(ValueError):
     """A tracked blob could not be read under the selected Git fetch policy."""
 
@@ -66,12 +76,12 @@ class GitTree:
         self._entries = {}
         remote = subprocess.run(
             ["git", "remote", "get-url", "origin"], cwd=self.root,
-            capture_output=True, text=True, check=False,
+            capture_output=True, text=True, check=False, env=clean_git_environment(),
         )
         self.repository = github_repository(remote.stdout.strip()) if remote.returncode == 0 else None
 
     def git(self, *args, allow_fetch=False, input_bytes=None):
-        env = os.environ.copy()
+        env = clean_git_environment()
         if allow_fetch:
             env["GIT_NO_LAZY_FETCH"] = "0"
         else:

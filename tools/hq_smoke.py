@@ -12,9 +12,9 @@ import sys
 from tempfile import TemporaryDirectory
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlsplit
-from urllib.request import Request, urlopen
+from urllib.request import HTTPRedirectHandler, Request, build_opener
 
-from hq_data import read_json
+from hq_data import clean_git_environment, read_json
 
 
 def require_https_url(value, field):
@@ -23,6 +23,16 @@ def require_https_url(value, field):
     url = urlsplit(value)
     if url.scheme != "https" or not url.hostname or url.username is not None or url.password is not None:
         raise ValueError(f"{field} must be an HTTPS URL without credentials")
+
+
+class HTTPSRedirectHandler(HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        require_https_url(newurl, "redirect destination")
+        return super().redirect_request(req, fp, code, msg, headers, newurl)
+
+
+def urlopen(request, *, timeout):
+    return build_opener(HTTPSRedirectHandler()).open(request, timeout=timeout)
 
 
 def url_subject(value):
@@ -99,6 +109,9 @@ def literal_shell_argv(value, language):
             escaped = False
             continue
         if char == "\\" and not windows and quote != "'":
+            # shlex does not decode all Bash double-quoted escapes identically.
+            if quote == '"' and following in {"$", "`"}:
+                return None
             escaped = True
             continue
         if windows and ((char == "\\" and following == '"') or (quote and char == quote == following)):
@@ -168,6 +181,7 @@ def run_first_action(tree, spec, *, allow_network=False, subproject=".", include
             with response:
                 status = response.status
                 effective_url = response.geturl()
+                require_https_url(effective_url, "effective URL")
                 observation = {"http_status": status, "final_url": url_subject(effective_url),
                                "final_url_match": None if final_url is None else final_url == effective_url}
                 if status in (401, 403, 429):
@@ -177,6 +191,8 @@ def run_first_action(tree, spec, *, allow_network=False, subproject=".", include
                 if "contains" in expected:
                     body = response.read(1_000_000).decode("utf-8", "replace")
                     matched = expected["contains"] in body
+        except ValueError:
+            return {"result": "failed", "failure_codes": ["invalid-https-redirect"], **identity}
         except (OSError, URLError):
             return {"result": "unresolved", "detail": "network destination could not be reached", **identity}
         failures = []
@@ -221,8 +237,7 @@ def run_first_action(tree, spec, *, allow_network=False, subproject=".", include
         raise ValueError("smoke working directory must be relative to the selected repository")
     with TemporaryDirectory(prefix="readme-hq-smoke-") as temp:
         checkout = Path(temp) / "checkout"
-        local_git_variables = tree.git("rev-parse", "--local-env-vars").decode("ascii").splitlines()
-        environment = {key: value for key, value in os.environ.items() if key not in local_git_variables}
+        environment = clean_git_environment()
 
         if tree.allow_git_fetch:
             tree.materialize_checkout_blobs()
@@ -325,11 +340,11 @@ def write_receipt(destination, tree, cases, errors, gaps, *, validator_path=None
     if tree:
         name = cases.get("entrypoint") or "README.md"
         for path in (name, "tools/check_readme_hq.py"):
-            if path in tree.entries():
-                try:
+            try:
+                if path in tree.entries():
                     sources[path] = sha256(tree.read(path)).hexdigest()
-                except (KeyError, OSError, ValueError):
-                    unavailable_sources.append(path)
+            except (KeyError, OSError, ValueError):
+                unavailable_sources.append(path)
     hosted = os.environ.get("GITHUB_ACTIONS") == "true"
     run = os.environ.get("GITHUB_RUN_ID") if hosted else None
     repo = os.environ.get("GITHUB_REPOSITORY") if hosted else None
