@@ -1,5 +1,552 @@
 {
   "schema_version": 1,
   "repository": "vixttha/README-HQ",
-  "issues": []
+  "issues": [
+    {
+      "issue": 1,
+      "version": "v0.0.6.1",
+      "state": "assigned",
+      "acceptance": [
+        "Add a clear route from the default GitHub landing page to the active README HQ version, version index, and Graphify index.",
+        "Open the default repo page or plain clone and follow every advertised link to its expected target."
+      ]
+    },
+    {
+      "issue": 2,
+      "version": "v0.0.6.2",
+      "state": "assigned",
+      "acceptance": [
+        "Restore navigable documentation links for the BART v0.0.3 and v0.0.4 homepage snapshots while preserving the frozen README bytes.",
+        "Verify both indexed reading paths and all reported relative destinations. Compare archived README hashes with the audited copies."
+      ]
+    },
+    {
+      "issue": 3,
+      "version": "v0.0.6.3",
+      "state": "assigned",
+      "acceptance": [
+        "Verify the archive's source repository, commit, path, blob, and tracked mode against independently pinned evidence.",
+        "Reject an unrelated or nonexistent source commit and a mode-only change. Verify valid imported snapshots still pass."
+      ]
+    },
+    {
+      "issue": 4,
+      "version": "v0.0.6.4",
+      "state": "assigned",
+      "acceptance": [
+        "Bind accepted standalone README and changelog bytes to source evidence used by archive validation and Graphify.",
+        "Change a frozen changelog in a disposable checkout and confirm the candidate checks reject the drift. Verify the unchanged snapshot passes."
+      ]
+    },
+    {
+      "issue": 5,
+      "version": "v0.0.6.5",
+      "state": "assigned",
+      "acceptance": [
+        "Require each version row to link to its own map and make the homepage current version agree with the canonical index.",
+        "Retarget the v0.0.6 row to the v0.0.5 map and the homepage to v0.0.1. Confirm both valid-but-wrong targets are rejected."
+      ]
+    },
+    {
+      "issue": 6,
+      "version": "v0.0.6.6",
+      "state": "assigned",
+      "acceptance": [
+        "Check rendered Markdown link forms and GitHub heading anchors while ignoring inline code and other literal examples.",
+        "Reject missing targets in titled, reference-style, and supported HTML links. Accept the Setext anchor and inline-code example."
+      ]
+    },
+    {
+      "issue": 7,
+      "version": "v0.0.6.7",
+      "state": "assigned",
+      "acceptance": [
+        "Give each Graphify record the correct verification reference for its own artifact.",
+        "Query the standalone and imported version nodes over MCP and verify they cite the validators that cover their respective artifacts."
+      ]
+    },
+    {
+      "issue": 8,
+      "version": "v0.0.6.8",
+      "state": "assigned",
+      "acceptance": [
+        "Enforce the registry schema and explicit field types before normalizing IDs or aliases.",
+        "Reject a Boolean schema and a string in place of the aliases array. Preserve the valid catalog and the public list command."
+      ]
+    },
+    {
+      "issue": 9,
+      "version": "v0.0.6.9",
+      "state": "assigned",
+      "acceptance": [
+        "Publish a complete Graphify batch only after all maps and receipts pass, with a safe retry path.",
+        "Force the second map build to fail. Confirm the destination remains safe and rerunning the same output succeeds when the fault is removed."
+      ]
+    },
+    {
+      "issue": 10,
+      "version": "v0.0.6.10",
+      "state": "assigned",
+      "acceptance": [
+        "Escape delimiters in catalog titles and summaries before rendering Markdown table cells.",
+        "Generate a row with pipe characters and verify it renders as exactly three cells with the original readable text."
+      ]
+    },
+    {
+      "issue": 11,
+      "version": "v0.0.6.11",
+      "state": "assigned",
+      "acceptance": [
+        "Classify the trusted hosting repository before any jobs are scheduled. Verify public, private, internal, unknown, and fork-PR metadata. Only verified public mode may schedule standard hosted validation. Use offline validation or an explicitly configured private environment for private/internal mode, and keep evidence private."
+      ]
+    },
+    {
+      "issue": 12,
+      "version": "v0.0.6.12",
+      "state": "assigned",
+      "acceptance": [
+        "Run an explicit target/ref for a plain project and a monorepo without requiring HQ's history, registry, or version folders. Report the selected repo, entry point, Git tree, applicable checks, and verification gaps."
+      ]
+    },
+    {
+      "issue": 13,
+      "version": "v0.0.6.13",
+      "state": "assigned",
+      "acceptance": [
+        "Resolve the GitHub-visible README using .github, root, and docs precedence. Run link checks relative to the selected file. Cover competing files, a docs-only README, and a reportable missing README."
+      ]
+    },
+    {
+      "issue": 14,
+      "version": "v0.0.6.14",
+      "state": "assigned",
+      "acceptance": [
+        "Add a profile-aware quality check for empty and placeholder content, visible first action, justified prerequisites, and verifiable material claims. Detect GitHub display truncation and keep qualitative review as a separate result."
+      ]
+    },
+    {
+      "issue": 15,
+      "version": "v0.0.6.15",
+      "state": "assigned",
+      "acceptance": [
+        "Resolve leading-slash GitHub paths from the repository root and ordinary relative paths from the README location. Test both forms in nested folders and continue rejecting references outside the selected repository tree."
+      ]
+    },
+    {
+      "issue": 16,
+      "version": "v0.0.6.16",
+      "state": "assigned",
+      "acceptance": [
+        "Validate checkout-relative and recognized same-repository links against the exact tracked publication tree and ref. Exercise untracked paths, wrong-case paths, explicit refs, and existing links on both Linux and Windows. Report any ref that cannot be resolved."
+      ]
+    },
+    {
+      "issue": 17,
+      "version": "v0.0.6.17",
+      "state": "assigned",
+      "acceptance": [
+        "Validate the adopter's configured publication branch on supported push and PR events while preserving the pre-scheduling visibility gate. Test at least main, master, trunk, and a custom branch."
+      ]
+    },
+    {
+      "issue": 18,
+      "version": "v0.0.6.18",
+      "state": "assigned",
+      "acceptance": [
+        "Bind each finding to a source repository, full commit, path or artifact digest, and anchor. Use observed for a documented pattern. Require outcome, environment, and exact execution evidence before marking a behavioral claim verified."
+      ]
+    },
+    {
+      "issue": 19,
+      "version": "v0.0.6.19",
+      "state": "assigned",
+      "acceptance": [
+        "Normalize evidence identity to repository, commit, path, and evidence span while grouping same-file observations under the same source. Preserve relevant source lines and keep aliases or mirrors from inflating independent corroboration."
+      ]
+    },
+    {
+      "issue": 20,
+      "version": "v0.0.6.20",
+      "state": "assigned",
+      "acceptance": [
+        "Detect exact repeated mechanisms with a canonical signature, flag semantic overlap for review, and retain one stable ID with aliases and corroborating evidence. Test against both active and retired techniques."
+      ]
+    },
+    {
+      "issue": 21,
+      "version": "v0.0.6.21",
+      "state": "assigned",
+      "acceptance": [
+        "Create an idempotent learning intake for supplied source repositories and in-flight discoveries. Persist source revision, candidate identity, disposition, and provenance. Demonstrate that repeated intake records new evidence once and retains versioned history."
+      ]
+    },
+    {
+      "issue": 22,
+      "version": "v0.0.6.22",
+      "state": "assigned",
+      "acceptance": [
+        "Bind recommendations to a target tree, owner-selected references, actual audience and capabilities, and the matching technique record. Record adopt, adapt, already present, declined, irrelevant, or insufficient evidence. Test that changing target facts or allowed sources changes the applicable recommendations."
+      ]
+    },
+    {
+      "issue": 23,
+      "version": "v0.0.6.23",
+      "state": "assigned",
+      "acceptance": [
+        "Keep public shared learning and private project receipts isolated. Require independently resolved visibility and provenance before public admission. Verify using a synthetic private marker that public outputs and logs contain no private identifiers, links, or excerpts."
+      ]
+    },
+    {
+      "issue": 24,
+      "version": "v0.0.6.24",
+      "state": "assigned",
+      "acceptance": [
+        "Record an owner decision on the HQ template's own reuse terms. For learning from an external example, cite the evidence and store an original abstraction. Require explicit license and attribution metadata before including copied material. Keep unresolved rights visible."
+      ]
+    },
+    {
+      "issue": 25,
+      "version": "v0.0.6.25",
+      "state": "assigned",
+      "acceptance": [
+        "Generate immutable Markdown source links with the commit, file path, plain-file mode, and accurate line fragment. Verify at least one public source link opens with its exact line highlighted."
+      ]
+    },
+    {
+      "issue": 26,
+      "version": "v0.0.6.26",
+      "state": "assigned",
+      "acceptance": [
+        "Select source anchors from rendered source structure or explicit reviewed line anchors. Ignore fenced and indented code for heading and changelog detection. Report an ambiguous or absent anchor."
+      ]
+    },
+    {
+      "issue": 27,
+      "version": "v0.0.6.27",
+      "state": "assigned",
+      "acceptance": [
+        "Support explicitly declared, authorized first-use smoke checks with exact revision, environment, invocation, and expected result. Fail on unsuccessful exit and on successful exit with the wrong outcome. Record unsupported, skipped, and unverified scenarios clearly."
+      ]
+    },
+    {
+      "issue": 28,
+      "version": "v0.0.6.28",
+      "state": "assigned",
+      "acceptance": [
+        "Verify local media against the published blob using supported format checks. Require a meaningful accessible name for image-only controls and links. Preserve decorative empty alt text where adjacent accessible content already describes the action."
+      ]
+    },
+    {
+      "issue": 29,
+      "version": "v0.0.6.29",
+      "state": "assigned",
+      "acceptance": [
+        "Collect file and line diagnostics per URL, continue across independent validation cases, and return a failing result with each observed defect. Keep explicit reporting for sections the validator cannot inspect."
+      ]
+    },
+    {
+      "issue": 30,
+      "version": "v0.0.6.30",
+      "state": "assigned",
+      "acceptance": [
+        "Require a resolved target evidence receipt for applicable claims. Verify target facts against a pinned tree, report unresolved evidence, and abstain or mark the recommendation preliminary when the target match cannot be established. Link this pilot defect to the broader project-specific recommendation work in #22."
+      ]
+    },
+    {
+      "issue": 31,
+      "version": "v0.0.6.31",
+      "state": "assigned",
+      "acceptance": [
+        "Use explicit conditional failures for provenance and pass/fail reporting, or fail clearly before verification in unsupported execution modes. Test identical malformed evidence under normal and optimized interpreter settings."
+      ]
+    },
+    {
+      "issue": 32,
+      "version": "v0.0.6.32",
+      "state": "assigned",
+      "acceptance": [
+        "Generate an exact-SHA, machine-readable acceptance receipt with expected cases, outcomes, skips, source hashes, tool versions, and run references. Preserve accepted public receipts in a durable location and keep private evidence isolated."
+      ]
+    },
+    {
+      "issue": 33,
+      "version": "v0.0.6.33",
+      "state": "assigned",
+      "acceptance": [
+        "Generalize Graphify plan partitioning for arbitrary checkpoint counts and verify that no checkpoint is dropped, duplicated, or disconnected across maps."
+      ]
+    },
+    {
+      "issue": 34,
+      "version": "v0.0.6.34",
+      "state": "assigned",
+      "acceptance": [
+        "Verify each outgoing edge against its expected target ID, relation, pinned path, and source range. Reject changed destinations even when totals match."
+      ]
+    },
+    {
+      "issue": 35,
+      "version": "v0.0.6.35",
+      "state": "assigned",
+      "acceptance": [
+        "Bind repository identity to independently established source provenance. Report local graph verification and remote provenance as distinct results and reject an unrelated repository label when provenance is claimed."
+      ]
+    },
+    {
+      "issue": 36,
+      "version": "v0.0.6.36",
+      "state": "assigned",
+      "acceptance": [
+        "Inspect the pinned Git tree entry mode. Reject symlink evidence with a path diagnostic or resolve it inside the same pinned tree with explicit path and mode records."
+      ]
+    },
+    {
+      "issue": 37,
+      "version": "v0.0.6.37",
+      "state": "assigned",
+      "acceptance": [
+        "Reject repeated JSON object keys at any depth before schema validation in registry, archive, version catalog, and Graphify manifest inputs. Include the input path and duplicate key in the diagnostic."
+      ]
+    },
+    {
+      "issue": 38,
+      "version": "v0.0.6.38",
+      "state": "assigned",
+      "acceptance": [
+        "Validate positive inline source line and line-range fragments against the target file, with tests for reversed and out-of-bounds ranges as well as valid last-line references."
+      ]
+    },
+    {
+      "issue": 39,
+      "version": "v0.0.6.39",
+      "state": "assigned",
+      "acceptance": [
+        "Validate the retained import inventory against an independent pinned listing and check archived README links against the imported tree. Fail on coordinated deletion of required files and manifest entries."
+      ]
+    },
+    {
+      "issue": 40,
+      "version": "v0.0.6.40",
+      "state": "assigned",
+      "acceptance": [
+        "Require independently defined coverage for every advertised version. Reject empty or incomplete record sets and identify missing versions and record IDs before publishing verified artifacts."
+      ]
+    },
+    {
+      "issue": 41,
+      "version": "v0.0.6.41",
+      "state": "assigned",
+      "acceptance": [
+        "Use one explicit Git-compatible line model for locating evidence and generating source links. Test embedded Unicode separators and CRLF against pinned physical line numbers."
+      ]
+    },
+    {
+      "issue": 42,
+      "version": "v0.0.6.42",
+      "state": "assigned",
+      "acceptance": [
+        "Hash and inventory supported binary blobs without decoding them. Require text decoding only for line anchors, and report unsupported anchor types clearly."
+      ]
+    },
+    {
+      "issue": 43,
+      "version": "v0.0.6.43",
+      "state": "assigned",
+      "acceptance": [
+        "Stage and validate the graph and receipt as a pair. Preserve the prior accepted pair on a publication failure and test recovery and repeat builds."
+      ]
+    },
+    {
+      "issue": 44,
+      "version": "v0.0.6.44",
+      "state": "assigned",
+      "acceptance": [
+        "Check for a capped commit listing. Resolve membership through a complete supported evidence route or report that membership could not be verified from the bounded response."
+      ]
+    },
+    {
+      "issue": 45,
+      "version": "v0.0.6.45",
+      "state": "assigned",
+      "acceptance": [
+        "Verify explicitly declared, authorized remote first-action URLs against an expected result when supported. Record unchecked, unresolved, gated, and broken routes distinctly in offline and online checks."
+      ]
+    },
+    {
+      "issue": 46,
+      "version": "v0.0.6.46",
+      "state": "assigned",
+      "acceptance": [
+        "Require a positive in-range integer coordinate and a meaningful nonempty anchor before comparing the pinned contents. Cover zero, negative, empty, and valid first/last-line evidence."
+      ]
+    },
+    {
+      "issue": 47,
+      "version": "v0.0.6.47",
+      "state": "assigned",
+      "acceptance": [
+        "Resolve existing recommendations against the canonical technique state and applicable registry revision. Exclude retired IDs from active recommendations and preserve prior decision history."
+      ]
+    },
+    {
+      "issue": 48,
+      "version": "v0.0.6.48",
+      "state": "assigned",
+      "acceptance": [
+        "Verify complete relationship readback for every supported manifest. Query by relation or page results, detect truncation explicitly, and test long valid paths at the documented limits."
+      ]
+    },
+    {
+      "issue": 49,
+      "version": "v0.0.6.49",
+      "state": "assigned",
+      "acceptance": [
+        "Validate source branch names with Git-compatible rules and compare the literal name to the API response. Exercise leading underscores, nested ref names, and invalid refs."
+      ]
+    },
+    {
+      "issue": 50,
+      "version": "v0.0.6.50",
+      "state": "assigned",
+      "acceptance": [
+        "Bind the checkpoint label, planned change anchor, and reproduction fixture to the corresponding issue. Reject each independently when the manifest, graph, and receipt agree on unrelated evidence."
+      ]
+    },
+    {
+      "issue": 51,
+      "version": "v0.0.6.51",
+      "state": "assigned",
+      "acceptance": [
+        "Validate each repair-plan index link against the exact partition and artifact in the checked-out tree. Cover missing and existing-but-wrong graph, manifest, and receipt destinations."
+      ]
+    },
+    {
+      "issue": 52,
+      "version": "v0.0.6.52",
+      "state": "assigned",
+      "acceptance": [
+        "Preserve the bytes of Graphify inputs and generated files across supported checkout settings or compare authoritative Git blobs. Verify default and autocrlf checkouts with real input drift still failing."
+      ]
+    },
+    {
+      "issue": 53,
+      "version": "v0.0.6.53",
+      "state": "assigned",
+      "acceptance": [
+        "Ensure every pinned evidence read uses the original Git object regardless of local replacement refs. Verify the reported line coordinates and digest against that object in both the compiler and version-map builder."
+      ]
+    },
+    {
+      "issue": 54,
+      "version": "v0.0.6.54",
+      "state": "assigned",
+      "acceptance": [
+        "Verify typed graph relationship fields or parse an unambiguous MCP representation. Accept valid paths with bracketed text while counting and checking only actual relationship fields."
+      ]
+    },
+    {
+      "issue": 55,
+      "version": "v0.0.6.55",
+      "state": "assigned",
+      "acceptance": [
+        "Resolve each requested source revision to a full immutable commit before verifying and recording a source observation. Require receipt provenance to retain the resolved SHA and test that moving input refs cannot change a saved observation."
+      ]
+    },
+    {
+      "issue": 56,
+      "version": "v0.0.6.56",
+      "state": "assigned",
+      "acceptance": [
+        "Provide and test a self-map for the actual vendored layout, or route the example explicitly to the working upstream tree. Verify the documented command from a clean checkout and check its graph over MCP."
+      ]
+    },
+    {
+      "issue": 57,
+      "version": "v0.0.6.57",
+      "state": "assigned",
+      "acceptance": [
+        "Require exactly one row per advertised version in the canonical version table. Reject duplicate labels even when their destinations and other columns are identical."
+      ]
+    },
+    {
+      "issue": 58,
+      "version": "v0.0.6.58",
+      "state": "assigned",
+      "acceptance": [
+        "Support checks_requested for adopters that use a merge queue. Verify a queued synthetic merge candidate reports the README and Graphify statuses against the queue SHA under the intended runner policy."
+      ]
+    },
+    {
+      "issue": 59,
+      "version": "v0.0.6.59",
+      "state": "assigned",
+      "acceptance": [
+        "Bind the PR observation to coherent head metadata. Recheck the head across dependent evidence reads and retry or report an unstable observation when it changes. Keep historical member and current head results distinct."
+      ]
+    },
+    {
+      "issue": 60,
+      "version": "v0.0.6.60",
+      "state": "assigned",
+      "acceptance": [
+        "Make technique list output safe and explicit across supported stream encodings. Keep output and exit status consistent when rendering fails, and test redirected ASCII and UTF-8 output."
+      ]
+    },
+    {
+      "issue": 61,
+      "version": "v0.0.6.61",
+      "state": "assigned",
+      "acceptance": [
+        "Reject cross-record exact collisions across the lookup fields promised by the technique guide, or define an explicit disambiguation rule and use it consistently for lookup. Test IDs, aliases, and outcome keys."
+      ]
+    },
+    {
+      "issue": 62,
+      "version": "v0.0.6.62",
+      "state": "assigned",
+      "acceptance": [
+        "Use the review endpoint pagination metadata to distinguish complete results from an intentionally bounded observation. Test 999, 1,000, and more than 1,000 reviews and never represent a partial count as exact."
+      ]
+    },
+    {
+      "issue": 63,
+      "version": "v0.0.6.63",
+      "state": "assigned",
+      "acceptance": [
+        "Recognize headings in supported non-Markdown README formats or require a reviewed explicit anchor with a clear unsupported-format result. Test the three pinned README formats and compare the chosen anchor with the actual document heading."
+      ]
+    },
+    {
+      "issue": 64,
+      "version": "v0.0.6.64",
+      "state": "assigned",
+      "acceptance": [
+        "Permit supported well-formed emoji joiner sequences in exact source anchors and preserve their original text and line coordinates. Test a joined emoji and a plain heading in the same pinned file."
+      ]
+    },
+    {
+      "issue": 65,
+      "version": "v0.0.6.65",
+      "state": "assigned",
+      "acceptance": [
+        "Bind the changelog anchor to the requested release section or a reviewed explicit source line. Reject draft placeholders as release evidence and test a newer unreleased section above the requested release."
+      ]
+    },
+    {
+      "issue": 66,
+      "version": "v0.0.6.66",
+      "state": "assigned",
+      "acceptance": [
+        "Resolve a directory route to the GitHub-rendered README before checking its fragment. Validate supported Markdown extensions and distinguish a missing fragment from an unchecked target."
+      ]
+    },
+    {
+      "issue": 67,
+      "version": "v0.0.6.67",
+      "state": "assigned",
+      "acceptance": [
+        "Recognize documented custom anchor destinations alongside generated heading anchors, while retaining missing-target diagnostics. Verify the fixture against GitHub-rendered HTML and the offline checker."
+      ]
+    }
+  ]
 }
