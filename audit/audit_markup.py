@@ -10,7 +10,8 @@ from tempfile import TemporaryDirectory
 
 
 ROOT = Path(__file__).resolve().parents[1]
-COMPILER = ROOT / "graphify-hq/template/v0.0.8/evidence_map.py"
+BASELINE = "f50e3749dab90ddfe35894284d1660097a1fb1a8"
+COMPILER = None
 
 
 @dataclass(frozen=True)
@@ -178,15 +179,22 @@ def check_release_change_placeholder(temporary, directory, version_maps):
 
 
 def main():
-    module_path = ROOT / "graphify-hq/version_maps.py"
-    spec = importlib.util.spec_from_file_location("version_maps", module_path)
-    version_maps = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(version_maps)
+    global COMPILER
     with TemporaryDirectory(prefix="readme-hq-markup-probes-") as temp:
         temporary = Path(temp)
-        requests = check_real_readme_formats(temporary, version_maps)
-        check_exact_emoji_anchor(temporary)
-        check_release_change_placeholder(temporary, requests, version_maps)
+        historical = temporary / "baseline"
+        run(ROOT, "git", "--no-replace-objects", "worktree", "add", "--quiet", "--detach", str(historical), BASELINE)
+        try:
+            COMPILER = historical / "graphify-hq/template/v0.0.8/evidence_map.py"
+            module_path = historical / "graphify-hq/version_maps.py"
+            spec = importlib.util.spec_from_file_location("version_maps", module_path)
+            version_maps = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(version_maps)
+            requests = check_real_readme_formats(temporary, version_maps)
+            check_exact_emoji_anchor(temporary)
+            check_release_change_placeholder(temporary, requests, version_maps)
+        finally:
+            run(ROOT, "git", "worktree", "remove", "--force", str(historical))
 
 
 if __name__ == "__main__":

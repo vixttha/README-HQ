@@ -224,6 +224,7 @@ def check_learning_mutable_ref(temporary):
 
 
 def main():
+    global KIT
     with TemporaryDirectory(prefix="readme-hq-provenance-fixtures-") as directory:
         temporary = Path(directory)
         with worktree(temporary / "plan", PLAN) as plan:
@@ -231,8 +232,10 @@ def main():
             check_checkpoint_evidence(plan)
             check_plan_index(plan)
         check_checkout_conversion(temporary)
-        check_replacement_object(temporary)
-        check_mcp_relation_field(temporary)
+        with worktree(temporary / "historical-compiler", BASE) as historical:
+            KIT = historical / "graphify-hq/template/v0.0.8/evidence_map.py"
+            check_replacement_object(temporary)
+            check_mcp_relation_field(temporary)
         check_learning_mutable_ref(temporary)
 
 

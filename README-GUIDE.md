@@ -32,6 +32,31 @@ The example creates a disposable repository and pins its exact commit. It runs `
 
 To adapt a spec, set its `commit` to the full SHA selected by `--ref`. Pass it with `--repo`, `--smoke`, and `--receipt`. A local spec uses an `argv` array and `expected.exit` plus an output marker or file outcome. Arguments and expected files use the selected subproject in a temporary shallow checkout. An HTTPS spec uses `url` and `expected.http_status`. Only add `--allow-network` for a URL you intend to probe. The example leaves its URL probe unchecked. Add `--require-smoke` when the audit must prove a passing first action. A skipped, gated, or unresolved required check produces an incomplete receipt and exits 2. A failed expectation exits 1 and lists structured mismatch codes in the receipt. Command stdout and stderr stay out of receipts by default. For a private failure receipt, `--include-smoke-output` retains the first 512 bytes of each stream with a truncation flag. This opt-in copies raw output without secret detection. Keep those receipts out of public artifacts.
 
+## Install on a dedicated target branch
+
+Use the reviewed full source SHA, not a moving branch tip. Before copying or publishing files, confirm that applicable reuse terms authorize the installation. A trial or review-only licensing draft grants no additional rights. Until then, use the separate source checkout for read-only consumer audits.
+
+For an authorized fresh installation, start at the root of a clean target clone. Record its current branch and HEAD. Check the local and remote `readme-hq` branch first; if either exists, stop and review an upgrade rather than replacing it. Fetch the approved source commit into the target clone and create the dedicated branch directly from that commit, not from the product branch. This installs the complete reviewed tree (AGENTS.md, guides, tools, locked requirements, version records and tests) without mixing it into product history.
+
+```sh
+git status --short
+git rev-parse HEAD
+git branch --list readme-hq
+git ls-remote --heads origin refs/heads/readme-hq
+# Stop if dirty, if either branch exists, or if a check failed.
+approved_sha=REPLACE_WITH_APPROVED_40_CHARACTER_SHA
+case "$approved_sha" in
+  *[!0-9a-f]*|'') exit 1 ;;
+esac
+test "${#approved_sha}" -eq 40 &&
+git fetch --no-tags https://github.com/vixttha/README-HQ.git "$approved_sha" &&
+test "$(git rev-parse FETCH_HEAD)" = "$approved_sha" &&
+git branch readme-hq "$approved_sha" &&
+git rev-parse readme-hq
+```
+
+Confirm the branch SHA exactly matches the reviewed source. Record the original product HEAD, installed SHA, target branch, authorization and verification receipt. The commands leave the product checkout on its original branch. Use a separate worktree to inspect or validate the installed branch; do not merge it into the product branch. Push the dedicated branch only with explicit owner permission and applicable distribution rights. Keep local records during upgrades and do not force-push.
+
 ## Draft, archive, and publish
 
 1. Record the target project, docs version, target ref and full SHA, and current homepage status. Decide the first reader task and who needs additional routes.

@@ -14,6 +14,7 @@ from urllib.parse import parse_qs, urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
 BASELINE = "f50e3749dab90ddfe35894284d1660097a1fb1a8"
+LEARNING_BASELINE = "a8d97d0559853538d4d814edf5c998e42cfec3d2"
 
 
 def command(directory, *args, expect=0):
@@ -109,9 +110,9 @@ def check_diagnostic_completeness(worktree):
     print("Q29: A malformed URL stopped navigation checking before a second independently failing link.")
 
 
-def check_target_provenance():
-    pilot = load(ROOT / "learning/audit_learning.py")
-    corpus = json.loads((ROOT / "learning/pilot.json").read_bytes())
+def check_target_provenance(learning):
+    pilot = load(learning / "learning/audit_learning.py")
+    corpus = json.loads((learning / "learning/pilot.json").read_bytes())
     target = corpus["targets"]["Lydite"]
     selected = set(corpus["sources"]) - {target["evidence"]}
     original = pilot.recommendations(corpus, target, selected)
@@ -120,7 +121,7 @@ def check_target_provenance():
     print("Q30: Removing target evidence and substituting a nonexistent target receipt preserve the same pilot recommendation.")
 
 
-def check_optimized_verifier(temporary):
+def check_optimized_verifier(temporary, learning):
     project = temporary / "synthetic-repo"
     project.mkdir()
     git(project, "init", "--quiet")
@@ -132,7 +133,7 @@ def check_optimized_verifier(temporary):
     loader = f"""
 import importlib.util
 from pathlib import Path
-spec = importlib.util.spec_from_file_location('audit_learning', {str(ROOT / "learning/audit_learning.py")!r})
+spec = importlib.util.spec_from_file_location('audit_learning', {str(learning / "learning/audit_learning.py")!r})
 app = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(app)
 sources = {{'test': {{'repository': 'synthetic-repo', 'commit': {revision!r}, 'blob': '0' * 40,
@@ -167,8 +168,13 @@ def main():
             check_first_use(worktree)
             check_media(worktree)
             check_diagnostic_completeness(worktree)
-            check_target_provenance()
-            check_optimized_verifier(temporary)
+            learning = temporary / "historical-learning"
+            git(ROOT, "--no-replace-objects", "worktree", "add", "--quiet", "--detach", str(learning), LEARNING_BASELINE)
+            try:
+                check_target_provenance(learning)
+                check_optimized_verifier(temporary, learning)
+            finally:
+                git(ROOT, "worktree", "remove", "--force", str(learning))
             check_receipt_retention(worktree)
         finally:
             git(ROOT, "worktree", "remove", "--force", str(worktree))
