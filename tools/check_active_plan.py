@@ -69,7 +69,8 @@ def check_plan(markdown, ledger, previous=None):
             raise ValueError(f"checkpoint {item['version']} has incomplete debug obligations")
 
     sections, observed = [], []
-    lines = markdown.splitlines()
+    markdown = markdown.replace("\r\n", "\n").replace("\r", "\n")
+    lines = markdown.split("\n")
     parser = MarkdownIt("commonmark").enable("table")
     tokens = parser.parse(markdown)
     for index, token in enumerate(tokens):

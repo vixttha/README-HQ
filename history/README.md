@@ -9,6 +9,12 @@ The [source manifest](sources.json) records each imported file's Git blob and or
 
 The [version index](../versions/README.md) describes the publication status observed at the time of import. Project license and attribution materials retain their original scope.
 
+## Historical replay notes
+
+The imported AlderVale Graphify generator and checker are frozen source evidence, not maintained executables of this product. Reproduce them in the pinned AlderVale source checkout linked above, with its original source commits available; the nested historical workflows do not run in README HQ. If a Graphify log omits the export because of its size limit, generate into an empty output directory in that original checkout and inspect the generated map and index rather than reconstructing them from truncated logs.
+
+The archived BART v0.0.4 draft refers to two illustrations absent from that imported workspace. Their exact intended version has not been established. Preserve those links and original bytes; the archival display gap is not proof that different-version assets are interchangeable.
+
 ## Publication snapshots added for v0.0.6
 
 | README | Local copy | Source publication |

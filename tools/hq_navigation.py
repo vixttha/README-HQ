@@ -456,7 +456,7 @@ def check_document(tree, source, errors, gaps, *, archive_scope=None, checked_me
             path, selected_commit = target
             commit = selected_commit if selected_commit is not None else source_commit
             entries = tree.entries(commit)
-            directory = not path or any(name.startswith(path + "/") for name in entries)
+            directory = not path or (path not in entries and any(name.startswith(path + "/") for name in entries))
             if path not in entries and not directory:
                 if archive_scope and not link.image and not path.startswith(archive_scope + "/assets/"):
                     gaps.append(f"{source}:{link.line}: original repository route outside import: {link.path}")

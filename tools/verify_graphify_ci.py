@@ -47,7 +47,9 @@ def verify(output):
             ("template tests", ("-m", "unittest", "discover", "-s", KIT, "-p", "test_*.py", "-v"), ()),
             ("integration tests", ("-m", "unittest", "discover", "-s", "tests", "-p", "test_graphify*.py", "-v"), ()),
             ("version maps", ("graphify-hq/version_maps.py", "--check"), Path("graphify-hq/maps").glob("*/receipt.json")),
-            ("repair plan", ("tools/verify_plan.py", "--mcp"), Path("graphify-hq/plans/v0.0.6-repairs").rglob("receipt.json")),
+            ("repair plan", ("tools/verify_plan.py", "--mcp"), (manifest.with_name("receipt.json") for manifest in
+                 [Path("graphify-hq/plans/v0.0.6-repairs/manifest.json"),
+                  *Path("graphify-hq/plans/v0.0.6-repairs").glob("*/manifest.json")])),
         ):
             if code := stage(name, *arguments, receipts=paths):
                 return code

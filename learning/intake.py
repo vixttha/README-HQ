@@ -192,6 +192,8 @@ def record_intake(specification, directory, *, fetch=fetch_github):
             raise ValueError("a recommendation selects one technique or one combination")
         kind = "combination" if "combination" in entry else "technique"
         if kind not in entry:
+            if not draft:
+                raise ValueError("learning finding requires a technique, combination or candidate")
             continue
         identifier = entry[kind]
         record = catalog_record(catalog, kind, identifier)

@@ -3,6 +3,7 @@
 import argparse
 from copy import deepcopy
 import json
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -25,6 +26,7 @@ def checker(directory, cwd=None):
     result = subprocess.run(
         [sys.executable, str(directory / "tools/check_readme_hq.py"), "--list"],
         cwd=cwd or directory, text=True, capture_output=True,
+        env={**os.environ, "GIT_NO_REPLACE_OBJECTS": "1"},
     )
     assert result.returncode == 0, result.stdout + result.stderr
     return result.stdout
@@ -105,7 +107,7 @@ def audit_baseline():
     with TemporaryDirectory(prefix="readme-hq-learning-audit-") as tmp:
         temporary = Path(tmp)
         worktree = temporary / "baseline"
-        git(ROOT, "worktree", "add", "--quiet", "--detach", str(worktree), BASELINE)
+        git(ROOT, "--no-replace-objects", "worktree", "add", "--quiet", "--detach", str(worktree), BASELINE)
         try:
             registry = worktree / "techniques/registry.json"
             original_bytes = registry.read_bytes()
