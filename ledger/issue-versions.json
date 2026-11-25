@@ -86,7 +86,7 @@
     {
       "issue": 10,
       "version": "v0.0.6.10",
-      "state": "assigned",
+      "state": "in_progress",
       "acceptance": [
         "Escape delimiters in catalog titles and summaries before rendering Markdown table cells.",
         "Generate a row with pipe characters and verify it renders as exactly three cells with the original readable text."

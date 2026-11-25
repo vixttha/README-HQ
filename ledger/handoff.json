@@ -1,6 +1,15 @@
 {
   "schema_version": 1,
-  "active": null,
+  "active": {
+    "issue": 10,
+    "version": "v0.0.6.10",
+    "phase": "Worker",
+    "next_action": "Verify three rendered cells and original readable pipe text using actual Graphify renderer at exact candidate.",
+    "fix_sha": null,
+    "candidate_sha": null,
+    "pull_request": null,
+    "evidence": []
+  },
   "history": [
     {
       "handoff": {
