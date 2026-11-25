@@ -41,6 +41,19 @@ def repository(files):
 
 
 class ReaderTests(unittest.TestCase):
+    def test_review_draft_reads_detect_changed_bytes(self):
+        with repository({"README.md": "# Original"}) as committed:
+            tree = GitTree(committed.root, draft=True, track_draft_reads=True)
+            self.assertEqual(tree.read("README.md"), b"# Original")
+            (tree.root / "README.md").write_text("# Changed", encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "draft content changed"):
+                tree.read("README.md")
+
+    def test_review_acceptance_headings_hidden_in_comments(self):
+        body = "## Checkpoint workflow\n\nVisible instructions.\n\n### v0.0.6.1\n\nAcceptance."
+        self.assertEqual(len(acceptance_sections(body)), 2)
+        self.assertEqual(acceptance_sections("<!--\n" + body + "\n-->"), [])
+
     def test_review_git_selectors_cannot_redirect_selected_tree(self):
         with repository({"README.md": "# Source A"}) as first, repository({"README.md": "# Source B"}) as second:
             with patch.dict(os.environ, {"GIT_DIR": str(first.root / ".git"), "GIT_WORK_TREE": str(second.root),

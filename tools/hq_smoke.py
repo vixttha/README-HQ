@@ -345,6 +345,8 @@ def write_receipt(destination, tree, cases, errors, gaps, *, validator_path=None
                     sources[path] = sha256(tree.read(path)).hexdigest()
             except (KeyError, OSError, ValueError):
                 unavailable_sources.append(path)
+                if tree.draft and path in tree.draft_source_digests:
+                    errors.append(f"{path}: draft evidence no longer matches the audited bytes")
     hosted = os.environ.get("GITHUB_ACTIONS") == "true"
     run = os.environ.get("GITHUB_RUN_ID") if hosted else None
     repo = os.environ.get("GITHUB_REPOSITORY") if hosted else None

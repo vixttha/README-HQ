@@ -9,7 +9,7 @@ import sys
 from tempfile import TemporaryDirectory
 
 from hq_data import GitTree, parse_json, read_json
-from hq_navigation import rendered_table_rows
+from hq_navigation import PARSER, rendered_table_rows
 
 ROOT = Path(__file__).resolve().parents[1]
 GRAPH = ROOT / "graphify-hq/plans/v0.0.6-repairs"
@@ -79,31 +79,19 @@ def rows(content):
 
 
 def acceptance_sections(content):
+    content = content.replace("\r\n", "\n").replace("\r", "\n")
+    lines = content.split("\n")
+    headings = [token.map[0] for token in PARSER.parse(content)
+                if token.type == "heading_open" and token.level == 0
+                and int(token.tag[1:]) <= 3 and token.map is not None]
     verified = []
-    sections = []
-    fence = None
-    start = offset = 0
-    for line in content.splitlines(keepends=True):
-        delimiter = re.match(r"^ {0,3}(`{3,}|~{3,})(.*)$", line.rstrip("\r\n"))
-        if delimiter:
-            marker, rest = delimiter.groups()
-            if fence is None and (marker[0] == "~" or "`" not in rest):
-                fence = marker
-            elif fence and marker[0] == fence[0] and len(marker) >= len(fence) and not rest.strip():
-                fence = None
-        elif fence is None and re.match(r"^#{1,3} ", line):
-            sections.append(content[start:offset])
-            start = offset
-        offset += len(line)
-    sections.append(content[start:])
-    for section in sections:
-        heading = section.split("\n", 1)[0].rstrip()
+    for start, end in zip(headings, headings[1:] + [len(lines)]):
+        heading = lines[start].rstrip()
         if re.fullmatch(r"### v0\.0\.6\.[0-9]+", heading) or heading in {
             "## Checkpoint workflow", "## Portability and quality acceptance",
         }:
-            verified.append(section.rstrip())
+            verified.append("\n".join(lines[start:end]).rstrip())
     return verified
-
 
 def verify_index(index, partitions):
     expected = []

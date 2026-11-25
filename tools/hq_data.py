@@ -1,6 +1,8 @@
 """Read structured evidence and Git objects without working-tree substitution."""
 
 import json
+from functools import lru_cache
+from hashlib import sha256
 import os
 from pathlib import Path
 import re
@@ -52,10 +54,17 @@ def github_repository(remote):
     return name if REPOSITORY.fullmatch(name) else None
 
 
+@lru_cache(maxsize=1)
+def local_git_environment_names():
+    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    return frozenset(subprocess.check_output(["git", "rev-parse", "--local-env-vars"],
+                                             env=env).decode("ascii").splitlines())
+
+
 def clean_git_environment():
     """Prevent inherited repository selectors from redirecting explicit Git operations."""
     env = os.environ.copy()
-    names = subprocess.check_output(["git", "rev-parse", "--local-env-vars"], env=env).decode("ascii").splitlines()
+    names = local_git_environment_names()
     for key in list(env):
         if key in names or key.startswith(("GIT_CONFIG_KEY_", "GIT_CONFIG_VALUE_")):
             env.pop(key, None)
@@ -67,12 +76,14 @@ class UnavailableGitBlob(ValueError):
 
 
 class GitTree:
-    def __init__(self, root, ref="HEAD", *, draft=False, allow_git_fetch=False):
+    def __init__(self, root, ref="HEAD", *, draft=False, allow_git_fetch=False, track_draft_reads=False):
         self.root = Path(root).resolve()
         self.allow_git_fetch = allow_git_fetch
         self.fetched_blobs = set()
         self.commit = self.git("rev-parse", "--verify", "--end-of-options", f"{ref}^{{commit}}").decode().strip()
         self.draft = draft
+        self.track_draft_reads = track_draft_reads
+        self.draft_source_digests = {}
         self._entries = {}
         remote = subprocess.run(
             ["git", "remote", "get-url", "origin"], cwd=self.root,
@@ -133,7 +144,12 @@ class GitTree:
                     getattr(info, "st_file_attributes", 0) & stat.FILE_ATTRIBUTE_REPARSE_POINT
                 ):
                     raise ValueError(f"{path}: tracked draft path has a symlink or reparse point")
-            return local.read_bytes()
+            body = local.read_bytes()
+            if self.track_draft_reads:
+                observed = sha256(body).hexdigest()
+                if self.draft_source_digests.setdefault(path, observed) != observed:
+                    raise ValueError(f"{path}: draft content changed during audit")
+            return body
         return self._read_blob(path, digest)
 
     def materialize_checkout_blobs(self):

@@ -221,8 +221,24 @@ def check_versions(errors, tree=None):
         if (version not in rows or len(matching) != 1
                 or re.findall(r"\]\(([^)]+)\)", matching[0]) != [f"maps/{version}/README.md"]):
             errors.append(f"{version}: Graphify landing row must link to its own map")
-    current = re.findall(r"\*\*Current version\*\*[^\n]*\]\((?:versions/)?(v[0-9.]+)/README\.md\)", index)
-    home = re.findall(r"\*\*Current version\*\*[^\n]*\]\(versions/(v[0-9.]+)/README\.md\)", readme)
+    def current_links(text, prefix):
+        _, _, tokens = parse_markdown(text)
+        result = []
+        for i, token in enumerate(tokens[:-1]):
+            if token.type != "paragraph_open" or token.level != 0:
+                continue
+            inline = tokens[i + 1]
+            if inline.type != "inline" or not inline.content.startswith("**Current version**"):
+                continue
+            for child in inline.children or []:
+                if child.type == "link_open":
+                    match = re.fullmatch(prefix + r"(v[0-9.]+)/README\.md", child.attrGet("href") or "")
+                    if match:
+                        result.append(match[1])
+        return result
+
+    current = current_links(index, r"(?:versions/)?")
+    home = current_links(readme, r"versions/")
     if len(current) != 1 or current != home or not set(current) <= set(rows):
         errors.append("homepage and index must agree on exactly one listed current version")
     dirs = sorted({path.split("/")[1] for path in entries if path.startswith("versions/") and path.count("/") >= 2})
@@ -418,7 +434,8 @@ def main():
     try:
         if args.draft and args.ref != "HEAD":
             raise ValueError("--draft applies to the current checkout only")
-        tree = GitTree(args.repo or ROOT, args.ref, draft=args.draft, allow_git_fetch=args.allow_git_fetch)
+        tree = GitTree(args.repo or ROOT, args.ref, draft=args.draft, allow_git_fetch=args.allow_git_fetch,
+                       track_draft_reads=args.draft)
         if args.repo:
             top_level = Path(tree.git("rev-parse", "--show-toplevel").decode("utf-8").rstrip("\r\n")).resolve()
             if tree.root != top_level:

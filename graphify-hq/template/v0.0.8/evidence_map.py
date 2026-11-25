@@ -137,7 +137,7 @@ def git(*args):
 
 
 def source_blob(commit, path):
-    entries = git("--literal-pathspecs", "ls-tree", "-z", commit, "--", path).split(b"\0")
+    entries = git("--literal-pathspecs", "ls-tree", "--full-tree", "-z", commit, "--", path).split(b"\0")
     header, _, name = entries[0].partition(b"\t")
     if name.decode("utf-8") != path or not header:
         raise ValueError(f"{path}: no entry at the pinned source commit")
@@ -419,7 +419,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("manifest", type=Path)
     parser.add_argument("output", type=Path)
-    parser.add_argument("--verify-repository", action="store_true", help="Verify the source SHA against the GitHub repository")
+    parser.add_argument("--verify-repository", action="store_true", help="Observe the source SHA through the GitHub repository endpoint (not ref reachability)")
     parser.add_argument("--verify-pr", action="store_true", help="Print a separate live GitHub observation")
     parser.add_argument("--check", action="store_true", help="Rebuild and compare the existing output bytes")
     args = parser.parse_args()
@@ -433,7 +433,7 @@ def main():
         observation = github_json(manifest["repository"], f"commits/{commit}")
         if observation.get("sha") != commit:
             parser.error("GitHub did not establish the claimed repository source")
-        provenance = "github-commit-observed"
+        provenance = "github-commit-visible-through-repository"
     if args.verify_pr:
         if "pull_request" not in manifest:
             parser.error("--verify-pr requires pull_request in the manifest")
